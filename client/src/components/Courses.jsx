@@ -51,7 +51,7 @@ const Courses = () => {
           <img src={OOPLogo} alt="OOP Logo" height="300px" width="200px" />
           <h3>OOP Concepts</h3>
           <p>“Think in objects, not just code.” Learn how real-world programming works.</p>
-          <Link to="/OopLesson">Start Lesson</Link>
+          <Link to="/OOPLesson">Start Lesson</Link>
         </div>
 
         <div className="course-box">

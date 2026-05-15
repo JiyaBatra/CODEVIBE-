@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import API_BASE from "../config";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
@@ -12,7 +13,7 @@ const ResetPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5002/api/auth/reset-password", {
+      const res = await axios.post(`${API_BASE}/api/auth/reset-password`, {
         Email: email,
         otp,
         newPassword,

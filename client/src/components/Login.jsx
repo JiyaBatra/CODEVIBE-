@@ -1,36 +1,38 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import API_BASE from "../config";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [responseMsg, setResponseMsg] = useState("");
   const navigate = useNavigate();
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  try {
-    const response = await axios.post(
-      "https://codevibe-3.onrender.com/api/auth/login",
-      {
-        Email: email,
-        password,
+    try {
+      const response = await axios.post(
+        `${API_BASE}/api/auth/login`,
+        {
+          Email: email,
+          password,
+        }
+      );
+
+      console.log("✅ Login successful", response.data);
+      setResponseMsg(response.data.message);
+
+      if (response.data.success) {
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        localStorage.setItem("userEmail", response.data.user.email);
+        navigate("/Dashboard");
       }
-    );
-
-    console.log("✅ Login successful", response.data);
-    setResponseMsg(response.data.message);
-
-    if (response.data.success) {
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-      navigate("/Dashboard");
+    } catch (error) {
+      console.error("❌ Login error", error.response?.data || error.message);
+      setResponseMsg(error.response?.data?.message || "Something went wrong");
     }
-  } catch (error) {
-    console.error("❌ Login error", error.response?.data || error.message);
-    setResponseMsg(error.response?.data?.message || "Something went wrong");
-  }
-};
+  };
 
   return (
     <div className="login-container">

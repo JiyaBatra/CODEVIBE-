@@ -226,8 +226,6 @@ createRoot(document.getElementById('root')).render(
          <Route path="/report/:email" element={<ViewReport />} />
         <Route path="/api" element={<App />} />
         <Route path="/Certificate" element={<Certificate />} />
-       <Route path="/report/:email" element={<ViewReport />} />
-        <Route path="/CLesson" element={<CLesson />} />
         <Route path="/CssLesson" element={<CssLesson />} />
         <Route path="/JsLesson" element={<JsLesson />} />
         <Route path="/Compiler" element={<Compiler />} />
@@ -293,7 +291,6 @@ createRoot(document.getElementById('root')).render(
         <Route path="/JsLesson29" element={<JsLesson29 />} />
 
 {/* C Lessons 1–17 */}
-        <Route path="/CLesson" element={<CLesson />} />
 <Route path="/CLesson1" element={<CLesson1 />} />
 <Route path="/CLesson2" element={<CLesson2 />} />
 <Route path="/CLesson3" element={<CLesson3 />} />

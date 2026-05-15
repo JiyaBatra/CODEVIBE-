@@ -5,7 +5,7 @@ const momsvalidation = joi.object({
     Email: joi.string().email().required(),
     password: joi.string().min(6).max(20).required(),
     college: joi.string().min(2).max(50).required(),
-    year: joi.string().required()   // chahe "1st year", "2nd year" likho ya numeric
+    year: joi.string().required()
 });
 
 module.exports = momsvalidation;

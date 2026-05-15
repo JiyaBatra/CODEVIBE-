@@ -15,6 +15,12 @@ const register = async (req, res, next) => {
   try {
     const { username, Email, password, college, year } = req.body;
 
+    // Validate input using the validation schema
+    const { error } = momsvalidation.validate({ username, Email, password, college, year });
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
+
     const userExist = await UserModel.findOne({ Email });
     if (userExist) {
       return res.status(400).json({ message: "User already exists" });
@@ -36,8 +42,8 @@ const register = async (req, res, next) => {
       user: { username, Email, college, year },
     });
   } catch (error) {
-    next(error);
     console.error("Registration error:", error);
+    next(error);
   }
 };
 

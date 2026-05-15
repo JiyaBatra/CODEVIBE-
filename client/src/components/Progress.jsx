@@ -1,6 +1,7 @@
 // src/components/Progress.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import API_BASE from "../config";
 
 const Progress = () => {
   const [progress, setProgress] = useState(null);
@@ -14,7 +15,7 @@ const Progress = () => {
     }
 
     axios
-      .get(`http://localhost:5002/api/progress/${email}`)
+      .get(`${API_BASE}/api/progress/${email}`)
       .then((res) => {
         setProgress(res.data);
         setLoading(false);
@@ -26,34 +27,38 @@ const Progress = () => {
   }, []);
 
   if (loading) {
-    return <p className="text-pink-400 text-center">Loading your progress...</p>;
+    return <p style={{ color: "#f472b6", textAlign: "center" }}>Loading your progress...</p>;
   }
 
   if (!progress) {
-    return <p className="text-red-400 text-center">No progress found. Start learning today!</p>;
+    return <p style={{ color: "#f87171", textAlign: "center" }}>No progress found. Start learning today!</p>;
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-black">
-      <div className="bg-gradient-to-r from-purple-700 via-pink-600 to-purple-800 p-6 rounded-2xl shadow-lg w-[400px] text-center">
-        <h2 className="text-2xl font-bold text-white mb-4">📖 Your Progress</h2>
-        <p className="text-lg text-pink-200 mb-2">
-          Lessons Completed: <span className="font-bold text-white">{progress.completedLessons}</span>
+    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", background: "#000" }}>
+      <div style={{ background: "linear-gradient(to right, #7e22ce, #db2777, #7e22ce)", padding: "24px", borderRadius: "16px", boxShadow: "0 10px 15px rgba(0,0,0,0.3)", width: "400px", textAlign: "center" }}>
+        <h2 style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#fff", marginBottom: "16px" }}>📖 Your Progress</h2>
+        <p style={{ fontSize: "1.125rem", color: "#fbcfe8", marginBottom: "8px" }}>
+          Lessons Completed: <span style={{ fontWeight: "bold", color: "#fff" }}>{progress.completedLessons?.length ?? 0}</span>
         </p>
-        <p className="text-lg text-pink-200">
-          Total Lessons: <span className="font-bold text-white">{progress.totalLessons}</span>
+        <p style={{ fontSize: "1.125rem", color: "#fbcfe8" }}>
+          Total Lessons: <span style={{ fontWeight: "bold", color: "#fff" }}>{progress.totalLessons ?? "—"}</span>
         </p>
 
-        <div className="w-full bg-pink-200 rounded-full h-4 mt-4">
-          <div
-            className="bg-purple-900 h-4 rounded-full"
-            style={{
-              width: `${(progress.completedLessons / progress.totalLessons) * 100}%`,
-            }}
-          ></div>
-        </div>
+        {progress.totalLessons > 0 && (
+          <div style={{ width: "100%", background: "#fbcfe8", borderRadius: "9999px", height: "16px", marginTop: "16px" }}>
+            <div
+              style={{
+                background: "#581c87",
+                height: "16px",
+                borderRadius: "9999px",
+                width: `${((progress.completedLessons?.length ?? 0) / progress.totalLessons) * 100}%`,
+              }}
+            ></div>
+          </div>
+        )}
 
-        <p className="mt-3 text-pink-100 italic">
+        <p style={{ marginTop: "12px", color: "#fce7f3", fontStyle: "italic" }}>
           Keep going, you're doing amazing! 🚀
         </p>
       </div>

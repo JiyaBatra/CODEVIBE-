@@ -26,6 +26,16 @@ backend.use(
 
 backend.use(routes);
 
+// Global error handling middleware
+// Express requires all 4 parameters to recognize this as an error handler
+backend.use((err, req, res, _next) => {
+  console.error("Unhandled error:", err.stack || err);
+  const statusCode = err.statusCode || 500;
+  res.status(statusCode).json({
+    message: err.message || "Internal Server Error",
+  });
+});
+
 const MONGODB_URL = process.env.DB_URL || "mongodb://127.0.0.1:27017/codevibe";
 
 mongoose

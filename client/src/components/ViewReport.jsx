@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
+import API_BASE from "../config";
 
 export default function ViewReport() {
   const { email } = useParams();
@@ -12,7 +13,7 @@ export default function ViewReport() {
   useEffect(() => {
     if (!email) return;
     axios
-      .get(`http://localhost:5002/api/progress/${email}`)
+      .get(`${API_BASE}/api/progress/${email}`)
       .then((res) => setProgress(res.data))
       .catch((err) => console.error("Error fetching progress:", err))
       .finally(() => setLoading(false));

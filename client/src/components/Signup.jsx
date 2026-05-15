@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import API_BASE from '../config';
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
@@ -15,9 +16,9 @@ const SignUp = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("https://codevibe-3.onrender.com/api/auth/register", {
+      const response = await axios.post(`${API_BASE}/api/auth/register`, {
         username,
-        Email:email,   // ✅ lowercase, same as Dashboard
+        Email:email,
         password,
         college,
         year,
@@ -27,8 +28,8 @@ const SignUp = () => {
       setResponseMsg(response.data.message);
 
       if (response.data.success) {
-        // ✅ signup ke baad direct Dashboard me bhejna
         localStorage.setItem("user", JSON.stringify(response.data.user));
+        localStorage.setItem("userEmail", response.data.user.Email);
         navigate("/Dashboard");
       }
     } catch (error) {
