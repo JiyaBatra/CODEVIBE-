@@ -1,134 +1,311 @@
-import React from 'react';
+import React, { useEffect } from "react";
 
 const TermsOfService = () => {
+  useEffect(() => {
+    document.title = "Terms of Service | CodeVibe";
+
+    const metaDescription = document.querySelector(
+      'meta[name="description"]'
+    );
+
+    if (metaDescription) {
+      metaDescription.setAttribute(
+        "content",
+        "Read the official Terms of Service for CodeVibe. Learn about user responsibilities, licenses, limitations, privacy, and legal conditions for using the CodeVibe platform."
+      );
+    } else {
+      const meta = document.createElement("meta");
+      meta.name = "description";
+      meta.content =
+        "Read the official Terms of Service for CodeVibe. Learn about user responsibilities, licenses, limitations, privacy, and legal conditions for using the CodeVibe platform.";
+      document.head.appendChild(meta);
+    }
+  }, []);
+
+  const sections = [
+    {
+      title: "Acceptance of Terms",
+      content:
+        "By accessing and using CodeVibe, you agree to comply with these Terms of Service and all applicable laws and regulations.",
+    },
+    {
+      title: "Use License",
+      content:
+        "Users are granted a limited, non-commercial license to access and use CodeVibe materials and services.",
+    },
+    {
+      title: "Disclaimer",
+      content:
+        "All materials and services on CodeVibe are provided 'as is' without warranties of any kind.",
+    },
+    {
+      title: "User Conduct",
+      content:
+        "Users must not upload malicious code, disrupt services, harass others, or violate any applicable laws.",
+    },
+    {
+      title: "Account Responsibility",
+      content:
+        "Users are responsible for maintaining account security and confidentiality of credentials.",
+    },
+    {
+      title: "Governing Law",
+      content:
+        "These Terms of Service are governed by the laws of India and applicable jurisdictions.",
+    },
+  ];
+
   return (
-    <div className="terms-container">
-      <div className="terms-content">
-        <h1>Terms of Service</h1>
-        <p className="last-updated">Last Updated: May 2026</p>
+    <main
+      style={{
+        minHeight: "100vh",
+        background:
+          "linear-gradient(135deg, #0f172a 0%, #111827 50%, #1e293b 100%)",
+        padding: "50px 20px",
+        fontFamily: "Arial, sans-serif",
+        color: "#e5e7eb",
+      }}
+    >
+      <article
+        style={{
+          maxWidth: "1000px",
+          margin: "0 auto",
+        }}
+      >
+        {/* SEO Optimized Header */}
+        <header
+          style={{
+            textAlign: "center",
+            marginBottom: "60px",
+          }}
+        >
+          <h1
+            style={{
+              fontSize: "56px",
+              fontWeight: "bold",
+              marginBottom: "15px",
+              background: "linear-gradient(to right, #38bdf8, #a855f7)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            CodeVibe Terms of Service
+          </h1>
 
-        <section>
-          <h2>1. Acceptance of Terms</h2>
-          <p>
-            By accessing and using CodeVibe, you accept and agree to be bound by the terms and provision 
-            of this agreement. If you do not agree to abide by the above, please do not use this service.
+          <p
+            style={{
+              fontSize: "18px",
+              color: "#94a3b8",
+              lineHeight: "1.8",
+              maxWidth: "700px",
+              margin: "0 auto",
+            }}
+          >
+            Read the official legal terms and conditions for using the
+            CodeVibe platform, including user rights, account security,
+            acceptable use, and service limitations.
           </p>
-        </section>
 
-        <section>
-          <h2>2. Use License</h2>
-          <p>
-            Permission is granted to temporarily download one copy of the materials (information or software) 
-            on CodeVibe for personal, non-commercial transitory viewing only. This is the grant of a license, 
-            not a transfer of title, and under this license you may not:
+          <p
+            style={{
+              marginTop: "20px",
+              color: "#64748b",
+              fontSize: "14px",
+            }}
+          >
+            Last Updated: May 2026
           </p>
-          <ul>
-            <li>Modify or copy the materials</li>
-            <li>Use the materials for any commercial purpose, or for any public display</li>
-            <li>Attempt to decompile or reverse engineer any software contained on CodeVibe</li>
-            <li>Remove any copyright or other proprietary notations from the materials</li>
-            <li>Transfer the materials to another person or "mirror" the materials on any other server</li>
-            <li>Engage in any conduct that restricts or inhibits anyone's use or enjoyment of CodeVibe</li>
-          </ul>
-        </section>
+        </header>
 
-        <section>
-          <h2>3. Disclaimer</h2>
-          <p>
-            The materials on CodeVibe are provided as is. CodeVibe makes no warranties, expressed or implied, 
-            and hereby disclaims and negates all other warranties including, without limitation, implied warranties 
-            or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual 
-            property or other violation of rights.
-          </p>
-        </section>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: "25px",
+            marginTop: "40px",
+          }}
+        >
+          {sections.map((section, index) => (
+            <section
+              key={index}
+              aria-labelledby={`section-${index}`}
+              style={{
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                borderRadius: "20px",
+                padding: "28px",
+                backdropFilter: "blur(10px)",
+                boxShadow: "0 8px 30px rgba(0,0,0,0.25)",
+                transition: "0.3s ease",
+                cursor: "pointer",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-8px)";
+                e.currentTarget.style.border =
+                  "1px solid rgba(56,189,248,0.4)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.border =
+                  "1px solid rgba(255,255,255,0.1)";
+              }}
+            >
+              <div
+                style={{
+                  width: "50px",
+                  height: "50px",
+                  borderRadius: "14px",
+                  background:
+                    "linear-gradient(135deg, #38bdf8 0%, #a855f7 100%)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: "bold",
+                  fontSize: "20px",
+                  color: "#fff",
+                  marginBottom: "20px",
+                  boxShadow: "0 4px 15px rgba(56,189,248,0.35)",
+                }}
+              >
+                {index + 1}
+              </div>
 
-        <section>
-          <h2>4. Limitations</h2>
-          <p>
-            In no event shall CodeVibe or its suppliers be liable for any damages (including, without limitation, 
-            damages for loss of data or profit, or due to business interruption) arising out of the use or 
-            inability to use the materials on CodeVibe.
-          </p>
-        </section>
+              <h2
+                id={`section-${index}`}
+                style={{
+                  color: "#ffffff",
+                  marginBottom: "15px",
+                  fontSize: "24px",
+                  lineHeight: "1.4",
+                }}
+              >
+                {section.title}
+              </h2>
 
-        <section>
-          <h2>5. Accuracy of Materials</h2>
-          <p>
-            The materials appearing on CodeVibe could include technical, typographical, or photographic errors. 
-            CodeVibe does not warrant that any of the materials on the website are accurate, complete, or current. 
-            CodeVibe may make changes to the materials contained on the website at any time without notice.
-          </p>
-        </section>
+              <p
+                style={{
+                  lineHeight: "1.8",
+                  color: "#cbd5e1",
+                  fontSize: "15px",
+                }}
+              >
+                {section.content}
+              </p>
 
-        <section>
-          <h2>6. Materials and Content</h2>
-          <p>
-            CodeVibe has not reviewed all of the sites linked to its website and is not responsible for the contents 
-            of any such linked site. The inclusion of any link does not imply endorsement by CodeVibe of the site. 
-            Use of any such linked website is at the user's own risk.
-          </p>
-        </section>
-
-        <section>
-          <h2>7. Modifications</h2>
-          <p>
-            CodeVibe may revise these terms of service for the website at any time without notice. By using this website, 
-            you are agreeing to be bound by the then current version of these terms of service.
-          </p>
-        </section>
-
-        <section>
-          <h2>8. Governing Law</h2>
-          <p>
-            These terms and conditions are governed by and construed in accordance with the laws of India 
-            and you irrevocably submit to the exclusive jurisdiction of the courts in that State or location.
-          </p>
-        </section>
-
-        <section>
-          <h2>9. User Conduct</h2>
-          <p>You agree not to:</p>
-          <ul>
-            <li>Upload, post, or transmit viruses or other malicious code</li>
-            <li>Harass, threaten, embarrass, or cause distress or discomfort to any individual</li>
-            <li>Disrupt the normal flow of dialogue within CodeVibe</li>
-            <li>Engage in commercial activities without prior written permission</li>
-            <li>Violate any laws or regulations applicable in your country</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>10. Account Responsibility</h2>
-          <p>
-            You are responsible for maintaining the confidentiality of your account information and password 
-            and for all activities that occur under your account. You agree to notify CodeVibe immediately of 
-            any unauthorized use of your account.
-          </p>
-        </section>
-
-        <section>
-          <h2>11. Limitation of Liability</h2>
-          <p>
-            CodeVibe shall not be liable to you in relation to the contents of, or use of, or otherwise in 
-            connection with, any linked website for any indirect, special or consequential loss, or for any 
-            business losses, loss of revenue, income, profits or anticipated savings.
-          </p>
-        </section>
-
-        <section>
-          <h2>12. Contact Information</h2>
-          <p>If you have questions about these Terms of Service, please contact us at:</p>
-          <ul>
-            <li>📧 Email: <a href="mailto:legal@codevibe.com">legal@codevibe.com</a></li>
-            <li>🔗 GitHub: <a href="https://github.com/JiyaBatra/CODEVIBE-" target="_blank" rel="noopener noreferrer">JiyaBatra/CODEVIBE-</a></li>
-          </ul>
-        </section>
-
-        <div className="terms-footer">
-          <p>© 2026 CodeVibe. All rights reserved.</p>
+              {section.list && (
+                <ul
+                  style={{
+                    marginTop: "18px",
+                    paddingLeft: "18px",
+                    color: "#94a3b8",
+                  }}
+                >
+                  {section.list.map((item, i) => (
+                    <li
+                      key={i}
+                      style={{
+                        marginBottom: "10px",
+                        lineHeight: "1.6",
+                      }}
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+          ))}
         </div>
-      </div>
-    </div>
+
+        <section
+          aria-labelledby="contact-heading"
+          style={{
+            background: "rgba(255,255,255,0.05)",
+            border: "1px solid rgba(255,255,255,0.1)",
+            borderRadius: "20px",
+            padding: "35px",
+            marginTop: "40px",
+            textAlign: "center",
+            backdropFilter: "blur(10px)",
+          }}
+        >
+          <h2
+            id="contact-heading"
+            style={{
+              fontSize: "34px",
+              marginBottom: "15px",
+              color: "#a855f7",
+            }}
+          >
+            Contact CodeVibe
+          </h2>
+
+          <p
+            style={{
+              color: "#cbd5e1",
+              marginBottom: "25px",
+              lineHeight: "1.7",
+            }}
+          >
+            For legal inquiries or questions related to the CodeVibe Terms of
+            Service, contact our support team.
+          </p>
+
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: "20px",
+            }}
+          >
+            <a
+              href="mailto:legal@codevibe.com"
+              aria-label="Email CodeVibe Legal Team"
+              style={{
+                padding: "14px 24px",
+                borderRadius: "12px",
+                background: "#0f172a",
+                color: "#38bdf8",
+                textDecoration: "none",
+                border: "1px solid rgba(255,255,255,0.1)",
+              }}
+            >
+              📧 legal@codevibe.com
+            </a>
+
+            <a
+              href="https://github.com/JiyaBatra/CODEVIBE-"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit CodeVibe GitHub Repository"
+              style={{
+                padding: "14px 24px",
+                borderRadius: "12px",
+                background: "#0f172a",
+                color: "#a855f7",
+                textDecoration: "none",
+                border: "1px solid rgba(255,255,255,0.1)",
+              }}
+            >
+              🔗 GitHub Repository
+            </a>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer
+          style={{
+            textAlign: "center",
+            marginTop: "50px",
+            color: "#64748b",
+            fontSize: "14px",
+          }}
+        >
+          © 2026 CodeVibe. All rights reserved.
+        </footer>
+      </article>
+    </main>
   );
 };
 
