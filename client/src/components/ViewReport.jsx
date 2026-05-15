@@ -8,6 +8,11 @@ export default function ViewReport() {
   const course = search.get("course");
   const [progress, setProgress] = useState(null);
   const [loading, setLoading] = useState(true);
+  const storedUser = JSON.parse(localStorage.getItem("user") || "null");
+  const reportName =
+    storedUser?.username ||
+    progress?.username ||
+    (email?.includes("@") ? email.split("@")[0] : email);
 
   useEffect(() => {
     if (!email) return;
@@ -21,12 +26,31 @@ export default function ViewReport() {
   if (loading) return <div>Loading report...</div>;
   if (!progress) return <div>No report found for {email}</div>;
 
-  // Calculate avg score for selected course
-  const lessonScores = Object.entries(progress.scores || {})
-    .filter(([lessonId]) =>
-      lessonId.toLowerCase().startsWith(course?.toLowerCase() || "")
-    )
-    .map(([_, val]) => val);
+  const coursePrefixMap = {
+    html: "html-lesson",
+    css: "css-lesson-",
+    javascript: "js-lesson-",
+    oop: "oop-lesson-",
+    dsa: "dsa-lesson-",
+    dbms: "dbms-lesson-",
+    mongodb: "mongo-lesson-",
+    "node.js": "node-lesson-",
+    "express.js": "express-lesson-",
+    "react.js": "react-lesson-",
+  };
+  const selectedPrefix = coursePrefixMap[(course || "").toLowerCase()] || "";
+
+  const filteredScoreEntries = Object.entries(progress.scores || {}).filter(
+    ([lessonId]) =>
+      !selectedPrefix || lessonId.toLowerCase().startsWith(selectedPrefix)
+  );
+  const filteredScores = Object.fromEntries(filteredScoreEntries);
+  const filteredCompletedLessons = (progress.completedLessons || []).filter(
+    (lessonId) =>
+      !selectedPrefix || lessonId.toLowerCase().startsWith(selectedPrefix)
+  );
+
+  const lessonScores = filteredScoreEntries.map(([_, val]) => val);
 
   const avgCourseScore = lessonScores.length
     ? Math.round(
@@ -36,24 +60,24 @@ export default function ViewReport() {
 
   return (
     <div style={{ padding: "32px", color: "white" }}>
-      <h2>Progress Report for {email}</h2>
+      <h2>Progress Report for {reportName}</h2>
       <p><strong>Email:</strong> {progress.email}</p>
       <p>
-        <strong>Completed Lessons ({progress.completedLessons.length}):</strong>
+        <strong>Completed Lessons ({filteredCompletedLessons.length}):</strong>
       </p>
       <ul>
-        {progress.completedLessons.map((lesson) => (
+        {filteredCompletedLessons.map((lesson) => (
           <li key={lesson}>
-            {lesson}: {progress.scores[lesson] ?? "-"}%
+            {lesson}: {filteredScores[lesson] ?? "-"}%
           </li>
         ))}
       </ul>
       <p>
         <strong>{course} Overall Score:</strong> {avgCourseScore}%
       </p>
-      <h4>All Scores:</h4>
+      <h4>{course} Scores:</h4>
       <ul>
-        {Object.entries(progress.scores || {}).map(([k, v]) => (
+        {filteredScoreEntries.map(([k, v]) => (
           <li key={k}>
             {k}: {v}%
           </li>

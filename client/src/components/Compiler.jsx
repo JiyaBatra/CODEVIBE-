@@ -22,6 +22,12 @@ const Compiler = ({ LessonId, language: fixedLanguage, initialCode = "", expecte
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
   const iframeRef = useRef(null);
+  const getStoredEmail = () => {
+    const userEmail = localStorage.getItem("userEmail");
+    if (userEmail) return userEmail;
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+    return user?.email || "guest@example.com";
+  };
   const copyCode = async () => {
   try {
     await navigator.clipboard.writeText(code);
@@ -58,7 +64,7 @@ const downloadCode = () => {
 };
 
   const saveProgress = (lessonId, sc, attempt) => {
-    const email = localStorage.getItem("userEmail");
+    const email = getStoredEmail();
     axios.post(`http://localhost:5002/api/lesson/${lessonId}/complete`, { email, score: sc })
       .catch(err => console.error("Save progress error:", err));
     onSuccess?.({ LessonId: lessonId, score: sc, tries: attempt });
@@ -212,7 +218,7 @@ const downloadCode = () => {
       setStatus("⏳ Running on server...");
       setError("");
       const res = await axios.post(`http://localhost:5002/api/execute/${language}`, {
-        email: localStorage.getItem("userEmail") || "guest@example.com",
+        email: getStoredEmail(),
         code
       }, { timeout: 12000 });
       const out = String(res.data.output ?? "").trim();

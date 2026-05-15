@@ -32,6 +32,7 @@ const SignUp = () => {
       if (response.data.success) {
         // ✅ signup ke baad direct Dashboard me bhejna
         localStorage.setItem("user", JSON.stringify(response.data.user));
+        localStorage.setItem("userEmail", response.data.user?.email || email);
         navigate("/Dashboard");
       }
     } catch (error) {

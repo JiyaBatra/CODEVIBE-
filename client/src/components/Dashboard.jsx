@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSignOutAlt } from "react-icons/fa";
 
@@ -6,8 +6,15 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user")); 
 
+  useEffect(() => {
+    if (user?.email) {
+      localStorage.setItem("userEmail", user.email);
+    }
+  }, [user]);
+
   const handleLogout = () => {
     localStorage.removeItem("user");
+    localStorage.removeItem("userEmail");
     navigate("/login");
   };
 
