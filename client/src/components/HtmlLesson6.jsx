@@ -33,6 +33,9 @@ const HtmlLesson6 = () => {
         <li><code>&lt;th&gt;</code> — Table header.</li>
         <li><code>&lt;td&gt;</code> — Table data/cell.</li>
       </ul>
+              <br/>
+    <hr/>
+
 
       <h3>🔹 Example Code</h3>
       <pre>
@@ -49,9 +52,12 @@ const HtmlLesson6 = () => {
 </tbody>
 </table>`}
       </pre>
+              <br/>
+    <hr/>
 
-      <h2>Try Yourself</h2>
-     <Compiler 
+
+      <h2>Try Yourself !!</h2>
+    <Compiler 
   LessonId="html-lesson6"
   expectedOutput={(output) => {
     const normalize = (s) => s.replace(/\s+/g, " ").trim();

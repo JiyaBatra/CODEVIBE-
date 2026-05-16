@@ -15,24 +15,24 @@ const HtmlLesson4 = () => {
   };
 
   return (
-    <div className="lesson-page">
+    <div className="lesson">
       <h1>Lesson 4: Html Attribute</h1>
-      <br />
-
-      <div className="lesson-content">
+      <div className="lesson">
         <p>
           An attribute is extra information added inside an HTML tag to give more control or settings to that tag.
           It helps define the behaviour, appearance, or properties of HTML elements.
         </p>
-        <hr />
+    
 
-        <h2>BASIC STRUCTURE</h2>
+        <h3>BASIC STRUCTURE</h3>
         <pre>
 {`<tagname attribute="value">content</tagname>
 
 for example:- 
 <a href="http://www.google.com">visitgoogle</a>`}
         </pre>
+                  <br/>
+    <hr/>
 
         <h3>Common HTML Attributes</h3>
         <ul>
@@ -52,6 +52,10 @@ for example:-
           <li><dt>height</dt> <dd>set height of image</dd></li>
           <li><dt>width</dt> <dd>set width of image</dd></li>
         </ul>
+                  <br/>
+    <hr/>
+    
+    <h2> 💻 Try Yourself, Follow Instructions !!</h2>
 
         <pre className="compiler-instruction">{`
 <!-- Instruction 1: Create an anchor tag with href="https://www.google.com" and text "Go to Google" -->
@@ -67,7 +71,7 @@ for example:-
 <p title="Hover Text">This is a paragraph.</p>
         `}</pre>
 
-       
+      
       </div>
 
       <Compiler

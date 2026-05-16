@@ -15,6 +15,8 @@ import Login from './components/Login.jsx';
 import ForgetPassword from './components/ForgetPassword.jsx';
 import ResetPassword from './components/ResetPassword.jsx';
 import Dashboard from './components/Dashboard.jsx';
+import PrivacyPolicy from './components/PrivacyPolicy.jsx';
+import TermsOfService from './components/TermsOfService.jsx';
 import Courses from './components/Courses.jsx';
 import Target from './components/Target.jsx';
 import Foot from './components/Foot.jsx';
@@ -223,6 +225,8 @@ createRoot(document.getElementById('root')).render(
         <Route path="/ForgetPassword" element={<ForgetPassword />} />
         <Route path="/ResetPassword" element={<ResetPassword />} />
         <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
          <Route path="/report/:email" element={<ViewReport />} />
         <Route path="/api" element={<App />} />
         <Route path="/Certificate" element={<Certificate />} />

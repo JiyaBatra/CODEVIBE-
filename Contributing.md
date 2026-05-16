@@ -21,17 +21,7 @@ Thank you for your interest in contributing to CodeVibe! We're excited to have y
 
 ## Code of Conduct
 
-### Our Pledge
-We are committed to providing a welcoming and inspiring community for all. We pledge that everyone participating in the CodeVibe community will be treated with respect and dignity.
-
-### Our Standards
-- Be respectful and inclusive
-- Welcome feedback and criticism gracefully
-- Focus on what is best for the community
-- Show empathy towards others
-
-### Enforcement
-Instances of unacceptable behavior may result in temporary or permanent removal from the community.
+Please note that this project is released with a [Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
 ---
 
@@ -150,6 +140,33 @@ npm run dev
 
 ---
 
+## Assignment Guidelines
+
+### Proposal and planning
+- Start by opening an issue labeled `assignment` or `learning-content`.
+- Describe the learning objective, expected outcome, and how the assignment complements existing lessons.
+- Include example input/output, diagrams, or a short task description so reviewers can understand the scope.
+
+### Implementation requirements
+- Work in a dedicated branch like `assignment/<topic>` or `feature/<issue-number>-assignment`.
+- Keep each assignment focused, accessible, and aligned with CodeVibe style.
+- Document any new lesson content, sample files, or interactive examples clearly.
+- Avoid duplicating content already covered in the repository.
+
+### Submission expectations
+- Reference the related issue in your pull request.
+- Add a short summary of how learners will use the assignment.
+- Include screenshots, demo steps, or verification instructions when applicable.
+- If a contribution includes external references, cite sources and keep explanations original.
+
+### What we do not accept
+- Copy/pasted assignments from other sites without original teaching content.
+- Off-topic projects unrelated to the course path.
+- Duplicate material that repeats existing lessons.
+- Assignments submitted without clear review or testing steps.
+
+---
+
 ## Commit Guidelines
 
 ### Commit Message Format
@@ -239,6 +256,12 @@ Examples:
 - `[docs]: Update API documentation`
 
 ### PR Description Template
+
+-  Use the template: [Pull Request Template](.github/pull_request_template.md)
+
+> **Note:** This template is automatically loaded when you open a new PR.
+> Fill in every section — incomplete PRs may be closed without review.
+
 ```markdown
 ## Description
 Brief description of what this PR does.
@@ -292,33 +315,8 @@ Add screenshots for UI changes.
 ## Reporting Issues
 
 ### Bug Report Template
-```markdown
-## Description
-Clear description of the bug.
 
-## Steps to Reproduce
-1. Go to '...'
-2. Click on '...'
-3. Scroll down to '...'
-4. See error
-
-## Expected Behavior
-What should happen.
-
-## Actual Behavior
-What actually happens.
-
-## Environment
-- OS: [e.g., Windows, macOS, Linux]
-- Browser: [e.g., Chrome, Firefox]
-- Node Version: [e.g., 16.13.0]
-
-## Logs/Screenshots
-Attach console logs or screenshots.
-
-## Possible Solution
-(Optional) Suggest a fix.
-```
+- Use the template: [Bug Report](.github/ISSUE_TEMPLATE/bug_report.md)
 
 ### Bug Report Best Practices
 - Use clear, descriptive titles
@@ -327,27 +325,9 @@ Attach console logs or screenshots.
 - Test on latest version first
 - Search existing issues before reporting
 
----
-
-## Feature Requests
-
 ### Feature Request Template
-```markdown
-## Description
-Clear description of the feature.
 
-## Motivation
-Why is this feature needed?
-
-## Proposed Solution
-How should it work?
-
-## Alternatives
-Other approaches considered.
-
-## Example Use Case
-How would users benefit?
-```
+- Use the template: [Feature Request](.github/ISSUE_TEMPLATE/feature_request.md)
 
 ### Feature Request Best Practices
 - Check existing issues/discussions first
@@ -355,6 +335,17 @@ How would users benefit?
 - Consider impact on other features
 - Be open to alternative solutions
 - Discuss before implementing
+
+### Documentation Request Template
+
+- Use the template: [Documentation Improvement](.github/ISSUE_TEMPLATE/documentation.md)
+
+### Documentation Request Best Practices
+- Specify the exact file or section that needs improvement
+- Explain why the current content is unclear or missing
+- Suggest what the corrected or added content should say
+- Link to any external references that support your suggestion
+- Keep scope small, one doc issue per report
 
 ---
 

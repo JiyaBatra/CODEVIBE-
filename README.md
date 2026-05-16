@@ -2,14 +2,20 @@
 
 <div align="center">
 
-![CodeVibe Banner](https://img.shields.io/badge/CodeVibe-v1.0.0-ff4d6d?style=flat-square)
+![CodeVibe Banner](https://img.shields.io/badge/CodeVibe-v1.0.0-ff4d6d)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![Open Source](https://img.shields.io/badge/Open%20Source-Yes-success)](https://github.com/JiyaBatra/CODEVIBE-)
+[![GSSoC26](https://img.shields.io/badge/GSSoC-2026-orange)](https://gssoc.girlscript.tech/)
 
-A modern, browser-based coding practice platform inspired by FreeCodeCamp. Learn programming through structured tasks, real-time coding, and instant evaluation—**no local environment setup required**.
+A modern, browser-based coding practice platform inspired by FreeCodeCamp. Learn programming through structured tasks, real-time coding and instant evaluation — **no local environment setup required**.
 
-[Live Demo](#) • [Documentation](#) • [Contributing](#contributing) • [Community](#community)
+**[Live Demo](https://codevibeforyou.netlify.app/)** •
+**[Project Structure](#project-structure)** •
+**[Contributing](#contributing)** •
+**[Code of Conduct](#code-of-conduct)** •
+**[Community](#community)** •
+**[Contact & Support](#contact--support)**
 
 </div>
 
@@ -24,7 +30,7 @@ CodeVibe removes friction from the learning journey. Whether you're a complete b
 - **Instant Feedback**: Get real-time evaluation and detailed performance metrics
 - **Progress Tracking**: Monitor your learning journey with comprehensive dashboards
 - **Certificates**: Earn certificates upon successful completion of courses
-- **Zero Setup**: No environment configuration—start coding in seconds
+- **Zero Setup**: No environment configuration — start coding in seconds
 
 ---
 
@@ -78,6 +84,36 @@ CodeVibe removes friction from the learning journey. Whether you're a complete b
 - Printable and shareable format
 
 ---
+
+## Learning Paths
+
+### Beginner Path
+1. **C Fundamentals** (17 lessons)
+   - Variables, data types, operators
+   - Control structures and loops
+   - Functions and arrays
+   - String manipulation
+
+2. **Web Basics with HTML** (15 lessons)
+   - HTML structure and semantics
+   - Forms and input handling
+   - Accessibility principles
+   - Best practices
+
+3. **Styling with CSS** (14 lessons)
+   - CSS selectors and properties
+   - Flexbox and Grid layouts
+   - Responsive design
+   - Animations and transitions
+
+### Intermediate Path
+4. **Database Fundamentals** (12 lessons)
+   - DBMS concepts
+   - SQL queries and joins
+   - Normalization
+   - Indexing and optimization
+
+---   
 
 ## Getting Started
 
@@ -140,22 +176,29 @@ CodeVibe removes friction from the learning journey. Whether you're a complete b
 
 ```
 CODEVIBE-/
-├── client/                 # React frontend application
+├── .github/                        # GitHub configuration and templates
+│   ├── ISSUE_TEMPLATE/             # Issue templates for contributors
+│   │   ├── bug_report.md           # Bug report template
+│   │   ├── feature_request.md      # Feature request template
+│   │   └── documentation.md        # Documentation improvement template
+│   └── pull_request_template.md    # PR description template
+├── client/                         # React frontend application
 │   ├── src/
-│   │   ├── components/    # React components (lessons, compiler, dashboard)
-│   │   ├── assets/        # Images, icons, static files
-│   │   ├── App.jsx        # Main app component
-│   │   ├── main.jsx       # React entry point
-│   │   └── index.css      # Global styles
+│   │   ├── components/             # React components (lessons, compiler, dashboard)
+│   │   ├── assets/                 # Images, icons, static files
+│   │   ├── App.jsx                 # Main app component
+│   │   ├── main.jsx                # React entry point
+│   │   └── index.css               # Global styles
 │   └── package.json
-├── server/                # Node.js/Express backend
-│   ├── routes/           # API endpoints
-│   ├── models/           # Database schemas
-│   ├── middleware/       # Auth and validation middleware
-│   └── server.js         # Server entry point
-├── Contributing.md        # Contribution guidelines
-├── LICENSE               # MIT License
-└── README.md            # This file
+├── server/                         # Node.js/Express backend
+│   ├── routes/                     # API endpoints
+│   ├── models/                     # Database schemas
+│   ├── middleware/                 # Auth and validation middleware
+│   └── server.js                   # Server entry point
+├── CODE_OF_CONDUCT.md              # Community standards and behavior expectations
+├── CONTRIBUTING.md                 # Contribution guidelines
+├── LICENSE                         # MIT License
+└── README.md                       # This file
 ```
 
 ---
@@ -275,7 +318,7 @@ We welcome contributions from the community! Whether it's bug fixes, new feature
 
 For detailed guidelines, see [CONTRIBUTING.md](CONTRIBUTING.md)
 
-### Code of Conduct
+## Code of Conduct
 
 Please note that this project is released with a [Code of Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
 
@@ -289,36 +332,6 @@ Join our growing community of learners and contributors!
 - **Issues**: Report bugs and suggest features
 - **Pull Requests**: Contribute code improvements
 - **Email**: [contact@codevibe.dev]
-
----
-
-## Learning Paths
-
-### Beginner Path
-1. **C Fundamentals** (17 lessons)
-   - Variables, data types, operators
-   - Control structures and loops
-   - Functions and arrays
-   - String manipulation
-
-2. **Web Basics with HTML** (15 lessons)
-   - HTML structure and semantics
-   - Forms and input handling
-   - Accessibility principles
-   - Best practices
-
-3. **Styling with CSS** (14 lessons)
-   - CSS selectors and properties
-   - Flexbox and Grid layouts
-   - Responsive design
-   - Animations and transitions
-
-### Intermediate Path
-4. **Database Fundamentals** (12 lessons)
-   - DBMS concepts
-   - SQL queries and joins
-   - Normalization
-   - Indexing and optimization
 
 ---
 
@@ -414,7 +427,9 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 <div align="center">
 
-Made with ❤️ by the CodeVibe Team
+Made with ❤️ by the **CodeVibe Team**
+
+---
 
 **[⬆ back to top](#codevibe---learn-practice-master-code)**
 

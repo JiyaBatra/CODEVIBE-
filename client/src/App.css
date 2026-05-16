@@ -40,3 +40,65 @@
 .read-the-docs {
   color: #888;
 }
+@media (max-width: 768px) {
+
+  header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .header-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  .course-box {
+    width: 90%;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .certificate-footer {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.search-input {
+  width: 340px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 2px solid #ff4d88;
+  background: rgba(20, 20, 40, 0.9);
+  color: white;
+  font-size: 1rem;
+  outline: none;
+  transition: 0.3s ease;
+  box-shadow: 0 0 15px rgba(255, 77, 136, 0.3);
+}
+
+.search-input:focus {
+  box-shadow: 0 0 25px rgba(255, 77, 136, 0.7);
+  transform: scale(1.02);
+}
+
+.search-input::placeholder {
+  color: #bbb;
+}

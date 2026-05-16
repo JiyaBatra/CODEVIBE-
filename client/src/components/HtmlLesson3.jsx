@@ -15,7 +15,7 @@ const HtmlLesson3 = () => {
   };
 
   return (
-    <div className="HtmlLesson">
+    <div className="lesson">
       <h1>Lesson 3: HTML List</h1>
       <br />
       <p>
@@ -53,12 +53,14 @@ const HtmlLesson3 = () => {
 
       <h2>Description list {'<dl>'}</h2>
       <p>This list is used for terms and their descriptions, like in a dictionary.</p>
+                
 
       <pre>{`<dl>
   <dt>HTML</dt>
   <dd>It stands for Hyper Text Markup Language</dd>
 </dl>`}</pre>
-
+          <br/>
+    <hr/>
       <br />
       <h2>Try Yourself: Create all three types of lists</h2>
 

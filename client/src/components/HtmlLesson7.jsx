@@ -32,8 +32,11 @@ const HtmlLesson7 = () => {
         <li><code>&lt;textarea&gt;</code> — Multi-line input.</li>
         <li><code>&lt;button&gt;</code> — Button to submit the form.</li>
       </ul>
+              <br/>
+    <hr/>
 
-      <h2>Common List of Input Fields</h2>
+
+      <h3>Common List of Input Fields</h3>
       <ul>
         <li><code>&lt;input type="text"&gt;</code> — Single-line text input.</li>
         <li><code>&lt;input type="email"&gt;</code> — Email address field.</li>
@@ -50,6 +53,9 @@ const HtmlLesson7 = () => {
         <li><code>&lt;textarea&gt;</code> — Multi-line input.</li>
         <li><code>&lt;select&gt;</code> — Dropdown menu.</li>
       </ul>
+              <br/>
+    <hr/>
+
 
       <h3>🔹 Example Code</h3>
       <pre>
@@ -60,7 +66,7 @@ const HtmlLesson7 = () => {
 </form>`}
       </pre>
 
-      <h2>Try Yourself</h2>
+      <h2>Try Yourself !!</h2>
      <Compiler
   LessonId="html-lesson7"
   expectedOutput={(output) => {

@@ -44,6 +44,8 @@ const HtmlLesson5 = () => {
         <li><code>&lt;object&gt;</code> — Embed other documents like PDFs.</li>
         <li><code>&lt;picture&gt;</code> — Load responsive images.</li>
       </ul>
+        <br/>
+    <hr/>
 
       <h3>🔹 Example Code</h3>
       <pre>{`<img src="your-image-url.jpg" alt="Sample Image" width="200" />
@@ -56,6 +58,9 @@ const HtmlLesson5 = () => {
   <source src="your-video.mp4" type="video/mp4" />
 </video>`}
       </pre>
+              <br/>
+    <hr/>
+
 
       <h2>Try the Code Below</h2>
       <ul>
@@ -74,6 +79,10 @@ const HtmlLesson5 = () => {
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowFullScreen
       ></iframe>
+      <br/>
+      <br/>
+    <hr/>
+
 
       <h3>Expected Output:</h3>
       <pre>{expectedOutput}</pre>

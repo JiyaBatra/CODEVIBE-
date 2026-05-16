@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import registerImage from "../assets/registerImage.png";
 import API_BASE from '../config';
 
 const SignUp = () => {
@@ -10,15 +11,17 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [responseMsg, setResponseMsg] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await axios.post(`${API_BASE}/api/auth/register`, {
         username,
-        Email:email,
+        Email: email,
         password,
         college,
         year,
@@ -28,70 +31,85 @@ const SignUp = () => {
       setResponseMsg(response.data.message);
 
       if (response.data.success) {
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        localStorage.setItem("userEmail", response.data.user.Email);
+        const user = response.data.user;
+        localStorage.setItem("user", JSON.stringify(user));
+        localStorage.setItem(
+          "userEmail",
+          user.email ?? user.Email
+        );
         navigate("/Dashboard");
       }
     } catch (error) {
       console.error("❌ Signup error", error.response?.data || error.message);
       setResponseMsg(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h1>Sign Up</h1>
+    <section className='login-section'>
+      <div className="login-container">
+        <div className="login-image">
+          <img src={registerImage} className='registerImage' alt="Register image" />
+        </div>
+        <div className="login-card">
+          <form className="login-form" onSubmit={handleSubmit}>
+            <h1>Join Us Today ! </h1>
 
-        <label>USERNAME:</label>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          required
-        />
+            <label>USERNAME:</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
 
-        <label>COLLEGE:</label>
-        <input
-          type="text"
-          value={college}
-          onChange={(e) => setCollege(e.target.value)}
-          required
-        />
+            <label>COLLEGE:</label>
+            <input
+              type="text"
+              value={college}
+              onChange={(e) => setCollege(e.target.value)}
+              required
+            />
 
-        <label>YEAR:</label>
-        <input
-          type="text"
-          value={year}
-          onChange={(e) => setYear(e.target.value)}
-          required
-        />
+            <label>YEAR:</label>
+            <input
+              type="text"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              required
+            />
 
-        <label>EMAIL:</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+            <label>EMAIL:</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
 
-        <label>PASSWORD:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+            <label>PASSWORD:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
 
-        <button type="submit">SUBMIT</button>
+            <button type="submit" disabled={loading}>
+              {loading ? "SUBMITTING..." : "SUBMIT"}
+            </button>
 
-        {responseMsg && <p style={{ color: "white" }}>{responseMsg}</p>}
+            {responseMsg && <p style={{ color: "white" }}>{responseMsg}</p>}
 
-        <p>
-          Already have an account? <Link to="/login">Login</Link>
-        </p>
-      </form>
-    </div>
+            <p>
+              Already have an account? <Link to="/login">Login</Link>
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
   );
 };
 

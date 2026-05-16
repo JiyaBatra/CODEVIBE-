@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import forgotPic from "../assets/forgotPassword.png";
 import API_BASE from "../config";
 
 const ForgotPassword = () => {
@@ -20,27 +21,34 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="login-container">
-      <form className="login-form" onSubmit={handleSubmit}>
-        <h1>Forgot Password</h1>
+    <section className="login-section">
+      <div className="login-container">
+        <div className="login-image">
+          <img src={forgotPic} alt="Forgot password" />
+        </div>
+        <div className="login-card">
+          <form className="login-form" onSubmit={handleSubmit}>
+            <h1>Forgot Your Password</h1>
 
-        <label>EMAIL:</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+            <label>EMAIL:</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
 
-        <button type="submit">Send OTP</button>
+            <button type="submit">Send OTP</button>
 
-        {responseMsg && <p style={{ color: "white" }}>{responseMsg}</p>}
+            {responseMsg && <p style={{ color: "white" }}>{responseMsg}</p>}
 
-        <p>
-          Back to <Link to="/login">Login</Link>
-        </p>
-      </form>
-    </div>
+            <p>
+              Back to <Link to="/login">Login</Link>
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
   );
 };
 
