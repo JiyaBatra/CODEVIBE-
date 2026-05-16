@@ -1,6 +1,6 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { FaDiscord, FaLinkedin, FaGithub, FaYoutube } from 'react-icons/fa'
+import React from "react";
+import { Link } from "react-router-dom";
+import { FaDiscord, FaLinkedin, FaGithub, FaYoutube } from "react-icons/fa";
 
 const Foot = () => {
   return (
@@ -9,16 +9,17 @@ const Foot = () => {
         <div className="footer-brand">
           <p className="footer-brand-title">CodeVibe</p>
           <p className="footer-brand-copy">
-            Open-source learning for HTML, CSS, JavaScript, backend skills, and real-world practice.
+            Open-source learning for HTML, CSS, JavaScript, backend skills, and
+            real-world practice.
           </p>
         </div>
 
         <div className="footer-links">
           <h3>Quick links</h3>
-          <Link to="/privacy-policy" className="footer-link">
+          <Link to="/privacy-policy" className="footer-link" onClick={() => window.scrollTo(0, 0)}>
             Privacy Policy
           </Link>
-          <Link to="/terms-of-service" className="footer-link">
+          <Link to="/terms-of-service" className="footer-link" onClick={() => window.scrollTo(0, 0)}>
             Terms of Service
           </Link>
           <a
@@ -74,14 +75,16 @@ const Foot = () => {
 
       <div className="footer-bottom">
         <p className="footer-copy">
-          © 2026 CodeVibe. Built with community, creativity, and accessible learning.
+          © 2026 CodeVibe. Built with community, creativity, and accessible
+          learning.
         </p>
         <p className="footer-note">
-          Want to contribute? Open an issue or follow the contributor guidelines above.
+          Want to contribute? Open an issue or follow the contributor guidelines
+          above.
         </p>
       </div>
     </footer>
-  )
-}
+  );
+};
 
-export default Foot
+export default Foot;
