@@ -27,13 +27,17 @@
   width: 52px;
   min-height: 100vh;
   padding: 8px;
+  align-items: center;
 }
 
 .dynamic-progress-sidebar--collapsed .dynamic-progress-sidebar__toggle {
-  width: 36px;
+  width: 100%;
+  max-width: 36px;
 }
 
 .dynamic-progress-sidebar__toggle {
+  box-sizing: border-box;
+  flex-shrink: 0;
   width: 46px;
   height: 36px;
   color: #ffffff;
