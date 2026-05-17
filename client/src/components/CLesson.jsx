@@ -19,7 +19,7 @@ const CLesson = () => {
 
   return (
     <div className="c-lesson" style={{ padding: '20px' }}>
-      <h2>C LESSON'S</h2>
+      <h2>C LESSONS</h2>
 
       <div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
         <div className="course-box">

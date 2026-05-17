@@ -28,7 +28,7 @@ const CssLesson = () => {
         color: 'white'
       }}
     >
-      <h2>CSS LESSON'S</h2>
+      <h2>CSS LESSONS</h2>
 
       <div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
         <div className="course-box">
