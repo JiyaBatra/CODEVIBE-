@@ -19,7 +19,7 @@ const NodeLesson = () => {
   return (
     <div className="node-lesson" style={{ padding: '20px' }}>
       <h2>Node.js LESSONS</h2>
-      <div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
+      <div className="lesson-grid">
 
         <div className="course-box">
           <h3>Lesson 1: Introduction</h3>

@@ -19,7 +19,7 @@ const ReactLesson = () => {
   return (
     <div className="react-lesson" style={{ padding: '20px' }}>
       <h2>⚛️ REACT LESSONS</h2>
-      <div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
+      <div className="lesson-grid">
         <div className="course-box">
           <h3>Lesson 1: Introduction to React</h3>
           <Link to="/ReactLesson1">Start Lesson</Link>

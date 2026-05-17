@@ -21,7 +21,7 @@ const CLesson = () => {
     <div className="c-lesson" style={{ padding: '20px' }}>
       <h2>C LESSON'S</h2>
 
-      <div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
+      <div className="lesson-grid">
         <div className="course-box">
           <h3>Lesson1: Introduction to C</h3>
           <Link to="/CLesson1">Start Lesson</Link>

@@ -21,7 +21,7 @@ const JsLesson = () => {
     <div className="js-lesson" style={{ padding: '20px' }}>
       <h2>JS LESSONS</h2>
 
-      <div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
+      <div className="lesson-grid">
         
         <div className="course-box">
           <h3>Lesson 1: Introduction to JS</h3>

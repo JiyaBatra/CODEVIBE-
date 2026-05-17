@@ -337,10 +337,18 @@ body>* {
 .course-name {
   padding: 3rem 2rem;
   text-align: center;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   justify-content: center;
   gap: 2rem;
+  align-items: stretch;
+}
+
+.lesson-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  align-items: stretch;
 }
 
 /* ===== SEARCH BAR ===== */
@@ -415,7 +423,12 @@ h3 {
   border-image: linear-gradient(135deg, var(--primary-red), var(--secondary-pink)) 1;
   padding: 2rem;
   margin: 0;
-  width: 280px;
+  width: 100%;
+  max-width: 320px;
+  min-height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   border-radius: 4px;
   color: var(--text-primary);
   position: relative;
@@ -475,6 +488,10 @@ h3 {
   font-weight: 700;
   margin-bottom: 1rem;
   text-shadow: 0 0 10px rgba(255, 77, 109, 0.6);
+  flex: 1 1 auto;
+  text-align: left;
+  display: block;
+  justify-content: flex-start;
 }
 
 .course-box p {
@@ -482,6 +499,7 @@ h3 {
   font-size: 0.95rem;
   margin-bottom: 1.5rem;
   line-height: 1.5;
+  flex: 1 1 auto;
 }
 
 .course-box a {
@@ -489,6 +507,8 @@ h3 {
   color: var(--white);
   background: linear-gradient(135deg, var(--primary-red), var(--secondary-pink));
   display: inline-block;
+  margin-top: auto;
+  align-self: flex-start;
   padding: 0.8rem 1.5rem;
   border-radius: 4px;
   transition: all 0.3s ease;

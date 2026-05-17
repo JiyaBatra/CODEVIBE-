@@ -21,7 +21,7 @@ const DSALesson = () => {
     <div className="dsa-lesson" style={{ padding: '20px' }}>
       <h2>📘 DATA STRUCTURES & ALGORITHMS (DSA) LESSONS (Using JS)</h2>
 
-      <div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
+      <div className="lesson-grid">
         
         <div className="course-box">
           <h3>Lesson 1: Introduction to DSA</h3>

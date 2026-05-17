@@ -20,7 +20,7 @@ const DBMSLessons = () => {
     <div className="dbms-lesson" style={{ padding: '20px' }}>
       <h2>DBMS LESSONS</h2>
 
-      <div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
+      <div className="lesson-grid">
         <div className="course-box">
           <h3>Lesson1: Introduction to DBMS</h3>
           <Link to="/DBMSLesson1">Start Lesson</Link>

@@ -30,7 +30,7 @@ const HtmlLesson = () => {
     >
       <h2>HTML LESSON'S</h2>
 
-      <div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
+      <div className="lesson-grid">
         <div className='course-box'>
           <h3>Lesson1: Introduction to HTML</h3>
           <Link to="/HtmlLesson1">Start Lesson</Link>
