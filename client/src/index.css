@@ -977,7 +977,11 @@ h3 {
 
 /* Lesson Section */
 .lesson {
-  padding: 2rem;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  padding: clamp(1rem, 2.5vw, 2rem);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.8;
   color: var(--text-secondary);
@@ -986,18 +990,37 @@ h3 {
   margin: 1.5rem 0;
 }
 
+.lesson-title {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+}
+
+.lesson-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
 .lesson h1,
 .lesson h2,
-.lesson h3 {
+.lesson h3,
+.lesson-title {
   color: var(--primary-red);
   text-shadow: 0 0 10px rgba(255, 77, 109, 0.3);
   margin-top: 1.5rem;
   margin-bottom: 1rem;
 }
 
-.lesson ul {
-  margin-left: 2rem;
-  margin-bottom: 1rem;
+.lesson hr {
+  margin: 1.25rem 0;
+  border: none;
+  border-top: 1px solid rgba(255, 77, 109, 0.25);
+}
+
+.lesson ul,
+.lesson ol {
+  margin: 0 0 1rem;
+  padding-left: 1.5rem;
 }
 
 .lesson li {
@@ -1005,10 +1028,15 @@ h3 {
 }
 
 .lesson pre {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
   font-size: 0.95rem;
   overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
   background: #0f1419;
-  padding: 1.5rem;
+  padding: 1.25rem;
   border-radius: 4px;
   color: #00ff00;
   border: 2px solid var(--primary-red);
@@ -1019,11 +1047,18 @@ h3 {
 }
 
 .lesson code {
+  max-width: 100%;
+  overflow-wrap: anywhere;
   background: #1a1f2e;
   color: var(--neon-cyan);
   padding: 0.2rem 0.5rem;
   border-radius: 3px;
   font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.lesson .instruction,
+.lesson .list {
+  max-width: 100%;
 }
 
 /* Login Container */
