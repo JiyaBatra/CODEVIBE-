@@ -5,6 +5,7 @@ import {
   FaUserPlus,
   FaTachometerAlt,
   FaSignOutAlt,
+  FaUser,
   FaGamepad,
   FaBars,
   FaTimes,
@@ -97,24 +98,35 @@ const Head = () => {
             </Link>
           </>
         ) : (
-          <div
-            className="nav-link"
-            onClick={handleLogout}
-            style={{ cursor: "pointer" }}
-          >
-            <FaSignOutAlt className="nav-icon" />
-            <span>Logout</span>
-          </div>
-        )}
+          <>
+            <Link
+              to="/Dashboard"
+              className="nav-link"
+              onClick={closeMobileMenu}
+            >
+              <FaTachometerAlt className="nav-icon" />
+              <span>Dashboard</span>
+            </Link>
 
-        <Link
-          to="/Dashboard"
-          className="nav-link"
-          onClick={closeMobileMenu}
-        >
-          <FaTachometerAlt className="nav-icon" />
-          <span>Dashboard</span>
-        </Link>
+            <Link
+              to="/Profile"
+              className="nav-link"
+              onClick={closeMobileMenu}
+            >
+              <FaUser className="nav-icon" />
+              <span>Profile</span>
+            </Link>
+
+            <div
+              className="nav-link"
+              onClick={handleLogout}
+              style={{ cursor: "pointer" }}
+            >
+              <FaSignOutAlt className="nav-icon" />
+              <span>Logout</span>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Heading */}

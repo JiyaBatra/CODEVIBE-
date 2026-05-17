@@ -60,12 +60,25 @@ const Dashboard = () => {
         </button>
       </div>
 
-      <div className="dashboard-card" style={{ color: "black", width: "100%", maxWidth: "600px" }}>
-        <p><strong>👤 Username:</strong> {user.username}</p>
-        <p><strong>📧 Email:</strong> {user.email}</p>
-        <p><strong>🏫 College:</strong> {user.college}</p>
-        <p><strong>🎓 Year:</strong> {user.year}</p>
-      </div>
+      <p style={{ color: "var(--text-secondary)", marginBottom: "1.5rem" }}>
+        Track your learning progress below, or visit your{" "}
+        <button
+          type="button"
+          onClick={() => navigate("/Profile")}
+          style={{
+            background: "none",
+            border: "none",
+            color: "var(--primary-red)",
+            cursor: "pointer",
+            fontWeight: 600,
+            textDecoration: "underline",
+            padding: 0,
+          }}
+        >
+          profile page
+        </button>{" "}
+        for account details.
+      </p>
 
       {/* Courses to view progress */}
       <div className="courses" style={{ width: "100%", maxWidth: "600px" }}>
