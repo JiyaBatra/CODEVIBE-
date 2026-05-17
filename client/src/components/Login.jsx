@@ -12,16 +12,18 @@ const Login = () => {
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setResponseMsg("");
 
     try {
-     const response = await axios.post("https://codevibe-3.onrender.com/api/auth/login",
+      const response = await axios.post(
+        "https://codevibe-3.onrender.com/api/auth/login",
         {
           Email: email,
           password,
         }
       );
 
-      console.log("✅ Login successful", response.data);
       setResponseMsg(response.data.message);
 
       if (response.data.success) {
@@ -29,8 +31,10 @@ const Login = () => {
         navigate("/Dashboard");
       }
     } catch (error) {
-      console.error("❌ Login error", error.response?.data || error.message);
+      console.error("Login error", error.response?.data || error.message);
       setResponseMsg(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,7 +63,9 @@ const Login = () => {
               required
             />
 
-            <button type="submit">SUBMIT</button>
+            <button type="submit" disabled={loading} aria-busy={loading}>
+              {loading ? "Logging in..." : "SUBMIT"}
+            </button>
 
             {responseMsg && <p style={{ color: "white" }}>{responseMsg}</p>}
 
