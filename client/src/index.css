@@ -1095,6 +1095,35 @@ h3 {
   box-sizing: border-box;
 }
 
+.password-field {
+  position: relative;
+  width: 100%;
+}
+
+.password-field input {
+  padding-right: 2.75rem;
+}
+
+.password-field__toggle {
+  position: absolute;
+  right: 0.35rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  margin: 0;
+  padding: 0.35rem 0.5rem;
+  min-width: auto;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.65));
+}
+
+.password-field__toggle:hover {
+  color: var(--white, #fff);
+  background: transparent;
+  box-shadow: none;
+}
+
 .login-form h1,
 .login-form h2 {
   color: var(--primary-red);

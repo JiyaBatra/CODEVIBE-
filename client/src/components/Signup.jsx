@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import registerImage from "../assets/registerImage.png";
+import PasswordField from "./PasswordField";
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
@@ -84,16 +85,17 @@ const SignUp = () => {
               required
             />
 
-            <label>PASSWORD:</label>
-            <input
-              type="password"
+            <PasswordField
+              id="signup-password"
+              label="PASSWORD:"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
+              hint={(
+                <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: "-10px", marginBottom: "15px", textAlign: "left" }}>
+                  *Password must be at least 6 characters long
+                </p>
+              )}
             />
-            <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: "-10px", marginBottom: "15px", textAlign: "left" }}>
-              *Password must be at least 6 characters long
-            </p>
 
             <button type="submit">SUBMIT</button>
 
