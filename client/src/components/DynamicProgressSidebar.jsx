@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { NavLink, useLocation } from "react-router-dom";
 import "./DynamicProgressSidebar.css";
+import { apiUrl } from "../config/api.js";
 
 const lessonGroups = [
   {
@@ -147,7 +148,7 @@ const DynamicProgressSidebar = () => {
     }
 
     axios
-      .get(`http://localhost:5002/api/progress/${email}`)
+      .get(apiUrl(`/api/progress/${email}`))
       .then((res) =>
         setProgress((current) => mergeProgress(current, res.data))
       )

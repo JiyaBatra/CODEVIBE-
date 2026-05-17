@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { apiUrl } from "../config/api.js";
 
 
 const HtmlLesson = () => {
@@ -10,7 +11,7 @@ const HtmlLesson = () => {
   useEffect(() => {
     const email = localStorage.getItem('userEmail');
     if (!email) return;
-    axios.get(`http://localhost:5002/api/progress/${email}`)
+    axios.get(apiUrl(`/api/progress/${email}`))
       .then(res => setCompleted(res.data.completedLessons || []))
       .catch(err => console.error(err));
   }, []);

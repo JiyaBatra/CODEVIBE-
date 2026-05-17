@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { apiUrl } from "../config/api.js";
 
 const App = () => {
   const [data, setData] = useState("");
@@ -8,7 +9,7 @@ const App = () => {
   const handleSignup = async () => {
     try {
       const response = await axios.post(
-        "https://codevibe-3.onrender.com/api/auth/register",
+        apiUrl("/api/auth/register"),
         {
           username: "Jiya",
           email: "jia@gmail.com",
@@ -30,7 +31,7 @@ const App = () => {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        "https://codevibe-3.onrender.com/api/auth/login",
+        apiUrl("/api/auth/login"),
         {
           email: "jia@gmail.com",
           password: "yourpassword",

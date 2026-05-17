@@ -3,6 +3,7 @@ import axios from "axios";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useNavigate } from "react-router-dom";
+import { apiUrl } from "../config/api.js";
 
 const defaultBackgroundUrl = "src/assets/completion certificate.png";
 
@@ -39,7 +40,7 @@ export default function Certificate({ backgroundUrl = defaultBackgroundUrl }) {
     try{
 
       const certRes=await axios.post(
-        "http://localhost:5002/api/certificate",
+        apiUrl("/api/certificate"),
         {email,courseName}
       );
 
@@ -51,7 +52,7 @@ export default function Certificate({ backgroundUrl = defaultBackgroundUrl }) {
       setInfo({...cert,studentName:displayName});
 
       const progRes=await axios.get(
-        `http://localhost:5002/api/progress/${email}`
+        apiUrl(`/api/progress/${email}`)
       );
 
       setProgress(progRes.data);

@@ -1,6 +1,7 @@
 // src/components/Compiler.jsx
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
+import { apiUrl } from "../config/api.js";
 
 const SCORING = (attempt) =>
   attempt === 1 ? 100 :
@@ -64,7 +65,7 @@ const downloadCode = () => {
         detail: { lessonId, score: sc },
       })
     );
-    axios.post(`http://localhost:5002/api/lesson/${lessonId}/complete`, { email, score: sc })
+    axios.post(apiUrl(`/api/lesson/${lessonId}/complete`), { email, score: sc })
       .catch(err => console.error("Save progress error:", err));
     onSuccess?.({ LessonId: lessonId, score: sc, tries: attempt });
   };
@@ -216,7 +217,7 @@ const downloadCode = () => {
     try {
       setStatus("⏳ Running on server...");
       setError("");
-      const res = await axios.post(`http://localhost:5002/api/execute/${language}`, {
+      const res = await axios.post(apiUrl(`/api/execute/${language}`), {
         email: localStorage.getItem("userEmail") || "guest@example.com",
         code
       }, { timeout: 12000 });

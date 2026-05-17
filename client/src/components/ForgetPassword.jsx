@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from 'react-router-dom';
 import forgotPic from "../assets/forgotPassword.png"
+import { apiUrl } from "../config/api.js";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -10,7 +11,7 @@ const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("https://codevibe-3.onrender.com/api/auth/forgot-password", {
+      const res = await axios.post(apiUrl("/api/auth/forgot-password"), {
         Email: email,
       });
       setResponseMsg(res.data.message);

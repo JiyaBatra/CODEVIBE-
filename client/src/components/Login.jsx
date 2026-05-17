@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import loginImage from "../assets/loginImage.png";
+import { apiUrl } from "../config/api.js";
 
 
 const Login = () => {
@@ -14,7 +15,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-     const response = await axios.post("https://codevibe-3.onrender.com/api/auth/login",
+     const response = await axios.post(apiUrl("/api/auth/login"),
         {
           Email: email,
           password,

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { apiUrl } from "../config/api.js";
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
@@ -25,7 +26,7 @@ const ResetPassword = () => {
     }
 
     try {
-      const res = await axios.post("https://codevibe-3.onrender.com/api/auth/reset-password", {
+      const res = await axios.post(apiUrl("/api/auth/reset-password"), {
         token,
         newPassword,
       });

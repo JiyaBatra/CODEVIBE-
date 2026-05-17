@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import registerImage from "../assets/registerImage.png";
+import { apiUrl } from "../config/api.js";
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
@@ -18,7 +19,7 @@ const SignUp = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("https://codevibe-3.onrender.com/api/auth/register", {
+      const response = await axios.post(apiUrl("/api/auth/register"), {
         username,
         Email: email,   // ✅ lowercase, same as Dashboard
         password,
