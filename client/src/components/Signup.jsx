@@ -9,19 +9,28 @@ const SignUp = () => {
   const [year, setYear] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [responseMsg, setResponseMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (password !== confirmPassword) {
+      setResponseMsg('Passwords do not match.');
+      return;
+    }
+
     setLoading(true);
+    setResponseMsg('');
 
     try {
       const response = await axios.post("https://codevibe-3.onrender.com/api/auth/register", {
         username,
         Email: email,   // ✅ lowercase, same as Dashboard
         password,
+        confirmPassword,
         college,
         year,
       });
@@ -90,12 +99,24 @@ const SignUp = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              minLength={6}
+            />
+
+            <label>CONFIRM PASSWORD:</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              minLength={6}
             />
             <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: "-10px", marginBottom: "15px", textAlign: "left" }}>
               *Password must be at least 6 characters long
             </p>
 
-            <button type="submit">SUBMIT</button>
+            <button type="submit" disabled={loading}>
+              {loading ? 'Signing up...' : 'SUBMIT'}
+            </button>
 
             {responseMsg && <p style={{ color: "white" }}>{responseMsg}</p>}
 

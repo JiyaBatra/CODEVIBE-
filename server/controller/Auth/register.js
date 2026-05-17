@@ -13,7 +13,14 @@ const momsvalidation = require("../../services/validationScheme");
 
 const register = async (req, res, next) => {
   try {
-    const { username, Email, password, college, year } = req.body;
+    const { username, Email, password, college, year, confirmPassword } = req.body;
+
+    if (confirmPassword !== undefined && password !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Passwords do not match",
+      });
+    }
 
     const userExist = await UserModel.findOne({ Email });
     if (userExist) {
