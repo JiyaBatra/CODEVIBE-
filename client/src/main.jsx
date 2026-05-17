@@ -20,6 +20,7 @@ import TermsOfService from './components/TermsOfService.jsx';
 import Courses from './components/Courses.jsx';
 import Target from './components/Target.jsx';
 import Foot from './components/Foot.jsx';
+import ScrollToTop from './components/ScrollToTop.jsx';
 import Compiler from './components/Compiler.jsx';
 import Certificate from './components/Certificate.jsx';
 import ViewReport from './components/ViewReport.jsx';
@@ -216,6 +217,7 @@ import ReactLesson13 from './components/ReactLesson13.jsx';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
+      <ScrollToTop />
       <Head />
       <DynamicProgressSidebar />
 
