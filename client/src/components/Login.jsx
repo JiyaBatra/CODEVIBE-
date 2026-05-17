@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import loginImage from "../assets/loginImage.png";
+import { persistUserEmail } from "../utils/getUserEmail";
 
 
 const Login = () => {
@@ -26,6 +27,7 @@ const Login = () => {
 
       if (response.data.success) {
         localStorage.setItem("user", JSON.stringify(response.data.user));
+        persistUserEmail(response.data.user?.Email || email);
         navigate("/Dashboard");
       }
     } catch (error) {

@@ -2,14 +2,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import MarkCompleteButton from './MarkCompleteButton.jsx';
 
 const DBMSLessons = () => {
   const [completed, setCompleted] = useState([]);
 
   useEffect(() => {
-    const email = localStorage.getItem('userEmail');
+    const email = getUserEmail();
     if (!email) return;
-    axios.get(`http://localhost:5002/api/progress/${email}`)
+    axios.get(`${API_BASE_URL}/api/progress/${email}`)
       .then(res => setCompleted(res.data.completedLessons || []))
       .catch(err => console.error(err));
   }, []);

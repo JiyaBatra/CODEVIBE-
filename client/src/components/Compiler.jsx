@@ -2,6 +2,8 @@
 import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 
+import { markLessonComplete } from "../utils/markLessonComplete";
+
 const SCORING = (attempt) =>
   attempt === 1 ? 100 :
   attempt === 2 ? 80  :
@@ -21,6 +23,8 @@ const Compiler = ({ LessonId, language: fixedLanguage, initialCode = "", expecte
   const [score, setScore] = useState(null);
   const [error, setError] = useState("");
   const [status, setStatus] = useState("");
+  const [markingComplete, setMarkingComplete] = useState(false);
+  const [markedComplete, setMarkedComplete] = useState(false);
   const iframeRef = useRef(null);
   const copyCode = async () => {
   try {
@@ -57,16 +61,31 @@ const downloadCode = () => {
   setStatus("⬇️ Code downloaded!");
 };
 
-  const saveProgress = (lessonId, sc, attempt) => {
-    const email = localStorage.getItem("userEmail");
-    window.dispatchEvent(
-      new CustomEvent("codevibe-progress-updated", {
-        detail: { lessonId, score: sc },
-      })
-    );
-    axios.post(`http://localhost:5002/api/lesson/${lessonId}/complete`, { email, score: sc })
-      .catch(err => console.error("Save progress error:", err));
-    onSuccess?.({ LessonId: lessonId, score: sc, tries: attempt });
+  const saveProgress = async (lessonId, sc, attempt) => {
+    try {
+      await markLessonComplete(lessonId, sc);
+      setMarkedComplete(true);
+      onSuccess?.({ LessonId: lessonId, score: sc, tries: attempt });
+    } catch (err) {
+      console.error("Save progress error:", err);
+      setError(err.message || "Could not save lesson progress.");
+    }
+  };
+
+  const handleMarkComplete = async () => {
+    setMarkingComplete(true);
+    setError("");
+
+    try {
+      await markLessonComplete(LessonId, score ?? 0);
+      setMarkedComplete(true);
+      setStatus("✅ Lesson marked complete.");
+      onSuccess?.({ LessonId, score: score ?? 0, tries });
+    } catch (err) {
+      setError(err.message || "Could not mark lesson complete.");
+    } finally {
+      setMarkingComplete(false);
+    }
   };
 
   const decide = (got, ctx = {}) => {
@@ -389,6 +408,25 @@ const downloadCode = () => {
     }}
   >
     Reset
+  </button>
+
+  <button
+    type="button"
+    title="Mark lesson complete without running code"
+    onClick={handleMarkComplete}
+    disabled={markingComplete || markedComplete || score !== null}
+    style={{
+      padding: "8px 14px",
+      background: markedComplete || score !== null ? "#166534" : "#7c3aed",
+      color: "#fff",
+      borderRadius: 10,
+    }}
+  >
+    {markedComplete || score !== null
+      ? "Completed"
+      : markingComplete
+        ? "Saving..."
+        : "Mark Complete"}
   </button>
 
 </div>

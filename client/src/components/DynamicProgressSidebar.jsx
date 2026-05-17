@@ -1,6 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { NavLink, useLocation } from "react-router-dom";
+
+import { getUserEmail } from "../utils/getUserEmail";
+import { API_BASE_URL } from "../utils/markLessonComplete";
 import "./DynamicProgressSidebar.css";
 
 const lessonGroups = [
@@ -178,7 +181,7 @@ const DynamicProgressSidebar = () => {
         };
       });
 
-      if (localStorage.getItem("userEmail")) {
+      if (getUserEmail()) {
         fetchProgress();
       }
     },

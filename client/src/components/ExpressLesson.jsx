@@ -2,15 +2,16 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import MarkCompleteButton from './MarkCompleteButton.jsx';
 
 const ExpressLesson = () => {
   const [completed, setCompleted] = useState([]);
 
   useEffect(() => {
-    const email = localStorage.getItem('userEmail');
+    const email = getUserEmail();
     if (!email) return;
 
-    axios.get(`http://localhost:5002/api/progress/${email}`)
+    axios.get(`${API_BASE_URL}/api/progress/${email}`)
       .then(res => setCompleted(res.data.completedLessons || []))
       .catch(err => console.error(err));
   }, []);
@@ -31,60 +32,70 @@ const ExpressLesson = () => {
         <div className="course-box">
           <h3>Lesson 1: Introduction</h3>
           <Link to="/ExpressLesson1">Start Lesson</Link>
+          <MarkCompleteButton lessonId="express-lesson-1" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('express-lesson-1') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 2: Routing Basics</h3>
           <Link to="/ExpressLesson2">Start Lesson</Link>
+          <MarkCompleteButton lessonId="express-lesson-2" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('express-lesson-2') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 3: Middleware Basics</h3>
           <Link to="/ExpressLesson3">Start Lesson</Link>
+          <MarkCompleteButton lessonId="express-lesson-3" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('express-lesson-3') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 4: Handling POST Requests</h3>
           <Link to="/ExpressLesson4">Start Lesson</Link>
+          <MarkCompleteButton lessonId="express-lesson-4" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('express-lesson-4') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 5: CRUD Basics</h3>
           <Link to="/ExpressLesson5">Start Lesson</Link>
+          <MarkCompleteButton lessonId="express-lesson-5" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('express-lesson-5') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 6: Route Parameters</h3>
           <Link to="/ExpressLesson6">Start Lesson</Link>
+          <MarkCompleteButton lessonId="express-lesson-6" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('express-lesson-6') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 7: Query Parameters</h3>
           <Link to="/ExpressLesson7">Start Lesson</Link>
+          <MarkCompleteButton lessonId="express-lesson-7" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('express-lesson-7') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 8: Express Router</h3>
           <Link to="/ExpressLesson8">Start Lesson</Link>
+          <MarkCompleteButton lessonId="express-lesson-8" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('express-lesson-8') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 9: Error Handling</h3>
           <Link to="/ExpressLesson9">Start Lesson</Link>
+          <MarkCompleteButton lessonId="express-lesson-9" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('express-lesson-9') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 10: Final Project – REST API</h3>
           <Link to="/ExpressLesson10">Start Lesson</Link>
+          <MarkCompleteButton lessonId="express-lesson-10" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('express-lesson-10') && <span> ✅</span>}
         </div>
       </div>

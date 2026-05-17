@@ -522,6 +522,33 @@ h3 {
   border-color: rgba(255, 255, 255, 0.5);
 }
 
+.mark-complete-wrap {
+  margin-top: 10px;
+}
+
+.mark-complete-btn {
+  display: inline-block;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mark-complete-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.mark-complete-error {
+  margin: 6px 0 0;
+  color: #fca5a5;
+  font-size: 0.8rem;
+}
+
 /* Goals Section */
 .goal {
   background: linear-gradient(135deg, #1a1f3a 0%, #242a45 100%);

@@ -2,14 +2,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import MarkCompleteButton from './MarkCompleteButton.jsx';
 const OOPLesson = () => {
   const [completed, setCompleted] = useState([]);
 
   useEffect(() => {
-    const email = localStorage.getItem('userEmail');
+    const email = getUserEmail();
     if (!email) return;
 
-    axios.get(`http://localhost:5002/api/progress/${email}`)
+    axios.get(`${API_BASE_URL}/api/progress/${email}`)
       .then(res => setCompleted(res.data.completedLessons || []))
       .catch(err => console.error(err));
   }, []);
@@ -23,84 +24,98 @@ const OOPLesson = () => {
         <div className="course-box">
           <h3>Lesson 1: Classes & Objects</h3>
           <Link to="/OOPLesson1">Start Lesson</Link>
+          <MarkCompleteButton lessonId="cpp-lesson-1" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('cpp-lesson-1') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 2: Constructors</h3>
           <Link to="/OOPLesson2">Start Lesson</Link>
+          <MarkCompleteButton lessonId="cpp-lesson-2" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('cpp-lesson-2') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 3: Modules</h3>
           <Link to="/OOPLesson3">Start Lesson</Link>
+          <MarkCompleteButton lessonId="cpp-lesson-3" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('cpp-lesson-3') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 4: Encapsulation</h3>
           <Link to="/OOPLesson4">Start Lesson</Link>
+          <MarkCompleteButton lessonId="cpp-lesson-4" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('cpp-lesson-4') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 5: Inheritance</h3>
           <Link to="/OOPLesson5">Start Lesson</Link>
+          <MarkCompleteButton lessonId="cpp-lesson-5" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('cpp-lesson-5') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 6: Multilevel Inheritance</h3>
           <Link to="/OOPLesson6">Start Lesson</Link>
+          <MarkCompleteButton lessonId="cpp-lesson-6" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('cpp-lesson-6') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 7: Function Overloading</h3>
           <Link to="/OOPLesson7">Start Lesson</Link>
+          <MarkCompleteButton lessonId="cpp-lesson-7" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('cpp-lesson-7') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 8: Virtual Functions</h3>
           <Link to="/OOPLesson8">Start Lesson</Link>
+          <MarkCompleteButton lessonId="cpp-lesson-8" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('cpp-lesson-8') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 9: Abstraction (Pure Virtual)</h3>
           <Link to="/OOPLesson9">Start Lesson</Link>
+          <MarkCompleteButton lessonId="cpp-lesson-9" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('cpp-lesson-9') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 10: Composition (HAS-A)</h3>
           <Link to="/OOPLesson10">Start Lesson</Link>
+          <MarkCompleteButton lessonId="cpp-lesson-10" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('cpp-lesson-10') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 11: Operator Overloading</h3>
           <Link to="/OOPLesson11">Start Lesson</Link>
+          <MarkCompleteButton lessonId="cpp-lesson-11" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('cpp-lesson-11') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 12: Mini Project — Bank Account</h3>
           <Link to="/OOPLesson12">Start Lesson</Link>
+          <MarkCompleteButton lessonId="cpp-lesson-12" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('cpp-lesson-12') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 13: Mini Project — Library</h3>
           <Link to="/OOPLesson13">Start Lesson</Link>
+          <MarkCompleteButton lessonId="cpp-lesson-13" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('cpp-lesson-13') && <span> ✅</span>}
         </div>
 
         <div className="course-box">
           <h3>Lesson 14: Final — Polymorphic Menu</h3>
           <Link to="/OOPLesson14">Start Lesson</Link>
+          <MarkCompleteButton lessonId="cpp-lesson-14" completed={completed} onComplete={(id) => setCompleted((prev) => (prev.includes(id) ? prev : [...prev, id]))} />
           {isDone('cpp-lesson-14') && <span> ✅</span>}
         </div>
       </div>

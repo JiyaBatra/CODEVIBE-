@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import registerImage from "../assets/registerImage.png";
+import { persistUserEmail } from '../utils/getUserEmail';
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
@@ -32,6 +33,7 @@ const SignUp = () => {
       if (response.data.success) {
         // ✅ signup ke baad direct Dashboard me bhejna
         localStorage.setItem("user", JSON.stringify(response.data.user));
+        persistUserEmail(response.data.user?.Email || email);
         navigate("/Dashboard");
       }
     } catch (error) {
