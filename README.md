@@ -142,14 +142,44 @@ CodeVibe removes friction from the learning journey. Whether you're a complete b
    ```
 
 3. **Configure environment variables**
-   
-   Create a `.env` file in the server directory:
-   ```env
-   PORT=5000
-   MONGODB_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret_key
-   NODE_ENV=development
+
+   Copy the example files and adjust values for your machine:
+
+   ```bash
+   cp server/.env.example server/.env
+   cp client/.env.example client/.env
    ```
+
+   #### Backend (`server/.env`)
+
+   | Variable | Required | Description |
+   |----------|----------|-------------|
+   | `PORT` | No | API port (default `5002`) |
+   | `DB_URL` | Yes* | MongoDB URI (`mongodb://127.0.0.1:27017/codevibe` for local) |
+   | `CLIENT_URL` | No | Frontend origin for reset-password links (default production Netlify URL) |
+   | `EMAIL_USER` | For auth email | Gmail address used by Nodemailer |
+   | `EMAIL_PASS` | For auth email | Gmail [App Password](https://support.google.com/accounts/answer/185833) |
+
+   \*Required for persistence; local MongoDB or Atlas both work.
+
+   #### Frontend (`client/.env`)
+
+   | Variable | Required | Description |
+   |----------|----------|-------------|
+   | `VITE_API_BASE_URL` | No | Documented target for local API (`http://localhost:5002`). Some screens still use the hosted Render URL until unified. |
+
+   #### Local vs production
+
+   | Environment | `DB_URL` | `CLIENT_URL` | Notes |
+   |-------------|----------|--------------|-------|
+   | Local | `mongodb://127.0.0.1:27017/codevibe` | `http://localhost:5173` | Run `mongod` or use Atlas with IP allowlist |
+   | Production | Atlas connection string | `https://codevibeforyou.netlify.app` | Set secrets on your host (Render, etc.) |
+
+   #### Troubleshooting
+
+   - **Login/register fails with network error** — confirm the backend is running on `PORT` and the client points at the same host.
+   - **Password reset email not sent** — verify `EMAIL_USER` / `EMAIL_PASS` and that `CLIENT_URL` matches where users open reset links.
+   - **Mongo connection errors** — check `DB_URL`, database user permissions, and Atlas network access.
 
 4. **Start the development servers**
    
