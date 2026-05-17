@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthProvider.jsx";
 import loginImage from "../assets/loginImage.png";
 
 
@@ -10,6 +11,7 @@ const Login = () => {
   const [responseMsg, setResponseMsg] = useState("");
   const [loading, setLoading] = useState(false); // State to manage loading spinner and button disabled state
   const navigate = useNavigate();
+  const { login } = useAuth();
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -25,7 +27,7 @@ const Login = () => {
       setResponseMsg(response.data.message);
 
       if (response.data.success) {
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        login(response.data.user);
         navigate("/Dashboard");
       }
     } catch (error) {
