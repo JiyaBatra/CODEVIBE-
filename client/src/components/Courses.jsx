@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-// Images import
+// Images
 import htmlLogo from '../assets/htmlLogo.png';
 import cssLogo from '../assets/cssLogo.png';
 import jsLogo from '../assets/jsLogo.png';
@@ -14,12 +14,12 @@ import expressLogo from '../assets/expressLogo.png';
 import mongoLogo from '../assets/mongoLogo.png';
 
 const Courses = () => {
-
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const loggedInUser = localStorage.getItem("user");
+    const loggedInUser = localStorage.getItem('user');
+
     if (loggedInUser) {
       setUser(JSON.parse(loggedInUser));
     }
@@ -27,65 +27,65 @@ const Courses = () => {
 
   const courses = [
     {
-      title: "HTML Basics",
-      desc: "Start your web development journey with HTML.",
+      title: 'HTML Basics',
+      desc: 'Start your web development journey with HTML.',
       img: htmlLogo,
-      link: "/HtmlLesson"
+      link: '/HtmlLesson',
     },
     {
-      title: "CSS for Beginner",
-      desc: "Learn how to style beautiful websites.",
+      title: 'CSS for Beginner',
+      desc: 'Learn how to style beautiful websites.',
       img: cssLogo,
-      link: "/CssLesson"
+      link: '/CssLesson',
     },
     {
-      title: "JS for Beginner",
-      desc: "Learn how to give functionality to websites.",
+      title: 'JS for Beginner',
+      desc: 'Learn how to give functionality to websites.',
       img: jsLogo,
-      link: "/JsLesson"
+      link: '/JsLesson',
     },
     {
-      title: "C Language for You!",
-      desc: "Master the fundamentals of C — the base of all programming.",
+      title: 'C Language for You!',
+      desc: 'Master the fundamentals of C programming.',
       img: cLogo,
-      link: "/CLesson"
+      link: '/CLesson',
     },
     {
-      title: "OOP Concepts",
-      desc: "Think in objects, not just code. Learn how real-world programming works.",
+      title: 'OOP Concepts',
+      desc: 'Learn object-oriented programming concepts.',
       img: OOPLogo,
-      link: "/OopLesson"
+      link: '/OopLesson',
     },
     {
-      title: "Data Structures & Algorithms",
-      desc: "Code faster, run smarter. Build the backbone of efficient programming.",
+      title: 'Data Structures & Algorithms',
+      desc: 'Build strong problem-solving skills.',
       img: dsaLogo,
-      link: "/DsaLesson"
+      link: '/DsaLesson',
     },
     {
-      title: "Node.js",
-      desc: "JavaScript, but on steroids. Learn backend development with ease.",
+      title: 'Node.js',
+      desc: 'Learn backend development with Node.js.',
       img: nodeLogo,
-      link: "/NodeLesson"
+      link: '/NodeLesson',
     },
     {
-      title: "React.js",
-      desc: "Build once, render everywhere. Master the king of frontend frameworks.",
+      title: 'React.js',
+      desc: 'Build modern frontend applications.',
       img: reactLogo,
-      link: "/ReactLesson"
+      link: '/ReactLesson',
     },
     {
-      title: "Express.js",
-      desc: "Backend, but lightning fast. Simplify server-side development.",
+      title: 'Express.js',
+      desc: 'Fast and minimal backend framework.',
       img: expressLogo,
-      link: "/ExpressLesson"
+      link: '/ExpressLesson',
     },
     {
-      title: "MongoDB",
-      desc: "Store data like a pro. Learn the NoSQL database of the modern web.",
+      title: 'MongoDB',
+      desc: 'Learn modern NoSQL database concepts.',
       img: mongoLogo,
-      link: "/MongoLesson"
-    }
+      link: '/MongoLesson',
+    },
   ];
 
   const filteredCourses = courses.filter((course) =>
@@ -95,8 +95,14 @@ const Courses = () => {
   return (
     <div>
       {user && (
-        <h2 style={{ color: 'white', textAlign: 'center', marginTop: '20px' }}>
-          Welcome back, {user.username || user.name || "User"}!
+        <h2
+          style={{
+            color: 'white',
+            textAlign: 'center',
+            marginTop: '20px',
+          }}
+        >
+          Welcome back, {user.username || user.name || 'User'}!
         </h2>
       )}
 
@@ -112,41 +118,35 @@ const Courses = () => {
         />
       </div>
 
-      <div className='course-name'>
-
+      <div className="course-name">
         {filteredCourses.length > 0 ? (
-
           filteredCourses.map((course, index) => (
-
-            <div className="course-box" key={index}>
-
+            <Link
+              to={course.link}
+              className="course-box"
+              key={index}
+            >
               <img
                 src={course.img}
                 alt={course.title}
-                height="300px"
-                width="200px"
+                className="course-img"
               />
 
               <h3>{course.title}</h3>
 
               <p>{course.desc}</p>
 
-              <Link to={course.link}>Start Lesson</Link>
-
-            </div>
-
+              <span className="start-btn">
+                Start Lesson
+              </span>
+            </Link>
           ))
-
         ) : (
-
-          <h3 style={{ color: "white", marginTop: "2rem" }}>
+          <h3 style={{ color: 'white' }}>
             No courses found.
           </h3>
-
         )}
-
       </div>
-
     </div>
   );
 };

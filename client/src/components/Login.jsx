@@ -12,9 +12,14 @@ const Login = () => {
   const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
+    setResponseMsg("");
     try {
-     const response = await axios.post("https://codevibe-3.onrender.com/api/auth/login",
+      const backendUrl = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname === "::1" || window.location.hostname.startsWith("192.168."))
+        ? "http://localhost:5002" 
+        : "https://codevibe-3.onrender.com";
+
+      const response = await axios.post(`${backendUrl}/api/auth/login`,
         {
           Email: email,
           password,
@@ -31,6 +36,8 @@ const Login = () => {
     } catch (error) {
       console.error("❌ Login error", error.response?.data || error.message);
       setResponseMsg(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -59,7 +66,9 @@ const Login = () => {
               required
             />
 
-            <button type="submit">SUBMIT</button>
+            <button type="submit" disabled={loading}>
+              {loading ? "SUBMITTING..." : "SUBMIT"}
+            </button>
 
             {responseMsg && <p style={{ color: "white" }}>{responseMsg}</p>}
 

@@ -22,89 +22,89 @@ const CLesson = () => {
       <h2>C LESSON'S</h2>
 
       <div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
-        <div className="course-box">
+         <Link to="/CLesson1" className="course-box">
           <h3>Lesson1: Introduction to C</h3>
-          <Link to="/CLesson1">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('c-lesson-1') && <span style={{ marginLeft: 8 }}>✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CLesson2" className="course-box">
           <h3>Lesson2: Variables & Data Types</h3>
-          <Link to="/CLesson2">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('c-lesson-2') && <span style={{ marginLeft: 8 }}>✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CLesson3" className="course-box">
           <h3>Lesson3: Operators</h3>
-          <Link to="/CLesson3">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('c-lesson-3') && <span style={{ marginLeft: 8 }}>✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CLesson4" className="course-box">
           <h3>Lesson4: Conditional Statements (if / else)</h3>
-          <Link to="/CLesson4">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('c-lesson-4') && <span style={{ marginLeft: 8 }}>✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CLesson5" className="course-box">
           <h3>Lesson5: Loops (for / while / do-while)</h3>
-          <Link to="/CLesson5">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('c-lesson-5') && <span style={{ marginLeft: 8 }}>✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CLesson6" className="course-box">
           <h3>Lesson6: Functions</h3>
-          <Link to="/CLesson6">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('c-lesson-6') && <span style={{ marginLeft: 8 }}>✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CLesson7" className="course-box">
           <h3>Lesson7: Arrays</h3>
-          <Link to="/CLesson7">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('c-lesson-7') && <span style={{ marginLeft: 8 }}>✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CLesson8" className="course-box">
           <h3>Lesson8: Pointers</h3>
-          <Link to="/CLesson8">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('c-lesson-8') && <span style={{ marginLeft: 8 }}>✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CLesson9" className="course-box">
           <h3>Lesson9: Strings</h3>
-          <Link to="/CLesson9">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('c-lesson-9') && <span style={{ marginLeft: 8 }}>✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CLesson10" className="course-box">
           <h3>Lesson10: Structures</h3>
-          <Link to="/CLesson10">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('c-lesson-10') && <span style={{ marginLeft: 8 }}>✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CLesson11" className="course-box">
           <h3>Lesson11: File Handling</h3>
-          <Link to="/CLesson11">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('c-lesson-11') && <span style={{ marginLeft: 8 }}>✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CLesson12" className="course-box">
           <h3>Lesson12: Dynamic Memory (malloc / free)</h3>
-          <Link to="/CLesson12">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('c-lesson-12') && <span style={{ marginLeft: 8 }}>✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CLesson13" className="course-box">
           <h3>Lesson13: Recursion</h3>
-          <Link to="/CLesson13">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('c-lesson-13') && <span style={{ marginLeft: 8 }}>✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CLesson14" className="course-box">
           <h3>Lesson14: Mini Project (Student Management)</h3>
-          <Link to="/CLesson14">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('c-lesson-14') && <span style={{ marginLeft: 8 }}>✅</span>}
-        </div>
+        </Link>
       </div>
     </div>
   );

@@ -281,20 +281,28 @@ const downloadCode = () => {
   return (
     <div className="compiler" style={{ color: "#fff", background: "#111", padding: 16, borderRadius: 12 }}>
       {!fixedLanguage && (
-        <select value={language} onChange={e => setLanguage(e.target.value)} style={{ background: "#222", color: "#fff", padding: 8, borderRadius: 8, marginBottom: 8 }}>
+       <select
+        value={language}
+        onChange={(e) => setLanguage(e.target.value)}
+        style={{
+          backgroundColor: "#1f1f1f",
+    color: "#ffffff",
+    padding: "10px 14px",
+    borderRadius: "10px",
+    border: "1px solid #4f46e5",
+    outline: "none",
+    marginBottom: "10px",
+    fontSize: "14px",
+    fontWeight: "500",
+    boxShadow: "0 4px 12px rgba(79, 70, 229, 0.25)",
+    cursor: "pointer",
+    minWidth: "140px",
+        }}
+      >
           <option value="html">HTML</option>
           <option value="css">CSS</option>
           <option value="js">JavaScript</option>
-          <option value="dsa-js">DSA (JavaScript)</option>
-          <option value="oop-js">OOP (JavaScript)</option>
           <option value="react">React (JSX)</option>
-          <option value="node">Node.js (server)</option>
-          <option value="c">C (server)</option>
-          <option value="cpp">C++ (server)</option>
-          <option value="python">Python (server)</option>
-          <option value="java">Java (server)</option>
-          <option value="dbms">DBMS/SQL (server)</option>
-          <option value="mongo">Mongo (server)</option>
         </select>
       )}
 

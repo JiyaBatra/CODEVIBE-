@@ -18,7 +18,11 @@ const SignUp = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post("https://codevibe-3.onrender.com/api/auth/register", {
+      const backendUrl = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname === "::1" || window.location.hostname.startsWith("192.168."))
+        ? "http://localhost:5002" 
+        : "https://codevibe-3.onrender.com";
+
+      const response = await axios.post(`${backendUrl}/api/auth/register`, {
         username,
         Email: email,   // ✅ lowercase, same as Dashboard
         password,
@@ -95,7 +99,9 @@ const SignUp = () => {
               *Password must be at least 6 characters long
             </p>
 
-            <button type="submit">SUBMIT</button>
+            <button type="submit" disabled={loading}>
+              {loading ? "JOINING..." : "SUBMIT"}
+            </button>
 
             {responseMsg && <p style={{ color: "white" }}>{responseMsg}</p>}
 

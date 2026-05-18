@@ -21,77 +21,77 @@ const NodeLesson = () => {
       <h2>Node.js LESSONS</h2>
       <div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
 
-        <div className="course-box">
+        <Link to="/NodeLesson1" className="course-box">
           <h3>Lesson 1: Introduction</h3>
-          <Link to="/NodeLesson1">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('node-lesson-1') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/NodeLesson2" className="course-box">
           <h3>Lesson 2: Hello World</h3>
-          <Link to="/NodeLesson2">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('node-lesson-2') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/NodeLesson3" className="course-box">
           <h3>Lesson 3: Modules</h3>
-          <Link to="/NodeLesson3">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('node-lesson-3') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/NodeLesson4" className="course-box">
           <h3>Lesson 4: HTTP Module</h3>
-          <Link to="/NodeLesson4">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('node-lesson-4') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/NodeLesson5" className="course-box">
           <h3>Lesson 5: File System (fs)</h3>
-          <Link to="/NodeLesson5">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('node-lesson-5') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/NodeLesson6" className="course-box">
           <h3>Lesson 6: Events</h3>
-          <Link to="/NodeLesson6">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('node-lesson-6') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/NodeLesson7" className="course-box">
           <h3>Lesson 7: Express.js</h3>
-          <Link to="/NodeLesson7">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('node-lesson-7') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/NodeLesson8" className="course-box">
           <h3>Lesson 8: Express Routing</h3>
-          <Link to="/NodeLesson8">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('node-lesson-8') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/NodeLesson9" className="course-box">
           <h3>Lesson 9: Middleware</h3>
-          <Link to="/NodeLesson9">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('node-lesson-9') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/NodeLesson10" className="course-box">
           <h3>Lesson 10: JSON Handling</h3>
-          <Link to="/NodeLesson10">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('node-lesson-10') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/NodeLesson11" className="course-box">
           <h3>Lesson 11: MongoDB Connection</h3>
-          <Link to="/NodeLesson11">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('node-lesson-11') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/NodeLesson12" className="course-box">
           <h3>Lesson 12: Mini Project - REST API</h3>
-          <Link to="/NodeLesson12">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('node-lesson-12') && <span> ✅</span>}
-        </div>
+        </Link>
 
       </div>
     </div>

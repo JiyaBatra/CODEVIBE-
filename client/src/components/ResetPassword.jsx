@@ -8,6 +8,7 @@ const ResetPassword = () => {
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
   const navigate = useNavigate();
 
@@ -24,8 +25,17 @@ const ResetPassword = () => {
       return;
     }
 
+    setLoading(true);
+    setResponseMsg("");
     try {
-      const res = await axios.post("https://codevibe-3.onrender.com/api/auth/reset-password", {
+      const backendUrl = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname === "::1" || window.location.hostname.startsWith("192.168."))
+        ? "http://localhost:5002" 
+        : "https://codevibe-3.onrender.com";
+
+      console.log("Selected Backend URL:", backendUrl);
+      console.log("Current Hostname:", window.location.hostname);
+
+      const res = await axios.post(`${backendUrl}/api/auth/reset-password`, {
         token,
         newPassword,
       });
@@ -36,6 +46,8 @@ const ResetPassword = () => {
       }
     } catch (err) {
       setResponseMsg(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,7 +76,9 @@ const ResetPassword = () => {
               required
             />
 
-            <button type="submit">Reset Password</button>
+            <button type="submit" disabled={loading}>
+              {loading ? "Resetting..." : "Reset Password"}
+            </button>
           </>
         )}
 
