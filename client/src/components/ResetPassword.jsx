@@ -1,20 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 const ResetPassword = () => {
-  const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
+
   const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!token) {
+      setResponseMsg("Invalid or missing reset token.");
+    }
+  }, [token]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (newPassword !== confirmPassword) {
+      setResponseMsg("Passwords do not match.");
+      return;
+    }
+
+    setLoading(true);
+    setResponseMsg("");
     try {
-      const res = await axios.post("http://localhost:5002/api/auth/reset-password", {
-        Email: email,
-        otp,
+      const backendUrl = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.hostname === "::1" || window.location.hostname.startsWith("192.168."))
+        ? "http://localhost:5002" 
+        : "https://codevibe-3.onrender.com";
+
+      console.log("Selected Backend URL:", backendUrl);
+      console.log("Current Hostname:", window.location.hostname);
+
+      const res = await axios.post(`${backendUrl}/api/auth/reset-password`, {
+        token,
         newPassword,
       });
       setResponseMsg(res.data.message);
@@ -24,6 +46,8 @@ const ResetPassword = () => {
       }
     } catch (err) {
       setResponseMsg(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -32,35 +56,35 @@ const ResetPassword = () => {
       <form className="login-form" onSubmit={handleSubmit}>
         <h1>Reset Password</h1>
 
-        <label>EMAIL:</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        {!token ? (
+          <p style={{ color: "var(--primary-red)" }}>Missing reset token in URL.</p>
+        ) : (
+          <>
+            <label>NEW PASSWORD:</label>
+            <input
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+            />
 
-        <label>OTP:</label>
-        <input
-          type="text"
-          value={otp}
-          onChange={(e) => setOtp(e.target.value)}
-          required
-        />
+            <label>CONFIRM PASSWORD:</label>
+            <input
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
 
-        <label>NEW PASSWORD:</label>
-        <input
-          type="password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          required
-        />
+            <button type="submit" disabled={loading}>
+              {loading ? "Resetting..." : "Reset Password"}
+            </button>
+          </>
+        )}
 
-        <button type="submit">Reset Password</button>
+        {responseMsg && <p style={{ color: "white", marginTop: "1rem" }}>{responseMsg}</p>}
 
-        {responseMsg && <p style={{ color: "white" }}>{responseMsg}</p>}
-
-        <p>
+        <p style={{marginTop: "1.5rem"}}>
           Back to <Link to="/login">Login</Link>
         </p>
       </form>

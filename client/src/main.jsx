@@ -23,6 +23,7 @@ import Foot from './components/Foot.jsx';
 import Compiler from './components/Compiler.jsx';
 import Certificate from './components/Certificate.jsx';
 import ViewReport from './components/ViewReport.jsx';
+import DynamicProgressSidebar from './components/DynamicProgressSidebar.jsx';
 
 // HTML Lessons
 import HtmlLesson from './components/HtmlLesson.jsx';
@@ -216,6 +217,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <Head />
+      <DynamicProgressSidebar />
 
       <Routes>
         {/* General Routes */}

@@ -31,83 +31,83 @@ const CssLesson = () => {
       <h2>CSS LESSON'S</h2>
 
       <div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
-        <div className="course-box">
+        <Link to="/CssLesson1" className="course-box">
           <h3>Lesson1: Introduction to CSS</h3>
-          <Link to="/CssLesson1">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('css-lesson-1') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CssLesson2" className="course-box">
           <h3>Lesson2: CSS Syntax & Selectors</h3>
-          <Link to="/CssLesson2">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('css-lesson-2') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CssLesson3" className="course-box">
           <h3>Lesson3: CSS Colors & Backgrounds</h3>
-          <Link to="/CssLesson3">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('css-lesson-3') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CssLesson4" className="course-box">
           <h3>Lesson4: CSS Fonts & Text</h3>
-          <Link to="/CssLesson4">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('css-lesson-4') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CssLesson5" className="course-box">
           <h3>Lesson5: CSS Box Model</h3>
-          <Link to="/CssLesson5">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('css-lesson-5') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CssLesson6" className="course-box">
           <h3>Lesson6: CSS Margin & Padding</h3>
-          <Link to="/CssLesson6">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('css-lesson-6') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CssLesson7" className="course-box">
           <h3>Lesson7: CSS Border & Outline</h3>
-          <Link to="/CssLesson7">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('css-lesson-7') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CssLesson8" className="course-box">
           <h3>Lesson8: CSS Display & Visibility</h3>
-          <Link to="/CssLesson8">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('css-lesson-8') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CssLesson9" className="course-box">
           <h3>Lesson9: CSS Positioning</h3>
-          <Link to="/CssLesson9">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('css-lesson-9') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CssLesson10" className="course-box">
           <h3>Lesson10: CSS Flexbox</h3>
-          <Link to="/CssLesson10">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('css-lesson-10') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CssLesson11" className="course-box">
           <h3>Lesson11: CSS Grid</h3>
-          <Link to="/CssLesson11">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('css-lesson-11') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CssLesson12" className="course-box">
           <h3>Lesson12: CSS Transitions & Animations</h3>
-          <Link to="/CssLesson12">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('css-lesson-12') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/CssLesson13" className="course-box">
           <h3>Lesson13: CSS Project</h3>
-          <Link to="/CssLesson13">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('css-lesson-13') && <span> ✅</span>}
-        </div>
+        </Link>
       </div>
     </div>
   );

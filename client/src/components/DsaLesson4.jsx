@@ -1,10 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Compiler from './Compiler';
 
 const DSALesson4 = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const navigate = useNavigate();
+
+  const [practiceCompleted, setPracticeCompleted] = useState({});
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const email = localStorage.getItem('userEmail') || 'guest';
+    const savedPractice = localStorage.getItem(`dsaPractice_${email}`);
+    if (savedPractice) {
+      try {
+        setPracticeCompleted(JSON.parse(savedPractice));
+      } catch (e) {
+        console.error('Error parsing practice progress', e);
+      }
+    }
+  }, []);
+
+  const togglePractice = (problemId) => {
+    setPracticeCompleted(prev => {
+      const email = localStorage.getItem('userEmail') || 'guest';
+      const updated = { ...prev, [problemId]: !prev[problemId] };
+      localStorage.setItem(`dsaPractice_${email}`, JSON.stringify(updated));
+      return updated;
+    });
+  };
+
 
   const handleSuccess = () => setIsCorrect(true);
   const goToNextLesson = () => navigate('/DSALesson5');
@@ -60,6 +85,68 @@ int main() {
           ⏭ NEXT LESSON
         </Link>
       )}
+      {/* 🎯 Practice Problems Section */}
+      <div style={{ marginTop: '50px', padding: '25px', backgroundColor: '#1a1a2e', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.4)', color: '#fff' }}>
+        <h2 style={{ color: '#ff4d6d', borderBottom: '2px solid #ff4d6d', paddingBottom: '10px', marginBottom: '20px' }}>🎯 Practice Problems: Strings</h2>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 16px', backgroundColor: '#16213e', borderRadius: '8px' }}>
+            <input 
+              type="checkbox" 
+              checked={practiceCompleted['reverse-string'] || false} 
+              onChange={() => togglePractice('reverse-string')}
+              style={{ width: '20px', height: '20px', accentColor: '#ff4d6d', cursor: 'pointer' }}
+            />
+            <a href="https://leetcode.com/problems/reverse-string/" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none', fontSize: '16px', flexGrow: 1, cursor: 'pointer' }}>Reverse String</a>
+            <span style={{ backgroundColor: '#ffa116', color: '#000', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold' }}>LeetCode</span>
+          </div>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 16px', backgroundColor: '#16213e', borderRadius: '8px' }}>
+            <input 
+              type="checkbox" 
+              checked={practiceCompleted['valid-anagram'] || false} 
+              onChange={() => togglePractice('valid-anagram')}
+              style={{ width: '20px', height: '20px', accentColor: '#ff4d6d', cursor: 'pointer' }}
+            />
+            <a href="https://leetcode.com/problems/valid-anagram/" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none', fontSize: '16px', flexGrow: 1, cursor: 'pointer' }}>Valid Anagram</a>
+            <span style={{ backgroundColor: '#ffa116', color: '#000', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold' }}>LeetCode</span>
+          </div>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 16px', backgroundColor: '#16213e', borderRadius: '8px' }}>
+            <input 
+              type="checkbox" 
+              checked={practiceCompleted['valid-palindrome'] || false} 
+              onChange={() => togglePractice('valid-palindrome')}
+              style={{ width: '20px', height: '20px', accentColor: '#ff4d6d', cursor: 'pointer' }}
+            />
+            <a href="https://leetcode.com/problems/valid-palindrome/" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none', fontSize: '16px', flexGrow: 1, cursor: 'pointer' }}>Valid Palindrome</a>
+            <span style={{ backgroundColor: '#ffa116', color: '#000', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold' }}>LeetCode</span>
+          </div>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 16px', backgroundColor: '#16213e', borderRadius: '8px' }}>
+            <input 
+              type="checkbox" 
+              checked={practiceCompleted['longest-substring-without-repeating-characters'] || false} 
+              onChange={() => togglePractice('longest-substring-without-repeating-characters')}
+              style={{ width: '20px', height: '20px', accentColor: '#ff4d6d', cursor: 'pointer' }}
+            />
+            <a href="https://leetcode.com/problems/longest-substring-without-repeating-characters/" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none', fontSize: '16px', flexGrow: 1, cursor: 'pointer' }}>Longest Substring Without Repeating Characters</a>
+            <span style={{ backgroundColor: '#ffa116', color: '#000', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold' }}>LeetCode</span>
+          </div>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 16px', backgroundColor: '#16213e', borderRadius: '8px' }}>
+            <input 
+              type="checkbox" 
+              checked={practiceCompleted['longest-palindromic-substring'] || false} 
+              onChange={() => togglePractice('longest-palindromic-substring')}
+              style={{ width: '20px', height: '20px', accentColor: '#ff4d6d', cursor: 'pointer' }}
+            />
+            <a href="https://leetcode.com/problems/longest-palindromic-substring/" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none', fontSize: '16px', flexGrow: 1, cursor: 'pointer' }}>Longest Palindromic Substring</a>
+            <span style={{ backgroundColor: '#ffa116', color: '#000', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold' }}>LeetCode</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

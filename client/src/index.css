@@ -341,6 +341,7 @@ body>* {
   flex-wrap: wrap;
   justify-content: center;
   gap: 2rem;
+  
 }
 
 /* ===== SEARCH BAR ===== */
@@ -413,27 +414,44 @@ h3 {
   background: linear-gradient(135deg, #1a1f3a 0%, #242a45 50%, #1a1f3a 100%);
   border: 3px solid;
   border-image: linear-gradient(135deg, var(--primary-red), var(--secondary-pink)) 1;
-  padding: 2rem;
-  margin: 0;
+  padding: 1.8rem;
   width: 280px;
+  
   border-radius: 4px;
   color: var(--text-primary);
   position: relative;
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  gap: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
   box-shadow:
     0 0 15px rgba(255, 77, 109, 0.4),
     inset 0 0 20px rgba(255, 77, 109, 0.1);
 }
 
-.course-box img {
-  width: 100%;
+
+.course-img {
+  width: 200px;
   height: auto;
-  aspect-ratio: 2/3;
+  max-height: 180px;
   object-fit: contain;
+  object-position: center;
+  margin: 0 auto 1rem;
   display: block;
-  margin: 0 auto;
-  max-width: 200px;
+  background: white;
+  padding: 10px;
+}
+
+.course-box img {
+  width: 200px;
+  height: 200px;
+  aspect-ratio: 2/3;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto 1rem;
 }
 
 /* Block shadow effect - Minecraft 3D */
@@ -473,53 +491,15 @@ h3 {
   color: var(--primary-red);
   font-size: 1.5rem;
   font-weight: 700;
-  margin-bottom: 1rem;
   text-shadow: 0 0 10px rgba(255, 77, 109, 0.6);
+  line-height: 1.4;
 }
 
 .course-box p {
   color: var(--text-secondary);
   font-size: 0.95rem;
-  margin-bottom: 1.5rem;
   line-height: 1.5;
-}
-
-.course-box a {
-  text-decoration: none;
-  color: var(--white);
-  background: linear-gradient(135deg, var(--primary-red), var(--secondary-pink));
-  display: inline-block;
-  padding: 0.8rem 1.5rem;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-  box-shadow: 0 0 15px rgba(255, 77, 109, 0.5);
-  font-weight: 600;
-  font-size: 1rem;
-  border: 2px solid transparent;
-  position: relative;
-  overflow: hidden;
-}
-
-.course-box a::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-  transition: left 0.5s ease;
-}
-
-.course-box a:hover::before {
-  left: 100%;
-}
-
-.course-box a:hover {
-  transform: scale(1.08);
-  background: linear-gradient(135deg, #ff6b81, #ff99ac);
-  box-shadow: 0 0 25px rgba(255, 77, 109, 0.8);
-  border-color: rgba(255, 255, 255, 0.5);
+  text-align: center;
 }
 
 /* Goals Section */
@@ -1480,10 +1460,18 @@ select:focus {
 }
 
 .course-name {
-  color: var(--secondary-pink);
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin: 1rem 0;
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(280px, 1fr));
+
+  gap: 2rem;
+
+  justify-items: center;
+
+  padding: 2rem;
+
+  width: 100%;
 }
 
 /* STATS GRID */
@@ -1587,6 +1575,25 @@ select:focus {
   box-shadow: 0 0 15px rgba(255, 77, 109, 0.4);
   position: relative;
   overflow: hidden;
+}
+
+.start-btn {
+  display: inline-block;
+  margin-top: auto;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #ff4d6d, #ff85a1);
+  color: white !important;
+  font-weight: 600;
+  font-size: 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  box-shadow: 0 0 10px rgba(255, 77, 109, 0.5);
+  transition: all 0.3s ease;
+}
+
+.course-box:hover .start-btn {
+  transform: translateY(-2px);
+  box-shadow: 0 0 18px rgba(255, 77, 109, 0.8);
 }
 
 /* Responsive login styles across tablet and mobile devices */
@@ -1709,3 +1716,4 @@ select:focus {
 
 
 @media (max-width: 686px) {}
+

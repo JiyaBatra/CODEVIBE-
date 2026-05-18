@@ -3,27 +3,40 @@ const UserModel = require("../../models/user.models");
 
 const resetPassword = async (req, res, next) => {
   try {
-    const { Email, otp, newPassword } = req.body;
+    const { token, newPassword } = req.body;
 
-    const user = await UserModel.findOne({ Email });
+    if (!token || !newPassword) {
+      return res.status(400).json({ message: "Token and new password are required" });
+    }
+
+    // Find user by token
+    const user = await UserModel.findOne({ resetToken: token });
+    
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(400).json({ message: "Invalid or expired reset token" });
     }
 
-    if (user.resetOTP !== parseInt(otp) || user.otpExpiry < Date.now()) {
-      return res.status(400).json({ message: "Invalid or expired OTP" });
+    // Check expiry
+    if (user.resetTokenExpiry < Date.now()) {
+      return res.status(400).json({ message: "Invalid or expired reset token" });
     }
 
+    // Update password
     user.password = newPassword;
-    user.resetOTP = undefined;
-    user.otpExpiry = undefined;
+    
+    // Invalidate token
+    user.resetToken = undefined;
+    user.resetTokenExpiry = undefined;
+
+    console.log(`Saving new password for user: ${user.Email}`);
+    
     await user.save();
 
     return res.status(200).json({ success: true, message: "Password reset successfully" });
 
   } catch (error) {
-    next(error);
     console.error("Reset password error:", error);
+    return res.status(500).json({ success: false, message: "Server error during password reset", error: error.message });
   }
 };
 

@@ -24,8 +24,8 @@ const userSchema = new Schema({
     maxLength: 20,
     required: true,
   },
-  resetOTP: { type: Number },       // for OTP
-  otpExpiry: { type: Date },        // for expiry
+  resetToken: { type: String },       // for password reset token
+  resetTokenExpiry: { type: Date },   // for password reset token expiry
 });
 
 module.exports = model("User", userSchema, "users");

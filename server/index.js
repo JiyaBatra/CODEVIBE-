@@ -8,6 +8,7 @@ const routes = require("./routes/index");
 dotenv.config();
 
 const backend = express();
+backend.set("trust proxy", 1);
 const server = http.Server(backend);
 
 backend.use(express.json());

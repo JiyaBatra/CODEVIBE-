@@ -1,10 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Compiler from './Compiler';
 
 const DSALesson5 = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const navigate = useNavigate();
+
+  const [practiceCompleted, setPracticeCompleted] = useState({});
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const email = localStorage.getItem('userEmail') || 'guest';
+    const savedPractice = localStorage.getItem(`dsaPractice_${email}`);
+    if (savedPractice) {
+      try {
+        setPracticeCompleted(JSON.parse(savedPractice));
+      } catch (e) {
+        console.error('Error parsing practice progress', e);
+      }
+    }
+  }, []);
+
+  const togglePractice = (problemId) => {
+    setPracticeCompleted(prev => {
+      const email = localStorage.getItem('userEmail') || 'guest';
+      const updated = { ...prev, [problemId]: !prev[problemId] };
+      localStorage.setItem(`dsaPractice_${email}`, JSON.stringify(updated));
+      return updated;
+    });
+  };
+
 
   const handleSuccess = () => setIsCorrect(true);
   const goToNextLesson = () => navigate('/DSALesson6');
@@ -77,6 +102,68 @@ int main() {
           ⏭ NEXT LESSON
         </Link>
       )}
+      {/* 🎯 Practice Problems Section */}
+      <div style={{ marginTop: '50px', padding: '25px', backgroundColor: '#1a1a2e', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.4)', color: '#fff' }}>
+        <h2 style={{ color: '#ff4d6d', borderBottom: '2px solid #ff4d6d', paddingBottom: '10px', marginBottom: '20px' }}>🎯 Practice Problems: Searching & Sorting</h2>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 16px', backgroundColor: '#16213e', borderRadius: '8px' }}>
+            <input 
+              type="checkbox" 
+              checked={practiceCompleted['binary-search'] || false} 
+              onChange={() => togglePractice('binary-search')}
+              style={{ width: '20px', height: '20px', accentColor: '#ff4d6d', cursor: 'pointer' }}
+            />
+            <a href="https://leetcode.com/problems/binary-search/" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none', fontSize: '16px', flexGrow: 1, cursor: 'pointer' }}>Binary Search</a>
+            <span style={{ backgroundColor: '#ffa116', color: '#000', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold' }}>LeetCode</span>
+          </div>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 16px', backgroundColor: '#16213e', borderRadius: '8px' }}>
+            <input 
+              type="checkbox" 
+              checked={practiceCompleted['sort-colors'] || false} 
+              onChange={() => togglePractice('sort-colors')}
+              style={{ width: '20px', height: '20px', accentColor: '#ff4d6d', cursor: 'pointer' }}
+            />
+            <a href="https://leetcode.com/problems/sort-colors/" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none', fontSize: '16px', flexGrow: 1, cursor: 'pointer' }}>Sort Colors</a>
+            <span style={{ backgroundColor: '#ffa116', color: '#000', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold' }}>LeetCode</span>
+          </div>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 16px', backgroundColor: '#16213e', borderRadius: '8px' }}>
+            <input 
+              type="checkbox" 
+              checked={practiceCompleted['find-first-and-last-position'] || false} 
+              onChange={() => togglePractice('find-first-and-last-position')}
+              style={{ width: '20px', height: '20px', accentColor: '#ff4d6d', cursor: 'pointer' }}
+            />
+            <a href="https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none', fontSize: '16px', flexGrow: 1, cursor: 'pointer' }}>Find First and Last Position</a>
+            <span style={{ backgroundColor: '#ffa116', color: '#000', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold' }}>LeetCode</span>
+          </div>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 16px', backgroundColor: '#16213e', borderRadius: '8px' }}>
+            <input 
+              type="checkbox" 
+              checked={practiceCompleted['search-insert-position'] || false} 
+              onChange={() => togglePractice('search-insert-position')}
+              style={{ width: '20px', height: '20px', accentColor: '#ff4d6d', cursor: 'pointer' }}
+            />
+            <a href="https://leetcode.com/problems/search-insert-position/" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none', fontSize: '16px', flexGrow: 1, cursor: 'pointer' }}>Search Insert Position</a>
+            <span style={{ backgroundColor: '#ffa116', color: '#000', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold' }}>LeetCode</span>
+          </div>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 16px', backgroundColor: '#16213e', borderRadius: '8px' }}>
+            <input 
+              type="checkbox" 
+              checked={practiceCompleted['merge-intervals'] || false} 
+              onChange={() => togglePractice('merge-intervals')}
+              style={{ width: '20px', height: '20px', accentColor: '#ff4d6d', cursor: 'pointer' }}
+            />
+            <a href="https://leetcode.com/problems/merge-intervals/" target="_blank" rel="noopener noreferrer" style={{ color: '#fff', textDecoration: 'none', fontSize: '16px', flexGrow: 1, cursor: 'pointer' }}>Merge Intervals</a>
+            <span style={{ backgroundColor: '#ffa116', color: '#000', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: 'bold' }}>LeetCode</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
