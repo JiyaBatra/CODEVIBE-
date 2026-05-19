@@ -16,7 +16,7 @@ const HtmlLesson4 = () => {
 
   return (
     <div className="lesson">
-      <h1>Lesson 4: Html Attribute</h1>
+      <h1>Lesson 4: HTML Attributes</h1>
       <div className="lesson">
         <p>
           An attribute is extra information added inside an HTML tag to give more control or settings to that tag.
@@ -28,34 +28,34 @@ const HtmlLesson4 = () => {
         <pre>
 {`<tagname attribute="value">content</tagname>
 
-for example:- 
-<a href="http://www.google.com">visitgoogle</a>`}
+For example:
+<a href="http://www.google.com">Visit Google</a>`}
         </pre>
                   <br/>
     <hr/>
 
         <h3>Common HTML Attributes</h3>
         <ul>
-          <li><dt>href</dt> <dd>defines the url for a link.</dd></li>
-          <li><dt>src</dt> <dd>source of image/audio/video/file</dd></li>
-          <li><dt>alt</dt> <dd>alternate text for image</dd></li>
-          <li><dt>title</dt> <dd>tooltip text on hover</dd></li>
-          <li><dt>id</dt> <dd>unique identifier</dd></li>
-          <li><dt>class</dt> <dd>used to group elements</dd></li>
-          <li><dt>style</dt> <dd>inline css to style element</dd></li>
-          <li><dt>target</dt> <dd>defines where to open (_blank, _self)</dd></li>
-          <li><dt>type</dt> <dd>type of input field</dd></li>
-          <li><dt>value</dt> <dd>sets default value</dd></li>
-          <li><dt>placeholder</dt> <dd>hint text inside input box</dd></li>
-          <li><dt>disabled</dt> <dd>disables the element</dd></li>
-          <li><dt>readonly</dt> <dd>makes input field read-only</dd></li>
-          <li><dt>height</dt> <dd>set height of image</dd></li>
-          <li><dt>width</dt> <dd>set width of image</dd></li>
+          <li><dt>href</dt> <dd>Defines the URL for a link.</dd></li>
+          <li><dt>src</dt> <dd>Source of image/audio/video/file.</dd></li>
+          <li><dt>alt</dt> <dd>Alternate text for image.</dd></li>
+          <li><dt>title</dt> <dd>Tooltip text on hover.</dd></li>
+          <li><dt>id</dt> <dd>Unique identifier.</dd></li>
+          <li><dt>class</dt> <dd>Used to group elements.</dd></li>
+          <li><dt>style</dt> <dd>Inline CSS to style element.</dd></li>
+          <li><dt>target</dt> <dd>Defines where to open (_blank, _self).</dd></li>
+          <li><dt>type</dt> <dd>Type of input field.</dd></li>
+          <li><dt>value</dt> <dd>Sets default value.</dd></li>
+          <li><dt>placeholder</dt> <dd>Hint text inside input box.</dd></li>
+          <li><dt>disabled</dt> <dd>Disables the element.</dd></li>
+          <li><dt>readonly</dt> <dd>Makes input field read-only.</dd></li>
+          <li><dt>height</dt> <dd>Set height of image.</dd></li>
+          <li><dt>width</dt> <dd>Set width of image.</dd></li>
         </ul>
                   <br/>
     <hr/>
     
-    <h2> 💻 Try Yourself, Follow Instructions !!</h2>
+    <h2> 💻 Try Yourself, Follow Instructions!</h2>
 
         <pre className="compiler-instruction">{`
 <!-- Instruction 1: Create an anchor tag with href="https://www.google.com" and text "Go to Google" -->
@@ -89,7 +89,7 @@ for example:-
 />
 
       {isCorrect && (
-        <Link to="/HtmlLesson5">⏭NEXT LESSON</Link>
+        <Link to="/HtmlLesson5">⏭ NEXT LESSON</Link>
       )}
     </div>
   );

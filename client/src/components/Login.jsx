@@ -15,9 +15,11 @@ const Login = () => {
   const { login } = useAuth();
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
+    setResponseMsg("");
     try {
      const response = await axios.post(`${API_BASE_URL}/api/auth/login`,
+      const response = await axios.post(`${API_BASE_URL}/api/auth/login`,
         {
           Email: email,
           password,
@@ -34,6 +36,8 @@ const Login = () => {
     } catch (error) {
       console.error("❌ Login error", error.response?.data || error.message);
       setResponseMsg(error.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,11 +45,11 @@ const Login = () => {
     <section className="login-section">
       <div className="login-container">
         <div className="login-image">
-          <img src={loginImage} alt="login image" />
+          <img src={loginImage} alt="Login" />
         </div>
         <div className="login-card">
           <form className="login-form" onSubmit={handleSubmit}>
-            <h1>Hello, Welcome !</h1>
+            <h1>Hello, Welcome!</h1>
             <label>EMAIL:</label>
             <input
               type="email"
@@ -62,7 +66,9 @@ const Login = () => {
               required
             />
 
-            <button type="submit">SUBMIT</button>
+            <button type="submit" disabled={loading}>
+              {loading ? "SUBMITTING..." : "SUBMIT"}
+            </button>
 
             {responseMsg && <p style={{ color: "white" }}>{responseMsg}</p>}
 

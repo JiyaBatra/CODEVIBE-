@@ -1,132 +1,199 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import {
-  FaSignInAlt,
-  FaUserPlus,
-  FaTachometerAlt,
-  FaSignOutAlt,
-  FaGamepad,
-  FaBars,
-  FaTimes,
-} from "react-icons/fa";
-
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useNavigate } from 'react-router-dom';
+import { FaSignInAlt, FaUserPlus, FaTachometerAlt, FaGamepad, FaSearch, FaTimes } from "react-icons/fa";
 import logo from "../assets/websitelogo.png";
 
+const COURSES = [
+  { label: "HTML Basics", path: "/HtmlLesson" },
+  { label: "CSS for Beginner", path: "/CssLesson" },
+  { label: "JS for Beginner", path: "/JsLesson" },
+  { label: "OOP Concepts", path: "/OopLesson" },
+  { label: "Data Structures & Algorithms", path: "/DsaLesson" },
+  { label: "Node.js", path: "/NodeLesson" },
+  { label: "React.js", path: "/ReactLesson" },
+  { label: "Express.js", path: "/ExpressLesson" },
+  { label: "MongoDB", path: "/MongoLesson" },
+  { label: "DBMS", path: "/DbmsLesson" },
+];
+
 const Head = () => {
+  const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [focused, setFocused] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [user, setUser] = useState(null);
+  const inputRef = useRef(null);
+  const wrapperRef = useRef(null);
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
-    const loggedInUser = localStorage.getItem("user");
-    if (loggedInUser) {
-      setUser(JSON.parse(loggedInUser));
-    } else {
-      setUser(null);
+    const handleClickOutside = (e) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+        setFocused(false);
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSearch = (value) => {
+    setQuery(value);
+    if (value.trim().length === 0) {
+      setSuggestions([]);
+      return;
     }
-  }, [location.pathname]);
-
-  // Toggle mobile menu
-  const toggleMenu = () => {
-    setMenuOpen((prev) => !prev);
+    const filtered = COURSES.filter((c) =>
+      c.label.toLowerCase().includes(value.toLowerCase())
+    );
+    setSuggestions(filtered);
   };
 
-  // Close mobile menu
-  const closeMobileMenu = () => {
-    setMenuOpen(false);
+  const handleSelect = (course) => {
+    setQuery(course.label);
+    setSuggestions([]);
+    setFocused(false);
+    navigate(course.path);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
-    closeMobileMenu();
-    navigate("/");
-    // Force a reload to reflect state in other components like Courses
-    window.location.reload();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (suggestions.length > 0) handleSelect(suggestions[0]);
+  };
+
+  const clearSearch = () => {
+    setQuery("");
+    setSuggestions([]);
+    inputRef.current?.focus();
   };
 
   return (
-    <header>
-      {/* Logo Section */}
-      <div className="header-logo-wrapper">
-        <Link
-          to="/"
-          aria-label="Go to homepage"
-          className="logo-link"
-          onClick={closeMobileMenu}
+    <header className="site-header">
+      {/* Row 1: Logo + Nav + Hamburger */}
+      <div className="header-top">
+        <div className="header-logo-wrapper">
+          <Link to="/" aria-label="Go to homepage" className="logo-link">
+            <img src={logo} alt="CodeVibe Logo" title="CodeVibe - Learn. Practice. Master." />
+          </Link>
+        </div>
+
+        {/* Desktop Nav */}
+        <nav className="header-nav" aria-label="Main navigation">
+          <Link to="/Login" className="nav-link">
+            <FaSignInAlt className="nav-icon" />
+            <span>Login</span>
+          </Link>
+          <Link to="/Signup" className="nav-link">
+            <FaUserPlus className="nav-icon" />
+            <span>Sign Up</span>
+          </Link>
+          <Link to="/Dashboard" className="nav-link">
+            <FaTachometerAlt className="nav-icon" />
+            <span>Dashboard</span>
+          </Link>
+        </nav>
+
+        {/* Hamburger for mobile */}
+        <button
+          className="hamburger"
+          aria-label="Toggle menu"
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((v) => !v)}
         >
-          <img
-            src={logo}
-            alt="CodeVibe Logo"
-            title="CodeVibe - Learn. Practice. Master."
+          <span className={`ham-bar ${menuOpen ? "open" : ""}`} />
+          <span className={`ham-bar ${menuOpen ? "open" : ""}`} />
+          <span className={`ham-bar ${menuOpen ? "open" : ""}`} />
+        </button>
+      </div>
+
+      {/* Mobile Nav Drawer */}
+      <nav className={`mobile-nav ${menuOpen ? "mobile-nav--open" : ""}`} aria-label="Mobile navigation">
+        <Link to="/Login" className="nav-link" onClick={() => setMenuOpen(false)}>
+          <FaSignInAlt className="nav-icon" /><span>Login</span>
+        </Link>
+        <Link to="/Signup" className="nav-link" onClick={() => setMenuOpen(false)}>
+          <FaUserPlus className="nav-icon" /><span>Sign Up</span>
+        </Link>
+        <Link to="/Dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
+          <FaTachometerAlt className="nav-icon" /><span>Dashboard</span>
+        </Link>
+      </nav>
+
+      {/* Row 2: Title */}
+      <div className="header-title-row">
+        <h1>
+          <FaGamepad className="title-icon" />
+          CodeVibe
+          <FaGamepad className="title-icon" />
+        </h1>
+        <p className="header-tagline">Learn &bull; Practice &bull; Master &bull; Code &mdash; Level Up Your Programming Skills</p>
+      </div>
+
+      {/* Row 3: Search Bar */}
+      <div className="header-search-row" ref={wrapperRef}>
+        <form
+          className={`search-form ${focused ? "search-form--focused" : ""}`}
+          onSubmit={handleSubmit}
+          role="search"
+          aria-label="Search courses"
+        >
+          <FaSearch className="search-icon-left" aria-hidden="true" />
+          <input
+            ref={inputRef}
+            type="text"
+            className="search-input"
+            placeholder="Search courses — HTML, DSA, React..."
+            value={query}
+            onChange={(e) => handleSearch(e.target.value)}
+            onFocus={() => setFocused(true)}
+            aria-autocomplete="list"
+            aria-controls="search-suggestions"
+            aria-expanded={suggestions.length > 0}
+            autoComplete="off"
           />
-        </Link>
-      </div>
-
-      {/* Hamburger Button */}
-      <button
-        className="hamburger-btn"
-        onClick={toggleMenu}
-        aria-label="Toggle navigation menu"
-        aria-expanded={menuOpen}
-      >
-        {menuOpen ? <FaTimes /> : <FaBars />}
-      </button>
-
-      {/* Navigation */}
-      <div className={`header-nav ${menuOpen ? "open" : ""}`}>
-        {!user ? (
-          <>
-            <Link
-              to="/Login"
-              className="nav-link"
-              onClick={closeMobileMenu}
+          {query && (
+            <button
+              type="button"
+              className="search-clear"
+              onClick={clearSearch}
+              aria-label="Clear search"
             >
-              <FaSignInAlt className="nav-icon" />
-              <span>Login</span>
-            </Link>
+              <FaTimes />
+            </button>
+          )}
+          <button type="submit" className="search-btn" aria-label="Search">
+            Search
+          </button>
 
-            <Link
-              to="/Signup"
-              className="nav-link"
-              onClick={closeMobileMenu}
+          {/* Suggestions Dropdown */}
+          {focused && suggestions.length > 0 && (
+            <ul
+              id="search-suggestions"
+              className="search-suggestions"
+              role="listbox"
+              aria-label="Course suggestions"
             >
-              <FaUserPlus className="nav-icon" />
-              <span>Sign Up</span>
-            </Link>
-          </>
-        ) : (
-          <div
-            className="nav-link"
-            onClick={handleLogout}
-            style={{ cursor: "pointer" }}
-          >
-            <FaSignOutAlt className="nav-icon" />
-            <span>Logout</span>
-          </div>
-        )}
+              {suggestions.map((course) => (
+                <li
+                  key={course.path}
+                  role="option"
+                  className="suggestion-item"
+                  onMouseDown={() => handleSelect(course)}
+                >
+                  <FaSearch className="suggestion-icon" aria-hidden="true" />
+                  {course.label}
+                </li>
+              ))}
+            </ul>
+          )}
 
-        <Link
-          to="/Dashboard"
-          className="nav-link"
-          onClick={closeMobileMenu}
-        >
-          <FaTachometerAlt className="nav-icon" />
-          <span>Dashboard</span>
-        </Link>
+          {/* No results */}
+          {focused && query.trim().length > 0 && suggestions.length === 0 && (
+            <div className="search-no-results" role="status">
+              No courses found for &ldquo;{query}&rdquo;
+            </div>
+          )}
+        </form>
       </div>
-
-      {/* Heading */}
-      <h1>
-        <FaGamepad style={{ marginRight: "0.5rem" }} />
-        CodeVibe
-        <FaGamepad style={{ marginLeft: "0.5rem" }} />
-      </h1>
-
-      <p>
-        Learn • Practice • Master • Code | Level Up Your Programming Skills
-      </p>
     </header>
   );
 };

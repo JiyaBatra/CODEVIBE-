@@ -19,46 +19,46 @@ const MongoLesson = () => {
     <div className="mongo-lesson" style={{ padding: '20px' }}>
       <h2>🍃 MONGODB LESSONS</h2>
       <div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
-        <div className="course-box">
+        <Link to="/MongoLesson1" className="course-box">
           <h3>Lesson 1: Introduction & Insert One</h3>
-          <Link to="/MongoLesson1">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('mongo-lesson-1') && <span> ✅</span>}
-        </div>
-        <div className="course-box">
+        </Link>
+        <Link to="/MongoLesson2" className="course-box">
           <h3>Lesson 2: Find Documents</h3>
-          <Link to="/MongoLesson2">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('mongo-lesson-2') && <span> ✅</span>}
-        </div>
-        <div className="course-box">
+        </Link>
+        <Link to="/MongoLesson3" className="course-box">
           <h3>Lesson 3: Insert Many</h3>
-          <Link to="/MongoLesson3">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('mongo-lesson-3') && <span> ✅</span>}
-        </div>
-        <div className="course-box">
+        </Link>
+        <Link to="/MongoLesson4" className="course-box">
           <h3>Lesson 4: Update Documents</h3>
-          <Link to="/MongoLesson4">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('mongo-lesson-4') && <span> ✅</span>}
-        </div>
-        <div className="course-box">
+        </Link>
+        <Link to="/MongoLesson5" className="course-box">
           <h3>Lesson 5: Delete Documents</h3>
-          <Link to="/MongoLesson5">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('mongo-lesson-5') && <span> ✅</span>}
-        </div>
-        <div className="course-box">
+        </Link>
+        <Link to="/MongoLesson6" className="course-box">
           <h3>Lesson 6: CRUD API with Node.js</h3>
-          <Link to="/MongoLesson6">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('mongo-lesson-6') && <span> ✅</span>}
-        </div>
-        <div className="course-box">
+        </Link>
+        <Link to="/MongoLesson7" className="course-box">
           <h3>Lesson 7: Aggregation</h3>
-          <Link to="/MongoLesson7">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('mongo-lesson-7') && <span> ✅</span>}
-        </div>
-        <div className="course-box">
+        </Link>
+        <Link to="/MongoLesson8" className="course-box">
           <h3>Lesson 8: Mini Project</h3>
-          <Link to="/MongoLesson8">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('mongo-lesson-8') && <span> ✅</span>}
-        </div>
+        </Link>
       </div>
     </div>
   );

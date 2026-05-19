@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import API_BASE_URL from "../config/api";
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
@@ -8,6 +9,7 @@ const ResetPassword = () => {
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const [responseMsg, setResponseMsg] = useState("");
   const navigate = useNavigate();
 
@@ -24,8 +26,13 @@ const ResetPassword = () => {
       return;
     }
 
+    setLoading(true);
+    setResponseMsg("");
     try {
-      const res = await axios.post("https://codevibe-3.onrender.com/api/auth/reset-password", {
+      console.log("Using Backend URL:", API_BASE_URL);
+      console.log("Current Hostname:", window.location.hostname);
+
+      const res = await axios.post(`${API_BASE_URL}/api/auth/reset-password`, {
         token,
         newPassword,
       });
@@ -36,6 +43,8 @@ const ResetPassword = () => {
       }
     } catch (err) {
       setResponseMsg(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,7 +73,9 @@ const ResetPassword = () => {
               required
             />
 
-            <button type="submit">Reset Password</button>
+            <button type="submit" disabled={loading}>
+              {loading ? "Resetting..." : "Reset Password"}
+            </button>
           </>
         )}
 

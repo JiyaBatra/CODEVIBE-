@@ -49,11 +49,11 @@ const SignUp = () => {
     <section className='login-section'>
       <div className="login-container">
         <div className="login-image">
-          <img src={registerImage} className='registerImage' alt="Register image" />
+          <img src={registerImage} className='registerImage' alt="Register" />
         </div>
         <div className="login-card">
           <form className="login-form" onSubmit={handleSubmit}>
-            <h1>Join Us Today ! </h1>
+            <h1>Join Us Today!</h1>
 
             <label>USERNAME:</label>
             <input
@@ -95,10 +95,12 @@ const SignUp = () => {
               required
             />
             <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: "-10px", marginBottom: "15px", textAlign: "left" }}>
-              *Password must be at least 6 characters long
+              *Password must be at least 6 characters long.
             </p>
 
-            <button type="submit">SUBMIT</button>
+            <button type="submit" disabled={loading}>
+              {loading ? "JOINING..." : "SUBMIT"}
+            </button>
 
             {responseMsg && <p style={{ color: "white" }}>{responseMsg}</p>}
 

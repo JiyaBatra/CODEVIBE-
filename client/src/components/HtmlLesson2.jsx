@@ -15,11 +15,11 @@ const HtmlLesson2 = () => {
   };
 
   // expected output (single line for easy normalization)
-  const expectedNormalized = `<b> bold </b> <i> italic </i> <u> under line </u> <strong> bold important message </strong> <em> italic important message </em> <mark> highlight </mark> <marquee> headline </marquee> <br> <hr> <abbr>HTML</abbr>`;
+  const expectedNormalized = `<b> bold </b> <i> italic </i> <u> underline </u> <strong> bold important message </strong> <em> italic important message </em> <mark> highlight </mark> <marquee> headline </marquee> <br> <hr> <abbr>HTML</abbr>`;
 
   return (
     <div className='lesson'>
-      <h1>Lesson 2: TYPE OF HTML ELEMENT — BLOCK OR INLINE</h1>
+      <h1>Lesson 2: Types of HTML Elements: Block vs Inline</h1>
       <br />
 
       <p>
@@ -35,7 +35,7 @@ const HtmlLesson2 = () => {
       </ol>
 
       <h3>
-        Note:<em>Opening tag looks like {'<element>'}, and closing tag looks like {'</element>'}. Can you see the difference? The closing tag has a "/" before the element name.</em>
+        Note: <em>Opening tag looks like {'<element>'}, and closing tag looks like {'</element>'}. Can you see the difference? The closing tag has a "/" before the element name.</em>
       </h3>
           <br/>
     <hr/>
@@ -89,7 +89,7 @@ const HtmlLesson2 = () => {
           <div className='list'>
           <li>{`<b> bold </b>`}</li>
           <li>{`<i> italic </i>`}</li>
-          <li>{`<u> under line </u>`}</li>
+          <li>{`<u> underline </u>`}</li>
           <li>{`<strong> bold important message </strong>`}</li>
           <li>{`<em> italic important message </em>`}</li>
           <li>{`<mark> highlight </mark>`}</li>
@@ -103,7 +103,7 @@ const HtmlLesson2 = () => {
     <br/>
     <hr/>
 
-      <h2> 💻 Try Yourself, Follow Instruction !!</h2>
+      <h2> 💻 Try Yourself, Follow Instructions!</h2>
 
       <Compiler 
         LessonId="html-lesson2"
@@ -116,7 +116,7 @@ const HtmlLesson2 = () => {
       />
 
       {isCorrect && (
-        <Link to="/HtmlLesson3">⏭NEXT LESSON</Link>
+        <Link to="/HtmlLesson3">⏭ NEXT LESSON</Link>
       )}
     </div>
   );

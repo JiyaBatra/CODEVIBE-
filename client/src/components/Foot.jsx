@@ -1,6 +1,6 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { FaDiscord, FaLinkedin, FaGithub, FaYoutube } from 'react-icons/fa'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { FaDiscord, FaLinkedin, FaGithub, FaYoutube } from 'react-icons/fa';
 
 const Foot = () => {
   return (
@@ -14,7 +14,7 @@ const Foot = () => {
         </div>
 
         <div className="footer-links">
-          <h3>Quick links</h3>
+          <h3>Quick Links</h3>
           <Link to="/privacy-policy" className="footer-link">
             Privacy Policy
           </Link>

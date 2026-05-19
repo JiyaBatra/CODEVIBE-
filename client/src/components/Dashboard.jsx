@@ -20,7 +20,7 @@ const Dashboard = () => {
   if (!user) {
     return (
       <p style={{ textAlign: "center", marginTop: "2rem", color: "red" }}>
-        ⚠️ Please login or signup first!
+        ⚠️ Please log in or sign up first!
       </p>
     );
   }

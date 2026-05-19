@@ -18,9 +18,9 @@ const HtmlLesson10 = () => {
 
   return (
     <div className="lesson">
-      <h1>Chapter 10: Simple Frontend Page</h1>
+      <h1>Lesson 10: Simple Frontend Page</h1>
       <p>
-        Build a simple webpage with header, main section and footer. Write your
+        Build a simple webpage with header, main section, and footer. Write your
         code exactly like in expected output inside the &lt;pre&gt; tag.
       </p>
 
