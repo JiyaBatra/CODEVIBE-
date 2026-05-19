@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FaSignInAlt, FaUserPlus, FaTachometerAlt, FaGamepad, FaSearch, FaTimes } from "react-icons/fa";
 import logo from "../assets/websitelogo.png";
 
@@ -16,6 +16,12 @@ const COURSES = [
   { label: "DBMS", path: "/DbmsLesson" },
 ];
 
+const NAV_LINKS = [
+  { to: "/Login",     icon: <FaSignInAlt className="nav-icon" />,       label: "Login"     },
+  { to: "/Signup",    icon: <FaUserPlus className="nav-icon" />,         label: "Sign Up"   },
+  { to: "/Dashboard", icon: <FaTachometerAlt className="nav-icon" />,    label: "Dashboard" },
+];
+
 const Head = () => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -24,6 +30,7 @@ const Head = () => {
   const inputRef = useRef(null);
   const wrapperRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -35,6 +42,11 @@ const Head = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
 
   const handleSearch = (value) => {
     setQuery(value);
@@ -60,19 +72,13 @@ const Head = () => {
     if (suggestions.length > 0) handleSelect(suggestions[0]);
   };
 
-const handleLogout = () => {
-  localStorage.removeItem("user");
-  setUser(null);
-  closeMobileMenu();
-  navigate("/login");
-  window.location.reload();
-};
+  const clearSearch = () => {
+    setQuery("");
+    setSuggestions([]);
+    inputRef.current?.focus();
+  };
 
-const clearSearch = () => {
-  setQuery("");
-  setSuggestions([]);
-  inputRef.current?.focus();
-};
+  const isActive = (path) => location.pathname === path;
 
   return (
     <header className="site-header">
@@ -86,44 +92,46 @@ const clearSearch = () => {
 
         {/* Desktop Nav */}
         <nav className="header-nav" aria-label="Main navigation">
-          <Link to="/Login" className="nav-link">
-            <FaSignInAlt className="nav-icon" />
-            <span>Login</span>
-          </Link>
-          <Link to="/Signup" className="nav-link">
-            <FaUserPlus className="nav-icon" />
-            <span>Sign Up</span>
-          </Link>
-          <Link to="/Dashboard" className="nav-link">
-            <FaTachometerAlt className="nav-icon" />
-            <span>Dashboard</span>
-          </Link>
+          {NAV_LINKS.map(({ to, icon, label }) => (
+            <Link
+              key={to}
+              to={to}
+              className={`nav-link${isActive(to) ? " nav-link--active" : ""}`}
+            >
+              {icon}
+              <span>{label}</span>
+            </Link>
+          ))}
         </nav>
 
         {/* Hamburger for mobile */}
         <button
           className="hamburger"
-          aria-label="Toggle menu"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((v) => !v)}
         >
-          <span className={`ham-bar ${menuOpen ? "open" : ""}`} />
-          <span className={`ham-bar ${menuOpen ? "open" : ""}`} />
-          <span className={`ham-bar ${menuOpen ? "open" : ""}`} />
+          <span className={`ham-bar ham-bar--1${menuOpen ? " open" : ""}`} />
+          <span className={`ham-bar ham-bar--2${menuOpen ? " open" : ""}`} />
+          <span className={`ham-bar ham-bar--3${menuOpen ? " open" : ""}`} />
         </button>
       </div>
 
       {/* Mobile Nav Drawer */}
-      <nav className={`mobile-nav ${menuOpen ? "mobile-nav--open" : ""}`} aria-label="Mobile navigation">
-        <Link to="/Login" className="nav-link" onClick={() => setMenuOpen(false)}>
-          <FaSignInAlt className="nav-icon" /><span>Login</span>
-        </Link>
-        <Link to="/Signup" className="nav-link" onClick={() => setMenuOpen(false)}>
-          <FaUserPlus className="nav-icon" /><span>Sign Up</span>
-        </Link>
-        <Link to="/Dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
-          <FaTachometerAlt className="nav-icon" /><span>Dashboard</span>
-        </Link>
+      <nav
+        className={`mobile-nav${menuOpen ? " mobile-nav--open" : ""}`}
+        aria-label="Mobile navigation"
+      >
+        {NAV_LINKS.map(({ to, icon, label }) => (
+          <Link
+            key={to}
+            to={to}
+            className={`nav-link${isActive(to) ? " nav-link--active" : ""}`}
+            onClick={() => setMenuOpen(false)}
+          >
+            {icon}<span>{label}</span>
+          </Link>
+        ))}
       </nav>
 
       {/* Row 2: Title */}
@@ -139,12 +147,11 @@ const clearSearch = () => {
       {/* Row 3: Search Bar */}
       <div className="header-search-row" ref={wrapperRef}>
         <form
-          className={`search-form ${focused ? "search-form--focused" : ""}`}
+          className={`search-form${focused ? " search-form--focused" : ""}`}
           onSubmit={handleSubmit}
           role="search"
           aria-label="Search courses"
         >
-          {/*<FaSearch className="search-icon-left" aria-hidden="true" />*/}
           <input
             ref={inputRef}
             type="text"
