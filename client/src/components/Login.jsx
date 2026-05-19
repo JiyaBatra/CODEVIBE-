@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthProvider.jsx";
+import API_BASE_URL from "../config/api";
 import loginImage from "../assets/loginImage.png";
 
 
@@ -16,7 +17,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-     const response = await axios.post("https://codevibe-3.onrender.com/api/auth/login",
+     const response = await axios.post(`${API_BASE_URL}/api/auth/login`,
         {
           Email: email,
           password,
