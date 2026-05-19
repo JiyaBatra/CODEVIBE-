@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthProvider.jsx';
 import API_BASE_URL from "../config/api";
 import registerImage from "../assets/registerImage.png";
 
@@ -13,6 +14,7 @@ const SignUp = () => {
   const [responseMsg, setResponseMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,7 +34,7 @@ const SignUp = () => {
 
       if (response.data.success) {
         // ✅ signup ke baad direct Dashboard me bhejna
-        localStorage.setItem("user", JSON.stringify(response.data.user));
+        login(response.data.user);
         navigate("/Dashboard");
       }
     } catch (error) {

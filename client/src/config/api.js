@@ -3,7 +3,7 @@
 
 const getBackendURL = () => {
   const hostname = window.location.hostname;
-  
+
   // Check if running locally
   if (
     hostname === "localhost" ||
@@ -13,7 +13,7 @@ const getBackendURL = () => {
   ) {
     return "http://localhost:5002";
   }
-  
+
   // Production backend
   return "https://codevibe-3.onrender.com";
 };

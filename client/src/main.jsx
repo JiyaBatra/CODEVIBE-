@@ -24,6 +24,12 @@ import Compiler from './components/Compiler.jsx';
 import Certificate from './components/Certificate.jsx';
 import ViewReport from './components/ViewReport.jsx';
 import DynamicProgressSidebar from './components/DynamicProgressSidebar.jsx';
+import {
+  AuthProvider,
+  PrivateRoute,
+  PublicRoute,
+  PublicHome,
+} from './AuthProvider.jsx';
 
 // HTML Lessons
 import HtmlLesson from './components/HtmlLesson.jsx';
@@ -216,22 +222,23 @@ import ReactLesson13 from './components/ReactLesson13.jsx';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <Head />
-      <DynamicProgressSidebar />
+      <AuthProvider>
+        <Head />
+        <DynamicProgressSidebar />
 
-      <Routes>
-        {/* General Routes */}
-        <Route path="/" element={<Courses />} />
-        <Route path="/Login" element={<Login />} />
-        <Route path="/SignUp" element={<SignUp />} />
-        <Route path="/ForgetPassword" element={<ForgetPassword />} />
-        <Route path="/ResetPassword" element={<ResetPassword />} />
-        <Route path="/Dashboard" element={<Dashboard />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/terms-of-service" element={<TermsOfService />} />
-         <Route path="/report/:email" element={<ViewReport />} />
-        <Route path="/api" element={<App />} />
-        <Route path="/Certificate" element={<Certificate />} />
+        <Routes>
+          {/* General Routes */}
+          <Route path="/" element={<PublicHome><Courses /></PublicHome>} />
+          <Route path="/Login" element={<PublicRoute><Login /></PublicRoute>} />
+          <Route path="/SignUp" element={<PublicRoute><SignUp /></PublicRoute>} />
+          <Route path="/ForgetPassword" element={<ForgetPassword />} />
+          <Route path="/ResetPassword" element={<ResetPassword />} />
+          <Route path="/Dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/report/:email" element={<ViewReport />} />
+          <Route path="/api" element={<App />} />
+          <Route path="/Certificate" element={<Certificate />} />
        <Route path="/report/:email" element={<ViewReport />} />
         <Route path="/CLesson" element={<CLesson />} />
         <Route path="/CssLesson" element={<CssLesson />} />
@@ -429,6 +436,7 @@ createRoot(document.getElementById('root')).render(
 
       <Target />
       <Foot />
+      </AuthProvider>
     </BrowserRouter>
   </StrictMode>
 );
