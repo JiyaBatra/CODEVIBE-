@@ -20,8 +20,6 @@ const userSchema = new Schema({
   },
   password: {
     type: String,
-    minLength: 6,
-    maxLength: 20,
     required: true,
   },
   resetToken: { type: String },       // for password reset token

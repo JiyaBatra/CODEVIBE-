@@ -31,11 +31,12 @@ app.listen(3000);`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create an Express server. 2. Respond with 'Hello Express' at root route."
         LessonId="node-lesson-7"
         language="js"
         initialCode={`// Write your code here
 `}
-        expectedOutput={(output) => output.trim() === 'Hello Express'}
+        expectedOutput={`Hello Express`}
         onSuccess={handleSuccess}
       />
 

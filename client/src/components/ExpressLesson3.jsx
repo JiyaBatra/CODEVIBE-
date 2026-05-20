@@ -33,6 +33,7 @@ const ExpressLesson3 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Add a middleware that logs the requested URL. 2. Ensure it runs before route handlers."
         LessonId="express-lesson-3"
         language="javascript"
         initialCode={`const express = require('express');
@@ -48,7 +49,7 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => res.send('Home Page'));
 
 app.listen(3000, () => console.log('Server running on port 3000'));`}
-        expectedOutput={(output) => output.includes('Request URL: /')}
+        expectedOutput={`Request URL: /`}
         onSuccess={handleSuccess}
       />
 

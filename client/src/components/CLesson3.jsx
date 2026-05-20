@@ -7,30 +7,22 @@ const CLesson3 = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const navigate = useNavigate();
 
-  const handleSuccess = () => {
-    setIsCorrect(true);
-  };
-
-  const goToNextLesson = () => {
-    navigate('/CLesson4');
-  };
+  const handleSuccess = () => { setIsCorrect(true); };
+  const goToNextLesson = () => { navigate('/CLesson4'); };
 
   return (
     <div className="lesson">
       <h1 className="lesson-title">Chapter 3: Operators in C</h1>
 
       <div className="lesson-content">
-        <p>
-          Operators in C are special symbols that perform operations on variables and values.
-        </p>
+        <p>Operators in C are special symbols that perform operations on variables and values.</p>
         <p>Types of Operators:</p>
         <ul>
           <li><b>Arithmetic Operators</b> → <code>+, -, *, /, %</code></li>
           <li><b>Relational Operators</b> → <code>==, !=, &gt;, &lt;, &gt;=, &lt;=</code></li>
           <li><b>Logical Operators</b> → <code>&& (AND), || (OR), ! (NOT)</code></li>
         </ul>
-        <p>
-          Example:<br />
+        <p>Example:<br />
           <code>
 {`#include <stdio.h>
 
@@ -60,6 +52,7 @@ Product: 24`}
       <Compiler
         LessonId="c-lesson-3"
         language="c"
+        hint="Declare num1 = 8 and num2 = 3. Use three separate printf() calls for Sum, Difference, and Product on separate lines."
         initialCode={`#include <stdio.h>
 
 int main() {
@@ -72,11 +65,7 @@ int main() {
       />
 
       {isCorrect && (
-        <Link
-          to="/CLesson4"
-          style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }}
-          onClick={goToNextLesson}
-        >
+        <Link to="/CLesson4" style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }} onClick={goToNextLesson}>
           ⏭ NEXT LESSON
         </Link>
       )}

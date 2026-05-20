@@ -34,6 +34,7 @@ app.get('/contact', (req, res) => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Add /about route that responds 'About Page'. 2. Add /contact route that responds 'Contact Page'."
         LessonId="express-lesson-2"
         language="js"
         initialCode={`const express = require('express');
@@ -48,7 +49,7 @@ app.get('/contact', (req, res) => {
 });
 
 app.listen(3000, () => console.log('Server running on port 3000'));`}
-        expectedOutput={(output) => output.includes('About Page') && output.includes('Contact Page')}
+        expectedOutput={`About Page`}
         onSuccess={handleSuccess}
       />
 

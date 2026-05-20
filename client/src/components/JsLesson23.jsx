@@ -55,6 +55,7 @@ const JsLesson23 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Has an array 'colors' with values ['Red', 'Green', 'Blue']."
         LessonId="js-lesson-23"
         language="js"
         initialCode={`// Write your code below

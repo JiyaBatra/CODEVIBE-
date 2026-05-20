@@ -29,13 +29,12 @@ SELECT * FROM Books WHERE title LIKE 'C%';`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Select all books with price >= 600. 2. Select books where title starts with 'C'."
         LessonId="dbms-lesson-5"
         language="sql"
         initialCode={`SELECT * FROM Books WHERE price >= 600;
 SELECT * FROM Books WHERE title LIKE 'C%';`}
-        expectedOutput={(output) =>
-          output.trim().toLowerCase().includes('c programming')
-        }
+        expectedOutput={`c programming`}
         onSuccess={handleSuccess}
       />
 

@@ -66,6 +66,7 @@ struct Node* head = NULL;`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a singly linked list with nodes 10, 20, 30. 2. Print all node values."
         LessonId="dsa-lesson-11"
         language="c"
         initialCode={`#include <stdio.h>
@@ -80,10 +81,7 @@ int main() {
     // Write code to create linked list with 10, 20, 30 and print values
     return 0;
 }`}
-        expectedOutput={(output) => {
-          const nums = output.trim().split(/\s+/).map(Number);
-          return nums.length === 3 && nums[0] === 10 && nums[1] === 20 && nums[2] === 30;
-        }}
+        expectedOutput={`1`}
         onSuccess={handleSuccess}
       />
 

@@ -30,6 +30,7 @@ const MongoLesson6 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create GET route '/users' to fetch all users. 2. Print 'API running' after route setup."
         LessonId="mongo-lesson-6"
         language="javascript"
         initialCode={`const express = require('express');
@@ -55,7 +56,7 @@ async function run() {
 }
 
 run();`}
-        expectedOutput={(output) => output.includes('API running')}
+        expectedOutput={`API running`}
         onSuccess={handleSuccess}
       />
 

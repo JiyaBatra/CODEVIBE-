@@ -36,6 +36,7 @@ const ReactLesson6 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a component 'TodoList'. 2. Render a list of todos passed as prop."
         LessonId="react-lesson-6"
         language="js"
         initialCode={`function TodoList({ todos }) {
@@ -45,7 +46,7 @@ const ReactLesson6 = () => {
     </ul>
   );
 }`}
-        expectedOutput={(output) => output.includes('<li>')}
+        expectedOutput={`<li>`}
         onSuccess={handleSuccess}
       />
 

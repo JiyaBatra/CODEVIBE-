@@ -37,6 +37,7 @@ const MongoLesson1 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a database 'mydb'. 2. Create a collection 'users'."
         LessonId="mongo-lesson-1"
         language="javascript"
         initialCode={`// Use MongoDB shell commands or Node.js MongoDB driver
@@ -58,7 +59,7 @@ async function run() {
 }
 
 run().catch(console.dir);`}
-        expectedOutput={(output) => output.includes('Document inserted')}
+        expectedOutput={`Document inserted`}
         onSuccess={handleSuccess}
       />
 

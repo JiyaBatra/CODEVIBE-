@@ -56,6 +56,7 @@ const JsLesson27 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Uses fetch to get data from 'https://jsonplaceholder.typicode.com/todos..."
         LessonId="js-lesson-27"
         language="js"
         initialCode={`// Write your code below

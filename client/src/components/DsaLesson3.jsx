@@ -71,14 +71,12 @@ sumArray();
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a JavaScript array with numbers 1 to 5. 2. Print the sum of all elements."
         LessonId="dsa-lesson-3"
         language="js"
         initialCode={`// Hello from CodeVibe
 console.log("Hello from CodeVibe");`}
-        expectedOutput={(output) => {
-          // check if output is sum of 1+2+3+4+5 = 15
-          return output.trim() === "15";
-        }}
+        expectedOutput={`15`}
         onSuccess={handleSuccess}
       />
 

@@ -29,13 +29,12 @@ SELECT price, COUNT(*) FROM Books GROUP BY price;`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Display books ordered by price descending. 2. Count how many books have the same price."
         LessonId="dbms-lesson-6"
         language="sql"
         initialCode={`SELECT * FROM Books ORDER BY price DESC;
 SELECT price, COUNT(*) FROM Books GROUP BY price;`}
-        expectedOutput={(output) =>
-          output.trim().toLowerCase().includes('c programming')
-        }
+        expectedOutput={`c programming`}
         onSuccess={handleSuccess}
       />
 

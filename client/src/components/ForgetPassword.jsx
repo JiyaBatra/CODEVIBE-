@@ -1,21 +1,30 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from 'react-router-dom';
+import API_BASE_URL from "../config/api";
 import forgotPic from "../assets/forgotPassword.png"
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [responseMsg, setResponseMsg] = useState("");
 
+  const [loading, setLoading] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setResponseMsg("");
     try {
-      const res = await axios.post("https://codevibe-3.onrender.com/api/auth/forgot-password", {
+      console.log("Using Backend URL:", API_BASE_URL);
+        
+      const res = await axios.post(`${API_BASE_URL}/api/auth/forgot-password`, {
         Email: email,
       });
       setResponseMsg(res.data.message);
     } catch (err) {
       setResponseMsg(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -23,14 +32,14 @@ const ForgotPassword = () => {
     <section className="login-section">
      <div className="login-container">
        <div className="login-image">
-        <img src={forgotPic} alt="Forgot image" />
+        <img src={forgotPic} alt="Forgot Password" />
       </div>
       <div className="login-card">
           <form className="login-form" onSubmit={handleSubmit}>
-            <h1>Forgot Your Password</h1>
+            <h1>Forgot Your Password?</h1>
             
             <div style={{ backgroundColor: "rgba(255, 77, 109, 0.1)", border: "1px solid var(--primary-red)", padding: "10px", borderRadius: "8px", marginBottom: "15px", fontSize: "0.85rem", color: "white" }}>
-              <strong style={{color: "var(--primary-red)"}}>Developer Note:</strong> Emails are sent using Resend Test Mode and will only be delivered to the verified developer email address.
+              <strong style={{color: "var(--primary-red)"}}>Note:</strong> Reset emails are sent via Nodemailer. Ensure EMAIL_USER and EMAIL_PASS are configured.
             </div>
 
             <label>EMAIL:</label>
@@ -41,7 +50,9 @@ const ForgotPassword = () => {
               required
             />
 
-            <button type="submit">Send Reset Link</button>
+            <button type="submit" disabled={loading}>
+              {loading ? "Sending..." : "Send Reset Link"}
+            </button>
 
             {responseMsg && <p style={{ color: "white", marginTop: "1rem", fontSize: "0.9rem" }}>{responseMsg}</p>}
 

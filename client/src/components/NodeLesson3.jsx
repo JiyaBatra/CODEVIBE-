@@ -33,11 +33,12 @@ console.log(math.add(5,3)); // 8`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a module that exports a function. 2. Import it and use it."
         LessonId="node-lesson-3"
         language="js"
         initialCode={`// Write your code here
 `}
-        expectedOutput={(output) => output.trim() === '8'}
+        expectedOutput={`8`}
         onSuccess={handleSuccess}
       />
 

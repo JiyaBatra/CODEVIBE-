@@ -38,6 +38,7 @@ const ReactLesson7 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a component 'NameForm'. 2. Add an input to enter name and display it below."
         LessonId="react-lesson-7"
         language="js"
         initialCode={`function NameForm() {
@@ -49,7 +50,7 @@ const ReactLesson7 = () => {
     </form>
   );
 }`}
-        expectedOutput={(output) => output.includes('Your name')}
+        expectedOutput={`Your name`}
         onSuccess={handleSuccess}
       />
 

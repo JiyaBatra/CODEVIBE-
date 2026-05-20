@@ -44,6 +44,7 @@ p::first-line { font-weight: bold; }`}</pre>
 
       {/* Compiler */}
       <Compiler
+        hint="💡 Hint: 1. Create a button that changes background color to green when hovered. 2. Style paragraphs so the first lin..."
         LessonId="css-lesson-10"
         language="css"
         initialCode={`button {

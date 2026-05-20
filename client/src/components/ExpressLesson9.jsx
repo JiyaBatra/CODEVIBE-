@@ -31,6 +31,7 @@ const ExpressLesson9 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Add error-handling middleware. 2. Respond with status 500 and message 'Something broke!'"
         LessonId="express-lesson-9"
         language="javascript"
         initialCode={`const express = require('express');
@@ -46,7 +47,7 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(3000, () => console.log('Server running on port 3000'));`}
-        expectedOutput={(output) => output.includes('Something broke')}
+        expectedOutput={`Something broke`}
         onSuccess={handleSuccess}
       />
 

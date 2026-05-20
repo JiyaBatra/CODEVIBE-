@@ -34,12 +34,11 @@ const DBMSLesson2 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Write a query to display all databases available in the system."
         LessonId="dbms-lesson-2"
         language="sql"
         initialCode={`SHOW DATABASES;`}
-        expectedOutput={(output) =>
-          output.trim().toLowerCase().includes('database')
-        }
+        expectedOutput={`database`}
         onSuccess={handleSuccess}
       />
 

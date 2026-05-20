@@ -41,6 +41,7 @@ const CssLesson8 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a webpage with a container div that: - Uses flexbox."
         LessonId="css-lesson-8"
         language="css" // property-check mode
         initialCode={`.container {

@@ -29,6 +29,7 @@ const MongoLesson8 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create backend with Express + MongoDB. 2. Setup GET /users and POST /users."
         LessonId="mongo-lesson-8"
         language="javascript"
         initialCode={`const express = require('express');
@@ -60,7 +61,7 @@ async function run() {
 }
 
 run();`}
-        expectedOutput={(output) => output.includes('Backend running')}
+        expectedOutput={`Backend running`}
         onSuccess={handleSuccess}
       />
 

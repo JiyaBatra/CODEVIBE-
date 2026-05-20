@@ -32,12 +32,13 @@ const ReactLesson5 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a component 'Greeting'. 2. Pass a boolean prop 'isLoggedIn'."
         LessonId="react-lesson-5"
         language="js"
         initialCode={`function Greeting({ isLoggedIn }) {
   return <h1>{isLoggedIn ? "Welcome!" : "Please log in"}</h1>;
 }`}
-        expectedOutput={(output) => output.includes('Welcome') || output.includes('Please')}
+        expectedOutput={`Welcome`}
         onSuccess={handleSuccess}
       />
 

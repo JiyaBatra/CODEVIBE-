@@ -29,6 +29,7 @@ const MongoLesson4 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Update Alice's age to 21. 2. Print 'Document updated' after success."
         LessonId="mongo-lesson-4"
         language="javascript"
         initialCode={`const { MongoClient } = require('mongodb');
@@ -50,7 +51,7 @@ async function run() {
 }
 
 run().catch(console.dir);`}
-        expectedOutput={(output) => output.includes('Document updated')}
+        expectedOutput={`Document updated`}
         onSuccess={handleSuccess}
       />
 

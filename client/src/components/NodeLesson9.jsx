@@ -38,11 +38,12 @@ app.listen(3000);`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a middleware that logs 'Request received'. 2. Create '/' route returning 'Hello Middleware'."
         LessonId="node-lesson-9"
         language="js"
         initialCode={`// Write your code here
 `}
-        expectedOutput={(output) => output.trim() === 'Hello Middleware'}
+        expectedOutput={`Hello Middleware`}
         onSuccess={handleSuccess}
       />
 

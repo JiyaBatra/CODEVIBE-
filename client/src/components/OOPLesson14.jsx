@@ -44,6 +44,7 @@ console.log(p.run(4, 6)); // 10`}</pre>
 3) Let p = new Add(); print p.run(4,6) => 10`}</pre>
 
       <Compiler
+        hint="💡 Hint: 1) Create Action base with run(a,b) that throws error. 2) Create Add and Mul classes overriding run()."
         LessonId="oop-lesson-14"
         language="js"
         initialCode={`// Write your code here

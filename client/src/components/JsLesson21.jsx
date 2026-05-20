@@ -51,6 +51,7 @@ const JsLesson21 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Has a button with id 'btn'."
         LessonId="js-lesson-21"
         language="js"
         initialCode={`// Write your code below

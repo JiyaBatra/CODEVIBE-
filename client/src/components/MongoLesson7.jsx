@@ -28,11 +28,12 @@ const MongoLesson7 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Group users by age and count them. 2. Print 'Aggregation complete' after success."
         LessonId="mongo-lesson-7"
         language="javascript"
         initialCode={`// MongoDB aggregation example
 console.log('Aggregation complete');`}
-        expectedOutput={(output) => output.includes('Aggregation complete')}
+        expectedOutput={`Aggregation complete`}
         onSuccess={handleSuccess}
       />
 

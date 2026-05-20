@@ -42,13 +42,12 @@ const JsLesson1 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Prints 'Hello JavaScript' in the browser console using console.log()."
   LessonId="dsa-lesson-1"
   language="js"
   initialCode={`// Write your code here
 console.log("Welcome to DSA");`}
-  expectedOutput={(output) => {
-    return output.trim() === "Welcome to DSA";
-  }}
+  expectedOutput={`Welcome to DSA`}
   onSuccess={handleSuccess}
 />
 

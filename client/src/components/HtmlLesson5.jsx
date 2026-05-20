@@ -88,10 +88,9 @@ const HtmlLesson5 = () => {
       <pre>{expectedOutput}</pre>
 
       <Compiler
+        hint="💡 Review the lesson instructions carefully. Make sure your output matches exactly."
   LessonId="html-lesson5"
-  expectedOutput={(output) => {
-    const normalize = (s) => s.replace(/\s+/g, " ").trim();
-    const expected = `<img src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg" alt="My Art" width="200">
+  expectedOutput={`<img src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_960_720.jpg" alt="My Art" width="200">
 
 <a href="https://www.instagram.com/jiya_the_coolartist/" target="_blank">Visit My Instagram</a>
 
@@ -99,9 +98,7 @@ const HtmlLesson5 = () => {
   <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
 </video>
 
-<iframe width="695" height="391" src="https://www.youtube.com/embed/2ml3qRpp1Ws" title="MERN Stack Overview for Beginners" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>`;
-    return normalize(output) === normalize(expected);
-  }}
+<iframe width="695" height="391" src="https://www.youtube.com/embed/2ml3qRpp1Ws" title="MERN Stack Overview for Beginners" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen=""></iframe>`}
   initialCode={`<h1>HELLO, From Code Vibe</h1>`}
   onSuccess={handleSuccess}
 />

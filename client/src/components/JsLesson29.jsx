@@ -46,6 +46,7 @@ const JsLesson29 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Instructions: 1. Each product has a 'Add to Cart' button. When clicked, it should add the product to the cart."
         LessonId="js-lesson-29"
         language="js"
         initialCode={`// Write your JS code here to make the shopping cart functional

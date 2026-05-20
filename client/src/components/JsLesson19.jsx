@@ -46,6 +46,7 @@ const JsLesson19 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Has a heading with id 'greeting' and text 'Hello'."
         LessonId="js-lesson-19"
         language="js"
         initialCode={`// Write your code below

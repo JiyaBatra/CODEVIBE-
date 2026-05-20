@@ -59,6 +59,7 @@ const CssLesson1 = () => {
 
       {/* Compiler */}
       <Compiler
+        hint="💡 Hint: Create a webpage with a heading “Hello CSS” and apply red color and 30px font size to it using CSS."
   LessonId="css-lesson-1"
   language="css"
   initialCode={`h1 {\n  /* Write your CSS here */\n}`}

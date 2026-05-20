@@ -47,6 +47,7 @@ const JsLesson25 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Creates a file 'utils.js' and export a function 'greet' that prints 'He..."
         LessonId="js-lesson-25"
         language="js"
         initialCode={`// Write your code below

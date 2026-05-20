@@ -34,6 +34,7 @@ console.log(c.add(2, 3, 4)); // 9`}</pre>
 2) Print add(2,3,4) => 9`}</pre>
 
       <Compiler
+        hint="💡 Hint: 1) Make class Calc with add(a,b) and add(a,b,c) simulated in one method 2) Print add(2,3,4) => 9"
         LessonId="oop-lesson-7"
         language="js"
         initialCode={`// write your code here

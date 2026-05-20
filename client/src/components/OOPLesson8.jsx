@@ -44,6 +44,7 @@ b.say(); // Der`}</pre>
 4) Call say() -> Output: Der`}</pre>
 
       <Compiler
+        hint="💡 Hint: 1) Create Base class with say() printing 'Base' 2) Create Derived class overriding say() to print 'Der'"
         LessonId="oop-lesson-8"
         language="js"
         initialCode={`// write your code here

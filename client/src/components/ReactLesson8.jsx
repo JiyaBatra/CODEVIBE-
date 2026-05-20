@@ -37,6 +37,7 @@ const ReactLesson8 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a component 'Timer'. 2. Use useEffect to increment count every second."
         LessonId="react-lesson-8"
         language="js"
         initialCode={`function Timer() {
@@ -47,7 +48,7 @@ const ReactLesson8 = () => {
   }, []);
   return <p>Count: {count}</p>;
 }`}
-        expectedOutput={(output) => output.includes('Count')}
+        expectedOutput={`Count`}
         onSuccess={handleSuccess}
       />
 

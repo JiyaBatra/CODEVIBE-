@@ -67,6 +67,7 @@ const DSALesson7 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a singly linked list with 3 nodes. 2. Print all node values."
         LessonId="dsa-lesson-7"
         language="c"
         initialCode={`#include <stdio.h>
@@ -81,11 +82,7 @@ int main() {
     // Write your code here
     return 0;
 }`}
-        expectedOutput={(output) => {
-          // Output should be 3 numbers, e.g., 1 2 3
-          const nums = output.trim().split(/\s+/).map(Number);
-          return nums.length === 3;
-        }}
+        expectedOutput={`1`}
         onSuccess={handleSuccess}
       />
 

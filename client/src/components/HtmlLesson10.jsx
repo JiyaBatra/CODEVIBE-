@@ -18,9 +18,9 @@ const HtmlLesson10 = () => {
 
   return (
     <div className="lesson">
-      <h1>Chapter 10: Simple Frontend Page</h1>
+      <h1>Lesson 10: Simple Frontend Page</h1>
       <p>
-        Build a simple webpage with header, main section and footer. Write your
+        Build a simple webpage with header, main section, and footer. Write your
         code exactly like in expected output inside the &lt;pre&gt; tag.
       </p>
 
@@ -42,11 +42,10 @@ const HtmlLesson10 = () => {
   <p>© 2025 My Simple Site. All rights reserved.</p>
 </footer>`}</pre>
 
-<Compiler 
+<Compiler
+        hint="💡 Review the lesson instructions carefully. Make sure your output matches exactly." 
   LessonId="html-lesson10"
-  expectedOutput={(output) => {
-    const normalize = (s) => s.replace(/\s+/g, " ").trim();
-    const expected = `<header> 
+  expectedOutput={`<header> 
 <h1>My Simple Site</h1> 
 <nav> 
 <a href="home.html">Home</a> 
@@ -60,9 +59,7 @@ const HtmlLesson10 = () => {
 </main> 
 <footer> 
 <p>© 2025 My Simple Site. All rights reserved.</p> 
-</footer>`;
-    return normalize(output) === normalize(expected);
-  }}
+</footer>`}
   initialCode={`<header>
   <h1>My Simple Site</h1>
   <nav>

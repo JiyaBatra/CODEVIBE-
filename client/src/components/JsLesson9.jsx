@@ -52,6 +52,7 @@ const JsLesson9 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Uses a for loop to print numbers from 1 to 5, each on a new line."
         LessonId="js-lesson-9"
         language="js"
         initialCode={`// Write your code below

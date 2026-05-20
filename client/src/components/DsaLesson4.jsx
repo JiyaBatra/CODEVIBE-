@@ -64,6 +64,7 @@ printf("You entered: %s", str);`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Write a C program to input a string. 2. Print its length using a loop."
         LessonId="dsa-lesson-4"
         language="c"
         initialCode={`#include <stdio.h>
@@ -73,10 +74,7 @@ int main() {
     // Write your code here
     return 0;
 }`}
-        expectedOutput={(output) => {
-          // simple check: if output is a number (length > 0)
-          return /^\d+$/.test(output.trim());
-        }}
+        expectedOutput={`1`}
         onSuccess={handleSuccess}
       />
 

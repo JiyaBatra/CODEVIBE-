@@ -35,11 +35,12 @@ app.listen(3000);`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a GET /users route. 2. Return JSON array [name:'Jiya', age:18]."
         LessonId="node-lesson-12"
         language="js"
         initialCode={`// Write your code here
 `}
-        expectedOutput={(output) => output.includes('Jiya')}
+        expectedOutput={`Jiya`}
         onSuccess={handleSuccess}
       />
 

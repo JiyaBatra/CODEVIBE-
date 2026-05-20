@@ -30,11 +30,12 @@ console.log(fs.readFileSync('demo.txt','utf8')); // Hello FS`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a file 'demo.txt' with content 'Hello FS'. 2. Read and print it."
         LessonId="node-lesson-5"
         language="js"
         initialCode={`// Write your code here
 `}
-        expectedOutput={(output) => output.trim() === 'Hello FS'}
+        expectedOutput={`Hello FS`}
         onSuccess={handleSuccess}
       />
 

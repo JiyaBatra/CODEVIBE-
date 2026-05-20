@@ -12,23 +12,22 @@ const CLesson1 = () => {
   };
 
   const goToNextLesson = () => {
-    navigate('/c/lesson2');
+    navigate('/CLesson2');
   };
 
   return (
     <div className="lesson">
-      <h1 className="lesson-title">Chapter 1: Introduction to C</h1>
+      <h1 className="lesson-title">Chapter 1: Hello C</h1>
 
       <div className="lesson-content">
         <p>
-          C is one of the most powerful and widely-used programming languages, created by Dennis Ritchie in 1972.
-          It is known for its speed, efficiency, and control over hardware.
+          C is a powerful, general-purpose programming language developed in the early 1970s by Dennis Ritchie at Bell Labs.
         </p>
         <p>
-          C programs are compiled (not interpreted), meaning the source code is converted into machine code before running.
+          Every C program starts with the <code>main()</code> function. This is where execution begins.
         </p>
         <p>
-          Example C Program:<br />
+          Example:
           <code>
 {`#include <stdio.h>
 
@@ -41,30 +40,25 @@ int main() {
       </div>
 
       <div className="tags-to-try">
-        <p>Concepts to Try: <code>#include</code>, <code>printf()</code>, <code>main()</code> function</p>
+        <p>Concepts to Try: printf(), #include, main()</p>
       </div>
 
       <pre className="instructions">
-{`Create a C program that:
-1. Prints "Hello C" on the screen using printf().`}
+{`Write a C program that prints: Hello C`}
       </pre>
 
       <Compiler
         LessonId="c-lesson-1"
+        language="c"
+        hint="Use printf() inside main() to print Hello C. Do not forget to include stdio.h at the top and return 0 at the end."
         initialCode={`#include <stdio.h>
 
 int main() {
     // Write your code here
-   printf("Hello C");
+    printf("Hello C");
     return 0;
 }`}
-        expectedOutput="
-        ={`#include <stdio.h>
-
-int main() {
-    // Write your code here
-  
-    return 0;"
+        expectedOutput="Hello C"
         onSuccess={handleSuccess}
       />
 

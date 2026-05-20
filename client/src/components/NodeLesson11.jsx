@@ -31,11 +31,12 @@ mongoose.connect('mongodb://localhost:27017/mydb')
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Connect to MongoDB using mongoose. 2. Log 'Connected' if successful."
         LessonId="node-lesson-11"
         language="js"
         initialCode={`// Write your code here
 `}
-        expectedOutput={(output) => output.includes('Connected')}
+        expectedOutput={`Connected`}
         onSuccess={handleSuccess}
       />
 

@@ -38,6 +38,7 @@ console.log(c.engine.hp); // 150`}</pre>
 3) Print the hp => 150`}</pre>
 
       <Compiler
+        hint="💡 Hint: 1) Make Engine class with constructor(hp) 2) Make Car class that HAS an Engine with hp=150"
         LessonId="oop-lesson-10"
         language="js"
         initialCode={`// Write your code here

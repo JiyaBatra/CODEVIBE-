@@ -69,14 +69,12 @@ console.log(sum); // prints 15`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Write a JavaScript program to calculate the sum of first 5 numbers using a loop. 2. Print the sum."
         LessonId="dsa-lesson-2"
         language="js"
         initialCode={`// Hello from CodeVibe
 console.log("Hello from CodeVibe");`}
-        expectedOutput={(output) => {
-          // Check if user printed 15
-          return output.trim() === "15";
-        }}
+        expectedOutput={`15`}
         onSuccess={handleSuccess}
       />
 

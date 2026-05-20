@@ -37,6 +37,7 @@ const ReactLesson10 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a parent component holding state 'value'. 2. Pass it to two child components, one to modify and on..."
         LessonId="react-lesson-10"
         language="js"
         initialCode={`function Parent() {
@@ -48,7 +49,7 @@ const ReactLesson10 = () => {
     </div>
   );
 }`}
-        expectedOutput={(output) => output.includes('Child')}
+        expectedOutput={`Child`}
         onSuccess={handleSuccess}
       />
 

@@ -33,11 +33,12 @@ app.listen(3000);`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create '/' route returning 'Home'. 2. Create '/about' route returning 'About'."
         LessonId="node-lesson-8"
         language="js"
         initialCode={`// Write your code here
 `}
-        expectedOutput={(output) => output.trim() === 'Home\nAbout' || output.trim() === 'Home'}
+        expectedOutput={`Home\nAbout`}
         onSuccess={handleSuccess}
       />
 

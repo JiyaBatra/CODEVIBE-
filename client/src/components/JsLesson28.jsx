@@ -54,6 +54,7 @@ const JsLesson28 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Stores 'CodeVibe' in localStorage with key 'platform'."
         LessonId="js-lesson-28"
         language="js"
         initialCode={`// Write your code below

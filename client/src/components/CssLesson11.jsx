@@ -39,6 +39,7 @@ const CssLesson11 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a webpage with: 1. A button that changes background color from blue to red smoothly on hover."
         LessonId="css-lesson-11"
         language="css" // lock to css
         initialCode={`button {

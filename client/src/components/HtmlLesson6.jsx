@@ -57,11 +57,10 @@ const HtmlLesson6 = () => {
 
 
       <h2>Try Yourself !!</h2>
-    <Compiler 
+    <Compiler
+        hint="💡 Review the lesson instructions carefully. Make sure your output matches exactly." 
   LessonId="html-lesson6"
-  expectedOutput={(output) => {
-    const normalize = (s) => s.replace(/\s+/g, " ").trim();
-    const expected = `<table border="1">
+  expectedOutput={`<table border="1">
 <tbody>
   <tr>
     <th>Name</th>
@@ -72,9 +71,7 @@ const HtmlLesson6 = () => {
     <td>20</td>
   </tr>
 </tbody>
-</table>`;
-    return normalize(output) === normalize(expected);
-  }}
+</table>`}
   initialCode={`<h1>HELLO, From Code Vibe</h1>`}
   onSuccess={handleSuccess}
 />

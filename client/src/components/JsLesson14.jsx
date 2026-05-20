@@ -57,6 +57,7 @@ const JsLesson14 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Creates an arrow function 'add' that takes two parameters 'a' and 'b'."
         LessonId="js-lesson-14"
         language="js"
         initialCode={`// Write your code below

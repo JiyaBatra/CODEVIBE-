@@ -56,6 +56,7 @@ const JsLesson17 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Creates an object 'car' with keys: brand='Tesla', model='Model 3', year..."
         LessonId="js-lesson-17"
         language="js"
         initialCode={`// Write your code below

@@ -49,6 +49,7 @@ const JsLesson6 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Creates two variables a = 8 and b = 3."
         LessonId="js-lesson-6"
         language="javascript"
         initialCode={`// Write your code below

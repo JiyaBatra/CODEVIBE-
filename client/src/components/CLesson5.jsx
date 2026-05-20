@@ -7,34 +7,20 @@ const CLesson5 = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const navigate = useNavigate();
 
-  const handleSuccess = () => {
-    setIsCorrect(true);
-  };
-
-  const goToNextLesson = () => {
-    navigate('/CLesson6');
-  };
+  const handleSuccess = () => { setIsCorrect(true); };
+  const goToNextLesson = () => { navigate('/CLesson6'); };
 
   return (
     <div className="lesson">
       <h1 className="lesson-title">Chapter 5: Loops in C (for, while)</h1>
 
       <div className="lesson-content">
-        <p>
-          Loops in C are used to repeat a block of code multiple times without writing it again and again.
-        </p>
+        <p>Loops in C are used to repeat a block of code multiple times without writing it again and again.</p>
         <ul>
-          <li>
-            <b>for loop</b> → Best for when you know how many times to repeat.
-          </li>
-          <li>
-            <b>while loop</b> → Runs while a condition is true.
-          </li>
-          <li>
-            <b>do-while loop</b> → Runs at least once before checking condition.
-          </li>
+          <li><b>for loop</b> → Best for when you know how many times to repeat.</li>
+          <li><b>while loop</b> → Runs while a condition is true.</li>
+          <li><b>do-while loop</b> → Runs at least once before checking condition.</li>
         </ul>
-
         <p>Example:</p>
         <code>
 {`#include <stdio.h>
@@ -65,6 +51,7 @@ int main() {
       <Compiler
         LessonId="c-lesson-5"
         language="c"
+        hint="Use a for loop starting at i = 1, running while i <= 5, with i++ increment. Print each number on a new line."
         initialCode={`#include <stdio.h>
 
 int main() {
@@ -77,11 +64,7 @@ int main() {
       />
 
       {isCorrect && (
-        <Link
-          to="/CLesson6"
-          style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }}
-          onClick={goToNextLesson}
-        >
+        <Link to="/CLesson6" style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }} onClick={goToNextLesson}>
           ⏭ NEXT LESSON
         </Link>
       )}

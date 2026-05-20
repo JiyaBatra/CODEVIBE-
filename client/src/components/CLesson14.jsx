@@ -1,3 +1,4 @@
+// src/components/CLesson14.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Compiler from './Compiler';
@@ -14,10 +15,7 @@ const CLesson14 = () => {
       <h1 className="lesson-title">Chapter 14: Structures in C</h1>
 
       <div className="lesson-content">
-        <p>
-          Structures in C allow grouping of variables of different types under a single name.
-          They are great for representing entities like students, books, or employees.
-        </p>
+        <p>Structures in C allow grouping of variables of different types under a single name. They are great for representing entities like students, books, or employees.</p>
         <p>Example:</p>
         <pre>
 {`#include <stdio.h>
@@ -46,22 +44,19 @@ C Programming 500`}
       <Compiler
         LessonId="c-lesson-14"
         language="c"
+        hint="Define struct Book with char title[50] and int price. Create a variable with C Programming and 500, then print both."
         initialCode={`#include <stdio.h>
 
 int main() {
     // Create your structure and print values
     return 0;
 }`}
-        expectedOutput={(output) => output.trim() === "C Programming 500"}
+        expectedOutput={`C Programming 500`}
         onSuccess={handleSuccess}
       />
 
       {isCorrect && (
-        <Link
-          to="/CLesson15"
-          className="next-lesson"
-          onClick={goToNextLesson}
-        >
+        <Link to="/CLesson15" className="next-lesson" onClick={goToNextLesson}>
           ⏭ NEXT LESSON
         </Link>
       )}

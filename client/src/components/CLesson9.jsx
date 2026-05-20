@@ -7,23 +7,15 @@ const CLesson9 = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const navigate = useNavigate();
 
-  const handleSuccess = () => {
-    setIsCorrect(true);
-  };
-
-  const goToNextLesson = () => {
-    navigate('/CLesson10');
-  };
+  const handleSuccess = () => { setIsCorrect(true); };
+  const goToNextLesson = () => { navigate('/CLesson10'); };
 
   return (
     <div className="lesson">
       <h1 className="lesson-title">Chapter 9: Functions in C</h1>
 
       <div className="lesson-content">
-        <p>
-          Functions in C help organize code into reusable blocks.  
-          They have a return type, a name, parameters, and a body.
-        </p>
+        <p>Functions in C help organize code into reusable blocks. They have a return type, a name, parameters, and a body.</p>
         <p>Syntax:</p>
         <code>
 {`returnType functionName(parameters) {
@@ -58,6 +50,7 @@ int main() {
       <Compiler
         LessonId="c-lesson-9"
         language="c"
+        hint="Write void sayHello() that prints Hello Functions above main(), then call sayHello(); inside main()."
         initialCode={`#include <stdio.h>
 
 // Write your function here
@@ -71,11 +64,7 @@ int main() {
       />
 
       {isCorrect && (
-        <Link
-          to="/CLesson10"
-          style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }}
-          onClick={goToNextLesson}
-        >
+        <Link to="/CLesson10" style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }} onClick={goToNextLesson}>
           ⏭ NEXT LESSON
         </Link>
       )}

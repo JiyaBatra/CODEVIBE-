@@ -74,6 +74,7 @@ const DSALesson1 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Write a simple program to print 'Welcome to DSA' using JavaScript."
         LessonId="dsa-lesson-1"
         language="js"
         initialCode={`// Write your code here

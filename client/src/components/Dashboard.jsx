@@ -1,14 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaSignOutAlt } from "react-icons/fa";
+import { useAuth } from "../AuthProvider.jsx";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user")); 
+  const { user, logout } = useAuth();
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    navigate("/login");
+    logout();
+    navigate("/Login");
   };
 
   const handleViewReport = (course) => {
@@ -19,7 +20,7 @@ const Dashboard = () => {
   if (!user) {
     return (
       <p style={{ textAlign: "center", marginTop: "2rem", color: "red" }}>
-        ⚠️ Please login or signup first!
+        ⚠️ Please log in or sign up first!
       </p>
     );
   }
@@ -27,7 +28,9 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <h1>Welcome, {user.username} 🎉</h1>
+        <h1 style={{ textAlign: "center", width: "100%" }}>
+        Welcome, {user.username} 🎉
+        </h1>
         <button
           style={{
             minHeight: "44px",

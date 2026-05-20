@@ -29,13 +29,12 @@ SELECT title, price FROM Books WHERE price > 500;`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a view 'BookView' showing books with price > 500."
         LessonId="dbms-lesson-9"
         language="sql"
         initialCode={`CREATE VIEW BookView AS
 SELECT title, price FROM Books WHERE price > 500;`}
-        expectedOutput={(output) =>
-          output.trim().toLowerCase().includes('bookview')
-        }
+        expectedOutput={`bookview`}
         onSuccess={handleSuccess}
       />
 

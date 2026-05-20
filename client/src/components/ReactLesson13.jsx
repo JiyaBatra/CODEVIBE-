@@ -30,12 +30,13 @@ const ReactLesson13 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Use useEffect to log 'Hello React' on mount."
         LessonId="react-lesson-13"
         language="js"
         initialCode={`useEffect(() => {
   console.log('Hello React');
 }, []);`}
-        expectedOutput={(output) => output.includes('Hello React')}
+        expectedOutput={`Hello React`}
         onSuccess={handleSuccess}
       />
 

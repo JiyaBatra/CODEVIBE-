@@ -54,6 +54,7 @@ const JsLesson7 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Creates a variable 'marks' with value 75."
         LessonId="js-lesson-7"
         language="js"
         initialCode={`// Write your code below

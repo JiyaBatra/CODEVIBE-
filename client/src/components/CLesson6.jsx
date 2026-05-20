@@ -7,29 +7,20 @@ const CLesson6 = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const navigate = useNavigate();
 
-  const handleSuccess = () => {
-    setIsCorrect(true);
-  };
-
-  const goToNextLesson = () => {
-    navigate('/CLesson7');
-  };
+  const handleSuccess = () => { setIsCorrect(true); };
+  const goToNextLesson = () => { navigate('/CLesson7'); };
 
   return (
     <div className="lesson">
       <h1 className="lesson-title">Chapter 6: Functions in C</h1>
 
       <div className="lesson-content">
-        <p>
-          Functions are blocks of code that perform a specific task.  
-          They make code reusable and organized.
-        </p>
+        <p>Functions are blocks of code that perform a specific task. They make code reusable and organized.</p>
         <p>Two main types of functions in C:</p>
         <ul>
           <li><b>Library Functions</b> (e.g., <code>printf()</code>, <code>scanf()</code>)</li>
           <li><b>User-Defined Functions</b> (functions we create ourselves)</li>
         </ul>
-
         <p>Example of a function:</p>
         <code>
 {`#include <stdio.h>
@@ -61,6 +52,7 @@ Hello from my function!
       <Compiler
         LessonId="c-lesson-6"
         language="c"
+        hint="Define a function void sayHello() that prints the text, then call sayHello(); inside main()."
         initialCode={`#include <stdio.h>
 
 // Write your function here
@@ -75,11 +67,7 @@ int main() {
       />
 
       {isCorrect && (
-        <Link
-          to="/CLesson7"
-          style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }}
-          onClick={goToNextLesson}
-        >
+        <Link to="/CLesson7" style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }} onClick={goToNextLesson}>
           ⏭ NEXT LESSON
         </Link>
       )}

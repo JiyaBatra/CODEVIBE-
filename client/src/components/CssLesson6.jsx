@@ -45,6 +45,7 @@ const CssLesson6 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a webpage with: 1. A heading 'Visible Heading' displayed normally."
         LessonId="css-lesson-6"
         language="css"
         initialCode={`

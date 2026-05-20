@@ -33,13 +33,14 @@ const ReactLesson1 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a functional component called 'Hello'. 2. It should render <h1>Hello, React!</h1>."
         LessonId="react-lesson-1"
         language="js"
         initialCode={`// Write your React component here
 function Hello() {
   return <h1>Hello, React!</h1>;
 }`}
-        expectedOutput={(output) => output.includes('Hello, React!')}
+        expectedOutput={`Hello, React!`}
         onSuccess={handleSuccess}
       />
 

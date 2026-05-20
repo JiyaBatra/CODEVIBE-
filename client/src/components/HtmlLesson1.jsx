@@ -14,9 +14,6 @@ const HtmlLesson1 = () => {
     navigate("/html/lesson2");
   };
 
-  // expected string we want to match (normalized)
-  const expectedNormalized = '<h1> heading 1 </h1> <h6> last heading </h6> <p> paragraph </p>';
-
   return (
     <div className="lesson" style={{ padding: "20px" }}>
       <h1>Lesson 1: Introduction to HTML</h1>
@@ -79,13 +76,10 @@ const HtmlLesson1 = () => {
 
       <h2> 💻 Try Yourself, Follow Instruction !!</h2>
 
-      <Compiler 
+      <Compiler
+        hint="💡 Review the lesson instructions carefully. Make sure your output matches exactly." 
         LessonId="html-lesson1"
-        // normalize both sides and compare -> avoid whitespace issues
-        expectedOutput={(output) => {
-          const norm = (s) => String(s || "").replace(/\s+/g, " ").trim();
-          return norm(output) === norm(expectedNormalized);
-        }}
+        expectedOutput={`<h1> heading 1 </h1> <h6> last heading </h6> <p> paragraph </p>`}
         initialCode={`<h1> heading 1 </h1>\n<h6> last heading </h6>\n<p> paragraph </p>`}
         onSuccess={handleSuccess}
       />

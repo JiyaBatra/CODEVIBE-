@@ -36,6 +36,7 @@ const ReactLesson9 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a component 'Greeting'. 2. Pass a prop 'isLoggedIn'."
         LessonId="react-lesson-9"
         language="js"
         initialCode={`function Greeting({ isLoggedIn }) {
@@ -45,7 +46,7 @@ const ReactLesson9 = () => {
     </div>
   );
 }`}
-        expectedOutput={(output) => output.includes('Welcome Back') || output.includes('Please Sign In')}
+        expectedOutput={`Welcome Back`}
         onSuccess={handleSuccess}
       />
 

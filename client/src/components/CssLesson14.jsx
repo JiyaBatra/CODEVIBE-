@@ -33,6 +33,7 @@ const CssLesson14 = () => {
       </div>
 
       <Compiler
+        hint="💡 Hint: instructionsText"
         LessonId="css-lesson-14"
         language="css" // property-check mode
         initialCode={`header {

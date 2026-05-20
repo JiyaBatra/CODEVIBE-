@@ -29,13 +29,12 @@ DELETE FROM Students WHERE id=1;`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Update the book price of 'C Programming' to 600. 2. Delete any book with id=2."
         LessonId="dbms-lesson-4"
         language="sql"
         initialCode={`UPDATE Books SET price=600 WHERE title='C Programming';
 DELETE FROM Books WHERE id=2;`}
-        expectedOutput={(output) =>
-          output.trim().toLowerCase().includes('c programming')
-        }
+        expectedOutput={`c programming`}
         onSuccess={handleSuccess}
       />
 

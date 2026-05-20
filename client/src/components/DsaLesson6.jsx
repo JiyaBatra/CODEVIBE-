@@ -68,6 +68,7 @@ int dequeue(){ return queue[front++]; }`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Implement a stack using an array in C. 2. Push 3 numbers into the stack."
         LessonId="dsa-lesson-6"
         language="c"
         initialCode={`#include <stdio.h>
@@ -77,11 +78,7 @@ int main() {
     // Write your code here
     return 0;
 }`}
-        expectedOutput={(output) => {
-          // For 3 numbers pushed then popped, output should be 3 2 1
-          const nums = output.trim().split(/\s+/).map(Number);
-          return nums.length === 3 && nums[0] > nums[1] && nums[1] > nums[2];
-        }}
+        expectedOutput={`1`}
         onSuccess={handleSuccess}
       />
 

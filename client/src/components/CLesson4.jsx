@@ -7,34 +7,20 @@ const CLesson4 = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const navigate = useNavigate();
 
-  const handleSuccess = () => {
-    setIsCorrect(true);
-  };
-
-  const goToNextLesson = () => {
-    navigate('/CLesson5');
-  };
+  const handleSuccess = () => { setIsCorrect(true); };
+  const goToNextLesson = () => { navigate('/CLesson5'); };
 
   return (
     <div className="lesson">
       <h1 className="lesson-title">Chapter 4: Conditional Statements (if, else)</h1>
 
       <div className="lesson-content">
-        <p>
-          Conditional statements in C are used to make decisions based on certain conditions.
-        </p>
+        <p>Conditional statements in C are used to make decisions based on certain conditions.</p>
         <ul>
-          <li>
-            <b>if</b> → Runs a block of code if a condition is true.
-          </li>
-          <li>
-            <b>if-else</b> → Runs one block if condition is true, otherwise runs another.
-          </li>
-          <li>
-            <b>else if</b> → Checks multiple conditions in sequence.
-          </li>
+          <li><b>if</b> → Runs a block of code if a condition is true.</li>
+          <li><b>if-else</b> → Runs one block if condition is true, otherwise runs another.</li>
+          <li><b>else if</b> → Checks multiple conditions in sequence.</li>
         </ul>
-
         <p>Example:</p>
         <code>
 {`#include <stdio.h>
@@ -64,6 +50,7 @@ int main() {
       <Compiler
         LessonId="c-lesson-4"
         language="c"
+        hint="Declare int marks = 75; then use if (marks >= 50) to print Pass, otherwise print Fail."
         initialCode={`#include <stdio.h>
 
 int main() {
@@ -76,11 +63,7 @@ int main() {
       />
 
       {isCorrect && (
-        <Link
-          to="/CLesson5"
-          style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }}
-          onClick={goToNextLesson}
-        >
+        <Link to="/CLesson5" style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }} onClick={goToNextLesson}>
           ⏭ NEXT LESSON
         </Link>
       )}

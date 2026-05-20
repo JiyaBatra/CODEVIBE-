@@ -7,32 +7,22 @@ const CLesson2 = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const navigate = useNavigate();
 
-  const handleSuccess = () => {
-    setIsCorrect(true);
-  };
-
-  const goToNextLesson = () => {
-    navigate('/CLesson3');
-  };
+  const handleSuccess = () => { setIsCorrect(true); };
+  const goToNextLesson = () => { navigate('/CLesson3'); };
 
   return (
     <div className="lesson">
       <h1 className="lesson-title">Chapter 2: Variables and Data Types</h1>
 
       <div className="lesson-content">
-        <p>
-          In C, variables are used to store data. Each variable has a <b>data type</b> which defines the kind of data it can hold.
-        </p>
-        <p>
-          Common Data Types in C:
-        </p>
+        <p>In C, variables are used to store data. Each variable has a <b>data type</b> which defines the kind of data it can hold.</p>
+        <p>Common Data Types in C:</p>
         <ul>
           <li><code>int</code> → Stores integers (whole numbers)</li>
           <li><code>float</code> → Stores decimal numbers</li>
           <li><code>char</code> → Stores single characters</li>
         </ul>
-        <p>
-          Example:<br />
+        <p>Example:<br />
           <code>
 {`#include <stdio.h>
 
@@ -64,6 +54,7 @@ int main() {
       <Compiler
         LessonId="c-lesson-2"
         language="c"
+        hint="Declare int age = 25; and char grade = 'B'; then print them using %d for integers and %c for characters."
         initialCode={`#include <stdio.h>
 
 int main() {
@@ -76,11 +67,7 @@ int main() {
       />
 
       {isCorrect && (
-        <Link
-          to="/CLesson3"
-          style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }}
-          onClick={goToNextLesson}
-        >
+        <Link to="/CLesson3" style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }} onClick={goToNextLesson}>
           ⏭ NEXT LESSON
         </Link>
       )}

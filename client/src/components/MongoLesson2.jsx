@@ -29,6 +29,7 @@ console.log(users);`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Fetch all documents from 'users' collection. 2. Print them."
         LessonId="mongo-lesson-2"
         language="javascript"
         initialCode={`const { MongoClient } = require('mongodb');
@@ -47,7 +48,7 @@ async function run() {
 }
 
 run().catch(console.dir);`}
-        expectedOutput={(output) => output.includes('Alice')}
+        expectedOutput={`Alice`}
         onSuccess={handleSuccess}
       />
 

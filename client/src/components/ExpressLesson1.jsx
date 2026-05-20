@@ -35,6 +35,7 @@ app.listen(3000, () => console.log('Server running on port 3000'));`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create an Express server. 2. Respond with 'Hello Express!' on root route."
         LessonId="express-lesson-1"
         language="js"
         initialCode={`const express = require('express');
@@ -45,7 +46,7 @@ app.get('/', (req, res) => {
 });
 
 app.listen(3000, () => console.log('Server running on port 3000'));`}
-        expectedOutput={(output) => output.includes('Hello Express!')}
+        expectedOutput={`Hello Express!`}
         onSuccess={handleSuccess}
       />
 

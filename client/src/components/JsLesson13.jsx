@@ -56,6 +56,7 @@ const JsLesson13 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Creates a function 'multiply' that takes two parameters 'x' and 'y'."
         LessonId="js-lesson-13"
         language="js"
         initialCode={`// Write your code below

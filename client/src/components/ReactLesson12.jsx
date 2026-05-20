@@ -34,6 +34,7 @@ const ReactLesson12 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create input field controlled by state 'name'. 2. Display value as user types."
         LessonId="react-lesson-12"
         language="js"
         initialCode={`function MyForm() {
@@ -42,7 +43,7 @@ const ReactLesson12 = () => {
     <input value={name} onChange={(e) => setName(e.target.value)} />
   );
 }`}
-        expectedOutput={(output) => output.includes('input')}
+        expectedOutput={`input`}
         onSuccess={handleSuccess}
       />
 

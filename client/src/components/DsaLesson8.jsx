@@ -67,6 +67,7 @@ const DSALesson8 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a doubly linked list with 3 nodes. 2. Print values in forward and backward order."
         LessonId="dsa-lesson-8"
         language="c"
         initialCode={`#include <stdio.h>
@@ -82,11 +83,7 @@ int main() {
     // Write your code here
     return 0;
 }`}
-        expectedOutput={(output) => {
-          // Output should have 6 numbers (forward + backward)
-          const nums = output.trim().split(/\s+/).map(Number);
-          return nums.length === 6;
-        }}
+        expectedOutput={`1`}
         onSuccess={handleSuccess}
       />
 

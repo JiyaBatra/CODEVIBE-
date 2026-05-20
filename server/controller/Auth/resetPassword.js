@@ -1,4 +1,5 @@
 // controller/Auth/resetPassword.js
+const bcrypt = require("bcryptjs");
 const UserModel = require("../../models/user.models");
 
 const resetPassword = async (req, res, next) => {
@@ -22,18 +23,21 @@ const resetPassword = async (req, res, next) => {
     }
 
     // Update password
-    user.password = newPassword;
+    user.password = await bcrypt.hash(newPassword, 10);
     
     // Invalidate token
     user.resetToken = undefined;
     user.resetTokenExpiry = undefined;
+
+    console.log(`Saving new password for user: ${user.Email}`);
+    
     await user.save();
 
     return res.status(200).json({ success: true, message: "Password reset successfully" });
 
   } catch (error) {
     console.error("Reset password error:", error);
-    next(error);
+    return res.status(500).json({ success: false, message: "Server error during password reset", error: error.message });
   }
 };
 

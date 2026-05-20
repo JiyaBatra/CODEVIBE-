@@ -54,6 +54,7 @@ const JsLesson12 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Creates a function named 'sayHello' that takes a parameter 'name'."
         LessonId="js-lesson-12"
         language="js"
         initialCode={`// Write your code below

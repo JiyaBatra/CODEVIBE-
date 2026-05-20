@@ -32,6 +32,7 @@ app.get('/user', (req, res) => res.json(users));`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create an array 'users'. 2. POST /user adds to array."
         LessonId="express-lesson-5"
         language="javascript"
         initialCode={`const express = require('express');
@@ -50,7 +51,7 @@ app.get('/user', (req, res) => {
 });
 
 app.listen(3000, () => console.log('Server running on port 3000'));`}
-        expectedOutput={(output) => output.includes('User added')}
+        expectedOutput={`User added`}
         onSuccess={handleSuccess}
       />
 

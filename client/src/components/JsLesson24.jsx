@@ -55,6 +55,7 @@ const JsLesson24 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Has an array 'nums1' with [10, 20]."
         LessonId="js-lesson-24"
         language="js"
         initialCode={`// Write your code below

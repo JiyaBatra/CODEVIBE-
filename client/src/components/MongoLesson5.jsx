@@ -26,6 +26,7 @@ const MongoLesson5 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Delete user named Bob. 2. Print 'Document deleted' after success."
         LessonId="mongo-lesson-5"
         language="javascript"
         initialCode={`const { MongoClient } = require('mongodb');
@@ -44,7 +45,7 @@ async function run() {
 }
 
 run().catch(console.dir);`}
-        expectedOutput={(output) => output.includes('Document deleted')}
+        expectedOutput={`Document deleted`}
         onSuccess={handleSuccess}
       />
 

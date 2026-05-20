@@ -35,10 +35,11 @@ const ReactLesson11 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Setup BrowserRouter with two routes. 2. Render Home component at '/'."
         LessonId="react-lesson-11"
         language="js"
         initialCode={`// Implement BrowserRouter with Routes as mentioned`}
-        expectedOutput={(output) => output.includes('Home') || output.includes('About')}
+        expectedOutput={`Home`}
         onSuccess={handleSuccess}
       />
 

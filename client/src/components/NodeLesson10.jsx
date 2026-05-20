@@ -30,11 +30,12 @@ console.log(JSON.parse('{"name":"Jiya","age":18}'));`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Convert object name:'Jiya', age:18 to JSON string. 2. Parse the same JSON string back to an object."
         LessonId="node-lesson-10"
         language="js"
         initialCode={`// Write your code here
 `}
-        expectedOutput={(output) => output.includes('"name":"Jiya"') && output.includes('18')}
+        expectedOutput={`"name":"Jiya"`}
         onSuccess={handleSuccess}
       />
 

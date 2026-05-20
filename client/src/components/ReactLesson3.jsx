@@ -32,13 +32,14 @@ const ReactLesson3 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a functional component 'Greeting'. 2. It should accept 'name' as a prop."
         LessonId="react-lesson-3"
         language="js"
         initialCode={`// Write your component here
 function Greeting(props) {
   return <h1>Hello, {props.name}!</h1>;
 }`}
-        expectedOutput={(output) => output.includes('Hello')}
+        expectedOutput={`Hello`}
         onSuccess={handleSuccess}
       />
 

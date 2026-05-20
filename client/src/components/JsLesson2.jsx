@@ -50,6 +50,7 @@ const JsLesson2 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Prints 'Learning Comments' in the console."
         LessonId="js-lesson-2"
         language="js"
         initialCode={`// Write your code below

@@ -1,3 +1,4 @@
+// src/components/CLesson15.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Compiler from './Compiler';
@@ -14,10 +15,7 @@ const CLesson15 = () => {
       <h1 className="lesson-title">Chapter 15: File Handling in C</h1>
 
       <div className="lesson-content">
-        <p>
-          File handling lets you read from and write to files.  
-          Use <code>fopen()</code>, <code>fprintf()</code>, <code>fscanf()</code>, <code>fclose()</code> etc.
-        </p>
+        <p>File handling lets you read from and write to files. Use <code>fopen()</code>, <code>fprintf()</code>, <code>fscanf()</code>, <code>fclose()</code> etc.</p>
         <p>Example:</p>
         <pre>
 {`#include <stdio.h>
@@ -41,13 +39,14 @@ int main() {
       <Compiler
         LessonId="c-lesson-15"
         language="c"
+        hint="For this exercise just use printf with the text File Handling Works inside main() to simulate writing to a file."
         initialCode={`#include <stdio.h>
 
 int main() {
     // Simulate writing to a file by printing output
     return 0;
 }`}
-        expectedOutput={(output) => output.trim() === "File Handling Works"}
+        expectedOutput={`File Handling Works`}
         onSuccess={handleSuccess}
       />
 

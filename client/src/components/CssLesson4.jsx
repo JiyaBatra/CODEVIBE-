@@ -43,6 +43,7 @@ const CssLesson4 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a webpage with: 1. A heading 'Margin and Padding Example' with 30px margin and 20px padding."
         LessonId="css-lesson-4"
         language="css"
         initialCode={`h1 {

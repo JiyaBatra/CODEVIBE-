@@ -32,6 +32,7 @@ const ExpressLesson6 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create GET route '/user/:id'. 2. Respond with 'User ID: id' where id is from URL."
         LessonId="express-lesson-6"
         language="javascript"
         initialCode={`const express = require('express');
@@ -43,7 +44,7 @@ app.get('/user/:id', (req, res) => {
 });
 
 app.listen(3000, () => console.log('Server running on port 3000'));`}
-        expectedOutput={(output) => output.includes('User ID')}
+        expectedOutput={`User ID`}
         onSuccess={handleSuccess}
       />
 

@@ -41,6 +41,7 @@ const CssLesson9 = () => {
 
       {/* Compiler */}
       <Compiler
+        hint="💡 Hint: Create a webpage with a grid container that: - Has 3 columns, each 100px wide."
         LessonId="css-lesson-9"
         language="css" // property-check mode
         initialCode={`.grid-container {

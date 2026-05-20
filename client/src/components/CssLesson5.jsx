@@ -43,6 +43,7 @@ const CssLesson5 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a webpage with: 1. A heading 'Stylish Text' with font-family Arial, font-size 40px, and bold text."
         LessonId="css-lesson-5"
         language="css" // lock compiler to CSS mode
         initialCode={`h1 {

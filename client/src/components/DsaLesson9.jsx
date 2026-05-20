@@ -67,6 +67,7 @@ int pop() { return stack[top--]; }`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Implement a stack of size 3. 2. Push numbers 10, 20, 30."
         LessonId="dsa-lesson-9"
         language="c"
         initialCode={`#include <stdio.h>
@@ -88,11 +89,7 @@ int main() {
     // Write code
     return 0;
 }`}
-        expectedOutput={(output) => {
-          const nums = output.trim().split(/\s+/).map(Number);
-          // After push 10,20,30 and pop one, remaining two numbers
-          return nums.length === 2 && nums.includes(10) && nums.includes(20) && !nums.includes(30);
-        }}
+        expectedOutput={`1`}
         onSuccess={handleSuccess}
       />
 

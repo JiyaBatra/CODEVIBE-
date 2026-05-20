@@ -20,89 +20,89 @@ const OOPLesson = () => {
     <div className="oop-lesson" style={{ padding: '20px' }}>
       <h2>🧑‍💻 OOP LESSONS (JavaScript)</h2>
       <div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
-        <div className="course-box">
+        <Link to="/OOPLesson1" className="course-box">
           <h3>Lesson 1: Classes & Objects</h3>
-          <Link to="/OOPLesson1">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('cpp-lesson-1') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/OOPLesson2" className="course-box">
           <h3>Lesson 2: Constructors</h3>
-          <Link to="/OOPLesson2">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('cpp-lesson-2') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/OOPLesson3" className="course-box">
           <h3>Lesson 3: Modules</h3>
-          <Link to="/OOPLesson3">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('cpp-lesson-3') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/OOPLesson4" className="course-box">
           <h3>Lesson 4: Encapsulation</h3>
-          <Link to="/OOPLesson4">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('cpp-lesson-4') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/OOPLesson5" className="course-box">
           <h3>Lesson 5: Inheritance</h3>
-          <Link to="/OOPLesson5">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('cpp-lesson-5') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/OOPLesson6" className="course-box">
           <h3>Lesson 6: Multilevel Inheritance</h3>
-          <Link to="/OOPLesson6">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('cpp-lesson-6') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/OOPLesson7" className="course-box">
           <h3>Lesson 7: Function Overloading</h3>
-          <Link to="/OOPLesson7">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('cpp-lesson-7') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/OOPLesson8" className="course-box">
           <h3>Lesson 8: Virtual Functions</h3>
-          <Link to="/OOPLesson8">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('cpp-lesson-8') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/OOPLesson9" className="course-box">
           <h3>Lesson 9: Abstraction (Pure Virtual)</h3>
-          <Link to="/OOPLesson9">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('cpp-lesson-9') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/OOPLesson10" className="course-box">
           <h3>Lesson 10: Composition (HAS-A)</h3>
-          <Link to="/OOPLesson10">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('cpp-lesson-10') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/OOPLesson11" className="course-box">
           <h3>Lesson 11: Operator Overloading</h3>
-          <Link to="/OOPLesson11">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('cpp-lesson-11') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/OOPLesson12" className="course-box">
           <h3>Lesson 12: Mini Project — Bank Account</h3>
-          <Link to="/OOPLesson12">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('cpp-lesson-12') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/OOPLesson13" className="course-box">
           <h3>Lesson 13: Mini Project — Library</h3>
-          <Link to="/OOPLesson13">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('cpp-lesson-13') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className="course-box">
+        <Link to="/OOPLesson14" className="course-box">
           <h3>Lesson 14: Final — Polymorphic Menu</h3>
-          <Link to="/OOPLesson14">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('cpp-lesson-14') && <span> ✅</span>}
-        </div>
+        </Link>
       </div>
     </div>
   );

@@ -30,6 +30,7 @@ console.log(b.getBalance()); // 500`}</pre>
 3) Set 999 and print: 999`}</pre>
 
       <Compiler
+        hint="💡 Hint: 1) Class Account with private field #bal 2) Add methods setBal(b) and getBal()"
         LessonId="oop-lesson-4"
         language="js"
         initialCode={`// write your code here

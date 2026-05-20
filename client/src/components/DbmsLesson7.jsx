@@ -32,14 +32,13 @@ INNER JOIN Books ON Students.book_id = Books.id;`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Join Students and Books table to show student name & book title. 2. Use INNER JOIN."
         LessonId="dbms-lesson-7"
         language="sql"
         initialCode={`SELECT Students.name, Books.title
 FROM Students
 INNER JOIN Books ON Students.book_id = Books.id;`}
-        expectedOutput={(output) =>
-          output.trim().toLowerCase().includes('c programming')
-        }
+        expectedOutput={`c programming`}
         onSuccess={handleSuccess}
       />
 

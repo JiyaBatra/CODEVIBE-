@@ -49,6 +49,7 @@ const JsLesson5 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Creates a string variable 'fruit' with value 'Mango'."
         LessonId="js-lesson-5"
         language="js"
         initialCode={`// Write your code below

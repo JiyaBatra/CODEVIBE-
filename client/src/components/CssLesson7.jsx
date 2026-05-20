@@ -40,6 +40,7 @@ const CssLesson7 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a webpage with: 1. A div with red background, positioned relative, shifted 20px down and 30px right."
         LessonId="css-lesson-7"
         language="css" // property-check mode
         initialCode={`.relative-box {

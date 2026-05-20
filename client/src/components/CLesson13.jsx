@@ -1,3 +1,4 @@
+// src/components/CLesson13.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Compiler from './Compiler';
@@ -14,10 +15,7 @@ const CLesson13 = () => {
       <h1 className="lesson-title">Chapter 13: Pointers in C</h1>
 
       <div className="lesson-content">
-        <p>
-          A pointer is a variable that stores the memory address of another variable.
-          They are powerful for memory management and working with arrays, strings, and functions.
-        </p>
+        <p>A pointer is a variable that stores the memory address of another variable. They are powerful for memory management and working with arrays, strings, and functions.</p>
         <p>Example:</p>
         <pre>
 {`#include <stdio.h>
@@ -33,20 +31,21 @@ int main() {
 
       <pre className="instructions">
 {`Task:
-1. Declare an integer variable and a pointer to it.
+1. Declare an integer variable with value 42 and a pointer to it.
 2. Use the pointer to print the value.`}
       </pre>
 
       <Compiler
         LessonId="c-lesson-13"
         language="c"
+        hint="Declare int num = 42; and int *ptr = &num; then use printf with *ptr to print the value via the pointer."
         initialCode={`#include <stdio.h>
 
 int main() {
     // Write your code here
     return 0;
 }`}
-        expectedOutput={(output) => output.trim() === "42"}
+        expectedOutput={`42`}
         onSuccess={handleSuccess}
       />
 

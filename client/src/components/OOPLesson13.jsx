@@ -39,6 +39,7 @@ console.log(lib.first()); // DSA`}</pre>
 3) Call library.first() and print -> DSA`}</pre>
 
       <Compiler
+        hint="💡 Hint: 1) Make a Book class that stores a title. 2) Make a Library class that HAS a Book('DSA')."
         LessonId="oop-lesson-13"
         language="js"
         initialCode={`// Write your code here

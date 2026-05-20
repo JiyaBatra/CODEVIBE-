@@ -53,6 +53,7 @@ const CssLesson3 = () => {
 
       {/* Compiler */}
       <Compiler
+        hint="💡 Hint: Create a webpage with: 1. A heading 'Bordered Heading' that has a 2px solid red border and centered text."
         LessonId="css-lesson-3"
         language="css" // lock to CSS
         initialCode={`h1 {

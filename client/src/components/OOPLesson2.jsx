@@ -30,6 +30,7 @@ console.log(b.w, b.h); // 5 10`}</pre>
 3) Print: 3 4`}</pre>
 
       <Compiler
+        hint="💡 Hint: 1) Create class Point with constructor(x, y) 2) Make object new Point(3, 4)"
         LessonId="oop-lesson-2"
         language="js"
         initialCode={`// write your code here

@@ -67,6 +67,7 @@ int dequeue() { return queue[front++]; }`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Implement a queue of size 3. 2. Enqueue numbers 5, 10, 15."
         LessonId="dsa-lesson-10"
         language="c"
         initialCode={`#include <stdio.h>
@@ -88,11 +89,7 @@ int main() {
     // Write code
     return 0;
 }`}
-        expectedOutput={(output) => {
-          const nums = output.trim().split(/\s+/).map(Number);
-          // After enqueue 5,10,15 and dequeue one, remaining two numbers
-          return nums.length === 2 && nums.includes(10) && nums.includes(15) && !nums.includes(5);
-        }}
+        expectedOutput={`10 15`}
         onSuccess={handleSuccess}
       />
 

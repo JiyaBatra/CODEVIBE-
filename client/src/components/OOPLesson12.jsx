@@ -47,6 +47,7 @@ console.log(a.get()); // 150`}</pre>
 3) Run deposit(200), withdraw(50), then print get() => 150`}</pre>
 
       <Compiler
+        hint="💡 Hint: 1) Create an Account class with private field #bal. 2) deposit(x) adds to balance, withdraw(x) subtracts."
         LessonId="oop-lesson-12"
         language="js"
         initialCode={`// Write your code here

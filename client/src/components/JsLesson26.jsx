@@ -56,6 +56,7 @@ const JsLesson26 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Creates a Promise that resolves 'Hello CodeVibe' after 1 second."
         LessonId="js-lesson-26"
         language="js"
         initialCode={`// Write your code below

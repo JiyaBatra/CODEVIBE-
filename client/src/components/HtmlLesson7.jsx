@@ -68,16 +68,13 @@ const HtmlLesson7 = () => {
 
       <h2>Try Yourself !!</h2>
      <Compiler
+        hint="💡 Review the lesson instructions carefully. Make sure your output matches exactly."
   LessonId="html-lesson7"
-  expectedOutput={(output) => {
-    const normalize = (s) => s.replace(/\s+/g, " ").trim();
-    const expected = `<form onsubmit="return false">
+  expectedOutput={`<form onsubmit="return false">
   Name: <input type="text" name="name"><br>
   Email: <input type="email" name="email"><br>
   <button type="button">Submit</button>
-</form>`;
-    return normalize(output) === normalize(expected);
-  }}
+</form>`}
   initialCode={`<h1>HELLO, From Code Vibe</h1>`}
   onSuccess={handleSuccess}
 />

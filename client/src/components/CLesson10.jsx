@@ -7,23 +7,15 @@ const CLesson10 = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const navigate = useNavigate();
 
-  const handleSuccess = () => {
-    setIsCorrect(true);
-  };
-
-  const goToNextLesson = () => {
-    navigate('/CLesson11');
-  };
+  const handleSuccess = () => { setIsCorrect(true); };
+  const goToNextLesson = () => { navigate('/CLesson11'); };
 
   return (
     <div className="lesson">
       <h1 className="lesson-title">Chapter 10: Arrays and Loops in C</h1>
 
       <div className="lesson-content">
-        <p>
-          Arrays store multiple values of the same type in a single variable.
-          Loops (like <code>for</code>) help us process array elements one by one.
-        </p>
+        <p>Arrays store multiple values of the same type in a single variable. Loops (like <code>for</code>) help us process array elements one by one.</p>
         <p>Example:</p>
         <code>
 {`#include <stdio.h>
@@ -53,6 +45,7 @@ int main() {
       <Compiler
         LessonId="c-lesson-10"
         language="c"
+        hint="Create int arr[3] = {10, 20, 30}; then use a for loop from i=0 to i<3 to print each element on a new line."
         initialCode={`#include <stdio.h>
 
 int main() {
@@ -67,11 +60,7 @@ int main() {
       />
 
       {isCorrect && (
-        <Link
-          to="/CLesson11"
-          style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }}
-          onClick={goToNextLesson}
-        >
+        <Link to="/CLesson11" style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }} onClick={goToNextLesson}>
           ⏭ NEXT LESSON
         </Link>
       )}

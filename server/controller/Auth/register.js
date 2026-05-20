@@ -1,15 +1,6 @@
-//main logic 
-//step of api 
-//we have to validate data of frontend (order) or req data
-//second step
-//we have to verify data from db etheri it exist or not.
-//3rd step 
-//data save in mongo db
-//fourth step 
-//send respose to frontend
-
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const UserModel = require("../../models/user.models");
-const momsvalidation = require("../../services/validationScheme");
 
 const register = async (req, res, next) => {
   try {
@@ -20,20 +11,29 @@ const register = async (req, res, next) => {
       return res.status(400).json({ message: "User already exists" });
     }
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const userCreate = new UserModel({
       username,
       Email,
-      password,
+      password: hashedPassword,
       college,
       year,
     });
 
     await userCreate.save();
 
+    const token = jwt.sign(
+      { userId: userCreate._id, email: Email, username },
+      process.env.JWT_SECRET || "codevibe_default_secret",
+      { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
+    );
+
     res.status(200).json({
       success: true,
       message: "User registered successfully",
-      user: { username, Email, college, year },
+      token,
+      user: { username, email: Email, college, year },
     });
   } catch (error) {
     next(error);

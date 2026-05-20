@@ -26,6 +26,7 @@ const DBMSLesson12 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create Books & Students tables. 2. Insert 3 books & 3 students."
         LessonId="dbms-lesson-12"
         language="sql"
         initialCode={`-- Write your SQL code here
@@ -34,9 +35,7 @@ CREATE TABLE Students(id INT PRIMARY KEY, name VARCHAR(50), book_id INT, FOREIGN
 INSERT INTO Books VALUES(1,'C Programming',500),(2,'Java Basics',600),(3,'DBMS',550);
 INSERT INTO Students VALUES(1,'Alice',1),(2,'Bob',2),(3,'Charlie',3);
 SELECT Students.name, Books.title FROM Students INNER JOIN Books ON Students.book_id = Books.id;`}
-        expectedOutput={(output) =>
-          output.trim().toLowerCase().includes('alice')
-        }
+        expectedOutput={`alice`}
         onSuccess={handleSuccess}
       />
 

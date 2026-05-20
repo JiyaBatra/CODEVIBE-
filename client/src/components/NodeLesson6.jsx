@@ -31,11 +31,12 @@ emitter.emit('greet'); // Hello Event!`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create an event called 'greet'. 2. Log 'Hello Event!' when it is triggered."
         LessonId="node-lesson-6"
         language="js"
         initialCode={`// Write your code here
 `}
-        expectedOutput={(output) => output.trim() === 'Hello Event!'}
+        expectedOutput={`Hello Event!`}
         onSuccess={handleSuccess}
       />
 

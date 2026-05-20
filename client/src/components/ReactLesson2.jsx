@@ -29,11 +29,12 @@ const ReactLesson2 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a JSX element that renders <h1>Hello JSX!</h1>. 2. Assign it to a variable called 'element'."
         LessonId="react-lesson-2"
         language="js"
         initialCode={`// Write your JSX code here
 const element = <h1>Hello JSX!</h1>;`}
-        expectedOutput={(output) => output.includes('Hello JSX!')}
+        expectedOutput={`Hello JSX!`}
         onSuccess={handleSuccess}
       />
 

@@ -30,13 +30,12 @@ SELECT AVG(price) FROM Books;`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Count the total number of books. 2. Find the average price of books."
         LessonId="dbms-lesson-11"
         language="sql"
         initialCode={`SELECT COUNT(*) FROM Books;
 SELECT AVG(price) FROM Books;`}
-        expectedOutput={(output) =>
-          output.trim().toLowerCase().includes('books')
-        }
+        expectedOutput={`books`}
         onSuccess={handleSuccess}
       />
 

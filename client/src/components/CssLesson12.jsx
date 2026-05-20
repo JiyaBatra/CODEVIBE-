@@ -39,6 +39,7 @@ const CssLesson12 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a webpage with: 1. A div with background color red by default."
         LessonId="css-lesson-12"
         language="css" // property-check mode
         initialCode={`.responsive-box {

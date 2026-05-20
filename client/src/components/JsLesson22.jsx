@@ -50,6 +50,7 @@ const JsLesson22 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Creates a variable 'name' with value 'CodeVibe'."
         LessonId="js-lesson-22"
         language="js"
         initialCode={`// Write your code below

@@ -36,6 +36,7 @@ console.log(result.v); // 10`}</pre>
 3) Do new Num(4).add(new Num(6)) and print v => 10`}</pre>
 
       <Compiler
+        hint="💡 Hint: 1) Create a Num class with constructor(v). 2) Add an add(other) method that returns a new Num with summed va..."
         LessonId="oop-lesson-11"
         language="js"
         initialCode={`// Write your code here

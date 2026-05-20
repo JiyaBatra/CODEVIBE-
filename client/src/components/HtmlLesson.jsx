@@ -28,68 +28,68 @@ const HtmlLesson = () => {
         color: 'white'
       }}
     >
-      <h2>HTML LESSON'S</h2>
+      <h2>HTML LESSONS</h2>
 
       <div style={{ display: 'grid', gap: '12px', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
-        <div className='course-box'>
+        <Link to="/HtmlLesson1" className="course-box">
           <h3>Lesson1: Introduction to HTML</h3>
-          <Link to="/HtmlLesson1">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('html-lesson-1') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className='course-box'>
-          <h3>Lesson2: TYPE OF HTML ELEMENT — BLOCK OR INLINE</h3>
-          <Link to="/HtmlLesson2">Start Lesson</Link>
+        <Link to="/HtmlLesson2" className="course-box">
+          <h3>Lesson2: Type of HTML element — Block or Inline</h3>
+          <span className="start-btn">Start Lesson</span>
           {isDone('html-lesson-2') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className='course-box'>
+        <Link to="/HtmlLesson3" className="course-box">
           <h3>Lesson3: Html List</h3>
-          <Link to="/HtmlLesson3">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('html-lesson-3') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className='course-box'>
+        <Link to="/HtmlLesson4" className="course-box">
           <h3>Lesson4: Html Attribute</h3>
-          <Link to="/HtmlLesson4">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('html-lesson-4') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className='course-box'>
+        <Link to="/HtmlLesson5" className="course-box">
           <h3>Lesson5: Html Media tag</h3>
-          <Link to="/HtmlLesson5">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('html-lesson-5') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className='course-box'>
+        <Link to="/HtmlLesson6" className="course-box">
           <h3>Lesson6: Html Table</h3>
-          <Link to="/HtmlLesson6">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('html-lesson-6') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className='course-box'>
+        <Link to="/HtmlLesson7" className="course-box">
           <h3>Lesson7: Html Form</h3>
-          <Link to="/HtmlLesson7">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('html-lesson-7') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className='course-box'>
+        <Link to="/HtmlLesson8" className="course-box">
           <h3>Lesson8: Html Class & ID</h3>
-          <Link to="/HtmlLesson8">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('html-lesson-8') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className='course-box'>
+        <Link to="/HtmlLesson9" className="course-box">
           <h3>Lesson9: HTML Quiz</h3>
-          <Link to="/HtmlLesson9">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('html-lesson-9') && <span> ✅</span>}
-        </div>
+        </Link>
 
-        <div className='course-box'>
+        <Link to="/HtmlLesson10" className="course-box">
           <h3>Lesson10: HTML Project</h3>
-          <Link to="/HtmlLesson10">Start Lesson</Link>
+          <span className="start-btn">Start Lesson</span>
           {isDone('html-lesson-10') && <span> ✅</span>}
-        </div>
+        </Link>
       </div>
     </div>
   );

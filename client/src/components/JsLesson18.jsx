@@ -52,6 +52,7 @@ const JsLesson18 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Creates an object 'student' with keys: name='CodeVibe', age=18."
         LessonId="js-lesson-18"
         language="js"
         initialCode={`// Write your code below

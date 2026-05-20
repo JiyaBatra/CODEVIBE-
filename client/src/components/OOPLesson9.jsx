@@ -39,6 +39,7 @@ console.log(s.name()); // Square`}</pre>
 3) In main, make object of Square and print: Square`}</pre>
 
       <Compiler
+        hint="💡 Hint: 1) Create abstract-like class Shape with name() that throws error 2) Create Square extends Shape, override n..."
         LessonId="oop-lesson-9"
         language="js"
         initialCode={`// write your code here

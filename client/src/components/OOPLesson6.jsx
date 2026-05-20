@@ -33,6 +33,7 @@ obj.greet(); // Hello`}</pre>
 3) Make object of C and call greet() -> Output: Hello`}</pre>
 
       <Compiler
+        hint="💡 Hint: 1) Create classes A → B → C (multilevel chain) 2) A has method greet() that prints 'Hello'"
         LessonId="oop-lesson-6"
         language="js"
         initialCode={`// write your code here

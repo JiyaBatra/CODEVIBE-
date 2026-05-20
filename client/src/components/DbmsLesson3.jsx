@@ -38,14 +38,13 @@ SELECT * FROM Students;`}
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a table 'Books' with id, title, and price. 2. Insert one book with id=1, title='C Programming', pr..."
         LessonId="dbms-lesson-3"
         language="sql"
         initialCode={`CREATE TABLE Books (id INT, title VARCHAR(50), price INT);
 INSERT INTO Books VALUES (1, 'C Programming', 500);
 SELECT * FROM Books;`}
-        expectedOutput={(output) =>
-          output.trim().toLowerCase().includes('c programming')
-        }
+        expectedOutput={`c programming`}
         onSuccess={handleSuccess}
       />
 

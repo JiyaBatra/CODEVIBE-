@@ -29,6 +29,7 @@ const MongoLesson3 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Insert two new users into 'users' collection. 2. Print 'Documents inserted' after success."
         LessonId="mongo-lesson-3"
         language="javascript"
         initialCode={`const { MongoClient } = require('mongodb');
@@ -50,7 +51,7 @@ async function run() {
 }
 
 run().catch(console.dir);`}
-        expectedOutput={(output) => output.includes('Documents inserted')}
+        expectedOutput={`Documents inserted`}
         onSuccess={handleSuccess}
       />
 

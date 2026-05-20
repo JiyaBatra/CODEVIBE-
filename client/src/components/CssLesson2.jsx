@@ -40,6 +40,7 @@ const CssLesson2 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a webpage with: - A heading 'Colorful World' with blue text and yellow background."
         LessonId="css-lesson-2"
         language="css" // lock to CSS
         initialCode={`h1 {

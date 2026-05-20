@@ -32,11 +32,12 @@ http.createServer((req,res) => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a server that prints 'Hello Server'. 2. Listen on port 3000."
         LessonId="node-lesson-4"
         language="js"
         initialCode={`// Write your code here
 `}
-        expectedOutput={(output) => output.trim() === 'Hello Server'}
+        expectedOutput={`Hello Server`}
         onSuccess={handleSuccess}
       />
 

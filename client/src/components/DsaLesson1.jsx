@@ -53,6 +53,7 @@ const DSALesson1 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Write a simple program to print 'Welcome to DSA' using a JavaScript function."
         LessonId="dsa-lesson-1"
         language="js"
         initialCode={`// Example: Hello from CodeVibe
@@ -62,7 +63,7 @@ function welcomeDSA() {
 
 // Call the function
 welcomeDSA();`}
-        expectedOutput={(output) => output.trim() === "Welcome to DSA"}
+        expectedOutput={`Welcome to DSA`}
         onSuccess={() => setIsCorrect(true)}
       />
 

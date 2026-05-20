@@ -7,23 +7,15 @@ const CLesson7 = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const navigate = useNavigate();
 
-  const handleSuccess = () => {
-    setIsCorrect(true);
-  };
-
-  const goToNextLesson = () => {
-    navigate('/CLesson8');
-  };
+  const handleSuccess = () => { setIsCorrect(true); };
+  const goToNextLesson = () => { navigate('/CLesson8'); };
 
   return (
     <div className="lesson">
       <h1 className="lesson-title">Chapter 7: Arrays in C</h1>
 
       <div className="lesson-content">
-        <p>
-          An array is a collection of elements of the same type stored in contiguous memory locations.  
-          Arrays are useful for storing multiple values in a single variable.
-        </p>
+        <p>An array is a collection of elements of the same type stored in contiguous memory locations. Arrays are useful for storing multiple values in a single variable.</p>
         <p>Example:</p>
         <code>
 {`#include <stdio.h>
@@ -51,6 +43,7 @@ int main() {
       <Compiler
         LessonId="c-lesson-7"
         language="c"
+        hint="Declare int arr[5] = {5, 10, 15, 20, 25}; then print arr[2] — arrays are zero-indexed so index 2 gives the third element."
         initialCode={`#include <stdio.h>
 
 int main() {
@@ -65,11 +58,7 @@ int main() {
       />
 
       {isCorrect && (
-        <Link
-          to="/CLesson8"
-          style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }}
-          onClick={goToNextLesson}
-        >
+        <Link to="/CLesson8" style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }} onClick={goToNextLesson}>
           ⏭ NEXT LESSON
         </Link>
       )}

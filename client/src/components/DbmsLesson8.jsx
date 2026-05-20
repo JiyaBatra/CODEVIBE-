@@ -35,6 +35,7 @@ const DBMSLesson8 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create Students table with id as PRIMARY KEY. 2. book_id as FOREIGN KEY referencing Books table."
         LessonId="dbms-lesson-8"
         language="sql"
         initialCode={`CREATE TABLE Students(
@@ -43,9 +44,7 @@ const DBMSLesson8 = () => {
   book_id INT,
   FOREIGN KEY (book_id) REFERENCES Books(id)
 );`}
-        expectedOutput={(output) =>
-          output.trim().toLowerCase().includes('students')
-        }
+        expectedOutput={`students`}
         onSuccess={handleSuccess}
       />
 

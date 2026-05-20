@@ -31,6 +31,7 @@ console.log(add(5, 3)); // 8`}</pre>
 3) Print: 8`}</pre>
 
       <Compiler
+        hint="💡 Hint: 1) Create math.js that exports add(a,b) 2) Import it in main.js"
         LessonId="oop-lesson-3"
         language="js"
         initialCode={`// --- math.js ---

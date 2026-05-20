@@ -38,6 +38,7 @@ const ReactLesson4 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a functional component 'Counter'. 2. Use useState to manage a count."
         LessonId="react-lesson-4"
         language="js"
         initialCode={`function Counter() {
@@ -49,7 +50,7 @@ const ReactLesson4 = () => {
     </div>
   );
 }`}
-        expectedOutput={(output) => output.includes('Count')}
+        expectedOutput={`Count`}
         onSuccess={handleSuccess}
       />
 

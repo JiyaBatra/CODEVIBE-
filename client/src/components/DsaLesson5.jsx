@@ -76,6 +76,7 @@ const DSALesson5 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Write a C program to input 5 numbers into an array. 2. Sort them in ascending order using Bubble Sort."
         LessonId="dsa-lesson-5"
         language="c"
         initialCode={`#include <stdio.h>
@@ -85,15 +86,7 @@ int main() {
     // Write your code here
     return 0;
 }`}
-        expectedOutput={(output) => {
-          // Check if output is sorted numbers (basic check)
-          const nums = output.trim().split(/\s+/).map(Number);
-          if (nums.length !== 5) return false;
-          for (let i = 1; i < nums.length; i++) {
-            if (nums[i] < nums[i-1]) return false;
-          }
-          return true;
-        }}
+        expectedOutput={`1`}
         onSuccess={handleSuccess}
       />
 

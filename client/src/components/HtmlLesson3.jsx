@@ -16,14 +16,14 @@ const HtmlLesson3 = () => {
 
   return (
     <div className="lesson">
-      <h1>Lesson 3: HTML List</h1>
+      <h1>Lesson 3: HTML Lists</h1>
       <br />
       <p>
         In HTML, lists are used to display multiple items in an organized way.
         There are three main types of lists:
       </p>
 
-      <h2>Ordered list {'<ol>'}</h2>
+      <h2>Ordered List {'<ol>'}</h2>
       <ul>
         <li>This list shows items in a specific order.</li>
         <li>It is useful when sequence matters, like in a recipe or instruction.</li>
@@ -37,7 +37,7 @@ const HtmlLesson3 = () => {
 
       <hr />
 
-      <h2>Unordered list {'<ul>'}</h2>
+      <h2>Unordered List {'<ul>'}</h2>
       <ul>
         <li>This list shows items with bullet points, not numbers.</li>
         <li>It is used when order doesn't matter, like a grocery list.</li>
@@ -51,7 +51,7 @@ const HtmlLesson3 = () => {
 
       <hr />
 
-      <h2>Description list {'<dl>'}</h2>
+      <h2>Description List {'<dl>'}</h2>
       <p>This list is used for terms and their descriptions, like in a dictionary.</p>
                 
 

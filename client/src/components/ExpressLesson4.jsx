@@ -33,6 +33,7 @@ app.post('/login', (req, res) => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a /login POST route. 2. Read 'username' from JSON body and respond with 'Welcome username'."
         LessonId="express-lesson-4"
         language="javascript"
         initialCode={`const express = require('express');
@@ -46,7 +47,7 @@ app.post('/login', (req, res) => {
 });
 
 app.listen(3000, () => console.log('Server running on port 3000'));`}
-        expectedOutput={(output) => output.includes('Welcome')}
+        expectedOutput={`Welcome`}
         onSuccess={handleSuccess}
       />
 

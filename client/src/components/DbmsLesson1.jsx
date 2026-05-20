@@ -34,12 +34,11 @@ const DBMSLesson1 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create a database named 'SchoolDB' using SQL."
         LessonId="dbms-lesson-1"
         language="sql"
         initialCode={`CREATE DATABASE SchoolDB;`}
-        expectedOutput={(output) =>
-          output.trim().toLowerCase().includes('database created')
-        }
+        expectedOutput={`database created`}
         onSuccess={handleSuccess}
       />
 

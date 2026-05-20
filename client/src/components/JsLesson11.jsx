@@ -54,6 +54,7 @@ const JsLesson11 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Uses a do...while loop to print numbers from 1 to 2, each on a new line."
         LessonId="js-lesson-11"
         language="js"
         initialCode={`// Write your code below

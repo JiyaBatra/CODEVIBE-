@@ -31,6 +31,7 @@ d.speak(); // sound`}</pre>
 3) Make Circle object and call name() -> Output: Shape`}</pre>
 
       <Compiler
+        hint="💡 Hint: 1) Create base class Shape with method name() that prints 'Shape' 2) Create derived class Circle extends Shape"
         LessonId="oop-lesson-5"
         language="js"
         initialCode={`// write your code here

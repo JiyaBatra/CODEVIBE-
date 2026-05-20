@@ -58,6 +58,7 @@ const JsLesson8 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: Create a JavaScript program that: 1. Creates a variable 'day' with value 3."
         LessonId="js-lesson-8"
         language="js"
         initialCode={`// Write your code below

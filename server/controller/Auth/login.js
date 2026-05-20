@@ -1,9 +1,5 @@
-// Main logic
-// Step 1: Validate incoming data (login form)
-// Step 2: Check if user exists in DB
-// Step 3: Compare password
-// Step 4: Send response to frontend
-
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const UserModel = require("../../models/user.models");
 
 const login = async (req, res, next) => {
@@ -15,13 +11,30 @@ const login = async (req, res, next) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (user.password !== password) {
+    let isMatch = await bcrypt.compare(password, user.password);
+
+    // Handle legacy plaintext passwords: if bcrypt fails, try direct comparison
+    // then migrate the password to a hash on the spot
+    if (!isMatch && password === user.password) {
+      isMatch = true;
+      user.password = await bcrypt.hash(password, 10);
+      await user.save();
+    }
+
+    if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
+
+    const token = jwt.sign(
+      { userId: user._id, email: user.Email, username: user.username },
+      process.env.JWT_SECRET || "codevibe_default_secret",
+      { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
+    );
 
     return res.status(200).json({
       success: true,
       message: "Login successful",
+      token,
       user: {
         username: user.username,
         email: user.Email,

@@ -34,6 +34,7 @@ app.post('/products', (req, res) => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create GET /products → returns array. 2. Create POST /products → adds product."
         LessonId="express-lesson-10"
         language="javascript"
         initialCode={`const express = require('express');
@@ -50,7 +51,7 @@ app.post('/products', (req, res) => {
 });
 
 app.listen(3000, () => console.log('Server running on port 3000'));`}
-        expectedOutput={(output) => output.includes('Product added')}
+        expectedOutput={`Product added`}
         onSuccess={handleSuccess}
       />
 

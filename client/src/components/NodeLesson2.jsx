@@ -27,13 +27,12 @@ const NodeLesson2 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Print 'Hello from Node.js!' to the console."
         LessonId="node-lesson-2"
         language="js"
         initialCode={`// Write your code here
 `}
-        expectedOutput={(output) =>
-          output.trim() === 'Hello from Node.js!'
-        }
+        expectedOutput={`Hello from Node.js!`}
         onSuccess={handleSuccess}
       />
 

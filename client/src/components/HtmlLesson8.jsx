@@ -44,13 +44,10 @@ const HtmlLesson8 = () => {
 
       <h2>Try Yourself !!</h2>
       <Compiler
+        hint="💡 Review the lesson instructions carefully. Make sure your output matches exactly."
         LessonId="html-lesson8"
-        expectedOutput={(output) => {
-          const normalize = (s) => s.replace(/\s+/g, " ").trim();
-          const expected = `<p class="my-text">This is a paragraph with a class.</p>
-<div id="unique-box">This has a unique ID.</div>`;
-          return normalize(output) === normalize(expected);
-        }}
+        expectedOutput={`<p class="my-text">This is a paragraph with a class.</p>
+<div id="unique-box">This has a unique ID.</div>`}
         initialCode={`<h1>HELLO, From Code Vibe</h1>`}
         onSuccess={handleSuccess}
       />

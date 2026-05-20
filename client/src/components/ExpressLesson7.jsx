@@ -32,6 +32,7 @@ const ExpressLesson7 = () => {
       </pre>
 
       <Compiler
+        hint="💡 Hint: 1. Create GET route '/search'. 2. Read 'name' from query and respond with 'Hello name'."
         LessonId="express-lesson-7"
         language="javascript"
         initialCode={`const express = require('express');
@@ -43,7 +44,7 @@ app.get('/search', (req, res) => {
 });
 
 app.listen(3000, () => console.log('Server running on port 3000'));`}
-        expectedOutput={(output) => output.includes('Hello')}
+        expectedOutput={`Hello`}
         onSuccess={handleSuccess}
       />
 

@@ -26,6 +26,7 @@ console.log(c.brand, c.year);`}</pre>
 3) Print: Alice 25`}</pre>
 
       <Compiler
+        hint="💡 Hint: 1) Create class Person with constructor(name, age) 2) Make an object with name='Alice', age=25"
         LessonId="oop-lesson-1"
         language="js"
         initialCode={`// write your code here
