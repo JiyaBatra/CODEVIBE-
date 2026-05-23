@@ -40,6 +40,3 @@ coverage/
 # optional npm cache
 .npm
 
-# lock files (optional if team project)
-package-lock.json
-yarn.lock
