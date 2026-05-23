@@ -65,7 +65,7 @@ For example:
 <input type="text" placeholder="Enter your name">
 
 <!-- Instruction 3: Create a button with the text "Submit" and disabled attribute -->
-<button type="button">Submit</button>
+<button type="button" disabled>Submit</button>
 
 <!-- Instruction 4: Create a paragraph with title="Hover Text" and text "This is a paragraph." -->
 <p title="Hover Text">This is a paragraph.</p>
@@ -79,7 +79,7 @@ For example:
   LessonId="html-lesson4"
   expectedOutput={`<a href="https://www.google.com">Go to Google</a>
 <input type="text" placeholder="Enter your name">
-<button type="button">Submit</button>
+<button type="button" disabled>Submit</button>
 <p title="Hover Text">This is a paragraph.</p>`}
   initialCode={`<h1> HELLO, From Code Vibe </h1>`}
   onSuccess={handleSuccess}
