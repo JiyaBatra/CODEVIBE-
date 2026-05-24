@@ -1,111 +1,1120 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaSignOutAlt } from "react-icons/fa";
+import { 
+  FaSignOutAlt, FaUserCircle, FaEnvelope, FaUniversity, FaGraduationCap, 
+  FaChartLine, FaTrophy, FaBookOpen, FaCode, FaDatabase, FaServer, 
+  FaReact, FaNodeJs, FaCss3Alt, FaHtml5, FaJs, FaArrowRight, 
+  FaCalendarAlt, FaClock, FaFire, FaMedal, FaCertificate, FaStar,
+  FaGithub, FaLinkedin, FaTwitter, FaArrowUp
+} from "react-icons/fa";
 import { useAuth } from "../AuthProvider.jsx";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const [hoveredCourse, setHoveredCourse] = useState(null);
+  const [greeting, setGreeting] = useState("");
+  const [currentTime, setCurrentTime] = useState("");
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) setGreeting("Good Morning");
+    else if (hour < 17) setGreeting("Good Afternoon");
+    else setGreeting("Good Evening");
+    
+    const updateTime = () => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }));
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogout = () => {
     logout();
     navigate("/Login");
   };
 
-  // Safely navigates to the detailed course progress report page by defensively
-  // resolving potential casing mismatches (email vs. Email) on the active user object.
   const handleViewReport = (course) => {
-    // yaha course select karke report page pe bhejenge
     const email = user?.email || user?.Email || "";
     navigate(`/report/${email}?course=${course}`);
   };
 
+  const courses = [
+    { name: "HTML", icon: <FaHtml5 />, color: "#ff4d4d", bgColor: "#ff4d4d20", progress: 75, lessons: 10, completed: 8 },
+    { name: "CSS", icon: <FaCss3Alt />, color: "#2965f1", bgColor: "#2965f120", progress: 65, lessons: 14, completed: 9 },
+    { name: "JavaScript", icon: <FaJs />, color: "#f7df1e", bgColor: "#f7df1e20", progress: 45, lessons: 29, completed: 13 },
+    { name: "C Programming", icon: <FaCode />, color: "#2d6a4f", bgColor: "#2d6a4f20", progress: 30, lessons: 17, completed: 5 },
+    { name: "OOP", icon: <FaCode />, color: "#e17055", bgColor: "#e1705520", progress: 20, lessons: 14, completed: 3 },
+    { name: "DSA", icon: <FaChartLine />, color: "#00cec9", bgColor: "#00cec920", progress: 15, lessons: 12, completed: 2 },
+    { name: "DBMS", icon: <FaDatabase />, color: "#6c5ce7", bgColor: "#6c5ce720", progress: 10, lessons: 12, completed: 1 },
+    { name: "MongoDB", icon: <FaDatabase />, color: "#4db33d", bgColor: "#4db33d20", progress: 5, lessons: 8, completed: 0 },
+    { name: "Node.js", icon: <FaNodeJs />, color: "#68a063", bgColor: "#68a06320", progress: 5, lessons: 12, completed: 0 },
+    { name: "Express.js", icon: <FaServer />, color: "#ffffff", bgColor: "#ffffff20", progress: 0, lessons: 10, completed: 0 },
+    { name: "React.js", icon: <FaReact />, color: "#61dafb", bgColor: "#61dafb20", progress: 0, lessons: 14, completed: 0 }
+  ];
+
+  const overallProgress = Math.round(courses.reduce((acc, c) => acc + c.progress, 0) / courses.length);
+  const totalLessons = courses.reduce((acc, c) => acc + c.lessons, 0);
+  const totalCompleted = courses.reduce((acc, c) => acc + c.completed, 0);
+  const streakDays = 7;
+
   if (!user) {
     return (
-      <p style={{ textAlign: "center", marginTop: "2rem", color: "red" }}>
-        ⚠️ Please log in or sign up first!
-      </p>
+      <div className="dashboard-container">
+        <div className="login-prompt">
+          <div className="prompt-icon">🚀</div>
+          <h2>Welcome Back!</h2>
+          <p>Sign in to continue your learning journey and track your progress</p>
+          <div className="prompt-buttons">
+            <button onClick={() => navigate("/Login")} className="btn-login">
+              <FaArrowRight /> Login to Dashboard
+            </button>
+            <button onClick={() => navigate("/Signup")} className="btn-signup">
+              Create Account
+            </button>
+          </div>
+        </div>
+      </div>
     );
   }
 
   return (
     <div className="dashboard">
+      <div className="bg-pattern"></div>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="modal-overlay" onClick={() => setShowLogoutConfirm(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-icon">👋</div>
+            <h3>Ready to leave?</h3>
+            <p>Your progress has been saved. Come back soon!</p>
+            <div className="modal-buttons">
+              <button className="modal-cancel" onClick={() => setShowLogoutConfirm(false)}>Cancel</button>
+              <button className="modal-confirm" onClick={handleLogout}>Logout</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Header Section */}
       <div className="dashboard-header">
-        <h1 style={{ textAlign: "center", width: "100%" }}>
-        Welcome, {user.username} 🎉
-        </h1>
-        <button
-          style={{
-            minHeight: "44px",
-            padding: "0.8rem 1.5rem",
-            borderRadius: "8px",
-            background: "linear-gradient(135deg, var(--primary-red), var(--secondary-pink))",
-            color: "var(--white)",
-            border: "none",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            fontSize: "0.95rem",
-            fontWeight: "600",
-            transition: "all 0.3s ease",
-            boxShadow: "0 0 15px rgba(255, 77, 109, 0.4)",
-          }}
-          onClick={handleLogout}
-          onMouseEnter={(e) => {
-            e.target.style.transform = "translateY(-2px) scale(1.05)";
-            e.target.style.boxShadow = "0 0 25px rgba(255, 77, 109, 0.8)";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.transform = "none";
-            e.target.style.boxShadow = "0 0 15px rgba(255, 77, 109, 0.4)";
-          }}
-        >
-          <FaSignOutAlt style={{ color: "var(--white)" }} />
-          Logout
+        <div className="header-left">
+          <div className="greeting-badge">
+            <span className="greeting-time">{greeting}</span>
+            <div className="current-time">
+              <FaClock /> {currentTime}
+            </div>
+          </div>
+          <div className="greeting-text">
+            <h1>
+              {user.username}!
+              <span className="wave-emoji">👋</span>
+            </h1>
+            <p className="motivation-text">Ready to level up your coding skills today?</p>
+          </div>
+        </div>
+        <div className="header-right">
+          <div className="streak-card">
+            <FaFire className="streak-icon" />
+            <div className="streak-info">
+              <span className="streak-days">{streakDays}</span>
+              <span className="streak-label">Day Streak</span>
+            </div>
+          </div>
+          <button className="logout-btn" onClick={() => setShowLogoutConfirm(true)}>
+            <FaSignOutAlt />
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Stats Row */}
+      <div className="stats-row">
+        <div className="stat-card-horizontal">
+          <div className="stat-icon-circle">
+            <FaTrophy />
+          </div>
+          <div className="stat-info-horizontal">
+            <h3>Overall Progress</h3>
+            <div className="stat-value-progress">
+              <span className="percentage">{overallProgress}%</span>
+              <div className="progress-bar-small">
+                <div className="progress-fill-small" style={{ width: `${overallProgress}%` }}></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="stat-card-horizontal">
+          <div className="stat-icon-circle">
+            <FaBookOpen />
+          </div>
+          <div className="stat-info-horizontal">
+            <h3>Lessons Completed</h3>
+            <div className="stat-value">
+              <span className="number">{totalCompleted}</span>
+              <span className="total">/{totalLessons}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="stat-card-horizontal">
+          <div className="stat-icon-circle">
+            <FaCertificate />
+          </div>
+          <div className="stat-info-horizontal">
+            <h3>Certificates Earned</h3>
+            <div className="stat-value">
+              <span className="number">{Math.floor(totalCompleted / 5)}</span>
+              <span className="total">🏆</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="quick-actions">
+        <button className="action-btn" onClick={() => navigate("/compiler")}>
+          <FaCode /> Live Code Editor
+        </button>
+        <button className="action-btn" onClick={() => navigate("/leaderboard")}>
+          <FaMedal /> Leaderboard
+        </button>
+        <button className="action-btn" onClick={() => navigate("/certificate")}>
+          <FaCertificate /> My Certificates
         </button>
       </div>
 
-      <div className="dashboard-card" style={{ color: "black", width: "100%", maxWidth: "600px" }}>
-        <p><strong>👤 Username:</strong> {user.username}</p>
-        <p><strong>📧 Email:</strong> {user.email || user.Email}</p>
-        <p><strong>🏫 College:</strong> {user.college}</p>
-        <p><strong>🎓 Year:</strong> {user.year}</p>
+      {/* User Info Card */}
+      <div className="user-info-card">
+        <div className="card-header">
+          <FaUserCircle className="card-icon" />
+          <h2>Profile Overview</h2>
+          <button className="edit-profile">Edit Profile</button>
+        </div>
+        <div className="info-grid">
+          <div className="info-item">
+            <FaEnvelope className="info-icon" />
+            <div>
+              <label>Email Address</label>
+              <p>{user.email || user.Email}</p>
+            </div>
+          </div>
+          <div className="info-item">
+            <FaUniversity className="info-icon" />
+            <div>
+              <label>Institution</label>
+              <p>{user.college || "Not specified"}</p>
+            </div>
+          </div>
+          <div className="info-item">
+            <FaGraduationCap className="info-icon" />
+            <div>
+              <label>Academic Year</label>
+              <p>{user.year || "Not specified"}</p>
+            </div>
+          </div>
+          <div className="info-item">
+            <FaCalendarAlt className="info-icon" />
+            <div>
+              <label>Member Since</label>
+              <p>{new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Courses to view progress */}
-      <div className="courses" style={{ width: "100%", maxWidth: "600px" }}>
-        {["HTML","CSS","JavaScript","OOP","DSA","DBMS","MongoDB","Node.js","Express.js","React.js"].map((c) => (
-          <button
-            key={c}
-            onClick={() => handleViewReport(c)}
-            style={{
-              padding: "0.8rem 1rem",
-              borderRadius: "8px",
-              background: "linear-gradient(135deg, #ff113d, #ff4d6d, #ff85a1)",
-              color: "#fff",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "0.95rem",
-              fontWeight: "600",
-              minHeight: "44px",
-              transition: "all 0.3s ease",
-              boxShadow: "0 0 15px rgba(255, 77, 109, 0.4)",
-              width: "100%",
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.transform = "translateY(-3px) scale(1.05)";
-              e.target.style.boxShadow = "0 0 25px rgba(255, 77, 109, 0.8)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = "none";
-              e.target.style.boxShadow = "0 0 15px rgba(255, 77, 109, 0.4)";
-            }}
-          >
-            View {c} Progress
-          </button>
-        ))}
+      {/* Courses Section - Extra Large Horizontal Cards */}
+      <div className="courses-section">
+        <div className="section-header">
+          <div className="header-badge">
+            <FaArrowUp />
+            <span>Learning Path</span>
+          </div>
+          <h2>Your Course Journey</h2>
+          <p>Track your progress and continue where you left off</p>
+        </div>
+
+        <div className="courses-grid">
+          {courses.map((course, index) => (
+            <button
+              key={course.name}
+              onClick={() => handleViewReport(course.name)}
+              className="course-card-btn"
+              onMouseEnter={() => setHoveredCourse(index)}
+              onMouseLeave={() => setHoveredCourse(null)}
+              style={{
+                transform: hoveredCourse === index ? 'translateY(-8px)' : 'translateY(0)',
+              }}
+            >
+              <div className="course-icon" style={{ background: course.bgColor }}>
+                <span style={{ color: course.color }}>{course.icon}</span>
+              </div>
+              <div className="course-details">
+                <div className="course-header">
+                  <h3>{course.name}</h3>
+                  <span className="course-progress-percent">{course.progress}%</span>
+                </div>
+                <div className="course-progress-bar">
+                  <div className="course-progress-fill" style={{ width: `${course.progress}%`, background: course.color }}></div>
+                </div>
+                <div className="course-stats">
+                  <span>{course.completed}/{course.lessons} lessons</span>
+                  {course.progress > 0 && <FaStar className="star-icon" style={{ color: course.color }} />}
+                </div>
+              </div>
+              <div className="course-arrow">
+                <FaArrowRight />
+              </div>
+            </button>
+          ))}
+        </div>
       </div>
+
+      {/* Footer */}
+      <div className="dashboard-footer">
+        <div className="footer-content">
+          <p>© 2024 CodeVibe - Learn. Practice. Master.</p>
+          <div className="social-links">
+            <a href="#"><FaGithub /></a>
+            <a href="#"><FaLinkedin /></a>
+            <a href="#"><FaTwitter /></a>
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        .dashboard {
+          min-height: 100vh;
+          background: linear-gradient(135deg, #0f0c29 0%, #1a1a2e 50%, #16213e 100%);
+          padding: 30px 50px;
+          position: relative;
+          overflow-x: hidden;
+        }
+
+        .bg-pattern {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-image: radial-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+          background-size: 30px 30px;
+          pointer-events: none;
+        }
+
+        /* Modal */
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.8);
+          backdrop-filter: blur(8px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 1000;
+          animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+          background: linear-gradient(135deg, #1e1e3f, #16162e);
+          border-radius: 24px;
+          padding: 40px;
+          text-align: center;
+          max-width: 400px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          animation: slideUp 0.3s ease;
+        }
+
+        .modal-icon {
+          font-size: 4rem;
+          margin-bottom: 20px;
+        }
+
+        .modal-content h3 {
+          color: white;
+          margin-bottom: 10px;
+          font-size: 1.5rem;
+        }
+
+        .modal-content p {
+          color: #a0a0a0;
+          margin-bottom: 30px;
+        }
+
+        .modal-buttons {
+          display: flex;
+          gap: 15px;
+          justify-content: center;
+        }
+
+        .modal-cancel, .modal-confirm {
+          padding: 10px 24px;
+          border-radius: 10px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          border: none;
+        }
+
+        .modal-cancel {
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+        }
+
+        .modal-cancel:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-confirm {
+          background: #ff4d4d;
+          color: white;
+        }
+
+        .modal-confirm:hover {
+          background: #ff3333;
+          transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+          from { transform: translateY(50px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Login Prompt */
+        .dashboard-container {
+          min-height: 100vh;
+          background: linear-gradient(135deg, #0f0c29 0%, #1a1a2e 50%, #16213e 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+        }
+
+        .login-prompt {
+          background: rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(10px);
+          border-radius: 32px;
+          padding: 50px;
+          text-align: center;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          max-width: 450px;
+          animation: fadeInUp 0.6s ease;
+        }
+
+        .prompt-icon {
+          font-size: 5rem;
+          margin-bottom: 20px;
+          animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+
+        .login-prompt h2 {
+          color: white;
+          margin-bottom: 15px;
+          font-size: 2rem;
+        }
+
+        .login-prompt p {
+          color: #a0a0a0;
+          margin-bottom: 35px;
+        }
+
+        .prompt-buttons {
+          display: flex;
+          gap: 15px;
+          flex-direction: column;
+        }
+
+        .btn-login, .btn-signup {
+          padding: 14px 28px;
+          border-radius: 12px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          border: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+        }
+
+        .btn-login {
+          background: linear-gradient(135deg, #ff4d4d, #ff8c4d);
+          color: white;
+        }
+
+        .btn-login:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 5px 20px rgba(255, 77, 77, 0.4);
+        }
+
+        .btn-signup {
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-signup:hover {
+          background: rgba(255, 255, 255, 0.2);
+          transform: translateY(-2px);
+        }
+
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 40px;
+          flex-wrap: wrap;
+          gap: 20px;
+          position: relative;
+          z-index: 1;
+          background: rgba(0, 0, 0, 0.3);
+          padding: 20px 25px;
+          border-radius: 20px;
+          backdrop-filter: blur(10px);
+        }
+
+        .header-left {
+          flex: 1;
+        }
+
+        .greeting-badge {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          margin-bottom: 15px;
+          flex-wrap: wrap;
+        }
+
+        .greeting-time {
+          background: rgba(255, 77, 77, 0.2);
+          padding: 8px 20px;
+          border-radius: 25px;
+          font-size: 1rem;
+          color: #ff4d4d;
+          font-weight: 600;
+          letter-spacing: 1px;
+        }
+
+        .current-time {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: rgba(255, 255, 255, 0.1);
+          padding: 8px 20px;
+          border-radius: 25px;
+          font-size: 1rem;
+          color: #ffffff;
+          font-weight: 500;
+        }
+
+        .greeting-text h1 {
+          font-size: 2.8rem;
+          color: white;
+          margin: 0 0 10px 0;
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          flex-wrap: wrap;
+        }
+
+        .wave-emoji {
+          display: inline-block;
+          animation: wave 1s infinite;
+          font-size: 2.5rem;
+        }
+
+        @keyframes wave {
+          0%, 100% { transform: rotate(0deg); }
+          50% { transform: rotate(20deg); }
+        }
+
+        .motivation-text {
+          color: #c0c0c0;
+          margin: 8px 0 0;
+          font-size: 1.1rem;
+          font-weight: 400;
+        }
+
+        .header-right {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+        }
+
+        .streak-card {
+          background: linear-gradient(135deg, rgba(255, 77, 77, 0.2), rgba(255, 140, 77, 0.15));
+          border-radius: 16px;
+          padding: 12px 24px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          border: 1px solid rgba(255, 77, 77, 0.3);
+        }
+
+        .streak-icon {
+          font-size: 2rem;
+          color: #ff8c4d;
+        }
+
+        .streak-info {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .streak-days {
+          font-size: 1.8rem;
+          font-weight: bold;
+          color: white;
+          line-height: 1;
+        }
+
+        .streak-label {
+          font-size: 0.8rem;
+          color: #c0c0c0;
+        }
+
+        .logout-btn {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 28px;
+          background: rgba(255, 77, 77, 0.15);
+          border: 1px solid rgba(255, 77, 77, 0.3);
+          border-radius: 12px;
+          color: white;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-size: 1rem;
+        }
+
+        .logout-btn:hover {
+          background: rgba(255, 77, 77, 0.3);
+          border-color: #ff4d4d;
+          transform: translateY(-2px);
+        }
+
+        /* Stats Row */
+        .stats-row {
+          display: flex;
+          gap: 25px;
+          margin-bottom: 40px;
+          position: relative;
+          z-index: 1;
+          flex-wrap: wrap;
+        }
+
+        .stat-card-horizontal {
+          flex: 1;
+          min-width: 220px;
+          background: rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(10px);
+          border-radius: 20px;
+          padding: 25px;
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          transition: all 0.3s ease;
+        }
+
+        .stat-card-horizontal:hover {
+          transform: translateY(-4px);
+          background: rgba(255, 255, 255, 0.08);
+          border-color: rgba(255, 77, 77, 0.3);
+        }
+
+        .stat-icon-circle {
+          width: 65px;
+          height: 65px;
+          background: rgba(255, 77, 77, 0.15);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 2rem;
+          color: #ff4d4d;
+        }
+
+        .stat-info-horizontal {
+          flex: 1;
+        }
+
+        .stat-info-horizontal h3 {
+          color: #c0c0c0;
+          font-size: 0.9rem;
+          margin: 0 0 10px 0;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+
+        .stat-value {
+          display: flex;
+          align-items: baseline;
+          gap: 5px;
+        }
+
+        .stat-value .number {
+          font-size: 2.2rem;
+          font-weight: bold;
+          color: white;
+        }
+
+        .stat-value .total {
+          font-size: 1.1rem;
+          color: #c0c0c0;
+        }
+
+        .stat-value-progress {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .stat-value-progress .percentage {
+          font-size: 2.2rem;
+          font-weight: bold;
+          color: white;
+        }
+
+        .progress-bar-small {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+          height: 8px;
+          width: 100%;
+          overflow: hidden;
+        }
+
+        .progress-fill-small {
+          background: linear-gradient(90deg, #ff4d4d, #ff8c4d);
+          height: 100%;
+          border-radius: 10px;
+          transition: width 0.5s ease;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+          display: flex;
+          gap: 15px;
+          margin-bottom: 40px;
+          flex-wrap: wrap;
+          position: relative;
+          z-index: 1;
+        }
+
+        .action-btn {
+          background: linear-gradient(135deg, rgba(255, 77, 77, 0.15), rgba(255, 140, 77, 0.1));
+          border: 1px solid rgba(255, 77, 77, 0.2);
+          border-radius: 12px;
+          padding: 14px 28px;
+          color: white;
+          font-weight: 600;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          transition: all 0.3s ease;
+          font-size: 1rem;
+        }
+
+        .action-btn:hover {
+          background: rgba(255, 77, 77, 0.25);
+          transform: translateY(-2px);
+          border-color: #ff4d4d;
+        }
+
+        /* User Info Card */
+        .user-info-card {
+          background: rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(10px);
+          border-radius: 24px;
+          padding: 30px;
+          margin-bottom: 40px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          position: relative;
+          z-index: 1;
+        }
+
+        .card-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 25px;
+          padding-bottom: 20px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          flex-wrap: wrap;
+          gap: 15px;
+        }
+
+        .card-header h2 {
+          color: white;
+          margin: 0;
+          font-size: 1.5rem;
+        }
+
+        .card-icon {
+          font-size: 2rem;
+          color: #ff4d4d;
+        }
+
+        .edit-profile {
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 8px 20px;
+          border-radius: 8px;
+          color: #c0c0c0;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .edit-profile:hover {
+          background: rgba(255, 77, 77, 0.1);
+          color: #ff4d4d;
+        }
+
+        .info-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 20px;
+        }
+
+        .info-item {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+        }
+
+        .info-icon {
+          font-size: 1.3rem;
+          color: #ff4d4d;
+        }
+
+        .info-item label {
+          font-size: 0.75rem;
+          color: #c0c0c0;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+
+        .info-item p {
+          color: white;
+          margin: 5px 0 0;
+          font-weight: 500;
+          font-size: 1rem;
+        }
+
+        /* Courses Section - EXTRA LARGE HORIZONTAL CARDS */
+        .courses-section {
+          position: relative;
+          z-index: 1;
+        }
+
+        .section-header {
+          text-align: center;
+          margin-bottom: 40px;
+        }
+
+        .header-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: rgba(255, 77, 77, 0.15);
+          padding: 8px 20px;
+          border-radius: 25px;
+          color: #ff4d4d;
+          font-size: 0.9rem;
+          margin-bottom: 15px;
+          font-weight: 500;
+        }
+
+        .section-header h2 {
+          color: white;
+          font-size: 2.2rem;
+          margin: 0 0 10px;
+        }
+
+        .section-header p {
+          color: #c0c0c0;
+          margin: 0;
+          font-size: 1rem;
+        }
+
+        /* EXTRA LARGE GRID - 1 card per row with full width */
+        .courses-grid {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          width: 100%;
+        }
+
+        /* Full width cards that span horizontally */
+        .course-card-btn {
+          background: rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(10px);
+          border-radius: 20px;
+          padding: 28px 35px;
+          display: flex;
+          align-items: center;
+          gap: 30px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          cursor: pointer;
+          transition: all 0.3s ease;
+          width: 100%;
+          text-align: left;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .course-card-btn::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+          transition: left 0.6s ease;
+        }
+
+        .course-card-btn:hover::before {
+          left: 100%;
+        }
+
+        /* Larger Icons */
+        .course-icon {
+          width: 85px;
+          height: 85px;
+          border-radius: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 2.5rem;
+          transition: all 0.3s ease;
+          flex-shrink: 0;
+        }
+
+        .course-card-btn:hover .course-icon {
+          transform: scale(1.08);
+        }
+
+        /* Larger Content Area */
+        .course-details {
+          flex: 1;
+        }
+
+        .course-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          margin-bottom: 15px;
+        }
+
+        .course-header h3 {
+          color: white;
+          margin: 0;
+          font-size: 1.5rem;
+          font-weight: 600;
+        }
+
+        .course-progress-percent {
+          font-size: 1.1rem;
+          font-weight: bold;
+          color: #ff4d4d;
+        }
+
+        /* Larger Progress Bar */
+        .course-progress-bar {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 12px;
+          height: 10px;
+          margin-bottom: 15px;
+          overflow: hidden;
+        }
+
+        .course-progress-fill {
+          height: 100%;
+          border-radius: 12px;
+          transition: width 0.3s ease;
+        }
+
+        /* Larger Stats Text */
+        .course-stats {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 0.95rem;
+          color: #c0c0c0;
+        }
+
+        .star-icon {
+          font-size: 1rem;
+        }
+
+        /* Larger Arrow Icon */
+        .course-arrow {
+          color: #c0c0c0;
+          transition: all 0.3s ease;
+          opacity: 0;
+          transform: translateX(-10px);
+          font-size: 1.5rem;
+        }
+
+        .course-card-btn:hover .course-arrow {
+          opacity: 1;
+          transform: translateX(0);
+          color: #ff4d4d;
+        }
+
+        /* Footer */
+        .dashboard-footer {
+          margin-top: 60px;
+          padding-top: 30px;
+          border-top: 1px solid rgba(255, 255, 255, 0.05);
+          position: relative;
+          z-index: 1;
+        }
+
+        .footer-content {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 20px;
+        }
+
+        .footer-content p {
+          color: #c0c0c0;
+          font-size: 0.9rem;
+        }
+
+        .social-links {
+          display: flex;
+          gap: 20px;
+        }
+
+        .social-links a {
+          color: #c0c0c0;
+          font-size: 1.3rem;
+          transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+          color: #ff4d4d;
+          transform: translateY(-2px);
+        }
+
+        /* Responsive - for smaller screens */
+        @media (max-width: 968px) {
+          .stats-row {
+            flex-direction: column;
+          }
+          
+          .stat-card-horizontal {
+            width: 100%;
+          }
+
+          .course-card-btn {
+            padding: 20px 25px;
+          }
+
+          .course-icon {
+            width: 65px;
+            height: 65px;
+            font-size: 2rem;
+          }
+
+          .course-header h3 {
+            font-size: 1.2rem;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .dashboard {
+            padding: 20px;
+          }
+
+          .greeting-text h1 {
+            font-size: 2rem;
+          }
+
+          .motivation-text {
+            font-size: 0.95rem;
+          }
+
+          .dashboard-header {
+            padding: 15px;
+          }
+
+          .greeting-time, .current-time {
+            font-size: 0.85rem;
+            padding: 6px 15px;
+          }
+
+          .streak-card {
+            padding: 8px 16px;
+          }
+
+          .streak-days {
+            font-size: 1.3rem;
+          }
+
+          .course-card-btn {
+            padding: 15px 20px;
+            gap: 15px;
+          }
+
+          .course-icon {
+            width: 55px;
+            height: 55px;
+            font-size: 1.5rem;
+          }
+
+          .course-header h3 {
+            font-size: 1rem;
+          }
+
+          .course-progress-percent {
+            font-size: 0.85rem;
+          }
+
+          .footer-content {
+            flex-direction: column;
+            text-align: center;
+          }
+
+          .quick-actions {
+            flex-direction: column;
+          }
+
+          .action-btn {
+            justify-content: center;
+          }
+        }
+      `}</style>
     </div>
   );
 };

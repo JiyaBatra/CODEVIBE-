@@ -1,0 +1,127 @@
+.global-back-nav {
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.75rem clamp(1rem, 4vw, 2.5rem) 0;
+  overflow: hidden;
+}
+
+.global-back-nav__inner {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+}
+
+.global-back-nav__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  color: #ff85a1;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 77, 109, 0.38);
+  border-radius: 10px;
+  box-shadow: 0 0 0 transparent;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.global-back-nav__button:hover,
+.global-back-nav__button:focus-visible {
+  color: #ffffff;
+  background: rgba(255, 77, 109, 0.12);
+  border-color: rgba(255, 133, 161, 0.85);
+  box-shadow: 0 0 14px rgba(255, 77, 109, 0.35);
+  transform: translateX(-2px);
+  outline: none;
+}
+
+.global-back-nav__button:active {
+  transform: translateX(0);
+}
+
+.global-back-nav__icon {
+  font-size: 0.9rem;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+.global-back-nav__button:hover .global-back-nav__icon,
+.global-back-nav__button:focus-visible .global-back-nav__icon {
+  transform: translateX(-1px);
+}
+
+/* Individual lesson pages — align with .lesson when progress sidebar is open */
+body.dynamic-progress-sidebar-visible .global-back-nav--lesson {
+  padding-left: calc(312px + clamp(1rem, 4vw, 4rem));
+  padding-right: clamp(1rem, 4vw, 4rem);
+}
+
+body.dynamic-progress-sidebar-visible.dynamic-progress-sidebar-collapsed .global-back-nav--lesson {
+  padding-left: calc(78px + clamp(1rem, 4vw, 4rem));
+  padding-right: clamp(1rem, 4vw, 4rem);
+}
+
+.global-back-nav--module {
+  padding: 1rem clamp(1.5rem, 5vw, 3.75rem) 0;
+}
+
+.global-back-nav--auth,
+.global-back-nav--default {
+  padding: 0.75rem clamp(1rem, 4vw, 2.5rem) 0;
+}
+
+@media (max-width: 1024px) {
+  body.dynamic-progress-sidebar-visible .global-back-nav--lesson {
+    padding-left: calc(312px + 1.5rem);
+    padding-right: 1.5rem;
+  }
+
+  body.dynamic-progress-sidebar-visible.dynamic-progress-sidebar-collapsed .global-back-nav--lesson {
+    padding-left: calc(78px + 1.5rem);
+    padding-right: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .global-back-nav,
+  .global-back-nav--module,
+  .global-back-nav--auth,
+  .global-back-nav--default {
+    padding: 0.5rem 1rem 0;
+  }
+
+  body.dynamic-progress-sidebar-visible .global-back-nav--lesson,
+  body.dynamic-progress-sidebar-visible.dynamic-progress-sidebar-collapsed .global-back-nav--lesson {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .global-back-nav__button {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 8px;
+  }
+
+  .global-back-nav__icon {
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .global-back-nav,
+  .global-back-nav--module,
+  .global-back-nav--auth,
+  .global-back-nav--default {
+    padding: 0.4rem 0.8rem 0;
+  }
+}

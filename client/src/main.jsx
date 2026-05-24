@@ -218,6 +218,7 @@ import ReactLesson11 from './components/ReactLesson11.jsx';
 import ReactLesson12 from './components/ReactLesson12.jsx';
 import ReactLesson13 from './components/ReactLesson13.jsx';
 import ScrollToTop from "./components/ScrollToTop";
+import GlobalBackNav from "./components/common/GlobalBackNav.jsx";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -226,6 +227,7 @@ createRoot(document.getElementById('root')).render(
         <Head />
         <DynamicProgressSidebar />
         <ScrollToTop />
+        <GlobalBackNav />
         <Routes>
           {/* General Routes */}
           <Route path="/" element={<Navigate to="/lessons" replace />} />
