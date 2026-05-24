@@ -34,36 +34,7 @@ const Dashboard = () => {
         <h1 style={{ textAlign: "center", width: "100%" }}>
         Welcome, {user.username} 🎉
         </h1>
-        <button
-          style={{
-            minHeight: "44px",
-            padding: "0.8rem 1.5rem",
-            borderRadius: "8px",
-            background: "linear-gradient(135deg, var(--primary-red), var(--secondary-pink))",
-            color: "var(--white)",
-            border: "none",
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            fontSize: "0.95rem",
-            fontWeight: "600",
-            transition: "all 0.3s ease",
-            boxShadow: "0 0 15px rgba(255, 77, 109, 0.4)",
-          }}
-          onClick={handleLogout}
-          onMouseEnter={(e) => {
-            e.target.style.transform = "translateY(-2px) scale(1.05)";
-            e.target.style.boxShadow = "0 0 25px rgba(255, 77, 109, 0.8)";
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.transform = "none";
-            e.target.style.boxShadow = "0 0 15px rgba(255, 77, 109, 0.4)";
-          }}
-        >
-          <FaSignOutAlt style={{ color: "var(--white)" }} />
-          Logout
-        </button>
+        
       </div>
 
       <div className="dashboard-card" style={{ color: "black", width: "100%", maxWidth: "600px" }}>
