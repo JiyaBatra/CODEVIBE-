@@ -56,29 +56,40 @@
   box-shadow: 0 0 18px rgba(255, 77, 109, 0.45);
 }
 
-.dynamic-progress-sidebar__header span {
-  justify-self: start;
-  display: block;
-  color: #ff9aae;
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
+.dynamic-progress-sidebar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
 }
 
-.dynamic-progress-sidebar__header {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 12px;
-  align-items: center;
+.dynamic-progress-sidebar__header-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.dynamic-progress-sidebar__header span {
+  display: block;
+  color: #ff9aae;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.2;
 }
 
 .dynamic-progress-sidebar__header h2 {
   margin: 0;
   color: #ffffff;
-  font-size: 28px;
-  letter-spacing: 1px;
-  text-align: center;
-  text-shadow: 0 0 14px rgba(255, 255, 255, 0.28);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+  text-align: left;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 77, 109, 0.3);
 }
 
 .dynamic-progress-sidebar__analytics {

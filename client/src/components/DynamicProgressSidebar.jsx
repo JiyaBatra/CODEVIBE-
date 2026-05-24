@@ -257,8 +257,10 @@ const DynamicProgressSidebar = () => {
       {!isCollapsed && (
         <>
           <div className="dynamic-progress-sidebar__header">
-            <span>Course</span>
-            <h2>{activeGroup.course}</h2>
+            <div className="dynamic-progress-sidebar__header-info">
+              <span>Course</span>
+              <h2>{activeGroup.course}</h2>
+            </div>
             <button
               className="dynamic-progress-sidebar__toggle"
               type="button"
