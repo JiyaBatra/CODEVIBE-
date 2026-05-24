@@ -11,7 +11,7 @@ const verifyToken = async (req, res, next) => {
   try {
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET || "codevibe_default_secret"
+      process.env.JWT_SECRET
     );
     
     // Verify user still exists in DB
