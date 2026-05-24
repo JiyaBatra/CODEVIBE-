@@ -174,6 +174,7 @@ const clearSearch = () => {
           {/*<FaSearch className="search-icon-left" aria-hidden="true" />*/}
           <input
             ref={inputRef}
+            autoFocus
             type="text"
             className="search-input"
             placeholder="Search courses — HTML, DSA, React..."
