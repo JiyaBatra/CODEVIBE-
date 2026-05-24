@@ -29,6 +29,11 @@ exports.completeLesson = async (req, res) => {
     const lessonId = req.params.id;
     
     if (!email) return res.status(400).json({ message: 'Email is required' });
+    
+    // Verify requesting user can only update their own progress
+    if (req.user.email !== email) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
 
     const progress = await Progress.findOneAndUpdate(
       { email },

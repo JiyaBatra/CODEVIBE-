@@ -16,7 +16,10 @@ Router.post("/reset-password", resetPassword);
 
 // Verify JWT and return current user info
 Router.get("/me", verifyToken, (req, res) => {
-  res.status(200).json({ success: true, user: req.user });
+  res.status(200).json({ 
+    success: true, 
+    user: req.user 
+  });
 });
 
 module.exports = Router;

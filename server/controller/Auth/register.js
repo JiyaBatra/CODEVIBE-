@@ -29,7 +29,8 @@ const register = async (req, res, next) => {
       { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
     );
 
-    res.status(200).json({
+    // 201 - is the standard created response not 200
+    res.status(201).json({
       success: true,
       message: "User registered successfully",
       token,

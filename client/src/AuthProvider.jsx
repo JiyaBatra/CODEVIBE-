@@ -1,5 +1,7 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import axios from "axios";
+import API_BASE_URL from "./config/api.js";
 
 const AuthContext = createContext(null);
 
@@ -57,13 +59,28 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const PrivateRoute = ({ children }) => {
-  const { user } = useAuth();
+  const { token, login, logout } = useAuth();
   const location = useLocation();
+  const [verified, setVerified] = useState(null); // null=loading, true=ok, false=fail
 
-  if (!user) {
-    return <Navigate to="/login" replace state={{ from: location }} />;
-  }
+  useEffect(() => {
+    if (!token) { setVerified(false); return; }
+    axios
+      .get(`${API_BASE_URL}/api/auth/me`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        // Update user data from server response
+        if (res.data.success && res.data.user) {
+          login(res.data.user, token);
+        }
+        setVerified(true);
+      })
+      .catch(() => { logout(); setVerified(false); });
+  }, [token]);
 
+  if (verified === null) return null; // or a spinner
+  if (!verified) return <Navigate to="/login" replace state={{ from: location }} />;
   return children;
 };
 

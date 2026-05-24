@@ -137,13 +137,21 @@ const Compiler = ({
   // ── progress ─────────────────────────────────────────────────────────────
   const saveProgress = (lessonId, sc, attempt) => {
     const email = localStorage.getItem("userEmail");
+    const token = localStorage.getItem("authToken");
     window.dispatchEvent(
       new CustomEvent("codevibe-progress-updated", {
         detail: { lessonId, score: sc },
       })
     );
+    if (!token) {
+      console.error("No auth token found, cannot save progress");
+      return;
+    }
     axios
-      .post(`${API_BASE_URL}/api/lesson/${lessonId}/complete`, { email, score: sc })
+      .post(`${API_BASE_URL}/api/lesson/${lessonId}/complete`, 
+        { email, score: sc },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
       .catch((err) => console.error("Save progress error:", err));
     onSuccess?.({ LessonId: lessonId, score: sc, tries: attempt });
   };

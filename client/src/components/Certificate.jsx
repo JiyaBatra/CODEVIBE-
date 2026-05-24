@@ -39,16 +39,24 @@ export default function Certificate({ backgroundUrl = defaultBackgroundUrl }) {
   if (!email) { setError("Please enter email"); return; }
   setLoading(true);
   setError("");
+  
+  const token = localStorage.getItem("authToken");
+  if (!token) { setError("Please login first"); setLoading(false); return; }
 
   try {
-    const certRes = await axios.post(`${API_BASE_URL}/api/certificate`, { email, courseName });
+    const certRes = await axios.post(`${API_BASE_URL}/api/certificate`, 
+      { email, courseName },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
     console.log("cert response:", certRes.data);  // ← what does this show?
     
     const cert = certRes.data;
     const displayName = studentName?.trim() || cert.studentName || "Student";
     setInfo({ ...cert, studentName: displayName });
 
-    const progRes = await axios.get(`${API_BASE_URL}/api/progress/${email}`);
+    const progRes = await axios.get(`${API_BASE_URL}/api/progress/${email}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
     console.log("progress response:", progRes.data);  // ← and this?
     setProgress(progRes.data);
 

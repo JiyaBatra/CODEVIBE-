@@ -340,19 +340,22 @@ const Dashboard = () => {
   const [error, setError] = useState("");
 
   const email = user?.email || user?.Email || "";
+  const token = localStorage.getItem("authToken");
 
   // ── Fetch real progress on mount ──
   useEffect(() => {
-    if (!email) return;
+    if (!email || !token) return;
     setLoading(true);
-    axios.get(`${API_BASE_URL}/api/progress/${encodeURIComponent(email)}`)
+    axios.get(`${API_BASE_URL}/api/progress/${encodeURIComponent(email)}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
       .then(res => {
         setProgressData(res.data);
         setError("");
       })
       .catch(() => setError("Failed to load progress. Showing defaults."))
       .finally(() => setLoading(false));
-  }, [email]);
+  }, [email, token]);
 
   const handleLogout = () => { logout(); navigate("/Login"); };
   const handleViewReport = (course) => {

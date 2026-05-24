@@ -32,8 +32,16 @@ export default function ViewReport() {
 
   useEffect(() => {
     if (!email) return;
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      console.error("No auth token found");
+      setLoading(false);
+      return;
+    }
     axios
-      .get(`${API_BASE_URL}/api/progress/${email}`)
+      .get(`${API_BASE_URL}/api/progress/${email}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       .then((res) => setProgress(res.data))
       .catch((err) => console.error("Error fetching progress:", err))
       .finally(() => setLoading(false));

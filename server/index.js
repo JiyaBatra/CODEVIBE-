@@ -39,7 +39,7 @@ backend.use(
 backend.use(routes);
 
 // Central JSON error handler for API responses
-backend.use((err, req, res, next) => {
+backend.use((err, req, res) => {
   console.error("Unhandled server error:", err);
   const status = err.status || 500;
   res.status(status).json({
@@ -49,7 +49,8 @@ backend.use((err, req, res, next) => {
   });
 });
 
-const MONGODB_URL = process.env.DB_URL || "mongodb://127.0.0.1:27017/codevibe";
+const MONGODB_URL = process.env.DB_URL ;
+
 
 mongoose
   .connect(MONGODB_URL)

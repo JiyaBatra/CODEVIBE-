@@ -35,6 +35,11 @@ exports.getCertificateInfo = async (req, res) => {
     if (!email || !courseName) {
       return res.status(400).json({ message: "Email and courseName required" });
     }
+    
+    // Verify requesting user can only access their own certificate
+    if (req.user.email !== email) {
+      return res.status(403).json({ message: "Access denied" });
+    }
 
     const progress = await Progress.findOne({ email });
     if (!progress) return res.status(404).json({ message: "User not found" });
