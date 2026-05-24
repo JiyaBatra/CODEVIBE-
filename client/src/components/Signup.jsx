@@ -19,10 +19,20 @@ const SignUp = () => {
   const { login } = useAuth();
   const from = location.state?.from?.pathname || "/lessons";
 
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setResponseMsg("");
+
+    if (!passwordRegex.test(password)) {
+      setResponseMsg(
+        "Password must contain uppercase, lowercase, number, special character and be at least 8 characters long."
+      );
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await axios.post(`${API_BASE_URL}/api/auth/register`, {
@@ -110,13 +120,25 @@ const SignUp = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              hint={(
-                <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", marginTop: "-10px", marginBottom: "15px", textAlign: "left" }}>
-                  *Password must be at least 6 characters long
-                </p>
-              )}
+              required
             />
-            
+            <p
+              style={{
+                fontSize: "0.8rem",
+                color: "var(--text-secondary)",
+                marginTop: "-10px",
+                marginBottom: "15px",
+                textAlign: "left",
+              }}
+            >
+              Password must contain uppercase, lowercase, number, special character and be at least 8 characters long.
+            </p>
+
+            {responseMsg && (
+              <p style={{ color: "red", marginBottom: "10px" }}>
+                {responseMsg}
+              </p>
+            )}
 
             <button type="submit" disabled={loading}>
               {loading ? "LOADING..." : "SUBMIT"}
