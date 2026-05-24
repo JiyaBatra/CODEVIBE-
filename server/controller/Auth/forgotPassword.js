@@ -13,9 +13,11 @@ const forgotPasswordLimiter = rateLimit({
 
 const forgotPasswordLogic = async (req, res, next) => {
   try {
-    const { Email } = req.body;
+    const email = (req.body.email || req.body.Email || "").trim().toLowerCase();
 
-    const user = await UserModel.findOne({ Email });
+    const user = await UserModel.findOne({
+      $or: [{ email }, { Email: email }],
+    });
     
     // Always return a generic message to prevent email enumeration
     if (!user) {
@@ -49,7 +51,7 @@ const forgotPasswordLogic = async (req, res, next) => {
     const emailFrom = process.env.EMAIL_FROM || emailUser || `no-reply@${(process.env.CLIENT_URL || "codevibeforyou.netlify.app").replace(/^https?:\/\//, "")}`;
     const mailOptions = {
       from: emailFrom,
-      to: Email,
+      to: email,
       subject: "Reset your CodeVibe password",
       html: `<p>Click here to reset your password: <a href="${resetLink}">${resetLink}</a></p><p>This link expires in 15 minutes.</p>`,
     };

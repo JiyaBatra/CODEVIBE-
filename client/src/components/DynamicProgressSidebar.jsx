@@ -33,7 +33,7 @@ const DynamicProgressSidebar = () => {
   const activeGroup = useMemo(
     () =>
       lessonGroups.find((group) =>
-        group.lessons.some((lesson) => lesson.path === location.pathname)
+        group.lessons.some((lesson) => lesson.path.toLowerCase() === location.pathname.toLowerCase())
       ),
     [location.pathname]
   );
@@ -42,15 +42,11 @@ const DynamicProgressSidebar = () => {
     if (!activeGroup) return;
 
     const email = localStorage.getItem("userEmail");
-    if (!email) {
-      return;
-    }
+    if (!email) return;
 
     axios
       .get(`${API_BASE_URL}/api/progress/${email}`)
-      .then((res) =>
-        setProgress((current) => mergeProgress(current, res.data))
-      )
+      .then((res) => setProgress((current) => mergeProgress(current, res.data)))
       .catch(() => {});
   }, [activeGroup]);
 
@@ -87,31 +83,22 @@ const DynamicProgressSidebar = () => {
 
   useEffect(() => {
     fetchProgress();
-
     window.addEventListener("codevibe-progress-updated", handleProgressUpdated);
-
     return () => {
-      window.removeEventListener(
-        "codevibe-progress-updated",
-        handleProgressUpdated
-      );
+      window.removeEventListener("codevibe-progress-updated", handleProgressUpdated);
     };
   }, [fetchProgress, handleProgressUpdated, location.pathname]);
 
   useEffect(() => {
     if (!activeGroup) return undefined;
 
-    document.body.classList.add("dynamic-progress-sidebar-visible");
-    document.body.classList.toggle(
-      "dynamic-progress-sidebar-collapsed",
-      isCollapsed
-    );
+    const layoutRoot = document.getElementById("root") || document.body;
+    
+    layoutRoot.classList.add("codevibe-layout-managed");
+    layoutRoot.classList.toggle("codevibe-layout-sidebar-collapsed", isCollapsed);
 
     return () => {
-      document.body.classList.remove(
-        "dynamic-progress-sidebar-visible",
-        "dynamic-progress-sidebar-collapsed"
-      );
+      layoutRoot.classList.remove("codevibe-layout-managed", "codevibe-layout-sidebar-collapsed");
     };
   }, [activeGroup, isCollapsed]);
 
@@ -122,17 +109,12 @@ const DynamicProgressSidebar = () => {
   const completedCount = activeGroup.lessons.filter((lesson) =>
     completedLessons.includes(lesson.lessonId)
   ).length;
-  const completionPercent = Math.round(
-    (completedCount / activeGroup.lessons.length) * 100
-  );
+  const completionPercent = Math.round((completedCount / activeGroup.lessons.length) * 100);
   const courseScores = activeGroup.lessons
     .map((lesson) => scores[lesson.lessonId])
     .filter((score) => typeof score === "number");
   const averageScore = courseScores.length
-    ? Math.round(
-        courseScores.reduce((total, score) => total + score, 0) /
-          courseScores.length
-      )
+    ? Math.round(courseScores.reduce((total, score) => total + score, 0) / courseScores.length)
     : 0;
   const totalPoints = courseScores.reduce((total, score) => total + score, 0);
 
@@ -156,8 +138,10 @@ const DynamicProgressSidebar = () => {
       {!isCollapsed && (
         <>
           <div className="dynamic-progress-sidebar__header">
-            <span>Course</span>
-            <h2>{activeGroup.course}</h2>
+            <div className="dynamic-progress-sidebar__header-text-container">
+              <span>Course</span>
+              <h2>{activeGroup.course}</h2>
+            </div>
             <button
               className="dynamic-progress-sidebar__toggle"
               type="button"

@@ -1,39 +1,41 @@
 // API Configuration
-// Determines the backend URL based on the current environment
+// Dynamically resolves backend URL for local + production
 
 /**
- * Resolves the appropriate backend server URL dynamically based on the current hostname.
- * This guarantees zero configuration setup for both local developers and production deployments.
- * 
- * @returns {string} The fully qualified base URL of the active backend server.
+ * Returns backend base URL
  */
 const getBackendURL = () => {
+  // Use environment variable if available
   if (import.meta.env.VITE_API_BASE_URL) {
     return import.meta.env.VITE_API_BASE_URL;
   }
 
   const hostname = window.location.hostname;
 
-  // Check if running locally (localhost, loopback, or local IP ranges)
+  // Local development environments
   if (
     hostname === "localhost" ||
     hostname === "127.0.0.1" ||
     hostname === "::1" ||
     hostname.startsWith("192.168.")
   ) {
-    return "http://localhost:5000";
+    // IMPORTANT:
+    // Your backend runs on PORT 5002
+    return "http://127.0.0.1:5002";
   }
 
-  // Production backend deployed on Render
+  // Production backend
   return "https://codevibe-3.onrender.com";
 };
 
 /**
- * Centralized API base URL dynamically computed at runtime.
- * Prevents hardcoding issues across client-side requests.
+ * Centralized API base URL
  */
 export const API_BASE_URL = getBackendURL();
 
+/**
+ * Optional reusable Axios client
+ */
 export const createApiClient = (axios) => {
   return axios.create({
     baseURL: API_BASE_URL,

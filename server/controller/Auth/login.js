@@ -2,13 +2,31 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../../models/user.models");
 
+const escapeRegex = (value = "") => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 const login = async (req, res, next) => {
   try {
-    const { Email, password } = req.body;
+    const email = (req.body.email || req.body.Email || "").trim().toLowerCase();
+    const { password } = req.body;
 
-    const user = await UserModel.findOne({ Email });
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required",
+      });
+    }
+
+    const user = await UserModel.findOne({
+      $or: [
+        { email },
+        { Email: { $regex: `^${escapeRegex(email)}$`, $options: "i" } },
+      ],
+    });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
     }
 
     let isMatch = await bcrypt.compare(password, user.password);
@@ -26,7 +44,7 @@ const login = async (req, res, next) => {
     }
 
     const token = jwt.sign(
-      { userId: user._id, email: user.Email, username: user.username },
+      { userId: user._id, email: user.email || user.Email, username: user.username },
       process.env.JWT_SECRET || "codevibe_default_secret",
       { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
     );
@@ -37,7 +55,7 @@ const login = async (req, res, next) => {
       token,
       user: {
         username: user.username,
-        email: user.Email,
+        email: user.email || user.Email,
         college: user.college,
         year: user.year,
       },

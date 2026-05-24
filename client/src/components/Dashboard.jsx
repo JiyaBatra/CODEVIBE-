@@ -100,7 +100,7 @@ const Dashboard = () => {
         </div>
       )}
 
-      {/* Header Section */}
+      {/* Header Section - Centered */}
       <div className="dashboard-header">
         <div className="header-left">
           <div className="greeting-badge">
@@ -132,7 +132,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Stats Row */}
+      {/* Stats Row - Centered */}
       <div className="stats-row">
         <div className="stat-card-horizontal">
           <div className="stat-icon-circle">
@@ -189,38 +189,40 @@ const Dashboard = () => {
         </button>
       </div>
 
-      {/* User Info Card */}
+      {/* User Info Card - Centered & Vertical Layout */}
       <div className="user-info-card">
         <div className="card-header">
-          <FaUserCircle className="card-icon" />
-          <h2>Profile Overview</h2>
+          <div className="card-header-left">
+            <FaUserCircle className="card-icon" />
+            <h2>Profile Overview</h2>
+          </div>
           <button className="edit-profile">Edit Profile</button>
         </div>
-        <div className="info-grid">
-          <div className="info-item">
+        <div className="info-vertical">
+          <div className="info-item-vertical">
             <FaEnvelope className="info-icon" />
-            <div>
+            <div className="info-content">
               <label>Email Address</label>
               <p>{user.email || user.Email}</p>
             </div>
           </div>
-          <div className="info-item">
+          <div className="info-item-vertical">
             <FaUniversity className="info-icon" />
-            <div>
+            <div className="info-content">
               <label>Institution</label>
               <p>{user.college || "Not specified"}</p>
             </div>
           </div>
-          <div className="info-item">
+          <div className="info-item-vertical">
             <FaGraduationCap className="info-icon" />
-            <div>
+            <div className="info-content">
               <label>Academic Year</label>
               <p>{user.year || "Not specified"}</p>
             </div>
           </div>
-          <div className="info-item">
+          <div className="info-item-vertical">
             <FaCalendarAlt className="info-icon" />
-            <div>
+            <div className="info-content">
               <label>Member Since</label>
               <p>{new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
             </div>
@@ -228,7 +230,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Courses Section - Extra Large Horizontal Cards */}
+      {/* Courses Section */}
       <div className="courses-section">
         <div className="section-header">
           <div className="header-badge">
@@ -481,7 +483,7 @@ const Dashboard = () => {
           to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Dashboard Header */
+        /* Dashboard Header - Centered */
         .dashboard-header {
           display: flex;
           justify-content: space-between;
@@ -495,6 +497,9 @@ const Dashboard = () => {
           padding: 20px 25px;
           border-radius: 20px;
           backdrop-filter: blur(10px);
+          max-width: 900px;
+          margin-left: auto;
+          margin-right: auto;
         }
 
         .header-left {
@@ -618,7 +623,7 @@ const Dashboard = () => {
           transform: translateY(-2px);
         }
 
-        /* Stats Row */
+        /* Stats Row - Centered */
         .stats-row {
           display: flex;
           gap: 25px;
@@ -626,18 +631,18 @@ const Dashboard = () => {
           position: relative;
           z-index: 1;
           flex-wrap: wrap;
+          justify-content: center;
         }
 
         .stat-card-horizontal {
-          flex: 1;
-          min-width: 220px;
+          flex: 0 1 280px;
           background: rgba(255, 255, 255, 0.05);
           backdrop-filter: blur(10px);
           border-radius: 20px;
-          padding: 25px;
+          padding: 20px;
           display: flex;
           align-items: center;
-          gap: 20px;
+          gap: 15px;
           border: 1px solid rgba(255, 255, 255, 0.1);
           transition: all 0.3s ease;
         }
@@ -649,14 +654,14 @@ const Dashboard = () => {
         }
 
         .stat-icon-circle {
-          width: 65px;
-          height: 65px;
+          width: 55px;
+          height: 55px;
           background: rgba(255, 77, 77, 0.15);
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 2rem;
+          font-size: 1.6rem;
           color: #ff4d4d;
         }
 
@@ -666,8 +671,8 @@ const Dashboard = () => {
 
         .stat-info-horizontal h3 {
           color: #c0c0c0;
-          font-size: 0.9rem;
-          margin: 0 0 10px 0;
+          font-size: 0.8rem;
+          margin: 0 0 8px 0;
           text-transform: uppercase;
           letter-spacing: 1px;
         }
@@ -679,24 +684,24 @@ const Dashboard = () => {
         }
 
         .stat-value .number {
-          font-size: 2.2rem;
+          font-size: 1.8rem;
           font-weight: bold;
           color: white;
         }
 
         .stat-value .total {
-          font-size: 1.1rem;
+          font-size: 1rem;
           color: #c0c0c0;
         }
 
         .stat-value-progress {
           display: flex;
           flex-direction: column;
-          gap: 10px;
+          gap: 8px;
         }
 
         .stat-value-progress .percentage {
-          font-size: 2.2rem;
+          font-size: 1.8rem;
           font-weight: bold;
           color: white;
         }
@@ -704,7 +709,7 @@ const Dashboard = () => {
         .progress-bar-small {
           background: rgba(255, 255, 255, 0.1);
           border-radius: 10px;
-          height: 8px;
+          height: 6px;
           width: 100%;
           overflow: hidden;
         }
@@ -724,13 +729,14 @@ const Dashboard = () => {
           flex-wrap: wrap;
           position: relative;
           z-index: 1;
+          justify-content: center;
         }
 
         .action-btn {
           background: linear-gradient(135deg, rgba(255, 77, 77, 0.15), rgba(255, 140, 77, 0.1));
           border: 1px solid rgba(255, 77, 77, 0.2);
           border-radius: 12px;
-          padding: 14px 28px;
+          padding: 12px 24px;
           color: white;
           font-weight: 600;
           cursor: pointer;
@@ -738,7 +744,7 @@ const Dashboard = () => {
           align-items: center;
           gap: 10px;
           transition: all 0.3s ease;
-          font-size: 1rem;
+          font-size: 0.95rem;
         }
 
         .action-btn:hover {
@@ -747,16 +753,19 @@ const Dashboard = () => {
           border-color: #ff4d4d;
         }
 
-        /* User Info Card */
+        /* User Info Card - Centered & Vertical Layout */
         .user-info-card {
           background: rgba(255, 255, 255, 0.05);
           backdrop-filter: blur(10px);
-          border-radius: 24px;
-          padding: 30px;
+          border-radius: 20px;
+          padding: 25px 30px;
           margin-bottom: 40px;
           border: 1px solid rgba(255, 255, 255, 0.1);
           position: relative;
           z-index: 1;
+          max-width: 600px;
+          margin-left: auto;
+          margin-right: auto;
         }
 
         .card-header {
@@ -764,20 +773,26 @@ const Dashboard = () => {
           align-items: center;
           justify-content: space-between;
           margin-bottom: 25px;
-          padding-bottom: 20px;
+          padding-bottom: 15px;
           border-bottom: 1px solid rgba(255, 255, 255, 0.1);
           flex-wrap: wrap;
           gap: 15px;
         }
 
-        .card-header h2 {
+        .card-header-left {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .card-header-left h2 {
           color: white;
           margin: 0;
-          font-size: 1.5rem;
+          font-size: 1.3rem;
         }
 
         .card-icon {
-          font-size: 2rem;
+          font-size: 1.8rem;
           color: #ff4d4d;
         }
 
@@ -789,45 +804,65 @@ const Dashboard = () => {
           color: #c0c0c0;
           cursor: pointer;
           transition: all 0.3s ease;
+          font-size: 0.85rem;
+          font-weight: 500;
         }
 
         .edit-profile:hover {
           background: rgba(255, 77, 77, 0.1);
           color: #ff4d4d;
+          border-color: #ff4d4d;
         }
 
-        .info-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        .info-vertical {
+          display: flex;
+          flex-direction: column;
           gap: 20px;
         }
 
-        .info-item {
+        .info-item-vertical {
           display: flex;
           align-items: center;
           gap: 15px;
+          padding: 12px 15px;
+          background: rgba(255, 255, 255, 0.03);
+          border-radius: 12px;
+          transition: all 0.3s ease;
+        }
+
+        .info-item-vertical:hover {
+          background: rgba(255, 255, 255, 0.06);
+          transform: translateX(5px);
         }
 
         .info-icon {
           font-size: 1.3rem;
           color: #ff4d4d;
+          width: 40px;
+          text-align: center;
         }
 
-        .info-item label {
-          font-size: 0.75rem;
+        .info-content {
+          flex: 1;
+        }
+
+        .info-content label {
+          font-size: 0.7rem;
           color: #c0c0c0;
           text-transform: uppercase;
           letter-spacing: 1px;
+          display: block;
+          margin-bottom: 4px;
         }
 
-        .info-item p {
+        .info-content p {
           color: white;
-          margin: 5px 0 0;
+          margin: 0;
           font-weight: 500;
           font-size: 1rem;
         }
 
-        /* Courses Section - EXTRA LARGE HORIZONTAL CARDS */
+        /* Courses Section */
         .courses-section {
           position: relative;
           z-index: 1;
@@ -863,23 +898,20 @@ const Dashboard = () => {
           font-size: 1rem;
         }
 
-        /* EXTRA LARGE GRID - 1 card per row with full width */
         .courses-grid {
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
-          width: 100%;
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+          gap: 25px;
         }
 
-        /* Full width cards that span horizontally */
         .course-card-btn {
           background: rgba(255, 255, 255, 0.05);
           backdrop-filter: blur(10px);
           border-radius: 20px;
-          padding: 28px 35px;
+          padding: 25px;
           display: flex;
           align-items: center;
-          gap: 30px;
+          gap: 20px;
           border: 1px solid rgba(255, 255, 255, 0.1);
           cursor: pointer;
           transition: all 0.3s ease;
@@ -896,32 +928,30 @@ const Dashboard = () => {
           left: -100%;
           width: 100%;
           height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-          transition: left 0.6s ease;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+          transition: left 0.5s ease;
         }
 
         .course-card-btn:hover::before {
           left: 100%;
         }
 
-        /* Larger Icons */
         .course-icon {
-          width: 85px;
-          height: 85px;
-          border-radius: 20px;
+          width: 70px;
+          height: 70px;
+          border-radius: 18px;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 2.5rem;
+          font-size: 2rem;
           transition: all 0.3s ease;
           flex-shrink: 0;
         }
 
         .course-card-btn:hover .course-icon {
-          transform: scale(1.08);
+          transform: scale(1.05);
         }
 
-        /* Larger Content Area */
         .course-details {
           flex: 1;
         }
@@ -930,57 +960,54 @@ const Dashboard = () => {
           display: flex;
           justify-content: space-between;
           align-items: baseline;
-          margin-bottom: 15px;
+          margin-bottom: 12px;
         }
 
         .course-header h3 {
           color: white;
           margin: 0;
-          font-size: 1.5rem;
+          font-size: 1.2rem;
           font-weight: 600;
         }
 
         .course-progress-percent {
-          font-size: 1.1rem;
+          font-size: 0.9rem;
           font-weight: bold;
           color: #ff4d4d;
         }
 
-        /* Larger Progress Bar */
         .course-progress-bar {
           background: rgba(255, 255, 255, 0.1);
-          border-radius: 12px;
-          height: 10px;
-          margin-bottom: 15px;
+          border-radius: 10px;
+          height: 8px;
+          margin-bottom: 12px;
           overflow: hidden;
         }
 
         .course-progress-fill {
           height: 100%;
-          border-radius: 12px;
+          border-radius: 10px;
           transition: width 0.3s ease;
         }
 
-        /* Larger Stats Text */
         .course-stats {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          font-size: 0.95rem;
+          font-size: 0.85rem;
           color: #c0c0c0;
         }
 
         .star-icon {
-          font-size: 1rem;
+          font-size: 0.85rem;
         }
 
-        /* Larger Arrow Icon */
         .course-arrow {
           color: #c0c0c0;
           transition: all 0.3s ease;
           opacity: 0;
           transform: translateX(-10px);
-          font-size: 1.5rem;
+          font-size: 1.2rem;
         }
 
         .course-card-btn:hover .course-arrow {
@@ -1027,28 +1054,30 @@ const Dashboard = () => {
           transform: translateY(-2px);
         }
 
-        /* Responsive - for smaller screens */
+        /* Responsive */
         @media (max-width: 968px) {
           .stats-row {
             flex-direction: column;
+            align-items: center;
           }
           
           .stat-card-horizontal {
             width: 100%;
+            max-width: 300px;
           }
 
-          .course-card-btn {
-            padding: 20px 25px;
+          .courses-grid {
+            grid-template-columns: 1fr;
           }
 
-          .course-icon {
-            width: 65px;
-            height: 65px;
-            font-size: 2rem;
+          .user-info-card {
+            max-width: 90%;
+            padding: 20px;
           }
 
-          .course-header h3 {
-            font-size: 1.2rem;
+          .dashboard-header {
+            max-width: 95%;
+            padding: 15px 20px;
           }
         }
 
@@ -1082,25 +1111,6 @@ const Dashboard = () => {
             font-size: 1.3rem;
           }
 
-          .course-card-btn {
-            padding: 15px 20px;
-            gap: 15px;
-          }
-
-          .course-icon {
-            width: 55px;
-            height: 55px;
-            font-size: 1.5rem;
-          }
-
-          .course-header h3 {
-            font-size: 1rem;
-          }
-
-          .course-progress-percent {
-            font-size: 0.85rem;
-          }
-
           .footer-content {
             flex-direction: column;
             text-align: center;
@@ -1108,10 +1118,26 @@ const Dashboard = () => {
 
           .quick-actions {
             flex-direction: column;
+            align-items: center;
           }
 
           .action-btn {
             justify-content: center;
+            width: 100%;
+            max-width: 220px;
+          }
+
+          .info-item-vertical {
+            padding: 10px 12px;
+          }
+          
+          .info-icon {
+            font-size: 1.1rem;
+            width: 35px;
+          }
+          
+          .info-content p {
+            font-size: 0.9rem;
           }
         }
       `}</style>

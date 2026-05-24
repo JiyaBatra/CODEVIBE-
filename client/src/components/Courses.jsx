@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import FAQ from "./FAQ";
 import Testimonials from "./testimonials";
-
+import EmptyState from "./EmptyState";
+import { FaBookOpen } from "react-icons/fa";
 
 // Images
 import htmlLogo from '../assets/htmlLogo.png';
@@ -312,16 +313,18 @@ const Courses = () => {
                   marginTop: '8px',
                 }}
               >
-                <img
-                  src={course.img}
-                  alt={course.title}
-                  className="course-img"
-                  style={{
-                    width: '80px',
-                    height: '80px',
-                    objectFit: 'contain',
-                  }}
-                />
+               <img
+  src={course.img}
+  alt={course.title}
+  loading="lazy"
+  className="course-img"
+  style={{
+    width: "100%",
+    maxWidth: "80px",
+    height: "80px",
+    objectFit: "contain",
+  }}
+/>
               </div>
 
               {/* Title */}
@@ -418,22 +421,16 @@ const Courses = () => {
           ))}
         </div>
       ) : (
-        <div
-          style={{
-            textAlign: 'center',
-            padding: '60px 20px',
-            background: 'rgba(255,255,255,0.03)',
-            borderRadius: '20px',
-            marginTop: '40px',
-          }}
-        >
-          <h3 style={{ color: 'white', marginBottom: '8px' }}>
-            🔍 No courses found
-          </h3>
-          <p style={{ color: 'rgba(255,255,255,0.5)' }}>
-            Try adjusting your category or search
-          </p>
-        </div>
+        <EmptyState
+  icon={<FaBookOpen />}
+  title="No Courses Found"
+  description="We couldn't find any courses matching your selected category or search query. Try exploring other categories to continue learning."
+  buttonText="Show All Courses"
+  onButtonClick={() => {
+    setSelectedCategory("All");
+    setSearch("");
+  }}
+/>
       )}
       <Testimonials />
       <FAQ/>

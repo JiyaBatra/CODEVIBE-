@@ -1,29 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import API_BASE_URL from "../config/api";
-
-// Maps display course name → lesson-ID prefix (mirrors server-side resolver)
-const getCoursePrefix = (courseName) => {
-  const key = (courseName || "").toLowerCase();
-
-  const map = {
-    javascript: "js-",
-    "react.js": "react-",
-    "node.js": "node-",
-    oop: "oop-",
-    mongodb: "mongo-",
-    "express.js": "express-",
-    dbms: "dbms-",
-    dsa: "dsa-",
-    html: "html-",
-    css: "css-",
-  };
-
-  return map[key] || `${key}-`;
-};
 
 const defaultBackgroundUrl = "src/assets/completion certificate.png";
 
@@ -35,9 +15,10 @@ const PinkBadge = () => (
 
 export default function Certificate({ backgroundUrl = defaultBackgroundUrl }) {
 
-  const [studentName,setStudentName]=useState("");
-  const [courseName,setCourseName]=useState("");
-  const [email,setEmail]=useState("");
+  const [searchParams] = useSearchParams();
+  const [studentName, setStudentName] = useState("");
+  const [courseName, setCourseName] = useState(searchParams.get("course") || "");
+  const [email, setEmail] = useState(searchParams.get("email") || "");
   const [loading,setLoading]=useState(false);
   const [error,setError]=useState("");
   const [info,setInfo]=useState(null);
@@ -46,47 +27,38 @@ export default function Certificate({ backgroundUrl = defaultBackgroundUrl }) {
   const certRef=useRef(null);
   const navigate=useNavigate();
 
+  useEffect(() => {
+    if (email && courseName) {
+      fetchData();
+    }
+  }, []);
+
   const poweredBy="CODEVIBE!!! & BEWITHMEit";
 
-  const fetchData=async()=>{
-    if(!email){
-      setError("Please enter email");
-      return;
-    }
+  const fetchData = async () => {
+  if (!email) { setError("Please enter email"); return; }
+  setLoading(true);
+  setError("");
 
-    setLoading(true);
-    setError("");
+  try {
+    const certRes = await axios.post(`${API_BASE_URL}/api/certificate`, { email, courseName });
+    console.log("cert response:", certRes.data);  // ← what does this show?
+    
+    const cert = certRes.data;
+    const displayName = studentName?.trim() || cert.studentName || "Student";
+    setInfo({ ...cert, studentName: displayName });
 
-    try{
+    const progRes = await axios.get(`${API_BASE_URL}/api/progress/${email}`);
+    console.log("progress response:", progRes.data);  // ← and this?
+    setProgress(progRes.data);
 
-      const certRes=await axios.post(
-        `${API_BASE_URL}/api/certificate`,
-        {email,courseName}
-      );
+  } catch (e) {
+    console.log("error:", e?.response?.data || e.message);  // ← and this?
+    setError(e?.response?.data?.message || e.message || "Something went wrong");
+  }
 
-      const cert=certRes.data;
-
-      const displayName=
-        studentName?.trim() || cert.studentName || "Student";
-
-      setInfo({...cert,studentName:displayName});
-
-      const progRes=await axios.get(
-        `${API_BASE_URL}/api/progress/${email}`
-      );
-
-      setProgress(progRes.data);
-
-    }catch(e){
-      setError(
-        e?.response?.data?.message ||
-        e.message ||
-        "Something went wrong"
-      );
-    }
-
-    setLoading(false);
-  };
+  setLoading(false);
+};
 
 
   const downloadPDF=async()=>{
@@ -109,24 +81,8 @@ export default function Certificate({ backgroundUrl = defaultBackgroundUrl }) {
   };
 
 
-  const avgScore = (() => {
-    if (!progress?.scores || !courseName) return 0;
-    const prefix = getCoursePrefix(courseName);
-    const vals = Object.entries(progress.scores)
-      .filter(([id]) => id.toLowerCase().startsWith(prefix))
-      .map(([, v]) => v);
-    return vals.length
-      ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length)
-      : 0;
-  })();
-
-  const completedLessons = (() => {
-    if (!progress?.completedLessons || !courseName) return 0;
-    const prefix = getCoursePrefix(courseName);
-    return progress.completedLessons.filter((id) =>
-      id.toLowerCase().startsWith(prefix)
-    ).length;
-  })();
+const avgScore = info?.score || 0;
+const completedLessons = info?.completedLessons || 0;
 
 
   const goToReport=()=>{
@@ -166,6 +122,7 @@ export default function Certificate({ backgroundUrl = defaultBackgroundUrl }) {
           <option value="">Select Course</option>
           <option>HTML</option>
           <option>CSS</option>
+          <option>C</option>
           <option>JavaScript</option>
           <option>OOP</option>
           <option>DSA</option>
