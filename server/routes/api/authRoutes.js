@@ -7,8 +7,10 @@ const login = require("../../controller/Auth/login");
 const forgotPassword = require("../../controller/Auth/forgotPassword");
 const resetPassword = require("../../controller/Auth/resetPassword");
 
-Router.post("/register", register);
-Router.post("/login", login);
+const { registerSchema, loginSchema, validateBody } = require("../../services/validationScheme");
+
+Router.post("/register", validateBody(registerSchema), register);
+Router.post("/login", validateBody(loginSchema), login);
 Router.post("/forgot-password", forgotPassword);
 Router.post("/reset-password", resetPassword);
 

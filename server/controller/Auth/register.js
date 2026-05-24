@@ -9,7 +9,6 @@
 //send respose to frontend
 
 const UserModel = require("../../models/user.models");
-const momsvalidation = require("../../services/validationScheme");
 
 const register = async (req, res, next) => {
   try {
