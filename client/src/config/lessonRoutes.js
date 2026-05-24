@@ -59,7 +59,7 @@ export const lessonGroups = [
     modulePath: "/DsaLesson",
     lessons: Array.from({ length: 12 }, (_, index) => ({
       title: `DSA Lesson ${index + 1}`,
-      path: `/DsaLesson${index + 1}`,
+      path: `/DSALesson${index + 1}`,
       lessonId: `dsa-lesson-${index + 1}`,
     })),
   },
@@ -96,11 +96,11 @@ export const lessonGroups = [
   {
     course: "OOP",
     key: "oop",
-    modulePath: "/OOPLesson",
+    modulePath: "/OopLesson",
     lessons: Array.from({ length: 14 }, (_, index) => ({
       title: `OOP Lesson ${index + 1}`,
       path: `/OOPLesson${index + 1}`,
-      lessonId: `oop-lesson-${index + 1}`,
+      lessonId: `OOP-lesson-${index + 1}`,
     })),
   },
   {
@@ -134,7 +134,7 @@ export function getLessonBackNavigation(pathname) {
   if (lessonGroup) {
     return {
       to: lessonGroup.modulePath,
-      label: `Back to ${lessonGroup.course}`,
+      label: "Back to lessons",
       variant: "lesson",
     };
   }
