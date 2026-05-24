@@ -6,18 +6,12 @@ import API_BASE_URL from "../config/api";
 import loginImage from "../assets/loginImage.png";
 import PasswordField from "./PasswordField";
 
-import {
-  validateEmail,
-  validatePassword,
-} from "../utils/validation";
-
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({ email: "", password: "" });
   const [responseMsg, setResponseMsg] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -25,40 +19,17 @@ const Login = () => {
 
   const from = location.state?.from?.pathname || "/lessons";
 
-  const handleEmailChange = (e) => {
-    const value = e.target.value;
-
-    setEmail(value);
-
-    setErrors((prev) => ({
-      ...prev,
-      email: validateEmail(value),
-    }));
-  };
-
-  const handlePasswordChange = (e) => {
-    const value = e.target.value;
-
-    setPassword(value);
-
-    setErrors((prev) => ({
-      ...prev,
-      password: validatePassword(value),
-    }));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const emailError = validateEmail(email);
-    const passwordError = validatePassword(password);
+    const nextErrors = {
+      email: email.trim() ? "" : "Email is required",
+      password: password.trim() ? "" : "Password is required",
+    };
 
-    if (emailError || passwordError) {
-      setErrors({
-        email: emailError,
-        password: passwordError,
-      });
+    setErrors(nextErrors);
 
+    if (nextErrors.email || nextErrors.password) {
       return;
     }
 
@@ -66,29 +37,48 @@ const Login = () => {
     setResponseMsg("");
 
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
-        Email: email,
-        password,
-      });
+      console.log(
+        "Login API:",
+        `${API_BASE_URL}/api/auth/login`
+      );
 
-      setResponseMsg(response.data.message);
+      const response = await axios.post(
+        `${API_BASE_URL}/api/auth/login`,
+        {
+          email,
+          password,
+        }
+      );
+
+      console.log("✅ Login successful:", response.data);
 
       if (response.data.success) {
+        setResponseMsg(
+          response.data.message || "Login successful"
+        );
+
         localStorage.setItem(
           "userEmail",
-          response.data.user.email ||
-            response.data.user.Email ||
-            ""
+          response.data.user?.email || ""
         );
 
         login(response.data.user, response.data.token);
 
         navigate(from, { replace: true });
+      } else {
+        setResponseMsg(
+          response.data.message || "Login failed"
+        );
       }
     } catch (error) {
+      console.error(
+        "❌ Login error:",
+        error.response?.data || error.message
+      );
+
       setResponseMsg(
         error.response?.data?.message ||
-          "Something went wrong"
+          "Server error. Please try again."
       );
     } finally {
       setLoading(false);
@@ -98,7 +88,7 @@ const Login = () => {
   return (
     <section className="login-section">
       <div className="login-container">
-
+        
         <div className="login-image">
         <img
   src={loginImage}
@@ -116,12 +106,21 @@ const Login = () => {
           <form className="login-form" onSubmit={handleSubmit} noValidate>
             <h1>Hello, Welcome!</h1>
 
-            <label>EMAIL:</label>
+            <label htmlFor="email">EMAIL:</label>
 
             <input
+              id="email"
               type="email"
+              placeholder="Enter your email"
               value={email}
-              onChange={handleEmailChange}
+              onChange={(e) => {
+                const nextEmail = e.target.value;
+                setEmail(nextEmail);
+                setErrors((prev) => ({
+                  ...prev,
+                  email: nextEmail.trim() ? "" : "Email is required",
+                }));
+              }}
               aria-invalid={!!errors.email}
               aria-describedby="email-error"
               style={{
@@ -148,7 +147,14 @@ const Login = () => {
               id="login-password"
               label="PASSWORD:"
               value={password}
-              onChange={handlePasswordChange}
+              onChange={(e) => {
+                const nextPassword = e.target.value;
+                setPassword(nextPassword);
+                setErrors((prev) => ({
+                  ...prev,
+                  password: nextPassword.trim() ? "" : "Password is required",
+                }));
+              }}
             />
 
             {errors.password && (
@@ -168,20 +174,24 @@ const Login = () => {
             </button>
 
             {responseMsg && (
-              <p style={{ color: "white" }}>
+              <p
+                style={{
+                  color: "white",
+                  marginTop: "10px",
+                }}
+              >
                 {responseMsg}
               </p>
             )}
 
             <p>
-              Don't have an account?
-              <Link to="/signup"> Signup</Link>
+              Don't have an account?{" "}
+              <Link to="/signup">Signup</Link>
             </p>
 
             <p>
-              Forgot Password?
+              Forgot Password?{" "}
               <Link to="/ForgetPassword">
-                {" "}
                 Click Here
               </Link>
             </p>
@@ -191,5 +201,4 @@ const Login = () => {
     </section>
   );
 };
-
 export default Login;

@@ -108,6 +108,11 @@ const Compiler = ({
   const [status, setStatus]             = useState("");
 
   const iframeRef = useRef(null);
+  const startTimeRef = useRef(Date.now());
+
+  useEffect(() => {
+    startTimeRef.current = Date.now();
+  }, [LessonId]);
 
   // ── copy / download ──────────────────────────────────────────────────────
   const copyCode = async () => {

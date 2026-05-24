@@ -43,6 +43,13 @@ export const AuthProvider = ({ children }) => {
     setAuthState({ user: userData, token });
   };
 
+  const updateUser = (updatedUser) => {
+    if (!updatedUser) return;
+    const currentToken = authState?.token || localStorage.getItem("authToken");
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+    setAuthState({ user: updatedUser, token: currentToken });
+  };
+
   const logout = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("user");
@@ -51,7 +58,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const value = useMemo(
-    () => ({ user: authState.user, token: authState.token, login, logout }),
+    () => ({ user: authState.user, token: authState.token, login, updateUser, logout }),
     [authState]
   );
 

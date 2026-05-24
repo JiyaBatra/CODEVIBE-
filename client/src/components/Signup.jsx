@@ -1,36 +1,31 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../AuthProvider.jsx";
+import { Link, useNavigate } from "react-router-dom";
 import API_BASE_URL from "../config/api";
 import registerImage from "../assets/registerImage.png";
+import PasswordField from "./PasswordField";
 
-import {
-  validateEmail,
-  validatePassword,
-  validateUsername,
-  validateCollege,
-  validateYear,
-} from "../utils/validation";
+const Signup = () => {
+  const navigate = useNavigate();
 
-const SignUp = () => {
-  const [username, setUsername] = useState("");
-  const [college, setCollege] = useState("");
-  const [year, setYear] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    username: "",
+    collegeName: "",
+    year: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const [responseMsg, setResponseMsg] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [errors, setErrors] = useState({});
-
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const { login } = useAuth();
-
-  const from = location.state?.from?.pathname || "/lessons";
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   // Username Validation
   const handleUsernameChange = (e) => {
@@ -98,66 +93,52 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const usernameError = validateUsername(username);
-    const collegeError = validateCollege(college);
-    const yearError = validateYear(year);
-    const emailError = validateEmail(email);
-    const passwordError = validatePassword(password);
+    setResponseMsg("");
 
-    if (
-      usernameError ||
-      collegeError ||
-      yearError ||
-      emailError ||
-      passwordError
-    ) {
-      setErrors({
-        username: usernameError,
-        college: collegeError,
-        year: yearError,
-        email: emailError,
-        password: passwordError,
-      });
-
+    // Password Match Validation
+    if (formData.password !== formData.confirmPassword) {
+      setResponseMsg("Passwords do not match");
       return;
     }
 
     setLoading(true);
-    setResponseMsg("");
 
     try {
       const response = await axios.post(
         `${API_BASE_URL}/api/auth/register`,
         {
-          username,
-          Email: email,
-          password,
-          college,
-          year,
+          username: formData.username,
+          collegeName: formData.collegeName,
+          year: formData.year,
+          email: formData.email,
+          password: formData.password,
         }
       );
 
-      setResponseMsg(response.data.message);
+      console.log("✅ Signup successful:", response.data);
 
       if (response.data.success) {
-        localStorage.setItem(
-          "userEmail",
-          response.data.user.email ||
-            response.data.user.Email ||
-            ""
+        setResponseMsg(
+          response.data.message || "Account created successfully"
         );
 
-        login(response.data.user, response.data.token);
-
-        navigate(from, { replace: true });
+        setTimeout(() => {
+          navigate("/login");
+        }, 1500);
+      } else {
+        setResponseMsg(
+          response.data.message || "Signup failed"
+        );
       }
     } catch (error) {
-      console.error(error);
+      console.error(
+        "❌ Signup error:",
+        error.response?.data || error.message
+      );
 
       setResponseMsg(
         error.response?.data?.message ||
-          error.message ||
-          "Something went wrong"
+          "Server error. Please try again."
       );
     } finally {
       setLoading(false);
@@ -168,187 +149,134 @@ const SignUp = () => {
     <section className="login-section">
       <div className="login-container">
 
-        {/* Left Image */}
+        {/* Left Side Image */}
         <div className="login-image">
-         <img
-  src={registerImage}
-  className="registerImage"
-  alt="Student Registration"
-  loading="lazy"
-  style={{
-    width: "100%",
-    maxWidth: "500px",
-    height: "auto",
-  }}
-/>
+          <img src={registerImage} alt="Signup" />
         </div>
 
         {/* Signup Form */}
         <div className="login-card">
-          <form
-            className="login-form"
-            onSubmit={handleSubmit}
-            noValidate
-            aria-label="Sign Up Form"
-          >
-            <h1>Create Your Account</h1>
+          <form className="login-form" onSubmit={handleSubmit}>
+
+            <h1>Create Account</h1>
 
             {/* Username */}
-            <label>USERNAME:</label>
+            <label htmlFor="username">
+              USERNAME:
+            </label>
 
             <input
               type="text"
-              value={username}
-              onChange={handleUsernameChange}
-              aria-invalid={!!errors.username}
-              aria-describedby="username-error"
-              style={{
-                border: errors.username
-                  ? "1px solid #ff4d6d"
-                  : "",
-              }}
+              id="username"
+              name="username"
+              placeholder="Enter username"
+              value={formData.username}
+              onChange={handleChange}
+              required
             />
 
-            {errors.username && (
-              <p
-                id="username-error"
-                style={{
-                  color: "#ff4d6d",
-                  fontSize: "0.85rem",
-                  marginTop: "5px",
-                }}
-              >
-                {errors.username}
-              </p>
-            )}
-
-            {/* College */}
-            <label>COLLEGE:</label>
+            {/* College Name */}
+            <label htmlFor="collegeName">
+              COLLEGE NAME:
+            </label>
 
             <input
               type="text"
-              value={college}
-              onChange={handleCollegeChange}
-              aria-invalid={!!errors.college}
-              aria-describedby="college-error"
-              style={{
-                border: errors.college
-                  ? "1px solid #ff4d6d"
-                  : "",
-              }}
+              id="collegeName"
+              name="collegeName"
+              placeholder="Enter college name"
+              value={formData.collegeName}
+              onChange={handleChange}
+              required
             />
-
-            {errors.college && (
-              <p
-                id="college-error"
-                style={{
-                  color: "#ff4d6d",
-                  fontSize: "0.85rem",
-                  marginTop: "5px",
-                }}
-              >
-                {errors.college}
-              </p>
-            )}
 
             {/* Year */}
-            <label>YEAR:</label>
+            <label htmlFor="year">
+              YEAR:
+            </label>
 
-            <input
-              type="text"
-              value={year}
-              onChange={handleYearChange}
-              maxLength={4}
-              aria-invalid={!!errors.year}
-              aria-describedby="year-error"
-              style={{
-                border: errors.year
-                  ? "1px solid #ff4d6d"
-                  : "",
-              }}
-            />
+            <select
+              id="year"
+              name="year"
+              value={formData.year}
+              onChange={handleChange}
+              required
+            >
+              <option value="">
+                Select Year
+              </option>
 
-            {errors.year && (
-              <p
-                id="year-error"
-                style={{
-                  color: "#ff4d6d",
-                  fontSize: "0.85rem",
-                  marginTop: "5px",
-                }}
-              >
-                {errors.year}
-              </p>
-            )}
+              <option value="1st Year">
+                1st Year
+              </option>
+
+              <option value="2nd Year">
+                2nd Year
+              </option>
+
+              <option value="3rd Year">
+                3rd Year
+              </option>
+
+              <option value="4th Year">
+                4th Year
+              </option>
+
+            </select>
 
             {/* Email */}
-            <label>EMAIL:</label>
+            <label htmlFor="email">
+              EMAIL ID:
+            </label>
 
             <input
               type="email"
-              value={email}
-              onChange={handleEmailChange}
-              aria-invalid={!!errors.email}
-              aria-describedby="email-error"
-              style={{
-                border: errors.email
-                  ? "1px solid #ff4d6d"
-                  : "",
-              }}
+              id="email"
+              name="email"
+              placeholder="Enter email"
+              value={formData.email}
+              onChange={handleChange}
+              required
             />
-
-            {errors.email && (
-              <p
-                id="email-error"
-                style={{
-                  color: "#ff4d6d",
-                  fontSize: "0.85rem",
-                  marginTop: "5px",
-                }}
-              >
-                {errors.email}
-              </p>
-            )}
 
             {/* Password */}
-            <label>PASSWORD:</label>
-
-            <input
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-              aria-invalid={!!errors.password}
-              aria-describedby="password-error"
-              style={{
-                border: errors.password
-                  ? "1px solid #ff4d6d"
-                  : "",
-              }}
+            <PasswordField
+              id="password"
+              label="PASSWORD:"
+              value={formData.password}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  password: e.target.value,
+                })
+              }
             />
 
-            {errors.password && (
-              <p
-                id="password-error"
-                style={{
-                  color: "#ff4d6d",
-                  fontSize: "0.85rem",
-                  marginTop: "5px",
-                }}
-              >
-                {errors.password}
-              </p>
-            )}
+            {/* Confirm Password */}
+            <PasswordField
+              id="confirmPassword"
+              label="CONFIRM PASSWORD:"
+              value={formData.confirmPassword}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  confirmPassword: e.target.value,
+                })
+              }
+            />
 
-            {/* Submit */}
+            {/* Submit Button */}
             <button type="submit" disabled={loading}>
-              {loading ? "LOADING..." : "SUBMIT"}
+              {loading
+                ? "CREATING ACCOUNT..."
+                : "CREATE ACCOUNT"}
             </button>
 
-            {/* Response */}
+            {/* Response Message */}
             {responseMsg && (
               <p
                 style={{
-                  color: "#ff4d6d",
+                  color: "white",
                   marginTop: "10px",
                 }}
               >
@@ -357,9 +285,11 @@ const SignUp = () => {
             )}
 
             {/* Login Link */}
-            <p className="login-link">
-              Already have an account?
-              <Link to="/login"> Login</Link>
+            <p>
+              Already have an account?{" "}
+              <Link to="/login">
+                Login
+              </Link>
             </p>
 
           </form>
@@ -369,4 +299,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Signup;

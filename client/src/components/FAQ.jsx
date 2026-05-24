@@ -27,9 +27,12 @@ const FAQItem = ({ item, index, activeIndex, setActiveIndex }) => {
 
   return (
     <div className="faq-item">
-      <button className="faq-question" onClick={toggleAccordion}  style={{ color: "#ff4d4d" }}>
+      <button className="faq-question" onClick={toggleAccordion}>
         <span>{item.question}</span>
-        <span>{isOpen ? "-" : "+"}</span>
+
+        <span className="faq-icon">
+          {isOpen ? "-" : "+"}
+        </span>
       </button>
 
       <div className={`faq-answer ${isOpen ? "open" : ""}`}>

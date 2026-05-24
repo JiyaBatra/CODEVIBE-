@@ -1,343 +1,302 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import {
-  FaSignOutAlt, FaDownload, FaFire, FaMedal,
-  FaChartLine, FaArrowRight, FaPlay, FaUser,
-  FaGraduationCap, FaStar, FaTimes, FaLock, FaSpinner
+import { 
+  FaSignOutAlt, FaUserCircle, FaEnvelope, FaUniversity, FaGraduationCap, 
+  FaChartLine, FaTrophy, FaBookOpen, FaCode, FaDatabase, FaServer, 
+  FaReact, FaNodeJs, FaCss3Alt, FaHtml5, FaJs, FaArrowRight, 
+  FaCalendarAlt, FaClock, FaFire, FaMedal, FaCertificate, FaStar,
+  FaGithub, FaLinkedin, FaTwitter, FaArrowUp
 } from "react-icons/fa";
 import { useAuth } from "../AuthProvider.jsx";
-import API_BASE_URL from "../config/api.js";
 
-// ── Constants ──────────────────────────────────────────────
-const COURSES = ["HTML", "CSS","C", "JavaScript", "OOP", "DSA", "DBMS", "MongoDB", "Node.js", "Express.js", "React.js"];
-const COURSE_LESSONS = {
-  HTML: 12, CSS: 14, C: 17, JavaScript: 20, OOP: 10,
-  DSA: 18, DBMS: 12, MongoDB: 10, "Node.js": 14,
-  "Express.js": 10, "React.js": 16,
-};
-const COURSE_ICONS = {
-  HTML: "🌐",C: "💻", CSS: "🎨", JavaScript: "⚡", OOP: "💡",
-  DSA: "🧠", DBMS: "🗄️", MongoDB: "🍃", "Node.js": "🟢",
-  "Express.js": "🚂", "React.js": "⚛️",
-};
-const COURSE_ROUTES = {
-  HTML: "/HtmlLesson",
-  CSS: "/CssLesson",
-  C: "/CLesson",
-  JavaScript: "/JsLesson",
-  OOP: "/OopLesson",
-  DSA: "/DsaLesson",
-  DBMS: "/DbmsLesson",
-  MongoDB: "/MongoLesson",
-  "Node.js": "/NodeLesson",
-  "Express.js": "/ExpressLesson",
-  "React.js": "/ReactLesson",
-};
-
-// ── Helpers ────────────────────────────────────────────────
-function buildCourseData(completedLessons = [], scores = {}) {
-  const scoresObj = scores instanceof Map
-    ? Object.fromEntries(scores)
-    : (scores || {});
-
-  return COURSES.map(name => {
-    const total = COURSE_LESSONS[name];
-    const courseLower = name.toLowerCase().replace(/\./g, "").replace(/\s/g, "");
-
-    const done = completedLessons.filter(l => {
-      const low = l.toLowerCase().replace(/\s/g, "").replace(/\./g, "");
-      return (            
-        low.startsWith(courseLower + "-lesson-") ||     // "c-lesson-1"
-        low.startsWith(courseLower + "-lesson") ||      // "html-lesson1"
-        low.startsWith(courseLower + "_lesson")         // "html_lesson1"
-      );
-    }).length;
-
-    // find score regardless of key format
-    const courseScores = Object.entries(scoresObj)
-  .filter(([key]) => {
-    const k = key.toLowerCase().replace(/\./g, "").replace(/\s/g, "");
-    return (
-      k.startsWith(courseLower + "-lesson-") ||
-      k.startsWith(courseLower + "-lesson") ||
-      k.startsWith(courseLower + "_lesson")
-    );
-  })
-  .map(([, val]) => val);
-
-  const score = courseScores.length
-    ? Math.round(courseScores.reduce((a, b) => a + b, 0) / courseScores.length)
-    : 0;
-
-    return { name, done, total, score };
-  });
-}
-
-function deriveCertificates(courseData) {
-  return courseData
-    .filter(c => c.done === c.total && c.score >= 80)
-    .map(c => ({ course: c.name, score: c.score, date: "2025-03-15" }));
-}
-
-function scoreColor(s) {
-  if (s === 0) return "rgba(255,255,255,0.4)";
-  if (s >= 80) return "#4caf50";
-  if (s >= 60) return "#BA7517";
-  return "#E24B4A";
-}
-
-// ── UI Primitives ──────────────────────────────────────────
-function ProgressBar({ pct }) {
-  return (
-    <div style={{ height: 4, background: "rgba(255,255,255,0.08)", borderRadius: 99, overflow: "hidden", marginTop: 8 }}>
-      <div style={{ height: "100%", width: `${Math.min(100, pct)}%`, background: "linear-gradient(90deg,#ff113d,#ff85a1)", borderRadius: 99, transition: "width 0.6s ease" }} />
-    </div>
-  );
-}
-
-function Spinner() {
-  return (
-    <div style={{ display: "flex", justifyContent: "center", padding: "2rem" }}>
-      <FaSpinner style={{ color: "#ff4d6d", fontSize: 24, animation: "spin 1s linear infinite" }} />
-      <style>{`@keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }`}</style>
-    </div>
-  );
-}
-
-function Modal({ title, onClose, children }) {
-  return (
-    <div style={{
-      position: "fixed", inset: 0, zIndex: 1000,
-      background: "rgba(0,0,0,0.75)", backdropFilter: "blur(6px)",
-      display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem",
-    }} onClick={onClose}>
-      <div style={{
-        background: "#13152a", border: "1px solid rgba(255,255,255,0.1)",
-        borderRadius: 20, padding: "1.5rem", width: "100%", maxWidth: 700,
-        maxHeight: "82vh", overflowY: "auto",
-        boxShadow: "0 24px 60px rgba(0,0,0,0.6)",
-      }} onClick={e => e.stopPropagation()}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.2rem" }}>
-          <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#f0f0f0" }}>{title}</h2>
-          <button onClick={onClose} style={{
-            background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-            borderRadius: 8, padding: "6px 10px", color: "#a0a0b0", cursor: "pointer",
-          }}><FaTimes size={13} /></button>
-        </div>
-        {children}
-      </div>
-    </div>
-  );
-}
-
-// ── Certificates Modal ─────────────────────────────────────
-function CertificatesView({ courseData, email }) {
-  const navigate = useNavigate();
-  const earned = deriveCertificates(courseData);
-  const locked = courseData.filter(c => !(c.done === c.total && c.score >= 80));
-
-  const handleDownload = (courseName) => {
-  navigate(`/certificate?course=${encodeURIComponent(courseName)}&email=${encodeURIComponent(email)}`);
-  };
-
-  return (
-    <div>
-      {earned.length === 0 ? (
-        <div style={{ textAlign: "center", padding: "2rem 1rem" }}>
-          <FaMedal style={{ fontSize: 44, color: "rgba(255,255,255,0.1)", marginBottom: "0.7rem" }} />
-          <p style={{ fontWeight: 700, fontSize: 15, color: "#f0f0f0", margin: "0 0 0.4rem" }}>No certificates yet</p>
-          <p style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", margin: 0 }}>Complete all lessons and score ≥ 80%</p>
-        </div>
-      ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: "1.2rem" }}>
-          {earned.map((cert, i) => (
-            <div key={i} style={{
-              background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-              borderRadius: 16, padding: "1rem 1.2rem",
-              display: "flex", alignItems: "center", justifyContent: "space-between",
-              transition: "transform 0.2s",
-            }}
-              onMouseEnter={e => e.currentTarget.style.transform = "translateY(-3px)"}
-              onMouseLeave={e => e.currentTarget.style.transform = "translateY(0)"}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                <span style={{ fontSize: 28 }}>{COURSE_ICONS[cert.course] || "🏅"}</span>
-                <div>
-                  <p style={{ margin: 0, fontWeight: 700, fontSize: 14, color: "#f0f0f0" }}>{cert.course}</p>
-                  <p style={{ margin: "3px 0 0", fontSize: 12, color: "rgba(255,255,255,0.4)" }}>
-                    Score: <span style={{ color: "#4caf50", fontWeight: 600 }}>{cert.score}%</span>
-                  </p>
-                </div>
-              </div>
-              <button onClick={() => handleDownload(cert.course)} style={{
-                padding: "6px 14px", borderRadius: 8,
-                background: "rgba(255,77,109,0.1)", border: "1px solid rgba(255,77,109,0.3)",
-                color: "#ff4d6d", fontSize: 12, fontWeight: 600, cursor: "pointer",
-                display: "flex", alignItems: "center", gap: 5,
-              }}>
-                <FaDownload size={10} /> Download
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {locked.length > 0 && (
-        <>
-          <p style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 10px" }}>
-            Locked ({locked.length})
-          </p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(155px,1fr))", gap: 10 }}>
-            {locked.map(c => {
-              const pct = c.total > 0 ? Math.round((c.done / c.total) * 100) : 0;
-              return (
-                <div key={c.name} style={{
-                  background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)",
-                  borderRadius: 14, padding: "0.8rem 1rem", opacity: 0.65,
-                }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-                    <FaLock size={10} color="rgba(255,255,255,0.3)" />
-                    <p style={{ margin: 0, fontWeight: 600, fontSize: 13, color: "#f0f0f0" }}>{c.name}</p>
-                  </div>
-                  <ProgressBar pct={pct} />
-                  <p style={{ margin: "5px 0 0", fontSize: 11, color: "rgba(255,255,255,0.35)" }}>{pct}% complete</p>
-                </div>
-              );
-            })}
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
-// ── Scores Modal ───────────────────────────────────────────
-function ScoresView({ courseData, onViewReport }) {
-  const attempted = courseData.filter(c => c.done > 0);
-  const avgScore = attempted.length
-    ? Math.round(attempted.reduce((s, c) => s + c.score, 0) / attempted.length)
-    : 0;
-
-  return (
-    <div>
-      {/* Summary bar */}
-      <div style={{
-        background: "rgba(255,77,109,0.06)", border: "1px solid rgba(255,77,109,0.15)",
-        borderRadius: 14, padding: "0.9rem 1.2rem", marginBottom: "1.2rem",
-        display: "flex", gap: 24, flexWrap: "wrap",
-      }}>
-        <div>
-          <p style={{ margin: 0, fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Courses Started</p>
-          <p style={{ margin: "2px 0 0", fontSize: 22, fontWeight: 800, color: "#f0f0f0" }}>{attempted.length}/{COURSES.length}</p>
-        </div>
-        <div>
-          <p style={{ margin: 0, fontSize: 11, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: "0.05em" }}>Completed</p>
-          <p style={{ margin: "2px 0 0", fontSize: 22, fontWeight: 800, color: "#4caf50" }}>
-            {courseData.filter(c => c.done === c.total && c.done > 0).length}
-          </p>
-        </div>
-      </div>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 10 }}>
-        {courseData.map(c => {
-          const pct = c.total > 0 ? Math.round((c.done / c.total) * 100) : 0;
-          const notStarted = c.done === 0;
-          const isComplete = c.done === c.total && c.done > 0;
-          const statusLabel = isComplete ? "Complete" : notStarted ? "Not started" : "In progress";
-          const sColor = scoreColor(c.score);
-
-          return (
-            <div key={c.name} style={{
-              background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-              borderRadius: 16, padding: "1rem 1.15rem",
-              transition: "transform 0.2s, box-shadow 0.2s",
-            }}
-              onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 10px 24px rgba(0,0,0,0.3)"; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ fontSize: 20 }}>{COURSE_ICONS[c.name] || "📘"}</span>
-                  <p style={{ margin: 0, fontWeight: 700, fontSize: 14, color: "#f0f0f0" }}>{c.name}</p>
-                </div>
-                <span style={{
-                  fontSize: 11, fontWeight: 600, padding: "2px 9px", borderRadius: 20,
-                  background: `${sColor}22`, color: sColor,
-                }}>{statusLabel}</span>
-              </div>
-              <ProgressBar pct={pct} />
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
-                <span style={{ fontSize: 12, color: "rgba(255,255,255,0.45)" }}>
-                  {c.done}/{c.total} lessons &nbsp;·&nbsp;
-                  <span style={{ color: sColor, fontWeight: 600 }}>
-                    {notStarted ? "—" : `${c.score}%`}
-                  </span>
-                </span>
-                <button onClick={() => onViewReport(c.name)} style={{
-                  padding: "4px 10px", borderRadius: 7, fontSize: 11, fontWeight: 600, cursor: "pointer",
-                  background: notStarted ? "transparent" : "linear-gradient(135deg,#ff113d,#ff4d6d)",
-                  border: notStarted ? "1px solid rgba(255,255,255,0.15)" : "none",
-                  color: notStarted ? "rgba(255,255,255,0.4)" : "#fff",
-                  display: "flex", alignItems: "center", gap: 4,
-                }}>
-                  {notStarted
-                    ? <><FaPlay size={9} /> Start</>
-                    : isComplete
-                      ? <><FaChartLine size={9} /> Report</>
-                      : <><FaArrowRight size={9} /> Continue</>}
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-// ── Continue Card ──────────────────────────────────────────
-function ContinueCourseCard({ course, done, total, onView }) {
-  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-  return (
-    <div style={{
-      background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-      borderRadius: 16, padding: "1rem 1.1rem",
-      transition: "transform 0.2s, box-shadow 0.2s",
-    }}
-      onMouseEnter={e => { e.currentTarget.style.transform = "translateY(-4px)"; e.currentTarget.style.boxShadow = "0 10px 24px rgba(0,0,0,0.25)"; }}
-      onMouseLeave={e => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-        <div style={{ width: 40, height: 40, borderRadius: 12, background: "rgba(255,77,109,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, flexShrink: 0 }}>
-          {COURSE_ICONS[course] || "📘"}
-        </div>
-        <div>
-          <p style={{ margin: 0, fontWeight: 700, fontSize: 14, color: "#f0f0f0" }}>{course}</p>
-          <p style={{ margin: "2px 0 0", fontSize: 11, color: "rgba(255,255,255,0.4)" }}>Lesson {done} · Out of {total}</p>
-        </div>
-      </div>
-      <ProgressBar pct={pct} />
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 8 }}>
-        <span style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}>{pct}%</span>
-        <button onClick={() => onView(course)} style={{
-          padding: "4px 12px", borderRadius: 7, border: "none",
-          background: "linear-gradient(135deg,#ff113d,#ff4d6d)",
-          color: "#fff", fontSize: 11, fontWeight: 600, cursor: "pointer",
-        }}>Continue →</button>
-      </div>
-    </div>
-  );
-}
-
-// ── Main Dashboard ─────────────────────────────────────────
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const [modal, setModal] = useState(null); // "certificates" | "scores" | null
-  const [progressData, setProgressData] = useState(null); // raw API response
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [hoveredCourse, setHoveredCourse] = useState(null);
+  const [greeting, setGreeting] = useState("");
+  const [currentTime, setCurrentTime] = useState("");
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) setGreeting("Good Morning");
+    else if (hour < 17) setGreeting("Good Afternoon");
+    else setGreeting("Good Evening");
+    
+    const updateTime = () => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }));
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/Login");
+  };
+
+  const handleViewReport = (course) => {
+    const email = user?.email || user?.Email || "";
+    navigate(`/report/${email}?course=${course}`);
+  };
+
+  const courses = [
+    { name: "HTML", icon: <FaHtml5 />, color: "#ff4d4d", bgColor: "#ff4d4d20", progress: 75, lessons: 10, completed: 8 },
+    { name: "CSS", icon: <FaCss3Alt />, color: "#2965f1", bgColor: "#2965f120", progress: 65, lessons: 14, completed: 9 },
+    { name: "JavaScript", icon: <FaJs />, color: "#f7df1e", bgColor: "#f7df1e20", progress: 45, lessons: 29, completed: 13 },
+    { name: "C Programming", icon: <FaCode />, color: "#2d6a4f", bgColor: "#2d6a4f20", progress: 30, lessons: 17, completed: 5 },
+    { name: "OOP", icon: <FaCode />, color: "#e17055", bgColor: "#e1705520", progress: 20, lessons: 14, completed: 3 },
+    { name: "DSA", icon: <FaChartLine />, color: "#00cec9", bgColor: "#00cec920", progress: 15, lessons: 12, completed: 2 },
+    { name: "DBMS", icon: <FaDatabase />, color: "#6c5ce7", bgColor: "#6c5ce720", progress: 10, lessons: 12, completed: 1 },
+    { name: "MongoDB", icon: <FaDatabase />, color: "#4db33d", bgColor: "#4db33d20", progress: 5, lessons: 8, completed: 0 },
+    { name: "Node.js", icon: <FaNodeJs />, color: "#68a063", bgColor: "#68a06320", progress: 5, lessons: 12, completed: 0 },
+    { name: "Express.js", icon: <FaServer />, color: "#ffffff", bgColor: "#ffffff20", progress: 0, lessons: 10, completed: 0 },
+    { name: "React.js", icon: <FaReact />, color: "#61dafb", bgColor: "#61dafb20", progress: 0, lessons: 14, completed: 0 }
+  ];
+
+  const overallProgress = Math.round(courses.reduce((acc, c) => acc + c.progress, 0) / courses.length);
+  const totalLessons = courses.reduce((acc, c) => acc + c.lessons, 0);
+  const totalCompleted = courses.reduce((acc, c) => acc + c.completed, 0);
+  const streakDays = 7;
+
+  if (!user) {
+    return (
+      <div className="dashboard-container">
+        <div className="login-prompt">
+          <div className="prompt-icon">🚀</div>
+          <h2>Welcome Back!</h2>
+          <p>Sign in to continue your learning journey and track your progress</p>
+          <div className="prompt-buttons">
+            <button onClick={() => navigate("/Login")} className="btn-login">
+              <FaArrowRight /> Login to Dashboard
+            </button>
+            <button onClick={() => navigate("/Signup")} className="btn-signup">
+              Create Account
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="dashboard">
+      <div className="bg-pattern"></div>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="modal-overlay" onClick={() => setShowLogoutConfirm(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-icon">👋</div>
+            <h3>Ready to leave?</h3>
+            <p>Your progress has been saved. Come back soon!</p>
+            <div className="modal-buttons">
+              <button className="modal-cancel" onClick={() => setShowLogoutConfirm(false)}>Cancel</button>
+              <button className="modal-confirm" onClick={handleLogout}>Logout</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Header Section - Centered */}
+      <div className="dashboard-header">
+        <div className="header-left">
+          <div className="greeting-badge">
+            <span className="greeting-time">{greeting}</span>
+            <div className="current-time">
+              <FaClock /> {currentTime}
+            </div>
+          </div>
+          <div className="greeting-text">
+            <h1>
+              {user.username}!
+              <span className="wave-emoji">👋</span>
+            </h1>
+            <p className="motivation-text">Ready to level up your coding skills today?</p>
+          </div>
+        </div>
+        <div className="header-right">
+          <div className="streak-card">
+            <FaFire className="streak-icon" />
+            <div className="streak-info">
+              <span className="streak-days">{streakDays}</span>
+              <span className="streak-label">Day Streak</span>
+            </div>
+          </div>
+          <button className="logout-btn" onClick={() => setShowLogoutConfirm(true)}>
+            <FaSignOutAlt />
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Stats Row - Centered */}
+      <div className="stats-row">
+        <div className="stat-card-horizontal">
+          <div className="stat-icon-circle">
+            <FaTrophy />
+          </div>
+          <div className="stat-info-horizontal">
+            <h3>Overall Progress</h3>
+            <div className="stat-value-progress">
+              <span className="percentage">{overallProgress}%</span>
+              <div className="progress-bar-small">
+                <div className="progress-fill-small" style={{ width: `${overallProgress}%` }}></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="stat-card-horizontal">
+          <div className="stat-icon-circle">
+            <FaBookOpen />
+          </div>
+          <div className="stat-info-horizontal">
+            <h3>Lessons Completed</h3>
+            <div className="stat-value">
+              <span className="number">{totalCompleted}</span>
+              <span className="total">/{totalLessons}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="stat-card-horizontal">
+          <div className="stat-icon-circle">
+            <FaCertificate />
+          </div>
+          <div className="stat-info-horizontal">
+            <h3>Certificates Earned</h3>
+            <div className="stat-value">
+              <span className="number">{Math.floor(totalCompleted / 5)}</span>
+              <span className="total">🏆</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="quick-actions">
+        <button className="action-btn" onClick={() => navigate("/compiler")}>
+          <FaCode /> Live Code Editor
+        </button>
+        <button className="action-btn" onClick={() => navigate("/leaderboard")}>
+          <FaMedal /> Leaderboard
+        </button>
+        <button className="action-btn" onClick={() => navigate("/certificate")}>
+          <FaCertificate /> My Certificates
+        </button>
+      </div>
+
+      {/* User Info Card - Centered & Vertical Layout */}
+      <div className="user-info-card">
+        <div className="card-header">
+          <div className="card-header-left">
+            <FaUserCircle className="card-icon" />
+            <h2>Profile Overview</h2>
+          </div>
+          <button className="edit-profile">Edit Profile</button>
+        </div>
+        <div className="info-vertical">
+          <div className="info-item-vertical">
+            <FaEnvelope className="info-icon" />
+            <div className="info-content">
+              <label>Email Address</label>
+              <p>{user.email || user.Email}</p>
+            </div>
+          </div>
+          <div className="info-item-vertical">
+            <FaUniversity className="info-icon" />
+            <div className="info-content">
+              <label>Institution</label>
+              <p>{user.college || "Not specified"}</p>
+            </div>
+          </div>
+          <div className="info-item-vertical">
+            <FaGraduationCap className="info-icon" />
+            <div className="info-content">
+              <label>Academic Year</label>
+              <p>{user.year || "Not specified"}</p>
+            </div>
+          </div>
+          <div className="info-item-vertical">
+            <FaCalendarAlt className="info-icon" />
+            <div className="info-content">
+              <label>Member Since</label>
+              <p>{new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Courses Section */}
+      <div className="courses-section">
+        <div className="section-header">
+          <div className="header-badge">
+            <FaArrowUp />
+            <span>Learning Path</span>
+          </div>
+          <h2>Your Course Journey</h2>
+          <p>Track your progress and continue where you left off</p>
+        </div>
+
+        <div className="courses-grid">
+          {courses.map((course, index) => (
+            <button
+              key={course.name}
+              onClick={() => handleViewReport(course.name)}
+              className="course-card-btn"
+              onMouseEnter={() => setHoveredCourse(index)}
+              onMouseLeave={() => setHoveredCourse(null)}
+              style={{
+                transform: hoveredCourse === index ? 'translateY(-8px)' : 'translateY(0)',
+              }}
+            >
+              <div className="course-icon" style={{ background: course.bgColor }}>
+                <span style={{ color: course.color }}>{course.icon}</span>
+              </div>
+              <div className="course-details">
+                <div className="course-header">
+                  <h3>{course.name}</h3>
+                  <span className="course-progress-percent">{course.progress}%</span>
+                </div>
+                <div className="course-progress-bar">
+                  <div className="course-progress-fill" style={{ width: `${course.progress}%`, background: course.color }}></div>
+                </div>
+                <div className="course-stats">
+                  <span>{course.completed}/{course.lessons} lessons</span>
+                  {course.progress > 0 && <FaStar className="star-icon" style={{ color: course.color }} />}
+                </div>
+              </div>
+              <div className="course-arrow">
+                <FaArrowRight />
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="dashboard-footer">
+        <div className="footer-content">
+          <p>© 2024 CodeVibe - Learn. Practice. Master.</p>
+          <div className="social-links">
+            <a href="#"><FaGithub /></a>
+            <a href="#"><FaLinkedin /></a>
+            <a href="#"><FaTwitter /></a>
+          </div>
+        </div>
+      </div>
+
+      <style jsx>{`
+        .dashboard {
+          min-height: 100vh;
+          background: linear-gradient(135deg, #0f0c29 0%, #1a1a2e 50%, #16213e 100%);
+          padding: 30px 50px;
+          position: relative;
+          overflow-x: hidden;
+        }
 
   const email = user?.email || user?.Email || "";
   const token = localStorage.getItem("authToken");
@@ -367,152 +326,822 @@ const Dashboard = () => {
   }
 };
 
-  if (!user) return (
-    <p style={{ textAlign: "center", marginTop: "2rem", color: "red" }}>⚠️ Please log in first!</p>
-  );
+        .modal-content {
+          background: linear-gradient(135deg, #1e1e3f, #16162e);
+          border-radius: 24px;
+          padding: 40px;
+          text-align: center;
+          max-width: 400px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          animation: slideUp 0.3s ease;
+        }
 
-  // ── Derive course data from real API response ──
-  const completedLessons = progressData?.completedLessons || [];
-  const scores = progressData?.scores || {};
-  const courseData = buildCourseData(completedLessons, scores);
-  const continueLearning = courseData.filter(c => c.done > 0 && c.done < c.total).slice(0, 3);
+        .modal-icon {
+          font-size: 4rem;
+          margin-bottom: 20px;
+        }
 
-  // streak: count of unique lesson days (fallback to 0 until you add it to schema)
-  const streakDays = progressData?.streak || 0;
+        .modal-content h3 {
+          color: white;
+          margin-bottom: 10px;
+          font-size: 1.5rem;
+        }
 
-  const glassCard = {
-    background: "rgba(255,255,255,0.05)",
-    border: "1px solid rgba(255,255,255,0.1)",
-    borderRadius: 20, padding: "1.1rem 1.25rem",
-  };
+        .modal-content p {
+          color: #a0a0a0;
+          margin-bottom: 30px;
+        }
 
-  return (
-    <div className="dashboard-page">
-      <div className="dashboard" style={{ padding: "1.5rem 2rem", maxWidth: 1200, margin: "0 auto" }}>
+        .modal-buttons {
+          display: flex;
+          gap: 15px;
+          justify-content: center;
+        }
 
-        {/* ── Welcome Header ── */}
-        <div style={{ ...glassCard, marginBottom: "1.5rem", display: "flex", alignItems: "center", gap: 16 }}>
-          <div style={{ width: 52, height: 52, borderRadius: "50%", background: "rgba(255,77,109,0.12)", border: "1.5px solid rgba(255,77,109,0.35)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            <FaUser style={{ color: "#ff4d6d", fontSize: 22 }} />
-          </div>
-          <div style={{ flex: 1 }}>
-            <h1 style={{ margin: 0, fontSize: 20, fontWeight: 800, color: "#f0f0f0" }}>
-              Welcome back, {user.username}! 👋
-            </h1>
-            <p style={{ margin: "4px 0 0", fontSize: 13, color: "rgba(255,255,255,0.45)", display: "flex", gap: 10, flexWrap: "wrap" }}>
-              <span>👤 {user.username}</span>
-              <span>🏛️ {user.college}</span>
-              <span>📅 Year {user.year}</span>
-            </p>
-          </div>
-          {streakDays > 0 && (
-            <div style={{ width: 50, height: 50, borderRadius: "50%", background: "rgba(255,77,109,0.1)", border: "1.5px solid rgba(255,77,109,0.3)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-              <span style={{ fontSize: 15, fontWeight: 800, color: "#ff4d6d", lineHeight: 1 }}>{streakDays}</span>
-              <span style={{ fontSize: 9, color: "rgba(255,255,255,0.4)" }}>streak</span>
-            </div>
-          )}
-          <button onClick={handleLogout} style={{
-            padding: "0.5rem 1.1rem", borderRadius: 10, border: "none",
-            background: "linear-gradient(135deg,#ff113d,#ff85a1)",
-            color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer",
-            display: "flex", alignItems: "center", gap: 5, flexShrink: 0,
-          }}>
-            <FaSignOutAlt /> Logout
-          </button>
-        </div>
+        .modal-cancel, .modal-confirm {
+          padding: 10px 24px;
+          border-radius: 10px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          border: none;
+        }
 
-        {/* ── Error banner ── */}
-        {error && (
-          <div style={{ background: "rgba(226,75,74,0.1)", border: "1px solid rgba(226,75,74,0.3)", borderRadius: 10, padding: "0.6rem 1rem", marginBottom: "1rem", fontSize: 13, color: "#E24B4A" }}>
-            ⚠️ {error}
-          </div>
-        )}
+        .modal-cancel {
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+        }
 
-        {/* ── Loading ── */}
-        {loading ? <Spinner /> : (
-          <>
-            {/* Continue Learning */}
-            {continueLearning.length > 0 && (
-              <>
-                <p style={{ margin: "0 0 10px", fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                  Continue Learning
-                </p>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 12, marginBottom: "1.5rem" }}>
-                  {continueLearning.map(c => (
-                    <ContinueCourseCard key={c.name} {...c} course={c.name} onView={handleViewReport} />
-                  ))}
-                </div>
-              </>
-            )}
+        .modal-cancel:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
 
-            {/* Progress + Quick Access */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+        .modal-confirm {
+          background: #ff4d4d;
+          color: white;
+        }
 
-              {/* Your Progress */}
-              <div style={glassCard}>
-                <p style={{ margin: "0 0 12px", fontWeight: 700, fontSize: 14, color: "#f0f0f0" }}>Your Progress</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-                  {[
-                    { icon: <FaGraduationCap />, label: "LEVEL", value: "Beginner" },
-                    { icon: <FaFire />, label: "LESSONS DONE", value: `${completedLessons.length}` },
-                  ].map(({ icon, label, value }) => (
-                    <div key={label} style={{
-                      background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)",
-                      borderRadius: 12, padding: "0.75rem 1rem", display: "flex", alignItems: "center", gap: 10,
-                    }}>
-                      <div style={{ width: 34, height: 34, borderRadius: 9, background: "rgba(255,77,109,0.1)", display: "flex", alignItems: "center", justifyContent: "center", color: "#ff4d6d", flexShrink: 0 }}>
-                        {icon}
-                      </div>
-                      <div>
-                        <p style={{ margin: 0, fontSize: 10, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</p>
-                        <p style={{ margin: "2px 0 0", fontSize: 16, fontWeight: 700, color: "#f0f0f0" }}>{value}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+        .modal-confirm:hover {
+          background: #ff3333;
+          transform: translateY(-2px);
+        }
 
-              {/* Quick Access */}
-              <div style={glassCard}>
-                <p style={{ margin: "0 0 12px", fontWeight: 700, fontSize: 14, color: "#f0f0f0" }}>Quick Access</p>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                  {[
-                    { icon: <FaMedal style={{ color: "#BA7517", fontSize: 22 }} />, label: "Certificates", sub: "View your achievements", key: "certificates" },
-                    { icon: <FaStar style={{ color: "#ff4d6d", fontSize: 22 }} />, label: "Scores", sub: "Check your performance", key: "scores" },
-                  ].map(({ icon, label, sub, key }) => (
-                    <button key={key} onClick={() => setModal(key)} style={{
-                      padding: "1rem", borderRadius: 14,
-                      border: "1px solid rgba(255,255,255,0.08)",
-                      background: "rgba(255,255,255,0.04)",
-                      cursor: "pointer", textAlign: "left", transition: "all 0.2s",
-                    }}
-                      onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.09)"; e.currentTarget.style.transform = "translateY(-3px)"; }}
-                      onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.transform = "translateY(0)"; }}
-                    >
-                      <div style={{ marginBottom: 6 }}>{icon}</div>
-                      <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: "#f0f0f0" }}>{label}</p>
-                      <p style={{ margin: "3px 0 0", fontSize: 11, color: "rgba(255,255,255,0.35)" }}>{sub}</p>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </>
-        )}
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
 
-        {/* ── Modals ── */}
-        {modal === "certificates" && (
-          <Modal title="🏅 Your Certificates" onClose={() => setModal(null)}>
-            <CertificatesView courseData={courseData} email={email} />
-          </Modal>
-        )}
-        {modal === "scores" && (
-          <Modal title="⭐ Your Scores" onClose={() => setModal(null)}>
-            <ScoresView courseData={courseData} onViewReport={course => { setModal(null); handleViewReport(course); }} />
-          </Modal>
-        )}
+        @keyframes slideUp {
+          from { transform: translateY(50px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
 
-      </div>
+        /* Login Prompt */
+        .dashboard-container {
+          min-height: 100vh;
+          background: linear-gradient(135deg, #0f0c29 0%, #1a1a2e 50%, #16213e 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+        }
+
+        .login-prompt {
+          background: rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(10px);
+          border-radius: 32px;
+          padding: 50px;
+          text-align: center;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          max-width: 450px;
+          animation: fadeInUp 0.6s ease;
+        }
+
+        .prompt-icon {
+          font-size: 5rem;
+          margin-bottom: 20px;
+          animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-10px); }
+        }
+
+        .login-prompt h2 {
+          color: white;
+          margin-bottom: 15px;
+          font-size: 2rem;
+        }
+
+        .login-prompt p {
+          color: #a0a0a0;
+          margin-bottom: 35px;
+        }
+
+        .prompt-buttons {
+          display: flex;
+          gap: 15px;
+          flex-direction: column;
+        }
+
+        .btn-login, .btn-signup {
+          padding: 14px 28px;
+          border-radius: 12px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          border: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+        }
+
+        .btn-login {
+          background: linear-gradient(135deg, #ff4d4d, #ff8c4d);
+          color: white;
+        }
+
+        .btn-login:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 5px 20px rgba(255, 77, 77, 0.4);
+        }
+
+        .btn-signup {
+          background: rgba(255, 255, 255, 0.1);
+          color: white;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-signup:hover {
+          background: rgba(255, 255, 255, 0.2);
+          transform: translateY(-2px);
+        }
+
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dashboard Header - Centered */
+        .dashboard-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 40px;
+          flex-wrap: wrap;
+          gap: 20px;
+          position: relative;
+          z-index: 1;
+          background: rgba(0, 0, 0, 0.3);
+          padding: 20px 25px;
+          border-radius: 20px;
+          backdrop-filter: blur(10px);
+          max-width: 900px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .header-left {
+          flex: 1;
+        }
+
+        .greeting-badge {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          margin-bottom: 15px;
+          flex-wrap: wrap;
+        }
+
+        .greeting-time {
+          background: rgba(255, 77, 77, 0.2);
+          padding: 8px 20px;
+          border-radius: 25px;
+          font-size: 1rem;
+          color: #ff4d4d;
+          font-weight: 600;
+          letter-spacing: 1px;
+        }
+
+        .current-time {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: rgba(255, 255, 255, 0.1);
+          padding: 8px 20px;
+          border-radius: 25px;
+          font-size: 1rem;
+          color: #ffffff;
+          font-weight: 500;
+        }
+
+        .greeting-text h1 {
+          font-size: 2.8rem;
+          color: white;
+          margin: 0 0 10px 0;
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          flex-wrap: wrap;
+        }
+
+        .wave-emoji {
+          display: inline-block;
+          animation: wave 1s infinite;
+          font-size: 2.5rem;
+        }
+
+        @keyframes wave {
+          0%, 100% { transform: rotate(0deg); }
+          50% { transform: rotate(20deg); }
+        }
+
+        .motivation-text {
+          color: #c0c0c0;
+          margin: 8px 0 0;
+          font-size: 1.1rem;
+          font-weight: 400;
+        }
+
+        .header-right {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+        }
+
+        .streak-card {
+          background: linear-gradient(135deg, rgba(255, 77, 77, 0.2), rgba(255, 140, 77, 0.15));
+          border-radius: 16px;
+          padding: 12px 24px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          border: 1px solid rgba(255, 77, 77, 0.3);
+        }
+
+        .streak-icon {
+          font-size: 2rem;
+          color: #ff8c4d;
+        }
+
+        .streak-info {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .streak-days {
+          font-size: 1.8rem;
+          font-weight: bold;
+          color: white;
+          line-height: 1;
+        }
+
+        .streak-label {
+          font-size: 0.8rem;
+          color: #c0c0c0;
+        }
+
+        .logout-btn {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 12px 28px;
+          background: rgba(255, 77, 77, 0.15);
+          border: 1px solid rgba(255, 77, 77, 0.3);
+          border-radius: 12px;
+          color: white;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-size: 1rem;
+        }
+
+        .logout-btn:hover {
+          background: rgba(255, 77, 77, 0.3);
+          border-color: #ff4d4d;
+          transform: translateY(-2px);
+        }
+
+        /* Stats Row - Centered */
+        .stats-row {
+          display: flex;
+          gap: 25px;
+          margin-bottom: 40px;
+          position: relative;
+          z-index: 1;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .stat-card-horizontal {
+          flex: 0 1 280px;
+          background: rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(10px);
+          border-radius: 20px;
+          padding: 20px;
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          transition: all 0.3s ease;
+        }
+
+        .stat-card-horizontal:hover {
+          transform: translateY(-4px);
+          background: rgba(255, 255, 255, 0.08);
+          border-color: rgba(255, 77, 77, 0.3);
+        }
+
+        .stat-icon-circle {
+          width: 55px;
+          height: 55px;
+          background: rgba(255, 77, 77, 0.15);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.6rem;
+          color: #ff4d4d;
+        }
+
+        .stat-info-horizontal {
+          flex: 1;
+        }
+
+        .stat-info-horizontal h3 {
+          color: #c0c0c0;
+          font-size: 0.8rem;
+          margin: 0 0 8px 0;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+
+        .stat-value {
+          display: flex;
+          align-items: baseline;
+          gap: 5px;
+        }
+
+        .stat-value .number {
+          font-size: 1.8rem;
+          font-weight: bold;
+          color: white;
+        }
+
+        .stat-value .total {
+          font-size: 1rem;
+          color: #c0c0c0;
+        }
+
+        .stat-value-progress {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .stat-value-progress .percentage {
+          font-size: 1.8rem;
+          font-weight: bold;
+          color: white;
+        }
+
+        .progress-bar-small {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+          height: 6px;
+          width: 100%;
+          overflow: hidden;
+        }
+
+        .progress-fill-small {
+          background: linear-gradient(90deg, #ff4d4d, #ff8c4d);
+          height: 100%;
+          border-radius: 10px;
+          transition: width 0.5s ease;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+          display: flex;
+          gap: 15px;
+          margin-bottom: 40px;
+          flex-wrap: wrap;
+          position: relative;
+          z-index: 1;
+          justify-content: center;
+        }
+
+        .action-btn {
+          background: linear-gradient(135deg, rgba(255, 77, 77, 0.15), rgba(255, 140, 77, 0.1));
+          border: 1px solid rgba(255, 77, 77, 0.2);
+          border-radius: 12px;
+          padding: 12px 24px;
+          color: white;
+          font-weight: 600;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          transition: all 0.3s ease;
+          font-size: 0.95rem;
+        }
+
+        .action-btn:hover {
+          background: rgba(255, 77, 77, 0.25);
+          transform: translateY(-2px);
+          border-color: #ff4d4d;
+        }
+
+        /* User Info Card - Centered & Vertical Layout */
+        .user-info-card {
+          background: rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(10px);
+          border-radius: 20px;
+          padding: 25px 30px;
+          margin-bottom: 40px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          position: relative;
+          z-index: 1;
+          max-width: 600px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        .card-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 25px;
+          padding-bottom: 15px;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          flex-wrap: wrap;
+          gap: 15px;
+        }
+
+        .card-header-left {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .card-header-left h2 {
+          color: white;
+          margin: 0;
+          font-size: 1.3rem;
+        }
+
+        .card-icon {
+          font-size: 1.8rem;
+          color: #ff4d4d;
+        }
+
+        .edit-profile {
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 8px 20px;
+          border-radius: 8px;
+          color: #c0c0c0;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-size: 0.85rem;
+          font-weight: 500;
+        }
+
+        .edit-profile:hover {
+          background: rgba(255, 77, 77, 0.1);
+          color: #ff4d4d;
+          border-color: #ff4d4d;
+        }
+
+        .info-vertical {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .info-item-vertical {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          padding: 12px 15px;
+          background: rgba(255, 255, 255, 0.03);
+          border-radius: 12px;
+          transition: all 0.3s ease;
+        }
+
+        .info-item-vertical:hover {
+          background: rgba(255, 255, 255, 0.06);
+          transform: translateX(5px);
+        }
+
+        .info-icon {
+          font-size: 1.3rem;
+          color: #ff4d4d;
+          width: 40px;
+          text-align: center;
+        }
+
+        .info-content {
+          flex: 1;
+        }
+
+        .info-content label {
+          font-size: 0.7rem;
+          color: #c0c0c0;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          display: block;
+          margin-bottom: 4px;
+        }
+
+        .info-content p {
+          color: white;
+          margin: 0;
+          font-weight: 500;
+          font-size: 1rem;
+        }
+
+        /* Courses Section */
+        .courses-section {
+          position: relative;
+          z-index: 1;
+        }
+
+        .section-header {
+          text-align: center;
+          margin-bottom: 40px;
+        }
+
+        .header-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: rgba(255, 77, 77, 0.15);
+          padding: 8px 20px;
+          border-radius: 25px;
+          color: #ff4d4d;
+          font-size: 0.9rem;
+          margin-bottom: 15px;
+          font-weight: 500;
+        }
+
+        .section-header h2 {
+          color: white;
+          font-size: 2.2rem;
+          margin: 0 0 10px;
+        }
+
+        .section-header p {
+          color: #c0c0c0;
+          margin: 0;
+          font-size: 1rem;
+        }
+
+        .courses-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+          gap: 25px;
+        }
+
+        .course-card-btn {
+          background: rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(10px);
+          border-radius: 20px;
+          padding: 25px;
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          cursor: pointer;
+          transition: all 0.3s ease;
+          width: 100%;
+          text-align: left;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .course-card-btn::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+          transition: left 0.5s ease;
+        }
+
+        .course-card-btn:hover::before {
+          left: 100%;
+        }
+
+        .course-icon {
+          width: 70px;
+          height: 70px;
+          border-radius: 18px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 2rem;
+          transition: all 0.3s ease;
+          flex-shrink: 0;
+        }
+
+        .course-card-btn:hover .course-icon {
+          transform: scale(1.05);
+        }
+
+        .course-details {
+          flex: 1;
+        }
+
+        .course-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          margin-bottom: 12px;
+        }
+
+        .course-header h3 {
+          color: white;
+          margin: 0;
+          font-size: 1.2rem;
+          font-weight: 600;
+        }
+
+        .course-progress-percent {
+          font-size: 0.9rem;
+          font-weight: bold;
+          color: #ff4d4d;
+        }
+
+        .course-progress-bar {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+          height: 8px;
+          margin-bottom: 12px;
+          overflow: hidden;
+        }
+
+        .course-progress-fill {
+          height: 100%;
+          border-radius: 10px;
+          transition: width 0.3s ease;
+        }
+
+        .course-stats {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 0.85rem;
+          color: #c0c0c0;
+        }
+
+        .star-icon {
+          font-size: 0.85rem;
+        }
+
+        .course-arrow {
+          color: #c0c0c0;
+          transition: all 0.3s ease;
+          opacity: 0;
+          transform: translateX(-10px);
+          font-size: 1.2rem;
+        }
+
+        .course-card-btn:hover .course-arrow {
+          opacity: 1;
+          transform: translateX(0);
+          color: #ff4d4d;
+        }
+
+        /* Footer */
+        .dashboard-footer {
+          margin-top: 60px;
+          padding-top: 30px;
+          border-top: 1px solid rgba(255, 255, 255, 0.05);
+          position: relative;
+          z-index: 1;
+        }
+
+        .footer-content {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 20px;
+        }
+
+        .footer-content p {
+          color: #c0c0c0;
+          font-size: 0.9rem;
+        }
+
+        .social-links {
+          display: flex;
+          gap: 20px;
+        }
+
+        .social-links a {
+          color: #c0c0c0;
+          font-size: 1.3rem;
+          transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+          color: #ff4d4d;
+          transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+          .stats-row {
+            flex-direction: column;
+            align-items: center;
+          }
+          
+          .stat-card-horizontal {
+            width: 100%;
+            max-width: 300px;
+          }
+
+          .courses-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .user-info-card {
+            max-width: 90%;
+            padding: 20px;
+          }
+
+          .dashboard-header {
+            max-width: 95%;
+            padding: 15px 20px;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .dashboard {
+            padding: 20px;
+          }
+
+          .greeting-text h1 {
+            font-size: 2rem;
+          }
+
+          .motivation-text {
+            font-size: 0.95rem;
+          }
+
+          .dashboard-header {
+            padding: 15px;
+          }
+
+          .greeting-time, .current-time {
+            font-size: 0.85rem;
+            padding: 6px 15px;
+          }
+
+          .streak-card {
+            padding: 8px 16px;
+          }
+
+          .streak-days {
+            font-size: 1.3rem;
+          }
+
+          .footer-content {
+            flex-direction: column;
+            text-align: center;
+          }
+
+          .quick-actions {
+            flex-direction: column;
+            align-items: center;
+          }
+
+          .action-btn {
+            justify-content: center;
+            width: 100%;
+            max-width: 220px;
+          }
+
+          .info-item-vertical {
+            padding: 10px 12px;
+          }
+          
+          .info-icon {
+            font-size: 1.1rem;
+            width: 35px;
+          }
+          
+          .info-content p {
+            font-size: 0.9rem;
+          }
+        }
+      `}</style>
     </div>
   );
 };
