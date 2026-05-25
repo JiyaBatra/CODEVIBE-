@@ -86,4 +86,4 @@ const register = async (req, res, next) => {
   }
 };
 
-module.exports = register; which to keep 
+module.exports = register; 
