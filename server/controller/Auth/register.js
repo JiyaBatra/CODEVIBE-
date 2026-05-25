@@ -25,6 +25,7 @@ const register = async (req, res, next) => {
         { Email: { $regex: `^${escapeRegex(email)}$`, $options: "i" } },
       ],
     });
+
     if (userExist) {
       return res.status(400).json({
         success: false,
@@ -36,28 +37,28 @@ const register = async (req, res, next) => {
 
     const userCreate = new UserModel({
       username,
-      Email: userEmail,
+      email,
       password: hashedPassword,
-      college: userCollege,
+      college,
       year,
     });
 
     await userCreate.save();
 
     const token = jwt.sign(
-      { userId: userCreate._id, email: userEmail, username },
+      { userId: userCreate._id, email, username },
       process.env.JWT_SECRET || "codevibe_default_secret",
       { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "User registered successfully",
       token,
       user: {
         username,
-        email: userEmail,
-        college: userCollege,
+        email,
+        college,
         year,
         bio: "",
         avatarUrl: "",
@@ -86,4 +87,4 @@ const register = async (req, res, next) => {
   }
 };
 
-module.exports = register; which to keep 
+module.exports = register;

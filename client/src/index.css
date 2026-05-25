@@ -39,6 +39,183 @@
   --info: #00f0ff;
 }
 
+/* Shared card theme inspired by the SVG course card */
+:is(
+  .course-card,
+  .course-box,
+  .testimonial-card,
+  .dashboard-card,
+  .glass-card,
+  .profile-panel,
+  .analytics-section,
+  .subject-card,
+  .dashboard-empty-state,
+  .lesson-section,
+  .stat-card,
+  .dashboard-loading,
+  .dashboard-error,
+  .empty-state-card
+) {
+  background: linear-gradient(180deg, rgba(22, 25, 43, 0.98) 0%, rgba(15, 17, 26, 0.98) 100%) !important;
+  border: 1px solid rgba(255, 51, 102, 0.22) !important;
+  border-image: none !important;
+  border-radius: 32px !important;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(255, 51, 102, 0.05) !important;
+  color: #ffffff !important;
+  backdrop-filter: blur(16px) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+:is(
+  .course-card,
+  .course-box,
+  .testimonial-card,
+  .dashboard-card,
+  .glass-card,
+  .profile-panel,
+  .analytics-section,
+  .subject-card,
+  .dashboard-empty-state,
+  .lesson-section,
+  .stat-card,
+  .dashboard-loading,
+  .dashboard-error,
+  .empty-state-card
+)::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 1rem;
+  right: 1rem;
+  height: 2px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, rgba(255, 51, 102, 0.78), transparent);
+  opacity: 0.85;
+}
+
+:is(
+  .course-card,
+  .course-box,
+  .testimonial-card,
+  .dashboard-card,
+  .glass-card,
+  .profile-panel,
+  .analytics-section,
+  .subject-card,
+  .dashboard-empty-state,
+  .lesson-section,
+  .stat-card,
+  .dashboard-loading,
+  .dashboard-error,
+  .empty-state-card
+):hover {
+  transform: translateY(-8px) !important;
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.42),
+    0 0 0 1px rgba(255, 51, 102, 0.12),
+    0 0 26px rgba(255, 51, 102, 0.14) !important;
+  border-color: rgba(255, 51, 102, 0.38) !important;
+}
+
+:is(.course-card, .course-box) {
+  text-decoration: none !important;
+}
+
+:is(.course-card, .course-box) h3,
+:is(.course-card, .course-box) .course-title,
+.testimonial-card h3,
+.testimonial-card h4,
+.dashboard-card strong,
+.subject-card p,
+.dashboard-empty-state h3,
+.empty-state-card h3 {
+  color: #ffffff !important;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.08);
+}
+
+:is(.course-card, .course-box) p,
+.dashboard-card p,
+.testimonial-card p,
+.subject-card small,
+.dashboard-empty-state p,
+.empty-state-card p,
+.lesson-section p {
+  color: #a2a8c2 !important;
+}
+
+:is(.course-card, .course-box) .course-meta,
+:is(.course-card, .course-box) .course-lessons,
+:is(.course-card, .course-box) .course-duration,
+:is(.course-card, .course-box) .course-category,
+:is(.course-card, .course-box) .category-name,
+:is(.course-card, .course-box) .category-icon {
+  color: #717b9f !important;
+}
+
+:is(.course-card, .course-box) .badge-container {
+  gap: 0.55rem !important;
+}
+
+:is(.course-card, .course-box) :is(.difficulty-badge, .completed-badge, .project-badge, .quiz-badge) {
+  border-radius: 999px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18) !important;
+}
+
+.start-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.55rem !important;
+  width: 100% !important;
+  padding: 0.95rem 1.4rem !important;
+  border-radius: 999px !important;
+  background: linear-gradient(180deg, #252a41 0%, #1e2235 100%) !important;
+  border: 1.5px solid rgba(255, 51, 102, 0.4) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 22px rgba(255, 51, 102, 0.16) !important;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease !important;
+}
+
+.start-btn:hover,
+.course-card:hover .start-btn,
+.course-box:hover .start-btn {
+  transform: translateY(-1px) !important;
+  border-color: rgba(255, 51, 102, 0.6) !important;
+  box-shadow: 0 14px 28px rgba(255, 51, 102, 0.24) !important;
+}
+
+.btn-arrow {
+  color: #ff3366 !important;
+}
+
+.course-box::before,
+.course-card::before,
+.testimonial-card::before,
+.dashboard-card::before,
+.glass-card::before,
+.profile-panel::before,
+.analytics-section::before,
+.subject-card::before,
+.dashboard-empty-state::before,
+.lesson-section::before,
+.stat-card::before,
+.dashboard-loading::before,
+.dashboard-error::before,
+.empty-state-card::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 51, 102, 0.78), transparent) !important;
+  height: 2px !important;
+  left: 1rem !important;
+  right: 1rem !important;
+  top: 0 !important;
+}
+
 a {
   color: white;
 }

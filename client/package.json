@@ -19,7 +19,7 @@
     "express": "^5.1.0",
     "html2canvas": "^1.4.1",
     "joi": "^18.0.0",
-    "jspdf": "^3.0.1",
+    "jspdf": "^4.2.1",
     "lucide-react": "^1.16.0",
     "mongoose": "^8.17.0",
     "nodemon": "^3.1.10",
