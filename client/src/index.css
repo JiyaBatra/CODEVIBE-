@@ -615,15 +615,15 @@ h3 {
 /* ===== FOOTER - Premium Gaming Style ===== */
 .site-footer {
   background: linear-gradient(180deg, #0a0e27 0%, #050710 100%);
-  border-top: 3px solid var(--primary-red);
-  box-shadow:
-    inset 0 2px 30px rgba(255, 77, 109, 0.1),
-    0 0 30px rgba(255, 77, 109, 0.15);
   padding: 3rem 2rem 1.5rem;
   color: var(--text-secondary);
   font-size: 0.95rem;
   position: relative;
   overflow: hidden;
+}
+
+.site-footer.lesson {
+  margin-top: 0;
 }
 
 /* Subtle animated glow on footer background */
@@ -3015,4 +3015,9 @@ select:focus {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.target-section {
+  margin-bottom: 0;
+  padding-bottom: 1rem;
 }

@@ -2,7 +2,7 @@ import React from 'react'
 
 const Target = () => {
   return (
-    <div className="lesson"> <section className="goal">
+    <div className="target-section"> <section className="goal">
             <h2>What you will get </h2>
             <ul >
                 <li>Simple, beginner-friendly lessons</li>
