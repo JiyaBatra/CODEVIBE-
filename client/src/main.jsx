@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 
 import {
-  BrowserRouter,
+  HashRouter,
   Routes,
   Route,
   Navigate
@@ -218,14 +218,16 @@ import ReactLesson11 from './components/ReactLesson11.jsx';
 import ReactLesson12 from './components/ReactLesson12.jsx';
 import ReactLesson13 from './components/ReactLesson13.jsx';
 import ScrollToTop from "./components/ScrollToTop";
+import GlobalBackNav from "./components/common/GlobalBackNav.jsx";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <AuthProvider>
         <Head />
         <DynamicProgressSidebar />
         <ScrollToTop />
+        <GlobalBackNav />
         <Routes>
           {/* General Routes */}
           <Route path="/" element={<Navigate to="/lessons" replace />} />
@@ -438,6 +440,6 @@ createRoot(document.getElementById('root')).render(
         <Target />
         <Foot />
       </AuthProvider>
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>
 );

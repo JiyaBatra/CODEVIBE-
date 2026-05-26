@@ -2,109 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import API_BASE_URL from "../config/api";
 import { NavLink, useLocation } from "react-router-dom";
+import { lessonGroups } from "../config/lessonRoutes";
 import "./DynamicProgressSidebar.css";
-
-const lessonGroups = [
-  {
-    course: "HTML",
-    key: "html",
-    lessons: Array.from({ length: 10 }, (_, index) => ({
-      title: `HTML Lesson ${index + 1}`,
-      path: `/HtmlLesson${index + 1}`,
-      lessonId: `html-lesson${index + 1}`,
-    })),
-  },
-  {
-    course: "CSS",
-    key: "css",
-    lessons: Array.from({ length: 14 }, (_, index) => ({
-      title: `CSS Lesson ${index + 1}`,
-      path: `/CssLesson${index + 1}`,
-      lessonId: `css-lesson${index + 1}`,
-    })),
-  },
-  {
-    course: "JavaScript",
-    key: "js",
-    lessons: Array.from({ length: 29 }, (_, index) => ({
-      title: `JS Lesson ${index + 1}`,
-      path: `/JsLesson${index + 1}`,
-      lessonId: `js-lesson-${index + 1}`,
-    })),
-  },
-  {
-    course: "C Programming",
-    key: "c",
-    lessons: Array.from({ length: 17 }, (_, index) => ({
-      title: `C Lesson ${index + 1}`,
-      path: `/CLesson${index + 1}`,
-      lessonId: `c-lesson-${index + 1}`,
-    })),
-  },
-  {
-    course: "DBMS",
-    key: "dbms",
-    lessons: Array.from({ length: 12 }, (_, index) => ({
-      title: `DBMS Lesson ${index + 1}`,
-      path: `/DbmsLesson${index + 1}`,
-      lessonId: `dbms-lesson-${index + 1}`,
-    })),
-  },
-  {
-    course: "DSA",
-    key: "dsa",
-    lessons: Array.from({ length: 12 }, (_, index) => ({
-      title: `DSA Lesson ${index + 1}`,
-      path: `/DsaLesson${index + 1}`,
-      lessonId: `dsa-lesson-${index + 1}`,
-    })),
-  },
-  {
-    course: "Express",
-    key: "express",
-    lessons: Array.from({ length: 10 }, (_, index) => ({
-      title: `Express Lesson ${index + 1}`,
-      path: `/ExpressLesson${index + 1}`,
-      lessonId: `express-lesson-${index + 1}`,
-    })),
-  },
-  {
-    course: "MongoDB",
-    key: "mongo",
-    lessons: Array.from({ length: 8 }, (_, index) => ({
-      title: `MongoDB Lesson ${index + 1}`,
-      path: `/MongoLesson${index + 1}`,
-      lessonId: `mongo-lesson-${index + 1}`,
-    })),
-  },
-  {
-    course: "Node.js",
-    key: "node",
-    lessons: Array.from({ length: 12 }, (_, index) => ({
-      title: `Node Lesson ${index + 1}`,
-      path: `/NodeLesson${index + 1}`,
-      lessonId: `node-lesson-${index + 1}`,
-    })),
-  },
-  {
-    course: "OOP",
-    key: "oop",
-    lessons: Array.from({ length: 14 }, (_, index) => ({
-      title: `OOP Lesson ${index + 1}`,
-      path: `/OOPLesson${index + 1}`,
-      lessonId: `oop-lesson-${index + 1}`,
-    })),
-  },
-  {
-    course: "React",
-    key: "react",
-    lessons: Array.from({ length: 13 }, (_, index) => ({
-      title: `React Lesson ${index + 1}`,
-      path: `/ReactLesson${index + 1}`,
-      lessonId: `react-lesson-${index + 1}`,
-    })),
-  },
-];
 
 const getProgressScores = (scores) => {
   if (!scores) return {};
@@ -134,7 +33,7 @@ const DynamicProgressSidebar = () => {
   const activeGroup = useMemo(
     () =>
       lessonGroups.find((group) =>
-        group.lessons.some((lesson) => lesson.path === location.pathname)
+        group.lessons.some((lesson) => lesson.path.toLowerCase() === location.pathname.toLowerCase())
       ),
     [location.pathname]
   );
@@ -143,15 +42,11 @@ const DynamicProgressSidebar = () => {
     if (!activeGroup) return;
 
     const email = localStorage.getItem("userEmail");
-    if (!email) {
-      return;
-    }
+    if (!email) return;
 
     axios
       .get(`${API_BASE_URL}/api/progress/${email}`)
-      .then((res) =>
-        setProgress((current) => mergeProgress(current, res.data))
-      )
+      .then((res) => setProgress((current) => mergeProgress(current, res.data)))
       .catch(() => {});
   }, [activeGroup]);
 
@@ -188,31 +83,22 @@ const DynamicProgressSidebar = () => {
 
   useEffect(() => {
     fetchProgress();
-
     window.addEventListener("codevibe-progress-updated", handleProgressUpdated);
-
     return () => {
-      window.removeEventListener(
-        "codevibe-progress-updated",
-        handleProgressUpdated
-      );
+      window.removeEventListener("codevibe-progress-updated", handleProgressUpdated);
     };
   }, [fetchProgress, handleProgressUpdated, location.pathname]);
 
   useEffect(() => {
     if (!activeGroup) return undefined;
 
-    document.body.classList.add("dynamic-progress-sidebar-visible");
-    document.body.classList.toggle(
-      "dynamic-progress-sidebar-collapsed",
-      isCollapsed
-    );
+    const layoutRoot = document.getElementById("root") || document.body;
+    
+    layoutRoot.classList.add("codevibe-layout-managed");
+    layoutRoot.classList.toggle("codevibe-layout-sidebar-collapsed", isCollapsed);
 
     return () => {
-      document.body.classList.remove(
-        "dynamic-progress-sidebar-visible",
-        "dynamic-progress-sidebar-collapsed"
-      );
+      layoutRoot.classList.remove("codevibe-layout-managed", "codevibe-layout-sidebar-collapsed");
     };
   }, [activeGroup, isCollapsed]);
 
@@ -223,17 +109,12 @@ const DynamicProgressSidebar = () => {
   const completedCount = activeGroup.lessons.filter((lesson) =>
     completedLessons.includes(lesson.lessonId)
   ).length;
-  const completionPercent = Math.round(
-    (completedCount / activeGroup.lessons.length) * 100
-  );
+  const completionPercent = Math.round((completedCount / activeGroup.lessons.length) * 100);
   const courseScores = activeGroup.lessons
     .map((lesson) => scores[lesson.lessonId])
     .filter((score) => typeof score === "number");
   const averageScore = courseScores.length
-    ? Math.round(
-        courseScores.reduce((total, score) => total + score, 0) /
-          courseScores.length
-      )
+    ? Math.round(courseScores.reduce((total, score) => total + score, 0) / courseScores.length)
     : 0;
   const totalPoints = courseScores.reduce((total, score) => total + score, 0);
 
@@ -257,8 +138,10 @@ const DynamicProgressSidebar = () => {
       {!isCollapsed && (
         <>
           <div className="dynamic-progress-sidebar__header">
-            <span>Course</span>
-            <h2>{activeGroup.course}</h2>
+            <div className="dynamic-progress-sidebar__header-text-container">
+              <span>Course</span>
+              <h2>{activeGroup.course}</h2>
+            </div>
             <button
               className="dynamic-progress-sidebar__toggle"
               type="button"
