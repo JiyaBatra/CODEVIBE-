@@ -3,15 +3,19 @@ const Progress = require('../../models/progress');
 
 // Maps display course name → lesson-ID prefix
 const getCoursePrefix = (courseName) => {
-  const key = (courseName || "").toLowerCase();
+  const key = (courseName || "")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "")
+    .replace(/\./g, "");
 
   const map = {
     javascript: "js-",
-    "react.js": "react-",
-    "node.js": "node-",
+    reactjs: "react-",
+    nodejs: "node-",
     oop: "oop-",
     mongodb: "mongo-",
-    "express.js": "express-",
+    expressjs: "express-",
     dbms: "dbms-",
     dsa: "dsa-",
     html: "html-",
@@ -30,10 +34,15 @@ const calculateFeedback = (score) => {
 
 exports.getCertificateInfo = async (req, res) => {
   try {
-    const { email, courseName } = req.body;
+    const email = req.user?.email;
+    const { courseName } = req.body;
 
-    if (!email || !courseName) {
-      return res.status(400).json({ message: "Email and courseName required" });
+    if (!email) {
+      return res.status(401).json({ message: "Unauthorized user" });
+    }
+
+    if (!courseName) {
+      return res.status(400).json({ message: "courseName required" });
     }
 
     const progress = await Progress.findOne({ email });
@@ -42,9 +51,13 @@ exports.getCertificateInfo = async (req, res) => {
     const prefix = getCoursePrefix(courseName);
 
     // Use prefix-based lookup so "JavaScript" → scores["js-lesson-1"] etc.
-    const courseScores = Object.entries(progress.scores || {})
-      .filter(([lessonId]) => lessonId.toLowerCase().startsWith(prefix))
-      .map(([, val]) => val);
+    const scoresObj = progress.scores instanceof Map
+      ? Object.fromEntries(progress.scores)
+      : (progress.scores?.toObject ? progress.scores.toObject() : progress.scores || {});
+
+  const courseScores = Object.entries(scoresObj)
+    .filter(([lessonId]) => lessonId.toLowerCase().startsWith(prefix))
+    .map(([, val]) => val);
 
     const score = courseScores.length
       ? Math.round(courseScores.reduce((a, b) => a + b, 0) / courseScores.length)

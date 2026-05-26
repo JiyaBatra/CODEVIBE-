@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 
 const AuthContext = createContext(null);
@@ -33,24 +33,32 @@ function loadAuthState() {
 export const AuthProvider = ({ children }) => {
   const [authState, setAuthState] = useState(() => loadAuthState());
 
-  const login = (userData, token) => {
+  const login = useCallback((userData, token) => {
     if (!userData || !token) return;
     localStorage.setItem("authToken", token);
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("userEmail", userData.email || userData.Email || "");
     setAuthState({ user: userData, token });
-  };
+  }, []);
 
-  const logout = () => {
+  const updateUser = useCallback((updatedUser) => {
+    if (!updatedUser) return;
+    const currentToken = authState?.token || localStorage.getItem("authToken");
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+    localStorage.setItem("userEmail", updatedUser.email || updatedUser.Email || "");
+    setAuthState({ user: updatedUser, token: currentToken });
+  }, [authState?.token]);
+
+  const logout = useCallback(() => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("user");
     localStorage.removeItem("userEmail");
     setAuthState({ user: null, token: null });
-  };
+  }, []);
 
   const value = useMemo(
-    () => ({ user: authState.user, token: authState.token, login, logout }),
-    [authState]
+    () => ({ user: authState.user, token: authState.token, login, updateUser, logout }),
+    [authState.user, authState.token, login, updateUser, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

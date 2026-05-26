@@ -29,7 +29,7 @@ const resetPassword = async (req, res, next) => {
     user.resetToken = undefined;
     user.resetTokenExpiry = undefined;
 
-    console.log(`Saving new password for user: ${user.Email}`);
+    console.log(`Saving new password for user: ${user.email || user.Email}`);
     
     await user.save();
 
