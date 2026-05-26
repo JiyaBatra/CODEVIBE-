@@ -108,6 +108,11 @@ const Compiler = ({
   const [status, setStatus]             = useState("");
 
   const iframeRef = useRef(null);
+  const startTimeRef = useRef(Date.now());
+
+  useEffect(() => {
+    startTimeRef.current = Date.now();
+  }, [LessonId]);
 
   // ── copy / download ──────────────────────────────────────────────────────
   const copyCode = async () => {
@@ -142,8 +147,13 @@ const Compiler = ({
         detail: { lessonId, score: sc },
       })
     );
+    const learningTime = Math.max(1, Math.round((Date.now() - startTimeRef.current) / 1000));
     axios
-      .post(`${API_BASE_URL}/api/lesson/${lessonId}/complete`, { email, score: sc })
+      .post(`${API_BASE_URL}/api/lesson/${lessonId}/complete`, {
+        email,
+        score: sc,
+        learningTime,
+      })
       .catch((err) => console.error("Save progress error:", err));
     onSuccess?.({ LessonId: lessonId, score: sc, tries: attempt });
   };

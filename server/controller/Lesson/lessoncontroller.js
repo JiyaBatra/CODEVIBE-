@@ -1,5 +1,12 @@
 const Lesson = require('../../models/lesson');
 const Progress = require('../../models/progress');
+const User = require('../../models/user.models');
+const Analytics = require('../../models/analytics');
+
+const getSubjectFromLessonId = (lessonId) => {
+  if (!lessonId || typeof lessonId !== 'string') return 'Other';
+  return lessonId.split('-')[0].replace(/\d+$/, '') || lessonId;
+};
 
 exports.getAllLessons = async (req, res) => {
   try {
@@ -25,7 +32,7 @@ exports.getLesson = async (req, res) => {
 
 exports.completeLesson = async (req, res) => {
   try {
-    const { email, score } = req.body;
+    const { email, score, coins, learningTime, type } = req.body;
     const lessonId = req.params.id;
     
     if (!email) return res.status(400).json({ message: 'Email is required' });
@@ -39,10 +46,29 @@ exports.completeLesson = async (req, res) => {
       { new: true, upsert: true }
     );
 
+    const user = await User.findOne({ Email: email }).lean();
+    try {
+      await Analytics.create({
+        userId: user?._id || null,
+        email,
+        username: user?.username || progress.username || '',
+        lessonId,
+        subject: getSubjectFromLessonId(lessonId),
+        score: score || 0,
+        completed: true,
+        points: score || 0,
+        coins: coins || 0,
+        learningTime: learningTime || 0,
+        type: type || 'lesson',
+      });
+    } catch (analyticsErr) {
+      console.error('Analytics event creation failed:', analyticsErr);
+    }
+
     res.json({
       message: 'Lesson marked as completed',
       completedLessons: progress.completedLessons,
-      scores: progress.scores
+      scores: progress.scores,
     });
   } catch (err) {
     console.error(err);

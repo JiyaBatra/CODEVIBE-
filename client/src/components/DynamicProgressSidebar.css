@@ -21,6 +21,7 @@
     inset -1px 0 0 rgba(255, 255, 255, 0.04),
     18px 0 36px rgba(0, 0, 0, 0.24);
   backdrop-filter: blur(14px);
+  transition: width 0.2s ease, padding 0.2s ease;
 }
 
 .dynamic-progress-sidebar--collapsed {
@@ -29,7 +30,6 @@
   padding: 16px 8px;
   display: flex;
   align-items: center;
-  
 }
 
 .dynamic-progress-sidebar--collapsed .dynamic-progress-sidebar__toggle {
@@ -40,11 +40,9 @@
 .dynamic-progress-sidebar__toggle {
   width: 32px;
   height: 32px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   color: #ffffff;
   background: linear-gradient(135deg, #ff4d6d, #ff7aa2);
   border: 1px solid rgba(255, 255, 255, 0.22);
@@ -56,29 +54,41 @@
   box-shadow: 0 0 18px rgba(255, 77, 109, 0.45);
 }
 
+/* --- TEXT WRAPPING ALIGNMENTS --- */
+.dynamic-progress-sidebar__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+}
+
+.dynamic-progress-sidebar__header-text-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
 .dynamic-progress-sidebar__header span {
-  justify-self: start;
   display: block;
   color: #ff9aae;
   font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
-}
-
-.dynamic-progress-sidebar__header {
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 12px;
-  align-items: center;
+  margin-bottom: 2px;
 }
 
 .dynamic-progress-sidebar__header h2 {
   margin: 0;
   color: #ffffff;
-  font-size: 28px;
+  font-size: 26px;
   letter-spacing: 1px;
-  text-align: center;
+  text-align: left;
   text-shadow: 0 0 14px rgba(255, 255, 255, 0.28);
+  line-height: 1.2;
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 .dynamic-progress-sidebar__analytics {
@@ -86,8 +96,10 @@
   grid-template-columns: 116px 1fr;
   gap: 14px;
   align-items: center;
+  margin-top: 6px;
 }
 
+/* --- GRAPHICS & METRICS --- */
 .dynamic-progress-sidebar__ring {
   width: 116px;
   height: 116px;
@@ -206,11 +218,20 @@
   background: #ff4d6d;
 }
 
-body.dynamic-progress-sidebar-visible .lesson {
-  margin-left: 312px;
-  transition: margin-left 0.2s ease;
+/* --- FIXED: MOVES CONTENT SO SIDEBAR DOES NOT OVERWRITE TEXT --- */
+
+/* When the sidebar is active and visible on screen */
+.codevibe-layout-managed {
+  padding-left: 280px;
+  transition: padding-left 0.2s ease;
 }
 
-body.dynamic-progress-sidebar-visible.dynamic-progress-sidebar-collapsed .lesson {
-  margin-left: 78px;
+/* When the sidebar is collapsed down to its icon tray strip */
+.codevibe-layout-managed.codevibe-layout-sidebar-collapsed {
+  padding-left: 52px;
+}
+
+/* Fallback check: If layout elements are wrapped in a nested inner .lesson container */
+.codevibe-layout-managed .lesson {
+  margin-left: 0 !important;
 }
