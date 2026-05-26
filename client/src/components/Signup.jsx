@@ -90,12 +90,31 @@ const SignUp = () => {
             />
 
             <label>YEAR:</label>
-            <input
-              type="text"
+            <select
               value={year}
               onChange={(e) => setYear(e.target.value)}
               required
-            />
+            >
+              <option value="">
+                Select your current year of study
+              </option>
+
+              <option value="1st Year">
+                1st Year
+              </option>
+
+              <option value="2nd Year">
+                2nd Year
+              </option>
+
+              <option value="3rd Year">
+                3rd Year
+              </option>
+
+              <option value="4th Year">
+                4th Year
+              </option>
+            </select>
 
             <label>EMAIL:</label>
             <input
