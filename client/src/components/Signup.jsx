@@ -191,38 +191,28 @@ const Signup = () => {
             />
 
             {/* Year */}
-            <label htmlFor="year">
-              YEAR:
-            </label>
+            <label>CURRENT YEAR OF STUDY:</label>
 
-            <select
-              id="year"
-              name="year"
-              value={formData.year}
-              onChange={handleChange}
-              required
-            >
-              <option value="">
-                Select Year
-              </option>
-
-              <option value="1st Year">
-                1st Year
-              </option>
-
-              <option value="2nd Year">
-                2nd Year
-              </option>
-
-              <option value="3rd Year">
-                3rd Year
-              </option>
-
-              <option value="4th Year">
-                4th Year
-              </option>
-
+            <select value={year} onChange={(e) => setYear(e.target.value)}>
+              <option value="">Select Year of Study</option>
+              <option value="1">1st Year</option>
+              <option value="2">2nd Year</option>
+              <option value="3">3rd Year</option>
+              <option value="4">4th Year</option>
             </select>
+
+            {errors.year && (
+              <p
+                id="year-error"
+                style={{
+                  color: "#ff4d6d",
+                  fontSize: "0.85rem",
+                  marginTop: "5px",
+                }}
+              >
+                {errors.year}
+              </p>
+            )}
 
             {/* Email */}
             <label htmlFor="email">

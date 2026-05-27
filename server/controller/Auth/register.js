@@ -19,6 +19,14 @@ const register = async (req, res, next) => {
       });
     }
 
+    const validYears = [1, 2, 3, 4];
+
+    if (!validYears.includes(Number(year))) {
+      return res.status(400).json({
+        message: "Invalid year of study"
+      });
+    }
+
     const userExist = await UserModel.findOne({
       $or: [
         { email },
@@ -36,16 +44,16 @@ const register = async (req, res, next) => {
 
     const userCreate = new UserModel({
       username,
-      Email: userEmail,
+      Email: email,
       password: hashedPassword,
-      college: userCollege,
+      college: college,
       year,
     });
 
     await userCreate.save();
 
     const token = jwt.sign(
-      { userId: userCreate._id, email: userEmail, username },
+      { userId: userCreate._id, email: email, username },
       process.env.JWT_SECRET || "codevibe_default_secret",
       { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
     );
@@ -56,8 +64,8 @@ const register = async (req, res, next) => {
       token,
       user: {
         username,
-        email: userEmail,
-        college: userCollege,
+        email: email,
+        college: college,
         year,
         bio: "",
         avatarUrl: "",
@@ -86,4 +94,4 @@ const register = async (req, res, next) => {
   }
 };
 
-module.exports = register; which to keep 
+module.exports = register;
