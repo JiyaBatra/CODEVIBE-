@@ -83,7 +83,7 @@ const clearSearch = () => {
       {/* Row 1: Logo + Nav + Hamburger */}
       <div className="header-top">
         <div className="header-logo-wrapper">
-          <Link to="/" aria-label="Go to homepage" className="logo-link">
+          <Link to="/lessons" aria-label="Go to homepage" className="logo-link">
             <img src={logo} alt="CodeVibe Logo" title="CodeVibe - Learn. Practice. Master." />
           </Link>
         </div>

@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 
 import {
-  HashRouter,
+  BrowserRouter,
   Routes,
   Route,
   Navigate
@@ -222,8 +222,8 @@ import GlobalBackNav from "./components/common/GlobalBackNav.jsx";
 import { SearchProvider } from "./context/SearchContext.jsx";
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <HashRouter>
+  
+    <BrowserRouter>
       <AuthProvider>
         <SearchProvider>
           <Head />
@@ -443,6 +443,6 @@ createRoot(document.getElementById('root')).render(
         <Foot />
         </SearchProvider>
       </AuthProvider>
-    </HashRouter>
-  </StrictMode>
+    </BrowserRouter>
+  
 );
