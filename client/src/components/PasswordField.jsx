@@ -22,6 +22,7 @@ export default function PasswordField({
           onChange={onChange}
           required={required}
           autoComplete={id.includes("confirm") ? "new-password" : "current-password"}
+          aria-describedby={hint ? `${id}-hint` : undefined}
         />
         <button
           type="button"
@@ -33,7 +34,11 @@ export default function PasswordField({
           {visible ? <FaEyeSlash aria-hidden="true" /> : <FaEye aria-hidden="true" />}
         </button>
       </div>
-      {hint}
+      {hint && (
+        <span id={`${id}-hint`} className="password-field__hint" style={{ display: "block", fontSize: "0.85rem", marginTop: "4px" }}>
+          {hint}
+        </span>
+      )}
     </>
   );
 }
