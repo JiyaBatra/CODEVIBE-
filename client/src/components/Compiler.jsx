@@ -465,10 +465,20 @@ const Compiler = ({
       <div className="compiler-editor-wrap">
         {/* toolbar */}
         <div className="compiler-toolbar">
-          <button title="Copy Code" onClick={copyCode} className="compiler-btn compiler-btn--copy">
+          <button
+            title="Copy Code"
+            onClick={copyCode}
+            className="compiler-btn compiler-btn--copy"
+            aria-label="Copy code to clipboard"
+          >
             📋 Copy
           </button>
-          <button title="Download Code" onClick={downloadCode} className="compiler-btn compiler-btn--download">
+          <button
+            title="Download Code"
+            onClick={downloadCode}
+            className="compiler-btn compiler-btn--download"
+            aria-label="Download code to local file"
+          >
             ⬇️ Download
           </button>
         </div>
@@ -480,12 +490,18 @@ const Compiler = ({
           className="compiler-textarea"
           placeholder={`// Type your code here. Use console.log for JS outputs.\n// For React define function App(){ return <h1>Hello</h1> }\n// Server languages will be executed by backend: POST /api/execute/:language`}
           spellCheck={false}
+          aria-label="Code editor input area"
         />
       </div>
 
       {/* action row */}
       <div className="compiler-actions">
-        <button title="Run (Ctrl + Enter)" onClick={runCode} className="compiler-btn compiler-btn--run">
+        <button
+          title="Run (Ctrl + Enter)"
+          onClick={runCode}
+          className="compiler-btn compiler-btn--run"
+          aria-label="Run compiler code execution"
+        >
           ▶ Run
         </button>
         <button
@@ -500,11 +516,12 @@ const Compiler = ({
             setScore(null);
           }}
           className="compiler-btn compiler-btn--reset"
+          aria-label="Reset code to starter code state"
         >
           ↺ Reset
         </button>
         {status && !isSuccess && !errorType && (
-          <span className="compiler-status">{status}</span>
+          <span className="compiler-status" aria-live="polite">{status}</span>
         )}
       </div>
 
