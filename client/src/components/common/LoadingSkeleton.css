@@ -1,0 +1,33 @@
+.skeleton-loader {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.06) 25%,
+    rgba(255, 255, 255, 0.12) 37%,
+    rgba(255, 255, 255, 0.06) 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-pulse 1.4s ease infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.skeleton-text {
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-circle {
+  flex-shrink: 0;
+}
+
+.skeleton-rect {
+  display: block;
+}
