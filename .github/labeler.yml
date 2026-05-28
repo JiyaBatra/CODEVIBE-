@@ -1,0 +1,17 @@
+# Configuration for actions/labeler
+
+frontend:
+  - changed-files:
+      - any-glob-to-any-file: 'client/**/*'
+
+backend:
+  - changed-files:
+      - any-glob-to-any-file: 'server/**/*'
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: ['**/*.md', 'docs/**/*']
+
+workflows:
+  - changed-files:
+      - any-glob-to-any-file: '.github/**/*'
