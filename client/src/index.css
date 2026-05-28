@@ -619,15 +619,20 @@ h3 {
 .site-footer {
   background: linear-gradient(180deg, #0a0e27 0%, #050710 100%);
   border-top: 3px solid var(--primary-red);
+
   box-shadow:
     inset 0 2px 30px rgba(255, 77, 109, 0.1),
     0 0 30px rgba(255, 77, 109, 0.15);
-  padding: 0 2rem 1.5rem;
+
   color: var(--text-secondary);
   font-size: 0.95rem;
+
   position: relative;
+
+  margin-top: 4rem;
+  padding: 3rem 2rem 1.5rem;
+
   overflow: hidden;
-  margin-top: -200px !important;
   margin-bottom: 0 !important;
 }
 
@@ -1140,6 +1145,14 @@ h3 {
   padding: 0.2rem 0.5rem;
   border-radius: 3px;
   font-family: 'Monaco', 'Courier New', monospace;
+}
+
+@media (min-width: 769px) {
+  .lesson {
+    margin-left: 300px;
+    width: calc(100% - 300px);
+    box-sizing: border-box;
+  }
 }
 
 /* Login Container */
@@ -3065,4 +3078,31 @@ select:focus {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media (min-width: 1025px) {
+  #root.codevibe-layout-managed > .lesson {
+    margin-left: 250px !important;
+    width: calc(100% - 250px) !important;
+    box-sizing: border-box !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  #root.codevibe-layout-managed > .lesson {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding: 1rem !important;
+    box-sizing: border-box !important;
+  }
+
+  .dynamic-progress-sidebar {
+    transform: translateX(-100%);
+    z-index: 1000;
+  }
+
+  .dynamic-progress-sidebar.open,
+  .dynamic-progress-sidebar.active {
+    transform: translateX(0);
+  }
 }
