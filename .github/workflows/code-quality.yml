@@ -1,0 +1,55 @@
+name: Code Quality CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint-client:
+    name: Lint Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: client/package.json
+
+      - name: Install Frontend Dependencies
+        working-directory: client
+        run: npm ci || npm install
+
+      - name: Run Frontend Lint
+        working-directory: client
+        run: npm run lint
+
+  lint-server:
+    name: Lint Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+          cache-dependency-path: server/package.json
+
+      - name: Install Backend Dependencies
+        working-directory: server
+        run: npm ci || npm install
+
+      - name: Run Backend Lint
+        working-directory: server
+        run: npm run lint
