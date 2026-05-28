@@ -1,0 +1,57 @@
+.custom-card {
+  background: var(--bg-card, #1e293b);
+  border: 1px solid var(--border-card, #334155);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  color: var(--text-primary, #f1f5f9);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-elevation-low {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.card-elevation-medium {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+.card-elevation-high {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+}
+
+.card-interactive {
+  cursor: pointer;
+}
+
+.card-interactive:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.4);
+  border-color: var(--primary-color, #ff4d6d);
+}
+
+.card-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-card, #334155);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.card-body {
+  padding: 1.25rem;
+  flex-grow: 1;
+}
+
+.card-footer {
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid var(--border-card, #334155);
+  background: rgba(0, 0, 0, 0.1);
+}
