@@ -7,6 +7,9 @@ const routes = require("./routes/index");
 
 dotenv.config();
 
+const { validateEnv } = require("./utils/envValidator");
+validateEnv();
+
 const backend = express();
 backend.set("trust proxy", 1);
 const server = http.Server(backend);
