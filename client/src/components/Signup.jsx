@@ -4,6 +4,13 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import API_BASE_URL from "../config/api";
 import registerImage from "../assets/registerImage.png";
 import PasswordField from "./PasswordField";
+import {
+  validateEmail,
+  validatePassword,
+  validateUsername,
+  validateCollege,
+  validateYear,
+} from "../utils/validation";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -18,87 +25,90 @@ const Signup = () => {
     confirmPassword: "",
   });
 
+  const [errors, setErrors] = useState({});
   const [responseMsg, setResponseMsg] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
-  // Username Validation
   const handleUsernameChange = (e) => {
     const value = e.target.value;
-
-    setUsername(value);
-
+    setFormData((prev) => ({ ...prev, username: value }));
     setErrors((prev) => ({
       ...prev,
       username: validateUsername(value),
     }));
   };
 
-  // College Validation
   const handleCollegeChange = (e) => {
     const value = e.target.value;
-
-    setCollege(value);
-
+    setFormData((prev) => ({ ...prev, collegeName: value }));
     setErrors((prev) => ({
       ...prev,
       college: validateCollege(value),
     }));
   };
 
-  // Year Validation
   const handleYearChange = (e) => {
     const value = e.target.value;
-
-    if (/^\d{0,4}$/.test(value)) {
-      setYear(value);
-
-      setErrors((prev) => ({
-        ...prev,
-        year: validateYear(value),
-      }));
-    }
+    setFormData((prev) => ({ ...prev, year: value }));
+    setErrors((prev) => ({
+      ...prev,
+      year: validateYear(value),
+    }));
   };
 
-  // Email Validation
   const handleEmailChange = (e) => {
     const value = e.target.value;
-
-    setEmail(value);
-
+    setFormData((prev) => ({ ...prev, email: value }));
     setErrors((prev) => ({
       ...prev,
       email: validateEmail(value),
     }));
   };
 
-  // Password Validation
   const handlePasswordChange = (e) => {
     const value = e.target.value;
-
-    setPassword(value);
-
+    setFormData((prev) => ({ ...prev, password: value }));
     setErrors((prev) => ({
       ...prev,
       password: validatePassword(value),
     }));
   };
 
-  // Submit
+  const handleConfirmPasswordChange = (e) => {
+    const value = e.target.value;
+    setFormData((prev) => ({ ...prev, confirmPassword: value }));
+    setErrors((prev) => ({
+      ...prev,
+      confirmPassword:
+        value !== formData.password ? "Passwords do not match" : "",
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setResponseMsg("");
 
-    // Password Match Validation
-    if (formData.password !== formData.confirmPassword) {
-      setResponseMsg("Passwords do not match");
+    const newErrors = {
+      username: validateUsername(formData.username),
+      college: validateCollege(formData.collegeName),
+      year: validateYear(formData.year),
+      email: validateEmail(formData.email),
+      password: validatePassword(formData.password),
+      confirmPassword:
+        formData.password !== formData.confirmPassword
+          ? "Passwords do not match"
+          : "",
+    };
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).some((err) => err)) {
       return;
     }
 
@@ -116,7 +126,7 @@ const Signup = () => {
         }
       );
 
-      console.log("✅ Signup successful:", response.data);
+      console.log("Signup successful:", response.data);
 
       if (response.data.success) {
         setResponseMsg(
@@ -133,13 +143,13 @@ const Signup = () => {
       }
     } catch (error) {
       console.error(
-        "❌ Signup error:",
+        "Signup error:",
         error.response?.data || error.message
       );
 
       setResponseMsg(
         error.response?.data?.message ||
-        "Server error. Please try again."
+          "Server error. Please try again."
       );
     } finally {
       setLoading(false);
@@ -149,131 +159,112 @@ const Signup = () => {
   return (
     <section className="login-section">
       <div className="login-container">
-
-        {/* Left Side Image */}
         <div className="login-image">
           <img src={registerImage} alt="Signup" />
         </div>
 
-        {/* Signup Form */}
         <div className="login-card">
           <form className="login-form" onSubmit={handleSubmit}>
-
             <h1>Create Account</h1>
 
-            {/* Username */}
-            <label htmlFor="username">
-              USERNAME:
-            </label>
-
+            <label htmlFor="username">USERNAME:</label>
             <input
               type="text"
               id="username"
               name="username"
               placeholder="Enter username"
               value={formData.username}
-              onChange={handleChange}
+              onChange={handleUsernameChange}
               required
             />
+            {errors.username && (
+              <span style={{ color: "#ff6b6b", fontSize: "12px" }}>
+                {errors.username}
+              </span>
+            )}
 
-            {/* College Name */}
-            <label htmlFor="collegeName">
-              COLLEGE NAME:
-            </label>
-
+            <label htmlFor="collegeName">COLLEGE NAME:</label>
             <input
               type="text"
               id="collegeName"
               name="collegeName"
               placeholder="Enter college name"
               value={formData.collegeName}
-              onChange={handleChange}
+              onChange={handleCollegeChange}
               required
             />
+            {errors.college && (
+              <span style={{ color: "#ff6b6b", fontSize: "12px" }}>
+                {errors.college}
+              </span>
+            )}
 
-            {/* Year */}
-            <label htmlFor="year">
-              YEAR:
-            </label>
-
+            <label htmlFor="year">YEAR:</label>
             <select
               id="year"
               name="year"
               value={formData.year}
-              onChange={handleChange}
+              onChange={handleYearChange}
               required
             >
-              <option value="">
-                Select Year
-              </option>
-
-              <option value="1st Year">
-                1st Year
-              </option>
-
-              <option value="2nd Year">
-                2nd Year
-              </option>
-
-              <option value="3rd Year">
-                3rd Year
-              </option>
-
-              <option value="4th Year">
-                4th Year
-              </option>
-
+              <option value="">Select Year</option>
+              <option value="1st Year">1st Year</option>
+              <option value="2nd Year">2nd Year</option>
+              <option value="3rd Year">3rd Year</option>
+              <option value="4th Year">4th Year</option>
             </select>
+            {errors.year && (
+              <span style={{ color: "#ff6b6b", fontSize: "12px" }}>
+                {errors.year}
+              </span>
+            )}
 
-            {/* Email */}
-            <label htmlFor="email">
-              EMAIL ID:
-            </label>
-
+            <label htmlFor="email">EMAIL ID:</label>
             <input
               type="email"
               id="email"
               name="email"
               placeholder="Enter email"
               value={formData.email}
-              onChange={handleChange}
+              onChange={handleEmailChange}
               required
             />
+            {errors.email && (
+              <span style={{ color: "#ff6b6b", fontSize: "12px" }}>
+                {errors.email}
+              </span>
+            )}
 
-            {/* Password */}
             <PasswordField
               id="password"
               label="PASSWORD:"
               value={formData.password}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  password: e.target.value,
-                })
-              }
+              onChange={handlePasswordChange}
             />
+            {errors.password && (
+              <span style={{ color: "#ff6b6b", fontSize: "12px" }}>
+                {errors.password}
+              </span>
+            )}
 
-            {/* Confirm Password */}
             <PasswordField
               id="confirmPassword"
               label="CONFIRM PASSWORD:"
               value={formData.confirmPassword}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  confirmPassword: e.target.value,
-                })
-              }
+              onChange={handleConfirmPasswordChange}
             />
+            {errors.confirmPassword && (
+              <span style={{ color: "#ff6b6b", fontSize: "12px" }}>
+                {errors.confirmPassword}
+              </span>
+            )}
 
-            {/* Submit Button */}
             <button type="submit" disabled={loading}>
               {loading
                 ? "CREATING ACCOUNT..."
                 : "CREATE ACCOUNT"}
             </button>
 
-            {/* Response Message */}
             {responseMsg && (
               <p
                 style={{
@@ -285,14 +276,12 @@ const Signup = () => {
               </p>
             )}
 
-            {/* Login Link */}
             <p>
               Already have an account?{" "}
               <Link to="/login" state={location.state}>
                 Login
               </Link>
             </p>
-
           </form>
         </div>
       </div>
