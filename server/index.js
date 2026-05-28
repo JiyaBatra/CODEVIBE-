@@ -24,6 +24,9 @@ const allowedOrigins = (
   .filter(Boolean);
 
 const isLocalDevOrigin = (origin = "") => {
+  if (process.env.NODE_ENV === "production") {
+    return false;
+  }
   try {
     const { hostname, port, protocol } = new URL(origin);
     const isLocalHost =
@@ -49,6 +52,7 @@ backend.use(
       ) {
         callback(null, true);
       } else {
+        console.warn(`⚠️ Blocked cross-origin request from: ${origin}`);
         callback(new Error("Not allowed by CORS"));
       }
     },
