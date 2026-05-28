@@ -29,6 +29,11 @@ const ScrollToTop = () => {
             top: 0,
             behavior: "smooth",
         });
+        // Retain focus correctly for keyboard screen reader users at page top
+        if (document.body) {
+            document.body.tabIndex = -1;
+            document.body.focus();
+        }
     };
 
     return showButton ? (
