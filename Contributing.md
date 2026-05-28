@@ -83,6 +83,29 @@ git checkout -b feature/your-feature-name
 git checkout -b fix/issue-name
 ```
 
+### Branch Naming Standards
+
+To keep the repository organized and ensure seamless reviews, please conform to the following branch naming standards:
+
+1. **Format**: All branch names must be in **lowercase**, **hyphen-separated**, descriptive, and prefix-oriented.
+2. **Standard Prefixes**:
+   - `feat/` — For introducing new features (e.g., `feat/github-workflow-pr-labeler`)
+   - `fix/` — For addressing codebase bugs (e.g., `fix/backend-security-cors`)
+   - `docs/` — For writing guides and readmes (e.g., `docs/architecture-overview`)
+   - `refactor/` — For extracting modules or redesigning structures without logic modifications (e.g., `refactor/extract-reusable-card`)
+   - `accessibility/` — For inclusive design and WCAG standard checks (e.g., `accessibility/improve-interactive-element-labels`)
+   - `style/` — For layout adjustments, spacing, and animations (e.g., `style/scroll-to-top-smoothness`)
+
+### Conflict Prevention Rules
+
+Always sync with the upstream repository before beginning new work or opening a pull request:
+```bash
+git checkout main
+git pull upstream main
+git checkout your-branch-name
+git rebase main
+```
+
 ### 3. Install Dependencies
 ```bash
 # Frontend
