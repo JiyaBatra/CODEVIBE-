@@ -71,13 +71,34 @@ backend.use((err, req, res, next) => {
   });
 });
 
-const MONGODB_URL =
-  process.env.DB_URL ||
-  process.env.MONGODB_URI ||
-  "mongodb://127.0.0.1:27017/codevibe";
+const useInMemoryDb =
+  process.env.USE_IN_MEMORY_DB === "true" ||
+  (!process.env.DB_URL && !process.env.MONGODB_URI && process.env.NODE_ENV !== "production");
 
-mongoose
-  .connect(MONGODB_URL)
+const getMongoUri = async () => {
+  if (process.env.DB_URL) return process.env.DB_URL;
+  if (process.env.MONGODB_URI) return process.env.MONGODB_URI;
+
+  if (useInMemoryDb) {
+    try {
+      const { MongoMemoryServer } = require("mongodb-memory-server");
+      const mongod = await MongoMemoryServer.create();
+      const uri = mongod.getUri();
+      console.log("🔧 Using in-memory MongoDB for development");
+      return uri;
+    } catch (error) {
+      console.warn(
+        "⚠️ mongodb-memory-server is not installed or failed to load. Falling back to local MongoDB.",
+        error.message
+      );
+    }
+  }
+
+  return "mongodb://127.0.0.1:27017/codevibe";
+};
+
+getMongoUri()
+  .then((mongoUri) => mongoose.connect(mongoUri))
   .then(() => {
     const PORT = process.env.PORT || 5002;
 
