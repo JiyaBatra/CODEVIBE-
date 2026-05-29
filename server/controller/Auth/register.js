@@ -2,7 +2,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../../models/user.models");
 
-const escapeRegex = (value = "") => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const escapeRegex = (value = "") =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const register = async (req, res, next) => {
   try {
@@ -47,7 +48,7 @@ const register = async (req, res, next) => {
     const token = jwt.sign(
       { userId: userCreate._id, email: userEmail, username },
       process.env.JWT_SECRET || "codevibe_default_secret",
-      { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
+      { expiresIn: process.env.JWT_EXPIRES_IN || "7d" },
     );
 
     res.status(200).json({
@@ -86,4 +87,4 @@ const register = async (req, res, next) => {
   }
 };
 
-module.exports = register; which to keep 
+module.exports = register;

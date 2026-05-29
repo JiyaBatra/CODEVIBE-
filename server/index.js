@@ -45,7 +45,9 @@ backend.use(
         !origin ||
         allowedOrigins.includes(origin) ||
         isLocalDevOrigin(origin) ||
-        /^https:\/\/deploy-preview-\d+--codevibeforyou\.netlify\.app$/.test(origin)
+        /^https:\/\/deploy-preview-\d+--codevibeforyou\.netlify\.app$/.test(
+          origin,
+        )
       ) {
         callback(null, true);
       } else {
@@ -55,7 +57,7 @@ backend.use(
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
-  })
+  }),
 );
 
 backend.use(routes);
@@ -79,7 +81,7 @@ const MONGODB_URL =
 mongoose
   .connect(MONGODB_URL)
   .then(() => {
-    const PORT = process.env.PORT || 5002;
+    const PORT = process.env.PORT || 5000;
 
     server.listen(PORT, () => {
       console.log(`✅ Server Started on port ${PORT}`);
