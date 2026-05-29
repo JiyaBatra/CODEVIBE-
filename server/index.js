@@ -81,7 +81,7 @@ const MONGODB_URL =
 mongoose
   .connect(MONGODB_URL)
   .then(() => {
-    const PORT = process.env.PORT || 5000;
+    const PORT = process.env.PORT || 5002;
 
     server.listen(PORT, () => {
       console.log(`✅ Server Started on port ${PORT}`);
