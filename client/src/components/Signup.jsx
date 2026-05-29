@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import API_BASE_URL from "../config/api";
 import registerImage from "../assets/registerImage.png";
 import PasswordField from "./PasswordField";
+import { validatePassword } from "../utils/validation";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -19,6 +20,10 @@ const Signup = () => {
   });
 
   const [responseMsg, setResponseMsg] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({
+    password: "",
+    confirmPassword: "",
+  });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -28,66 +33,26 @@ const Signup = () => {
     });
   };
 
-  // Username Validation
-  const handleUsernameChange = (e) => {
-    const value = e.target.value;
-
-    setUsername(value);
-
-    setErrors((prev) => ({
+  const updatePasswordField = (name, value) => {
+    setFormData((prev) => ({
       ...prev,
-      username: validateUsername(value),
+      [name]: value,
+    }));
+
+    setResponseMsg("");
+    setFieldErrors((prev) => ({
+      ...prev,
+      [name]: name === "password" ? validatePassword(value) : "",
+      ...(name === "password" ? { confirmPassword: "" } : {}),
     }));
   };
 
-  // College Validation
-  const handleCollegeChange = (e) => {
-    const value = e.target.value;
-
-    setCollege(value);
-
-    setErrors((prev) => ({
-      ...prev,
-      college: validateCollege(value),
-    }));
-  };
-
-  // Year Validation
-  const handleYearChange = (e) => {
-    const value = e.target.value;
-
-    if (/^\d{0,4}$/.test(value)) {
-      setYear(value);
-
-      setErrors((prev) => ({
-        ...prev,
-        year: validateYear(value),
-      }));
+  const formatSignupError = (message = "") => {
+    if (/password/i.test(message) && /length|least|characters/i.test(message)) {
+      return "Password must be at least 8 characters";
     }
-  };
 
-  // Email Validation
-  const handleEmailChange = (e) => {
-    const value = e.target.value;
-
-    setEmail(value);
-
-    setErrors((prev) => ({
-      ...prev,
-      email: validateEmail(value),
-    }));
-  };
-
-  // Password Validation
-  const handlePasswordChange = (e) => {
-    const value = e.target.value;
-
-    setPassword(value);
-
-    setErrors((prev) => ({
-      ...prev,
-      password: validatePassword(value),
-    }));
+    return message || "Signup failed";
   };
 
   // Submit
@@ -96,9 +61,23 @@ const Signup = () => {
 
     setResponseMsg("");
 
-    // Password Match Validation
+    const passwordError = validatePassword(formData.password);
+    if (passwordError) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        password: passwordError,
+      }));
+      setResponseMsg(passwordError);
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
-      setResponseMsg("Passwords do not match");
+      const confirmPasswordError = "Passwords do not match";
+      setFieldErrors((prev) => ({
+        ...prev,
+        confirmPassword: confirmPasswordError,
+      }));
+      setResponseMsg(confirmPasswordError);
       return;
     }
 
@@ -128,7 +107,7 @@ const Signup = () => {
         }, 1500);
       } else {
         setResponseMsg(
-          response.data.message || "Signup failed"
+          formatSignupError(response.data.message)
         );
       }
     } catch (error) {
@@ -138,7 +117,7 @@ const Signup = () => {
       );
 
       setResponseMsg(
-        error.response?.data?.message ||
+        formatSignupError(error.response?.data?.message) ||
         "Server error. Please try again."
       );
     } finally {
@@ -245,12 +224,10 @@ const Signup = () => {
               id="password"
               label="PASSWORD:"
               value={formData.password}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  password: e.target.value,
-                })
-              }
+              onChange={(e) => updatePasswordField("password", e.target.value)}
+              hint={fieldErrors.password && (
+                <p className="field-error">{fieldErrors.password}</p>
+              )}
             />
 
             {/* Confirm Password */}
@@ -258,12 +235,10 @@ const Signup = () => {
               id="confirmPassword"
               label="CONFIRM PASSWORD:"
               value={formData.confirmPassword}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  confirmPassword: e.target.value,
-                })
-              }
+              onChange={(e) => updatePasswordField("confirmPassword", e.target.value)}
+              hint={fieldErrors.confirmPassword && (
+                <p className="field-error">{fieldErrors.confirmPassword}</p>
+              )}
             />
 
             {/* Submit Button */}

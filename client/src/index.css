@@ -1198,6 +1198,13 @@ h3 {
   transform: translateY(-50%);
 }
 
+.field-error {
+  color: #ffb3c1;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin: -0.75rem 0 0;
+}
+
 .login-form h1,
 .login-form h2 {
   color: var(--primary-red);
