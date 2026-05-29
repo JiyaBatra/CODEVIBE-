@@ -76,6 +76,30 @@ const roadmapData = {
       "Monitoring & Scaling",
     ],
   },
+  DSA: {
+    Beginner: [
+      "Arrays",
+      "Strings",
+      "Time Complexity",
+      "Basic Recursion",
+    ],
+    Intermediate: [
+      "Linked Lists",
+      "Stack & Queue",
+      "Trees",
+      "Binary Search",
+      "Sliding Window",
+      "Sorting Algorithms",
+    ],
+    Advanced: [
+      "Graphs",
+      "Dynamic Programming",
+      "Greedy Algorithms",
+      "Tries",
+      "Backtracking",
+      "Segment Trees",
+    ],
+  },
 };
 
 const RoadmapGenerator = () => {
@@ -133,19 +157,21 @@ const RoadmapGenerator = () => {
         }}
       >
         <select
-          value={domain}
-          onChange={(e) => setDomain(e.target.value)}
-          style={{
-            padding: "14px 18px",
-            borderRadius: "12px",
-            background: "rgba(255,255,255,0.08)",
-            color: "white",
-            border: "1px solid rgba(255,255,255,0.15)",
-            outline: "none",
-            minWidth: "250px",
-            fontSize: "1rem",
-          }}
-        >
+  id="domain-select"
+  name="domain"
+  value={domain}
+  onChange={(e) => setDomain(e.target.value)}
+  style={{
+    padding: "14px 18px",
+    borderRadius: "12px",
+    background: "rgba(255,255,255,0.08)",
+    color: "white",
+    border: "1px solid rgba(255,255,255,0.15)",
+    outline: "none",
+    minWidth: "250px",
+    fontSize: "1rem",
+  }}
+>
           <option value="">Select Domain</option>
 
           {Object.keys(roadmapData).map((item) => (

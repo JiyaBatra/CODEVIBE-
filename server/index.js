@@ -110,3 +110,21 @@ getMongoUri()
   .catch((err) => {
     console.error("❌ MongoDB connection error:", err);
   });
+
+const gracefulShutdown = (signal) => {
+  console.log(`\n⚠️ ${signal} received. Starting graceful shutdown...`);
+  
+  server.close(() => {
+    console.log("🏁 HTTP server closed.");
+    mongoose.connection.close(false).then(() => {
+      console.log("🔌 MongoDB connection closed.");
+      process.exit(0);
+    }).catch((err) => {
+      console.error("❌ Error during MongoDB disconnection:", err);
+      process.exit(1);
+    });
+  });
+};
+
+process.on("SIGINT", () => gracefulShutdown("SIGINT"));
+process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));

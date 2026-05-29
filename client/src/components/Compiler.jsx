@@ -513,7 +513,7 @@ const Compiler = ({
         ref={iframeRef}
         className="compiler-preview"
         title="code-output"
-        sandbox="allow-scripts allow-same-origin"
+        sandbox="allow-scripts"
       />
 
       {/* ── rich feedback panel ── */}

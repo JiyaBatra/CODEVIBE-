@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from "../AuthProvider.jsx";
+import { useSearch } from "../context/SearchContext.jsx";
 import { FaSignInAlt, FaSignOutAlt, FaUserPlus, FaTachometerAlt, FaGamepad, FaSearch, FaTimes } from "react-icons/fa";
 import logo from "../assets/websitelogo.png";
 
@@ -18,7 +19,7 @@ const COURSES = [
 ];
 
 const Head = () => {
-  const [query, setQuery] = useState("");
+  const { query, setQuery } = useSearch();
   const [suggestions, setSuggestions] = useState([]);
   const [focused, setFocused] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -171,20 +172,22 @@ const clearSearch = () => {
           role="search"
           aria-label="Search courses"
         >
-          {/*<FaSearch className="search-icon-left" aria-hidden="true" />*/}
-          <input
-            ref={inputRef}
-            type="text"
-            className="search-input"
-            placeholder="Search courses — HTML, DSA, React..."
-            value={query}
-            onChange={(e) => handleSearch(e.target.value)}
-            onFocus={() => setFocused(true)}
-            aria-autocomplete="list"
-            aria-controls="search-suggestions"
-            aria-expanded={suggestions.length > 0}
-            autoComplete="off"
-          />
+         {/*<FaSearch className="search-icon-left" aria-hidden="true" />*/}
+<input
+  ref={inputRef}
+  type="text"
+  id="search-courses"
+  name="searchCourses"
+  className="search-input"
+  placeholder="Search courses — HTML, DSA, React..."
+  value={query}
+  onChange={(e) => handleSearch(e.target.value)}
+  onFocus={() => setFocused(true)}
+  aria-autocomplete="list"
+  aria-controls="search-suggestions"
+  aria-expanded={suggestions.length > 0}
+  autoComplete="off"
+/>
           {query && (
             <button
               type="button"

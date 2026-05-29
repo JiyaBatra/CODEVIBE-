@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const ScrollToTop = () => {
     const [showButton, setShowButton] = useState(false);
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            behavior: "auto",
+        });
+    }, [pathname]);
 
     useEffect(() => {
         const handleScroll = () => {

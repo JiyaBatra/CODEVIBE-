@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import API_BASE_URL from "../config/api";
 import registerImage from "../assets/registerImage.png";
 import PasswordField from "./PasswordField";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -123,7 +124,7 @@ const Signup = () => {
         );
 
         setTimeout(() => {
-          navigate("/login");
+          navigate("/login", { state: location.state });
         }, 1500);
       } else {
         setResponseMsg(
@@ -287,7 +288,7 @@ const Signup = () => {
             {/* Login Link */}
             <p>
               Already have an account?{" "}
-              <Link to="/login">
+              <Link to="/login" state={location.state}>
                 Login
               </Link>
             </p>

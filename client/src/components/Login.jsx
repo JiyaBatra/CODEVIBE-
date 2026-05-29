@@ -186,7 +186,7 @@ const Login = () => {
 
             <p>
               Don't have an account?{" "}
-              <Link to="/signup">Signup</Link>
+              <Link to="/signup" state={location.state}>Signup</Link>
             </p>
 
             <p>

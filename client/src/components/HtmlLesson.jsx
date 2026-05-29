@@ -340,6 +340,7 @@ const HtmlLesson = () => {
           font-size: 1.25rem;
           margin: 0 0 8px 0;
           font-weight: 600;
+          min-height: 64px;
         }
 
         .course-category {
@@ -360,6 +361,7 @@ const HtmlLesson = () => {
           font-size: 0.9rem;
           line-height: 1.5;
           margin-bottom: 20px;
+          min-height: 70px;
         }
 
         .start-btn-wrapper {
@@ -424,7 +426,19 @@ const HtmlLesson = () => {
           }
 
           .course-card {
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 24px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
           }
         }
 

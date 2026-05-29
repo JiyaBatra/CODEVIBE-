@@ -357,7 +357,9 @@ const JsLesson = () => {
           position: relative;
           overflow: hidden;
           cursor: pointer;
-          display: block;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
         }
 
         .course-card:hover {
@@ -435,6 +437,7 @@ const JsLesson = () => {
           font-size: 1.2rem;
           margin: 0 0 8px 0;
           font-weight: 600;
+          min-height: 64px;
         }
 
         .course-meta {
@@ -453,6 +456,7 @@ const JsLesson = () => {
           font-size: 0.9rem;
           line-height: 1.5;
           margin-bottom: 20px;
+          min-height: 70px;
         }
 
         .start-btn-wrapper {
