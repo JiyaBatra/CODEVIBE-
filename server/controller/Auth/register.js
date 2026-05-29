@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../../models/user.models");
+const momsvalidation = require("../../services/validationScheme");
 
 const escapeRegex = (value = "") =>
   value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -13,10 +14,11 @@ const register = async (req, res, next) => {
     const year = req.body.year?.trim();
     const password = req.body.password;
 
-    if (!username || !email || !college || !year || !password) {
+    const { error } = momsvalidation.validate({ username, email, password, college, year });
+    if (error) {
       return res.status(400).json({
         success: false,
-        message: "Please fill in all required fields",
+        message: error.details[0].message,
       });
     }
 
@@ -37,16 +39,16 @@ const register = async (req, res, next) => {
 
     const userCreate = new UserModel({
       username,
-      Email: userEmail,
+      email,
       password: hashedPassword,
-      college: userCollege,
+      college,
       year,
     });
 
     await userCreate.save();
 
     const token = jwt.sign(
-      { userId: userCreate._id, email: userEmail, username },
+      { userId: userCreate._id, email, username },
       process.env.JWT_SECRET || "codevibe_default_secret",
       { expiresIn: process.env.JWT_EXPIRES_IN || "7d" },
     );
@@ -57,8 +59,8 @@ const register = async (req, res, next) => {
       token,
       user: {
         username,
-        email: userEmail,
-        college: userCollege,
+        email,
+        college,
         year,
         bio: "",
         avatarUrl: "",

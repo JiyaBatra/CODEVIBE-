@@ -160,6 +160,24 @@ CodeVibe removes friction from the learning journey. Whether you're a complete b
    See [`server/.env.example`](./server/.env.example) for all available
    variables and their descriptions.
 
+### Environment Setup
+To run the backend locally, you need to configure your environment variables.
+
+Navigate to the server/ directory.
+
+Copy the .env.example file and rename it to .env.
+
+Update the variables in .env as needed:
+
+PORT: The port your Express server will run on (Default: 5002).
+
+DB_URL / MONGODB_URI: Your MongoDB connection string.
+
+ALLOWED_ORIGINS: Comma-separated list of frontend URLs permitted to access the API.
+
+LEADERBOARD_API_URL & TOKEN: Credentials required if you are syncing GitHub stats with the backend.
+
+
 4. **Start the development servers**
    
    Terminal 1 - Backend:

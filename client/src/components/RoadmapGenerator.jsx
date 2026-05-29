@@ -76,6 +76,30 @@ const roadmapData = {
       "Monitoring & Scaling",
     ],
   },
+  DSA: {
+    Beginner: [
+      "Arrays",
+      "Strings",
+      "Time Complexity",
+      "Basic Recursion",
+    ],
+    Intermediate: [
+      "Linked Lists",
+      "Stack & Queue",
+      "Trees",
+      "Binary Search",
+      "Sliding Window",
+      "Sorting Algorithms",
+    ],
+    Advanced: [
+      "Graphs",
+      "Dynamic Programming",
+      "Greedy Algorithms",
+      "Tries",
+      "Backtracking",
+      "Segment Trees",
+    ],
+  },
 };
 
 const RoadmapGenerator = () => {
@@ -133,21 +157,36 @@ const RoadmapGenerator = () => {
         }}
       >
         <select
-  id="domain-select"
-  name="domain"
-  value={domain}
-  onChange={(e) => setDomain(e.target.value)}
-  style={{
-    padding: "14px 18px",
-    borderRadius: "12px",
-    background: "rgba(255,255,255,0.08)",
-    color: "white",
-    border: "1px solid rgba(255,255,255,0.15)",
-    outline: "none",
-    minWidth: "250px",
-    fontSize: "1rem",
-  }}
->
+          id="domain-select"
+          name="domain"
+          value={domain}
+          onChange={(e) => setDomain(e.target.value)}
+          style={{
+            padding: "16px 20px",
+            borderRadius: "16px",
+            background: "rgba(255,255,255,0.06)",
+            color: "#fff",
+            border: "1px solid rgba(255, 20, 147, 0.35)",
+            outline: "none",
+            minWidth: "280px",
+            fontSize: "1rem",
+            fontWeight: "500",
+            backdropFilter: "blur(10px)",
+            WebkitBackdropFilter: "blur(10px)",
+            boxShadow:
+              "0 0 18px rgba(255, 20, 147, 0.18), inset 0 0 8px rgba(255,255,255,0.04)",
+            cursor: "pointer",
+            transition: "all 0.3s ease",
+            appearance: "none",
+            WebkitAppearance: "none",
+            MozAppearance: "none",
+            backgroundImage:
+              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E\")",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "right 18px center",
+            backgroundSize: "16px",
+          }}
+        >
           <option value="">Select Domain</option>
 
           {Object.keys(roadmapData).map((item) => (
@@ -155,7 +194,8 @@ const RoadmapGenerator = () => {
               key={item}
               value={item}
               style={{
-                color: "black",
+                background: "#14142b",
+                color: "white",
               }}
             >
               {item}

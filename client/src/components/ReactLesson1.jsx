@@ -20,7 +20,7 @@ const ReactLesson1 = () => {
           Example of a simple component:
         </p>
         <pre>
-{`function Hello() {
+{`function App() {
   return <h1>Hello, React!</h1>;
 }`}
         </pre>
@@ -28,16 +28,16 @@ const ReactLesson1 = () => {
 
       <pre className="instructions">
 {`Task:
-1. Create a functional component called 'Hello'.
+1. Create a functional component called 'App'.
 2. It should render <h1>Hello, React!</h1>.`}
       </pre>
 
       <Compiler
-        hint="💡 Hint: 1. Create a functional component called 'Hello'. 2. It should render <h1>Hello, React!</h1>."
+        hint="💡 Hint: 1. Create a functional component called 'App'. 2. It should render <h1>Hello, React!</h1>."
         LessonId="react-lesson-1"
-        language="js"
+        language="react"
         initialCode={`// Write your React component here
-function Hello() {
+function App() {
   return <h1>Hello, React!</h1>;
 }`}
         expectedOutput={`Hello, React!`}

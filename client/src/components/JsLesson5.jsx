@@ -17,7 +17,7 @@ const JsLesson5 = () => {
 
   return (
     <div className="lesson">
-      <h1 className="lesson-title">Chapter 5: Expressions in JavaScript</h1>
+      <h1 className="lesson-title">Chapter 5: Operators in JavaScript</h1>
 
       <div className="lesson-content">
         <p>
@@ -56,9 +56,9 @@ const JsLesson5 = () => {
       </pre>
 
       <Compiler
-        hint="💡 Hint: Use arithmetic expressions and console.log() to print the results."
+        hint="💡 Hint: Create a JavaScript program that: 1. Creates two variables a = 8 and b = 3."
         LessonId="js-lesson-5"
-        language="js"
+        language="javascript"
         initialCode={`// Write your code below
 
 `}

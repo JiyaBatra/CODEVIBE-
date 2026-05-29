@@ -24,9 +24,7 @@
     "joi": "^18.0.0",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.23.0",
-    "nodemailer": "^7.0.13",
-    "resend": "^6.12.3",
-    "sqlite3": "^5.1.7"
+    "nodemailer": "^7.0.13"
   },
 
   "devDependencies": {

@@ -1,9 +1,9 @@
-// src/pages/JsLesson5.jsx
+// src/pages/JsLesson4.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Compiler from '../components/Compiler';
 
-const JsLesson5 = () => {
+const JsLesson4 = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const navigate = useNavigate();
 
@@ -12,12 +12,12 @@ const JsLesson5 = () => {
   };
 
   const goToNextLesson = () => {
-    navigate('/JsLesson6');
+    navigate('/JsLesson5');
   };
 
   return (
     <div className="lesson">
-      <h1 className="lesson-title">Chapter 5: Data Types in JavaScript</h1>
+      <h1 className="lesson-title">Chapter 4: Data Types in JavaScript</h1>
 
       <div className="lesson-content">
         <p>
@@ -50,7 +50,7 @@ const JsLesson5 = () => {
 
       <Compiler
         hint="💡 Hint: Create a JavaScript program that: 1. Creates a string variable 'fruit' with value 'Mango'."
-        LessonId="js-lesson-5"
+        LessonId="js-lesson-4"
         language="js"
         initialCode={`// Write your code below
 
@@ -63,7 +63,7 @@ true`}
 
       {isCorrect && (
         <Link
-          to="/JsLesson6"
+          to="/JsLesson5"
           style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }}
           onClick={goToNextLesson}
         >
@@ -74,4 +74,4 @@ true`}
   );
 };
 
-export default JsLesson5;
+export default JsLesson4;

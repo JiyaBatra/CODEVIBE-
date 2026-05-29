@@ -1,9 +1,9 @@
-// src/pages/JsLesson17.jsx
+// src/pages/JsLesson16.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Compiler from '../components/Compiler';
 
-const JsLesson17 = () => {
+const JsLesson16 = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const navigate = useNavigate();
 
@@ -12,12 +12,12 @@ const JsLesson17 = () => {
   };
 
   const goToNextLesson = () => {
-    navigate('/JsLesson18');
+    navigate('/JsLesson17');
   };
 
   return (
     <div className="lesson">
-      <h1 className="lesson-title">Chapter 17: Objects in JavaScript</h1>
+      <h1 className="lesson-title">Chapter 16: Objects in JavaScript</h1>
 
       <div className="lesson-content">
         <p>
@@ -57,7 +57,7 @@ const JsLesson17 = () => {
 
       <Compiler
         hint="💡 Hint: Create a JavaScript program that: 1. Creates an object 'car' with keys: brand='Tesla', model='Model 3', year..."
-        LessonId="js-lesson-17"
+        LessonId="js-lesson-16"
         language="js"
         initialCode={`// Write your code below
 
@@ -69,7 +69,7 @@ const JsLesson17 = () => {
 
       {isCorrect && (
         <Link
-          to="/JsLesson18"
+          to="/JsLesson17"
           style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }}
           onClick={goToNextLesson}
         >
@@ -80,4 +80,4 @@ const JsLesson17 = () => {
   );
 };
 
-export default JsLesson17;
+export default JsLesson16;

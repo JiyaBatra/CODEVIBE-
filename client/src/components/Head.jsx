@@ -62,7 +62,14 @@ const Head = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (suggestions.length > 0) handleSelect(suggestions[0]);
+    const exactMatch = COURSES.find(
+      (c) => c.label.toLowerCase() === query.trim().toLowerCase()
+    );
+    if (exactMatch) {
+      handleSelect(exactMatch);
+    } else {
+      setSuggestions([]);
+    }
   };
 
 const handleLogout = (e) => {

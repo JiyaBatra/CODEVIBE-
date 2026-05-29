@@ -219,6 +219,7 @@ import ReactLesson12 from './components/ReactLesson12.jsx';
 import ReactLesson13 from './components/ReactLesson13.jsx';
 import ScrollToTop from "./components/ScrollToTop";
 import GlobalBackNav from "./components/common/GlobalBackNav.jsx";
+import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import { SearchProvider } from "./context/SearchContext.jsx";
 
 createRoot(document.getElementById('root')).render(
@@ -230,6 +231,7 @@ createRoot(document.getElementById('root')).render(
         <DynamicProgressSidebar />
         <ScrollToTop />
         <GlobalBackNav />
+        <ErrorBoundary>
         <Routes>
           {/* General Routes */}
           <Route path="/" element={<Navigate to="/lessons" replace />} />
@@ -437,7 +439,7 @@ createRoot(document.getElementById('root')).render(
 
 
         </Routes>
-
+        </ErrorBoundary>
 
         <Target />
         <Foot />
