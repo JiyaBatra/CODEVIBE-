@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import API_BASE_URL from '../config/api';
+import { getCourseLessonIds, isCourseCompleted } from '../utils/courseProgress';
 import RoadmapGenerator from "./RoadmapGenerator";
 import ProjectSuggestions from "./ProjectSuggestions";
 import FAQ from "./FAQ";
@@ -26,6 +29,8 @@ const Courses = () => {
   const [wishlist, setWishlist] = useState([]);
   const [animatingId, setAnimatingId] = useState(null);
   const [showWishlistOnly, setShowWishlistOnly] = useState(false);
+  const [completedLessons, setCompletedLessons] = useState([]);
+  const [markingCourse, setMarkingCourse] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,6 +41,51 @@ const Courses = () => {
     const savedWishlist = localStorage.getItem('codevibe_wishlist');
     if (savedWishlist) setWishlist(JSON.parse(savedWishlist));
   }, []);
+
+  useEffect(() => {
+    const email = localStorage.getItem('userEmail');
+    if (!email) return;
+
+    axios
+      .get(`${API_BASE_URL}/api/progress/${email}`)
+      .then((res) => setCompletedLessons(res.data?.completedLessons || []))
+      .catch(() => {});
+  }, [user]);
+
+  const handleMarkComplete = async (e, courseLink) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const email = localStorage.getItem('userEmail');
+    if (!email) {
+      navigate('/login', { state: { from: { pathname: '/lessons' } } });
+      return;
+    }
+
+    const lessonIds = getCourseLessonIds(courseLink);
+    if (!lessonIds.length || isCourseCompleted(completedLessons, courseLink)) {
+      return;
+    }
+
+    setMarkingCourse(courseLink);
+    try {
+      await Promise.all(
+        lessonIds.map((lessonId) =>
+          axios.post(`${API_BASE_URL}/api/lesson/${lessonId}/complete`, {
+            email,
+            score: 100,
+            type: 'course',
+          }),
+        ),
+      );
+      setCompletedLessons((prev) => Array.from(new Set([...prev, ...lessonIds])));
+      window.dispatchEvent(new CustomEvent('codevibe-progress-updated'));
+    } catch (err) {
+      console.error('Mark complete failed:', err);
+    } finally {
+      setMarkingCourse(null);
+    }
+  };
 
   const toggleWishlist = (e, courseTitle) => {
     e.preventDefault();
@@ -327,19 +377,50 @@ const Courses = () => {
                 {course.desc}
               </p>
 
-              <span className="start-btn" style={{
-                display: 'inline-block', textAlign: 'center',
-                background: 'rgba(255,255,255,0.1)', color: 'white',
-                padding: '10px 20px', borderRadius: '30px',
-                fontSize: '0.9rem', fontWeight: '500',
-                transition: 'all 0.3s ease',
-                border: '1px solid rgba(255,255,255,0.15)', marginTop: 'auto',
-              }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.2)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.3)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'; }}
-              >
-                Start Lesson →
-              </span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: 'auto' }}>
+                <span className="start-btn" style={{
+                  display: 'inline-block', textAlign: 'center',
+                  background: 'rgba(255,255,255,0.1)', color: 'white',
+                  padding: '10px 20px', borderRadius: '30px',
+                  fontSize: '0.9rem', fontWeight: '500',
+                  transition: 'all 0.3s ease',
+                  border: '1px solid rgba(255,255,255,0.15)',
+                }}>
+                  Start Lesson →
+                </span>
+
+                {user && (
+                  <button
+                    type="button"
+                    onClick={(e) => handleMarkComplete(e, course.link)}
+                    disabled={
+                      markingCourse === course.link
+                      || isCourseCompleted(completedLessons, course.link)
+                    }
+                    style={{
+                      textAlign: 'center',
+                      background: isCourseCompleted(completedLessons, course.link)
+                        ? 'rgba(46, 125, 50, 0.25)'
+                        : 'rgba(255,255,255,0.06)',
+                      color: isCourseCompleted(completedLessons, course.link)
+                        ? '#8ef0a0'
+                        : 'white',
+                      padding: '10px 20px',
+                      borderRadius: '30px',
+                      fontSize: '0.85rem',
+                      fontWeight: '500',
+                      border: '1px solid rgba(255,255,255,0.12)',
+                      cursor: isCourseCompleted(completedLessons, course.link) ? 'default' : 'pointer',
+                    }}
+                  >
+                    {markingCourse === course.link
+                      ? 'Saving...'
+                      : isCourseCompleted(completedLessons, course.link)
+                        ? 'Completed ✓'
+                        : 'Mark Complete'}
+                  </button>
+                )}
+              </div>
             </Link>
           ))}
         </div>
