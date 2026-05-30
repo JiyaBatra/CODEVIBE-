@@ -32,14 +32,24 @@ const Head = () => {
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+      if (e.target.closest('.hamburger')) return;
+      if (!wrapperRef.current || !wrapperRef.current.contains(e.target)) {
         setFocused(false);
         setMenuOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
 
   const handleSearch = (value) => {
     setQuery(value);
@@ -137,6 +147,9 @@ const clearSearch = () => {
 
       {/* Mobile Nav Drawer */}
       <nav className={`mobile-nav ${menuOpen ? "mobile-nav--open" : ""}`} aria-label="Mobile navigation">
+        <button className="mobile-nav-close" onClick={() => setMenuOpen(false)} aria-label="Close menu">
+          <FaTimes />
+        </button>
         {user ? (
           <>
             <Link to="/dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>

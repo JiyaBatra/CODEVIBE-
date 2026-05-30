@@ -2407,6 +2407,30 @@ select:focus {
   transform: translateY(0);
 }
 
+.mobile-nav-close {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 77, 109, 0.18);
+  border: 2px solid rgba(255, 77, 109, 0.5);
+  border-radius: 10px;
+  color: #ff4d6d;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 100001;
+}
+
+.mobile-nav-close:hover {
+  background: rgba(255, 77, 109, 0.3);
+  box-shadow: 0 0 12px rgba(255, 77, 109, 0.5);
+}
+
 .mobile-nav .nav-link {
   position: relative;
   z-index: 100000;
