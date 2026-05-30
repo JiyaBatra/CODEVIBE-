@@ -34,7 +34,11 @@
 
 .dynamic-progress-sidebar--collapsed .dynamic-progress-sidebar__toggle {
   width: 100%;
-  padding: 2px;
+  max-width: 100%;
+  min-width: 0;
+  height: 28px;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .dynamic-progress-sidebar__toggle {
@@ -267,8 +271,8 @@
 }
 
 :root {
-  --sidebar-width: var(--sidebar-width);
-  --sidebar-collapsed-width: var(--sidebar-collapsed-width);
+  --sidebar-width: 300px;
+  --sidebar-collapsed-width: 56px;
 }
 
 @media (prefers-reduced-motion: reduce) {
