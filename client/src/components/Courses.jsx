@@ -350,7 +350,7 @@ const Courses = () => {
           description={showWishlistOnly
             ? "You haven't bookmarked any courses yet. Click the bookmark icon on any course to save it!"
             : "We couldn't find any courses matching your selected category or search query."}
-          buttonText="Show All Courses"
+          buttonText={showWishlistOnly ? "Show All Courses" : "Clear Filters"}
           onButtonClick={() => { setSelectedCategory("All"); setSearch(""); setShowWishlistOnly(false); }}
         />
       )}
