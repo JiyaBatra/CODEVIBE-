@@ -9,7 +9,7 @@ const COURSES = [
   { label: "HTML Basics", path: "/HtmlLesson" },
   { label: "CSS for Beginner", path: "/CssLesson" },
   { label: "JS for Beginner", path: "/JsLesson" },
-  { label: "OOP Concepts", path: "/OopLesson" },
+  { label: "OOP Concepts", path: "/OOPLesson" },
   { label: "Data Structures & Algorithms", path: "/DsaLesson" },
   { label: "Node.js", path: "/NodeLesson" },
   { label: "React.js", path: "/ReactLesson" },
