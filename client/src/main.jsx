@@ -25,6 +25,7 @@ import Compiler from './components/Compiler.jsx';
 import Certificate from './components/Certificate.jsx';
 import ViewReport from './components/ViewReport.jsx';
 import DynamicProgressSidebar from './components/DynamicProgressSidebar.jsx';
+import ScrollToTop from './components/ScrollToTop.jsx';
 import {
   AuthProvider,
   PrivateRoute,
@@ -229,6 +230,7 @@ createRoot(document.getElementById('root')).render(
         <SearchProvider>
           <Head />
         <DynamicProgressSidebar />
+        <ScrollToTop />
         <ScrollNavigator />
         <GlobalBackNav />
         <ErrorBoundary>
