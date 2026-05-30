@@ -186,7 +186,10 @@ const Courses = () => {
       </div>
 
       {/* Category Filter Buttons */}
-      <div style={{
+      <div
+        role="group"
+        aria-label="Filter courses by category"
+        style={{
         display: 'flex',
         flexWrap: 'wrap',
         gap: '12px',
@@ -196,6 +199,8 @@ const Courses = () => {
         {categories.map((category) => (
           <button
             key={category}
+            type="button"
+            aria-pressed={selectedCategory === category}
             onClick={() => setSelectedCategory(category)}
             style={{
               padding: '8px 20px',
