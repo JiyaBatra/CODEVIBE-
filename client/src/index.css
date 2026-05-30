@@ -627,7 +627,7 @@ h3 {
   font-size: 0.95rem;
   position: relative;
   overflow: hidden;
-  margin-top: -200px !important;
+  margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
 
@@ -827,49 +827,6 @@ h3 {
 .footer-note {
   font-size: 0.8rem;
   color: rgba(176, 184, 212, 0.75);
-}
-
-/* ===== SCROLL TO TOP BUTTON ===== */
-.scroll-to-top {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  z-index: 999;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 77, 109, 0.7);
-  background: linear-gradient(135deg, rgba(26, 31, 58, 0.95), rgba(36, 42, 69, 0.95));
-  color: white;
-  font-size: 1.5rem;
-  font-weight: bold;
-  line-height: 1;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 15px rgba(255, 77, 109, 0.5);
-  transition: all 0.3s ease;
-  animation: fadeInUp 0.3s ease;
-}
-
-.scroll-to-top:hover {
-  background: linear-gradient(135deg, rgba(255, 77, 109, 0.4), rgba(255, 133, 161, 0.4));
-  border-color: var(--primary-red);
-  box-shadow: 0 0 25px rgba(255, 77, 109, 0.8);
-  transform: translateY(-4px) scale(1.1);
-  color: white;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 /* Responsive footer */
@@ -2406,6 +2363,8 @@ select:focus {
 /* Mobile nav drawer */
 /* Mobile nav drawer - full screen */
 .mobile-nav {
+  z-index: 99999 !important;
+  pointer-events: auto !important;
   position: fixed;
   top: 0;
   left: 0;
@@ -2431,7 +2390,7 @@ select:focus {
 
   opacity: 0;
   visibility: hidden;
-  pointer-events: none;
+  pointer-events: auto;
 
   transform: translateY(-100%);
   transition: all 0.35s ease;
@@ -2442,13 +2401,16 @@ select:focus {
 }
 
 .mobile-nav--open {
+  pointer-events: auto !important;
   opacity: 1;
   visibility: visible;
-  pointer-events: auto;
   transform: translateY(0);
 }
 
 .mobile-nav .nav-link {
+  position: relative;
+  z-index: 100000;
+  pointer-events: auto !important;
   width: 85%;
   max-width: 320px;
   justify-content: center;
@@ -2742,49 +2704,90 @@ select:focus {
     font-size: 0.95rem;
   }
 }
-.scroll-to-top {
+.scroll-navigator {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  width: 55px;
-  height: 55px;
-  border: none;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: scrollNavFadeIn 0.3s ease;
+}
+
+@keyframes scrollNavFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.scroll-navigator__btn {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: #ff5c8a;
-  color: white;
-  font-size: 22px;
+  border: 1.5px solid rgba(255, 77, 109, 0.5);
+  background: rgba(26, 31, 58, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #ffffff;
+  font-size: 1.1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 20px rgba(255, 92, 138, 0.5);
-  z-index: 9999;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow:
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    0 0 12px rgba(255, 77, 109, 0.25);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  padding: 0;
+  margin: 0;
+  line-height: 1;
 }
 
-.scroll-to-top:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 0 28px rgba(255, 92, 138, 0.7);
+.scroll-navigator__btn:hover {
+  background: rgba(255, 77, 109, 0.35);
+  border-color: rgba(255, 77, 109, 0.85);
+  box-shadow:
+    0 6px 25px rgba(0, 0, 0, 0.4),
+    0 0 22px rgba(255, 77, 109, 0.55);
+  transform: scale(1.12);
+  color: #ffffff;
+}
+
+.scroll-navigator__btn:active {
+  transform: scale(0.95);
+}
+
+.scroll-navigator__btn--hidden {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.scroll-navigator__btn--hidden:hover {
+  transform: none;
+  background: rgba(26, 31, 58, 0.75);
+  border-color: rgba(255, 77, 109, 0.5);
+  box-shadow:
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    0 0 12px rgba(255, 77, 109, 0.25);
 }
 
 @media (max-width: 768px) {
-  .scroll-to-top {
-    width: 46px;
-    height: 46px;
+  .scroll-navigator {
     bottom: 18px;
     right: 18px;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+    gap: 8px;
   }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .scroll-navigator__btn {
+    width: 42px;
+    height: 42px;
+    font-size: 1rem;
   }
 }
 

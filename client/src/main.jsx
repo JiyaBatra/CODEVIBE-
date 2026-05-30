@@ -217,7 +217,7 @@ import ReactLesson10 from './components/ReactLesson10.jsx';
 import ReactLesson11 from './components/ReactLesson11.jsx';
 import ReactLesson12 from './components/ReactLesson12.jsx';
 import ReactLesson13 from './components/ReactLesson13.jsx';
-import ScrollToTop from "./components/ScrollToTop";
+import ScrollNavigator from "./components/common/ScrollNavigator";
 import GlobalBackNav from "./components/common/GlobalBackNav.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import { SearchProvider } from "./context/SearchContext.jsx";
@@ -229,7 +229,7 @@ createRoot(document.getElementById('root')).render(
         <SearchProvider>
           <Head />
         <DynamicProgressSidebar />
-        <ScrollToTop />
+        <ScrollNavigator />
         <GlobalBackNav />
         <ErrorBoundary>
         <Routes>

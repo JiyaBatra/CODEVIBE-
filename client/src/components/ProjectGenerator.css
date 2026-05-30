@@ -1,0 +1,128 @@
+/* ==========================================================================
+   1. MASTER CONTAINER SYSTEM
+   ========================================================================== */
+.cv-reference-master-section {
+  margin-top: 80px !important;
+  margin-bottom: 80px !important;
+  padding: 40px !important;
+  border-radius: 24px !important;
+  background: linear-gradient(135deg, rgba(20,20,40,0.95), rgba(10,10,30,0.95)) !important;
+  border: 1px solid rgba(255, 0, 128, 0.3) !important;
+  box-shadow: 0 0 30px rgba(255, 0, 128, 0.15) !important;
+  box-sizing: border-box !important;
+  font-family: system-ui, -apple-system, sans-serif !important;
+  width: 100% !important;
+}
+
+/* ==========================================================================
+   2. HEADER TYPOGRAPHY
+   ========================================================================== */
+.cv-reference-header-block { text-align: center !important; margin-bottom: 40px !important; }
+.cv-reference-main-heading { color: #ff4d88 !important; font-size: 2.3rem !important; margin-bottom: 12px !important; font-weight: 700 !important; }
+.cv-reference-subtext-desc { color: rgba(255, 255, 255, 0.7) !important; font-size: 1rem !important; }
+
+/* ==========================================================================
+   3. CONTROLS INPUT (Dark Theme Dropdown)
+   ========================================================================== */
+.cv-reference-controls-row { display: flex !important; justify-content: center !important; align-items: center !important; gap: 16px !important; flex-wrap: wrap !important; margin-bottom: 40px !important; }
+
+select.cv-reference-native-select {
+  padding: 14px 18px !important;
+  border-radius: 12px !important;
+  background: #1a1a2e !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  outline: none !important;
+  min-width: 270px !important;
+  font-size: 1rem !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+}
+
+select.cv-reference-native-select:hover,
+select.cv-reference-native-select:focus {
+  border-color: #ff4d88 !important;
+  background: #232338 !important;
+}
+
+select.cv-reference-native-select option {
+  background: #1a1a2e !important;
+  color: white !important;
+  padding: 10px !important;
+}
+
+.cv-reference-action-btn { padding: 14px 28px !important; border-radius: 12px !important; background: #ff4d88 !important; color: white !important; border: none !important; font-weight: 600 !important; cursor: pointer !important; transition: 0.3s ease !important; }
+.cv-reference-action-btn:hover:not(:disabled) { opacity: 0.9 !important; box-shadow: 0 0 15px rgba(255, 77, 136, 0.4) !important; }
+.cv-reference-action-btn:disabled { background: rgba(255, 255, 255, 0.05) !important; color: rgba(255, 255, 255, 0.2) !important; }
+
+/* ==========================================================================
+   4. PREMIUM CARD TILES MATRIX
+   ========================================================================== */
+.cv-reference-dynamic-results-view { width: 100% !important; animation: cvTileReveal 0.35s ease-out forwards !important; }
+.cv-reference-cards-responsive-grid { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important; gap: 24px !important; }
+
+.cv-reference-project-tile {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-radius: 20px !important;
+  padding: 24px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  gap: 1.2rem !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1) !important;
+}
+
+/* PREMIUM HOVER EFFECTS */
+.cv-reference-project-tile:hover {
+  transform: translateY(-12px) !important;
+  border-color: var(--preview-glow) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.2), inset 0 0 20px rgba(255, 255, 255, 0.03) !important;
+}
+
+.cv-reference-project-tile::before {
+  content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+  background: radial-gradient(circle, var(--preview-glow) 0%, transparent 70%);
+  opacity: 0; transition: opacity 0.5s ease; z-index: 0; pointer-events: none;
+}
+.cv-reference-project-tile:hover::before { opacity: 0.15; }
+
+/* ==========================================================================
+   5. INTERNAL CARD ELEMENTS
+   ========================================================================== */
+.cv-reference-tile-content-left { width: 65% !important; position: relative !important; z-index: 1 !important; }
+.cv-reference-tile-graphic-right { width: 32% !important; display: flex !important; justify-content: flex-end !important; position: relative !important; z-index: 1 !important; }
+
+.cv-reference-project-title { font-size: 1.35rem !important; color: #ffffff !important; font-weight: 700 !important; margin: 0 0 4px 0 !important; }
+.cv-reference-build-time { font-size: 0.85rem !important; color: rgba(255, 255, 255, 0.5) !important; margin-bottom: 1.2rem !important; }
+.cv-reference-requirements-headline { display: block !important; font-size: 0.75rem !important; text-transform: uppercase !important; color: rgba(255, 255, 255, 0.4) !important; margin-bottom: 0.6rem !important; }
+.cv-reference-li-item { font-size: 0.85rem !important; color: rgba(255, 255, 255, 0.85) !important; margin-bottom: 0.5rem !important; padding: 10px 12px !important; border-radius: 10px !important; background: rgba(255, 255, 255, 0.04) !important; border: 1px solid rgba(255, 255, 255, 0.06) !important; }
+.cv-reference-project-tile:hover .cv-reference-li-item { background: rgba(0, 0, 0, 0.2) !important; border-color: rgba(255, 255, 255, 0.1) !important; }
+
+/* ==========================================================================
+   6. ACCENT COLORS & MICRO BROWSER
+   ========================================================================== */
+.tier-pink   { --preview-glow: #ff4d88; }
+.tier-green  { --preview-glow: #00ff87; }
+.tier-blue   { --preview-glow: #00d2ff; }
+.tier-purple { --preview-glow: #b5179e; }
+.tier-orange { --preview-glow: #f77f00; }
+
+.cv-reference-micro-browser { width: 100% !important; max-width: 125px !important; height: 85px !important; background-color: #0a0a1e !important; border-radius: 10px !important; border: 1.5px solid var(--preview-glow) !important; display: flex !important; flex-direction: column !important; overflow: hidden !important; }
+.cv-reference-browser-header-dots { height: 12px !important; background-color: rgba(255, 255, 255, 0.03) !important; display: flex !important; align-items: center !important; gap: 3px !important; padding-left: 5px !important; }
+.cv-reference-browser-canvas { display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; flex-grow: 1 !important; padding: 0.3rem !important; }
+.cv-reference-canvas-title { font-size: 0.55rem !important; color: #ffffff !important; text-align: center !important; opacity: 0.85 !important; }
+.cv-reference-canvas-wirelines { display: flex !important; flex-direction: column !important; gap: 2px !important; width: 75% !important; margin-top: 5px !important; }
+.cv-reference-canvas-wirelines span { display: block !important; height: 1.5px !important; background-color: rgba(255, 255, 255, 0.08) !important; width: 100% !important; }
+
+@keyframes cvTileReveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 580px) {
+  .cv-reference-controls-row { flex-direction: column !important; align-items: stretch !important; }
+  .cv-reference-project-tile { flex-direction: column !important; }
+  .cv-reference-tile-content-left, .cv-reference-tile-graphic-right { width: 100% !important; }
+  .cv-reference-tile-graphic-right { justify-content: flex-start !important; margin-top: 1rem !important; }
+}

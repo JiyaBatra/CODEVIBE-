@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./RoadmapTimeline.css"; // Ensure this import matches the CSS file we make next
+import "./RoadmapTimeline.css";
 
 const roadmapData = {
   "Web Development": {
@@ -35,14 +35,11 @@ const RoadmapGenerator = () => {
   const [completedSteps, setCompletedSteps] = useState([]);
 
   const generateRoadmap = () => {
-    // If they choose the default "Select Domain", clear the screen
     if (!domain) {
       setRoadmap(null); 
       setCompletedSteps([]);
       return;
     }
-    
-    // Otherwise, generate the new timeline
     const data = roadmapData[domain];
     setRoadmap([
       { id: 1, tier: "Beginner", title: "Foundation Level", topics: data.Beginner, icon: "🚀" },
@@ -83,19 +80,9 @@ const RoadmapGenerator = () => {
           onChange={(e) => setDomain(e.target.value)}
           className="timeline-select"
         >
-          <option value="" style={{ color: "white", background: "#1a1a26" }}>
-            Select Domain
-          </option>
-
+          <option value="" style={{ color: "white", background: "#1a1a26" }}>Select Domain</option>
           {Object.keys(roadmapData).map((item) => (
-            <option
-              key={item}
-              value={item}
-              style={{
-                color: "white",
-                background: "#1a1a26",
-              }}
-            >
+            <option key={item} value={item} style={{ color: "white", background: "#1a1a26" }}>
               {item}
             </option>
           ))}

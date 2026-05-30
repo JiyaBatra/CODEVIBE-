@@ -230,6 +230,7 @@ const ReactLesson = () => {
         .header-icon {
           font-size: 3.5rem;
           color: #61dafb;
+          filter: drop-shadow(0 0 12px rgba(97, 218, 251, 0.9));
           animation: spin 10s linear infinite, float 3s ease-in-out infinite;
         }
 
@@ -305,7 +306,7 @@ const ReactLesson = () => {
         }
 
         .progress-fill {
-          background: linear-gradient(90deg, #61dafb, #4fa8d1);
+          background: linear-gradient(90deg, #61dafb, #38bdf8);
           height: 100%;
           border-radius: 10px;
           transition: width 0.5s ease;
@@ -421,6 +422,14 @@ const ReactLesson = () => {
           font-weight: 500;
         }
 
+        
+        .start-btn,
+        .start-btn *,
+        .course-card:hover .start-btn,
+        .course-card:hover .start-btn * {
+          color: #08173d;
+          }
+
         .course-title {
           color: white;
           font-size: 1.2rem;
@@ -457,7 +466,7 @@ const ReactLesson = () => {
           align-items: center;
           gap: 8px;
           padding: 10px 20px;
-          background: #61dafb;
+          background: linear-gradient(90deg,#61dafb,#38bdf8);
           border: none;
           border-radius: 8px;
           color: #1a1a2e;

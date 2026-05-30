@@ -226,7 +226,8 @@ const NodeLesson = () => {
 
         .header-icon {
           font-size: 3.5rem;
-          color: #68a063;
+          color: #34D399;
+          filter: drop-shadow(0 0 10px rgba(52,211,153,.9));
           animation: float 3s ease-in-out infinite;
         }
 
@@ -272,7 +273,7 @@ const NodeLesson = () => {
         }
 
         .stat-icon {
-          color: #68a063;
+          color: #34D399;
         }
 
         .trophy-icon {
@@ -282,7 +283,7 @@ const NodeLesson = () => {
 
         .progress-percent {
           font-weight: bold;
-          color: #68a063;
+          color: #34D399;
         }
 
         .progress-bar {
@@ -293,7 +294,7 @@ const NodeLesson = () => {
         }
 
         .progress-fill {
-          background: linear-gradient(90deg, #68a063, #8bc34a);
+          background: linear-gradient(90deg,#68a063,8cc84b);
           height: 100%;
           border-radius: 10px;
           transition: width 0.5s ease;
@@ -445,7 +446,8 @@ const NodeLesson = () => {
           align-items: center;
           gap: 8px;
           padding: 10px 20px;
-          background: #68a063;
+          background: linear-gradient(90deg,#10B981,#34D399);
+          box-shadow: 0 0 15px rgba(52, 211, 153, 0.4);
           border: none;
           border-radius: 8px;
           color: white;
@@ -457,8 +459,8 @@ const NodeLesson = () => {
         }
 
         .course-card:hover .start-btn {
-          background: #4c7a47;
-          gap: 12px;
+          background: linear-gradient(90deg,#10B981,#34D399);
+          box-shadow: 0 0 25px rgba(52,211,153,.6);
         }
 
         .btn-arrow {
