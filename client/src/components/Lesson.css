@@ -115,6 +115,34 @@
   white-space: pre-wrap;
 }
 
+.copy-code-block {
+  position: relative;
+}
+
+.copy-code-block__button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.copy-code-block__button:hover {
+  background: rgba(255,255,255,0.16);
+  border-color: rgba(255,255,255,0.28);
+}
+
+.copy-code-block .code-block {
+  padding-top: 3rem;
+}
+
 /* =========================
    COMPILER SECTION
 ========================= */

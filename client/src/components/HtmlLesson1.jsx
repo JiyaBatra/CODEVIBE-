@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Compiler from './Compiler';
+import CopyCodeBlock from './CopyCodeBlock';
 import { Link, useNavigate } from 'react-router-dom';
 import './Lesson.css';
 
@@ -76,8 +77,8 @@ const HtmlLesson1 = () => {
           Basic Structure of HTML
         </h2>
 
-        <pre className="code-block">
-{`<!DOCTYPE html>
+        <CopyCodeBlock
+          code={`<!DOCTYPE html>
 <html>
 <head>
   <title>CodeVibe</title>
@@ -87,7 +88,7 @@ const HtmlLesson1 = () => {
   <p>Powered by BE WITH ME</p>
 </body>
 </html>`}
-      </pre>
+        />
       </section>
 
       {/* SECTION 4*/}
