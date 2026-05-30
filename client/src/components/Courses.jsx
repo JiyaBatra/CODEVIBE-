@@ -193,7 +193,10 @@ const Courses = () => {
         marginBottom: '32px',
         justifyContent: 'center',
       }}>
-        {categories.map((category) => (
+        {categories.map((category) => {
+          const isActive = selectedCategory === category;
+
+          return (
           <button
             key={category}
             onClick={() => setSelectedCategory(category)}
@@ -201,19 +204,30 @@ const Courses = () => {
               padding: '8px 20px',
               borderRadius: '30px',
               fontSize: '0.9rem',
-              fontWeight: '500',
+              fontWeight: isActive ? '700' : '500',
               cursor: 'pointer',
               transition: 'all 0.3s ease',
-              background: selectedCategory === category ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.05)',
+              background: isActive
+                ? 'linear-gradient(135deg, rgba(255,77,109,0.35), rgba(255,255,255,0.18))'
+                : 'rgba(255,255,255,0.05)',
               color: 'white',
-              border: selectedCategory === category ? '1px solid rgba(255,255,255,0.3)' : '1px solid rgba(255,255,255,0.1)',
+              border: isActive
+                ? '1px solid rgba(255,77,109,0.55)'
+                : '1px solid rgba(255,255,255,0.1)',
+              boxShadow: isActive ? '0 0 18px rgba(255,77,109,0.25)' : 'none',
+              transform: isActive ? 'translateY(-1px)' : 'none',
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; }}
-            onMouseLeave={(e) => { if (selectedCategory !== category) e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; }}
+            onMouseEnter={(e) => {
+              if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.12)';
+            }}
+            onMouseLeave={(e) => {
+              if (!isActive) e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+            }}
           >
             {category}
           </button>
-        ))}
+          );
+        })}
       </div>
 
       {filteredCourses.length > 0 ? (
