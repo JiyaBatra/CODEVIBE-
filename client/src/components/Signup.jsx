@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import API_BASE_URL from "../config/api";
 import registerImage from "../assets/registerImage.png";
 import PasswordField from "./PasswordField";
+import { validatePassword } from "../utils/validation";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -31,9 +32,7 @@ const Signup = () => {
   // Username Validation
   const handleUsernameChange = (e) => {
     const value = e.target.value;
-
     setUsername(value);
-
     setErrors((prev) => ({
       ...prev,
       username: validateUsername(value),
@@ -43,9 +42,7 @@ const Signup = () => {
   // College Validation
   const handleCollegeChange = (e) => {
     const value = e.target.value;
-
     setCollege(value);
-
     setErrors((prev) => ({
       ...prev,
       college: validateCollege(value),
@@ -55,10 +52,8 @@ const Signup = () => {
   // Year Validation
   const handleYearChange = (e) => {
     const value = e.target.value;
-
     if (/^\d{0,4}$/.test(value)) {
       setYear(value);
-
       setErrors((prev) => ({
         ...prev,
         year: validateYear(value),
@@ -69,9 +64,7 @@ const Signup = () => {
   // Email Validation
   const handleEmailChange = (e) => {
     const value = e.target.value;
-
     setEmail(value);
-
     setErrors((prev) => ({
       ...prev,
       email: validateEmail(value),
@@ -81,9 +74,7 @@ const Signup = () => {
   // Password Validation
   const handlePasswordChange = (e) => {
     const value = e.target.value;
-
     setPassword(value);
-
     setErrors((prev) => ({
       ...prev,
       password: validatePassword(value),
@@ -95,6 +86,13 @@ const Signup = () => {
     e.preventDefault();
 
     setResponseMsg("");
+
+    // Password length validation — stop before hitting server
+    const passwordError = validatePassword(formData.password);
+    if (passwordError) {
+      setResponseMsg(passwordError);
+      return;
+    }
 
     // Password Match Validation
     if (formData.password !== formData.confirmPassword) {
@@ -122,21 +120,17 @@ const Signup = () => {
         setResponseMsg(
           response.data.message || "Account created successfully"
         );
-
         setTimeout(() => {
           navigate("/login", { state: location.state });
         }, 1500);
       } else {
-        setResponseMsg(
-          response.data.message || "Signup failed"
-        );
+        setResponseMsg(response.data.message || "Signup failed");
       }
     } catch (error) {
       console.error(
         "❌ Signup error:",
         error.response?.data || error.message
       );
-
       setResponseMsg(
         error.response?.data?.message ||
         "Server error. Please try again."
@@ -165,7 +159,6 @@ const Signup = () => {
             <label htmlFor="username">
               USERNAME:
             </label>
-
             <input
               type="text"
               id="username"
@@ -180,7 +173,6 @@ const Signup = () => {
             <label htmlFor="collegeName">
               COLLEGE NAME:
             </label>
-
             <input
               type="text"
               id="collegeName"
@@ -195,7 +187,6 @@ const Signup = () => {
             <label htmlFor="year">
               YEAR:
             </label>
-
             <select
               id="year"
               name="year"
@@ -203,33 +194,17 @@ const Signup = () => {
               onChange={handleChange}
               required
             >
-              <option value="">
-                Select Year
-              </option>
-
-              <option value="1st Year">
-                1st Year
-              </option>
-
-              <option value="2nd Year">
-                2nd Year
-              </option>
-
-              <option value="3rd Year">
-                3rd Year
-              </option>
-
-              <option value="4th Year">
-                4th Year
-              </option>
-
+              <option value="">Select Year</option>
+              <option value="1st Year">1st Year</option>
+              <option value="2nd Year">2nd Year</option>
+              <option value="3rd Year">3rd Year</option>
+              <option value="4th Year">4th Year</option>
             </select>
 
             {/* Email */}
             <label htmlFor="email">
               EMAIL ID:
             </label>
-
             <input
               type="email"
               id="email"
@@ -268,19 +243,12 @@ const Signup = () => {
 
             {/* Submit Button */}
             <button type="submit" disabled={loading}>
-              {loading
-                ? "CREATING ACCOUNT..."
-                : "CREATE ACCOUNT"}
+              {loading ? "CREATING ACCOUNT..." : "CREATE ACCOUNT"}
             </button>
 
             {/* Response Message */}
             {responseMsg && (
-              <p
-                style={{
-                  color: "white",
-                  marginTop: "10px",
-                }}
-              >
+              <p style={{ color: "white", marginTop: "10px" }}>
                 {responseMsg}
               </p>
             )}
