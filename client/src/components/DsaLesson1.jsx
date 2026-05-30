@@ -5,14 +5,19 @@ import Compiler from './Compiler';
 import axios from 'axios';
 
 const DSALesson1 = () => {
-  const [isCorrect, setIsCorrect] = useState(false);
   const navigate = useNavigate();
+  const email = localStorage.getItem('userEmail') || 'guest';
+
+  // 1. Updated: Initialize compiler state straight from localStorage
+  const [isCorrect, setIsCorrect] = useState(() => {
+    const savedLessonStatus = localStorage.getItem(`dsa_lesson_1_completed_${email}`);
+    return savedLessonStatus ? JSON.parse(savedLessonStatus) : false;
+  });
 
   const [practiceCompleted, setPracticeCompleted] = useState({});
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const email = localStorage.getItem('userEmail') || 'guest';
     const savedPractice = localStorage.getItem(`dsaPractice_${email}`);
     let localPractice = {};
     if (savedPractice) {
@@ -43,11 +48,22 @@ const DSALesson1 = () => {
         })
         .catch(err => console.error('Error syncing practice progress from backend:', err));
     }
-  }, []);
+  }, [email]);
+
+  // 2. New Handler: Triggers when the user runs the correct compiler code
+  const handleCompilerSuccess = () => {
+    setIsCorrect(true);
+    localStorage.setItem(`dsa_lesson_1_completed_${email}`, JSON.stringify(true));
+    
+    // Optional: If they have a backend endpoint to track main lessons, fire it here
+    if (email !== 'guest') {
+      axios.post(`${API_BASE_URL}/api/lesson/dsa-lesson-1/complete`, { email, score: 100 })
+        .catch(err => console.error("Error saving main lesson progress:", err));
+    }
+  };
 
   const togglePractice = (problemId) => {
     setPracticeCompleted(prev => {
-      const email = localStorage.getItem('userEmail') || 'guest';
       const updated = { ...prev, [problemId]: !prev[problemId] };
       localStorage.setItem(`dsaPractice_${email}`, JSON.stringify(updated));
 
@@ -93,7 +109,7 @@ function welcomeDSA() {
 // Call the function
 welcomeDSA();`}
         expectedOutput={`Welcome to DSA`}
-        onSuccess={() => setIsCorrect(true)}
+        onSuccess={handleCompilerSuccess} // 3. Updated: Triggers our persistent handler
       />
 
       {isCorrect && (
@@ -105,12 +121,12 @@ welcomeDSA();`}
           ⏭ NEXT LESSON
         </Link>
       )}
+
       {/* 🎯 Practice Problems Section */}
       <div style={{ marginTop: '50px', padding: '25px', backgroundColor: '#1a1a2e', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.4)', color: '#fff' }}>
         <h2 style={{ color: '#ff4d6d', borderBottom: '2px solid #ff4d6d', paddingBottom: '10px', marginBottom: '20px' }}>🎯 Practice Problems: Intro to DSA</h2>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-          
           <div style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 16px', backgroundColor: '#16213e', borderRadius: '8px' }}>
             <input 
               type="checkbox" 

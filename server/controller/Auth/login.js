@@ -17,9 +17,14 @@ const login = async (req, res, next) => {
       });
     }
 
+    // This clean block handles case-insensitive lookups safely
     const user = await UserModel.findOne({
       email: { $regex: `^${escapeRegex(email)}$`, $options: "i" },
     });
+
+
+
+
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -60,6 +65,7 @@ const login = async (req, res, next) => {
   } catch (error) {
     console.error("Login error:", error);
     return next(error);
+    next(error);
   }
 };
 

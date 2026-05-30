@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import RoadmapGenerator from "./RoadmapGenerator";
+import ProjectGenerator from "./ProjectGenerator";
+
 import ProjectSuggestions from "./ProjectSuggestions";
+
 import FAQ from "./FAQ";
 import Testimonials from "./testimonials";
 import EmptyState from "./EmptyState";
@@ -355,7 +358,11 @@ const Courses = () => {
         />
       )}
       <RoadmapGenerator />
+
+      <ProjectGenerator />
+
       <ProjectSuggestions />
+
       <Testimonials />
       <FAQ />
     </div>
