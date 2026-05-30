@@ -70,8 +70,8 @@ header::before, .site-header::before {
   position: absolute;
   top: -50%;
   left: -50%;
-  width: 200%;
-  height: 200%;
+  width: 100%;
+  height: 100%;
   background: radial-gradient(circle, rgba(255, 77, 109, 0.1) 0%, transparent 70%);
   animation: headerGlow 4s ease-in-out infinite;
   pointer-events: none;
@@ -151,16 +151,16 @@ header img:hover {
   font-weight: 600;
   background: linear-gradient(135deg, rgba(255, 77, 109, 0.25), rgba(255, 133, 161, 0.25));
   border: 2px solid rgba(255, 77, 109, 0.6);
-  padding: 0.55rem 1rem;
-  border-radius: 8px;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.3rem;
   transition: all 0.3s cubic-bezier(0.4, 0.2, 0.2, 1);
   position: relative;
   overflow: hidden;
   white-space: nowrap;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .nav-link::before {
@@ -2219,7 +2219,7 @@ select:focus {
 .site-header {
   background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
   color: white;
-  padding: 1.5rem 2rem;
+  padding: 0.4rem 1.5rem;
   border-bottom: 3px solid #ff4d6d;
   box-shadow: 0 0 30px rgba(255, 77, 109, 0.5),
     inset 0 0 20px rgba(255, 77, 109, 0.1);
@@ -2228,7 +2228,7 @@ select:focus {
   /* allow dropdown to escape */
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.25rem;
   width: 100%;
 }
 
@@ -2266,14 +2266,14 @@ select:focus {
 }
 
 .site-header img {
-  width: 60px;
+  width: 32px;
   height: auto;
   filter: drop-shadow(0 0 12px rgba(255, 77, 109, 0.8));
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
     filter 0.4s ease;
-  border-radius: 8px;
+  border-radius: 6px;
   border: 2px solid rgba(255, 77, 109, 0.4);
-  padding: 0.4rem;
+  padding: 0.1rem;
   cursor: pointer;
 }
 
@@ -2426,7 +2426,7 @@ select:focus {
 }
 
 .site-header h1 {
-  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-size: clamp(1.5rem, 3.5vw, 2.2rem);
   font-weight: 900;
   background: linear-gradient(135deg, #ff4d6d, #ff85a1, #ff6b81);
   -webkit-background-clip: text;
@@ -2435,7 +2435,7 @@ select:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.3rem;
   animation: titlePulse 3s ease-in-out infinite;
   margin: 0;
 }
@@ -2443,16 +2443,16 @@ select:focus {
 .title-icon {
   -webkit-text-fill-color: #ff4d6d;
   color: #ff4d6d;
-  font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
   filter: drop-shadow(0 0 8px rgba(255, 77, 109, 0.8));
 }
 
 .header-tagline {
-  font-size: clamp(0.75rem, 2vw, 1rem);
+  font-size: clamp(0.6rem, 1.5vw, 0.8rem);
   color: #b0b8d4;
   font-weight: 500;
   letter-spacing: 0.8px;
-  margin: 0.25rem 0 0;
+  margin: 0;
 }
 
 /* ── Row 3: Search ─────────────────────────────────────────── */
@@ -2462,7 +2462,8 @@ select:focus {
   align-items: center;
   position: relative;
   z-index: 10;
-  width: 100%;
+  flex: 1;
+  margin: 0 1rem;
 }
 
 .search-form {
@@ -2474,8 +2475,8 @@ select:focus {
   background: rgba(10, 14, 39, 0.85);
   border: 2px solid rgba(255, 77, 109, 0.5);
   border-radius: 8px;
-  padding: 0.4rem 0.4rem 0.4rem 1rem;
-  gap: 0.5rem;
+  padding: 0.2rem 0.2rem 0.2rem 0.8rem;
+  gap: 0.4rem;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   backdrop-filter: blur(10px);
   overflow: visible;
@@ -2507,9 +2508,9 @@ select:focus {
   border: none;
   outline: none;
   color: #ffffff;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-family: inherit;
-  padding: 0.85rem 1.2rem;
+  padding: 0.5rem 0.8rem;
   border-radius: 14px;
   caret-color: #ff4d6d;
   min-width: 0;
@@ -2559,9 +2560,9 @@ select:focus {
   border: none;
   color: white;
   font-weight: 700;
-  font-size: 1rem;
-  padding: 0.75rem 1.4rem;
-  border-radius: 14px;
+  font-size: 0.85rem;
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
@@ -2650,7 +2651,7 @@ select:focus {
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .site-header {
-    padding: 0.9rem 1.2rem;
+    padding: 0.4rem 1rem;
   }
 
   /* Hide desktop nav, show hamburger */
@@ -2680,11 +2681,11 @@ select:focus {
 
 @media (max-width: 480px) {
   .site-header {
-    padding: 0.8rem 1rem;
+    padding: 0.4rem 0.8rem;
   }
 
   .site-header img {
-    width: 48px;
+    width: 28px;
   }
 
   .search-input::placeholder {
