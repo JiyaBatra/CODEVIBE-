@@ -1,0 +1,19 @@
+name: 'PR Checklist Validator'
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check PR Body Checklist
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.pull_request.body || "";
+            const unchecked = body.includes("- [ ]");
+            if (unchecked) {
+              core.setFailed("Please complete all checkboxes inside the PR template before merging.");
+            }
