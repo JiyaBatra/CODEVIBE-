@@ -246,7 +246,6 @@ createRoot(document.getElementById('root')).render(
           <Route path="/report/:email" element={<ViewReport />} />
           <Route path="/api" element={<App />} />
           <Route path="/Certificate" element={<Certificate />} />
-          <Route path="/report/:email" element={<ViewReport />} />
           <Route path="/CLesson" element={<CLesson />} />
           <Route path="/CssLesson" element={<CssLesson />} />
           <Route path="/JsLesson" element={<JsLesson />} />
