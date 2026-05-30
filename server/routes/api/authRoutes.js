@@ -12,7 +12,6 @@ const verifyToken = require("../../middleware/authMiddleware");
 Router.post("/register", register);
 Router.post("/login", login);
 Router.post("/forgot-password", forgotPassword);
-Router.post("/ForgotPassword", forgotPassword);
 Router.post("/reset-password", resetPassword);
 Router.put("/profile", verifyToken, updateProfile);
 
