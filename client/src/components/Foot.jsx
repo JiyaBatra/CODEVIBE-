@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   FaDiscord, FaLinkedin, FaGithub, FaYoutube,
-  FaTwitter, FaHeart, FaArrowUp, FaReact, FaNodeJs,
+  FaTwitter, FaHeart, FaArrowUp,
   FaEnvelope, FaCheckCircle,
 } from 'react-icons/fa';
-import { SiMongodb, SiExpress, SiVite } from 'react-icons/si';
+
 
 /* ─── helpers ─────────────────────────────────────────────────── */
 const currentYear = new Date().getFullYear();
@@ -80,13 +80,7 @@ const SOCIALS = [
   },
 ];
 
-const TECH_BADGES = [
-  { icon: <FaReact />,   label: 'React',    color: '#61DAFB' },
-  { icon: <FaNodeJs />,  label: 'Node.js',  color: '#339933' },
-  { icon: <SiExpress />, label: 'Express',  color: '#ffffff' },
-  { icon: <SiMongodb />, label: 'MongoDB',  color: '#47A248' },
-  { icon: <SiVite />,    label: 'Vite',     color: '#646CFF' },
-];
+
 
 /* ─── component ───────────────────────────────────────────────── */
 const Foot = () => {
@@ -248,35 +242,11 @@ const Foot = () => {
           color: rgba(255,255,255,0.55);
           font-size: 0.9rem;
           line-height: 1.7;
-          margin: 0 0 20px;
+          margin: 0;
           max-width: 280px;
         }
 
-        /* ── Tech badges ── */
-        .footer-tech-badges {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-          margin-top: 4px;
-        }
-        .tech-badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-          padding: 4px 10px;
-          border-radius: 20px;
-          background: rgba(255,255,255,0.06);
-          border: 1px solid rgba(255,255,255,0.1);
-          color: rgba(255,255,255,0.7);
-          font-size: 0.75rem;
-          font-weight: 500;
-          transition: all 0.25s ease;
-        }
-        .tech-badge:hover {
-          background: rgba(255,255,255,0.11);
-          border-color: rgba(255,255,255,0.2);
-          transform: translateY(-2px);
-        }
+
 
         /* ── Link columns ── */
         .footer-col h4 {
@@ -509,15 +479,6 @@ const Foot = () => {
               accessible education.
             </p>
 
-            {/* Tech stack badges */}
-            <div className="footer-tech-badges" aria-label="Tech stack used">
-              {TECH_BADGES.map(({ icon, label, color }) => (
-                <span key={label} className="tech-badge">
-                  <span style={{ color, fontSize: '0.95rem' }} aria-hidden="true">{icon}</span>
-                  {label}
-                </span>
-              ))}
-            </div>
           </div>
 
           {/* Link columns */}
