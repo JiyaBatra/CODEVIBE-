@@ -20,8 +20,9 @@ const updateProfile = async (req, res) => {
       return res.status(400).json({ message: 'No profile fields to update' });
     }
 
+    const normalizedEmail = String(tokenEmail || "").trim().toLowerCase();
     const user = await UserModel.findOneAndUpdate(
-      { Email: tokenEmail },
+      { email: normalizedEmail },
       { $set: updateFields },
       { new: true }
     );
@@ -34,7 +35,7 @@ const updateProfile = async (req, res) => {
       success: true,
       user: {
         username: user.username,
-        email: user.Email,
+        email: user.email,
         college: user.college,
         year: user.year,
         bio: user.bio || '',

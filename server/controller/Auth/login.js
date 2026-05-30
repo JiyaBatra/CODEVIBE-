@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const UserModel = require("../../models/user.models");
 
 const escapeRegex = (value = "") => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const isBcryptHash = (value = "") => /^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$/.test(value);
 
 const login = async (req, res, next) => {
   try {
@@ -17,10 +18,7 @@ const login = async (req, res, next) => {
     }
 
     const user = await UserModel.findOne({
-      $or: [
-        { email },
-        { Email: { $regex: `^${escapeRegex(email)}$`, $options: "i" } },
-      ],
+      email: { $regex: `^${escapeRegex(email)}$`, $options: "i" },
     });
     if (!user) {
       return res.status(404).json({
@@ -31,9 +29,8 @@ const login = async (req, res, next) => {
 
     let isMatch = await bcrypt.compare(password, user.password);
 
-    // Handle legacy plaintext passwords: if bcrypt fails, try direct comparison
-    // then migrate the password to a hash on the spot
-    if (!isMatch && password === user.password) {
+    // Handle legacy plaintext passwords only when the stored password is not already a bcrypt hash.
+    if (!isMatch && !isBcryptHash(user.password) && password === user.password) {
       isMatch = true;
       user.password = await bcrypt.hash(password, 10);
       await user.save();
@@ -61,8 +58,8 @@ const login = async (req, res, next) => {
       },
     });
   } catch (error) {
-    next(error);
     console.error("Login error:", error);
+    return next(error);
   }
 };
 

@@ -34,11 +34,12 @@ exports.completeLesson = async (req, res) => {
   try {
     const { email, score, coins, learningTime, type } = req.body;
     const lessonId = req.params.id;
+    const normalizedEmail = (email || "").trim().toLowerCase();
     
-    if (!email) return res.status(400).json({ message: 'Email is required' });
+    if (!normalizedEmail) return res.status(400).json({ message: 'Email is required' });
 
     const progress = await Progress.findOneAndUpdate(
-      { email },
+      { email: normalizedEmail },
       { 
         $addToSet: { completedLessons: lessonId },
         $set: { [`scores.${lessonId}`]: score || 0 }
@@ -46,11 +47,11 @@ exports.completeLesson = async (req, res) => {
       { new: true, upsert: true }
     );
 
-    const user = await User.findOne({ Email: email }).lean();
+    const user = await User.findOne({ email: normalizedEmail }).lean();
     try {
       await Analytics.create({
         userId: user?._id || null,
-        email,
+        email: normalizedEmail,
         username: user?.username || progress.username || '',
         lessonId,
         subject: getSubjectFromLessonId(lessonId),

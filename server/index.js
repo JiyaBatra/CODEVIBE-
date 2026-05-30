@@ -11,8 +11,8 @@ const backend = express();
 backend.set("trust proxy", 1);
 const server = http.Server(backend);
 
-backend.use(express.json());
-backend.use(express.urlencoded({ extended: true }));
+backend.use(express.json({ limit: "10mb" }));
+backend.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // CORS Configuration - read allowed origins from environment or use defaults
 const allowedOrigins = (

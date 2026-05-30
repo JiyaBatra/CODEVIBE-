@@ -145,19 +145,20 @@ const buildPointsTimeline = (events = []) => {
 
 const getAnalytics = async (req, res) => {
   try {
-    const email = req.params.email;
-    const tokenEmail = req.user?.email || req.user?.Email;
+    const emailParam = req.params.email || "";
+    const email = emailParam.trim().toLowerCase();
+    const tokenEmail = String(req.user?.email || req.user?.Email || "").toLowerCase();
 
     if (!email || !tokenEmail) {
       return res.status(400).json({ message: 'Email is required' });
     }
 
-    if (email.toLowerCase() !== tokenEmail.toLowerCase()) {
+    if (email !== tokenEmail) {
       return res.status(403).json({ message: 'Forbidden' });
     }
 
     const [user, progress, events] = await Promise.all([
-      User.findOne({ Email: email }).lean(),
+      User.findOne({ email }).lean(),
       Progress.findOne({ email }).lean(),
       Analytics.find({ email }).sort({ createdAt: 1 }).lean(),
     ]);
@@ -285,7 +286,7 @@ const getAnalytics = async (req, res) => {
 
     const profile = {
       username: user.username,
-      email: user.Email,
+      email: user.email,
       college: user.college,
       year: user.year,
       bio: user.bio || '',
