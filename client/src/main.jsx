@@ -24,6 +24,7 @@ import Foot from './components/Foot.jsx';
 import Compiler from './components/Compiler.jsx';
 import Certificate from './components/Certificate.jsx';
 import ViewReport from './components/ViewReport.jsx';
+import NotFound from './components/NotFound.jsx';
 import DynamicProgressSidebar from './components/DynamicProgressSidebar.jsx';
 import {
   AuthProvider,
@@ -436,7 +437,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/ReactLesson12" element={<ReactLesson12 />} />
           <Route path="/ReactLesson13" element={<ReactLesson13 />} />
 
-
+          <Route path="*" element={<NotFound />} />
 
         </Routes>
         </ErrorBoundary>
