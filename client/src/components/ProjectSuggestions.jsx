@@ -68,6 +68,13 @@ const ProjectSuggestions = () => {
         boxShadow: "0 0 30px rgba(255, 0, 128, 0.15)",
       }}
     >
+      <style>{`
+        .project-level-select option {
+          background: #141428;
+          color: #ffffff;
+        }
+      `}</style>
+
       {/* Heading */}
       <div style={{ textAlign: "center", marginBottom: "40px" }}>
         <h2
@@ -103,6 +110,8 @@ const ProjectSuggestions = () => {
         <select
           value={level}
           onChange={(e) => setLevel(e.target.value)}
+          className="project-level-select"
+          aria-label="Select project difficulty level"
           style={{
             padding: "14px 18px",
             borderRadius: "12px",
@@ -113,12 +122,13 @@ const ProjectSuggestions = () => {
             minWidth: "250px",
             fontSize: "1rem",
             cursor: "pointer",
+            colorScheme: "dark",
           }}
         >
-          <option value="" style={{ color: "black" }}>Select Level</option>
-          <option value="Beginner" style={{ color: "black" }}>Beginner</option>
-          <option value="Intermediate" style={{ color: "black" }}>Intermediate</option>
-          <option value="Advanced" style={{ color: "black" }}>Advanced</option>
+          <option value="">Select Level</option>
+          <option value="Beginner">Beginner</option>
+          <option value="Intermediate">Intermediate</option>
+          <option value="Advanced">Advanced</option>
         </select>
       </div>
 
