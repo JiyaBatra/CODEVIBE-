@@ -48,7 +48,7 @@ const Head = () => {
       return;
     }
     const filtered = COURSES.filter((c) =>
-      c.label.toLowerCase().includes(value.toLowerCase())
+      c.label.toLowerCase().includes(value.toLowerCase().trim())
     );
     setSuggestions(filtered);
   };

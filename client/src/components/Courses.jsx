@@ -68,7 +68,7 @@ const Courses = () => {
   const categories = ['All', ...new Set(courses.map(course => course.category))];
 
   const filteredCourses = courses.filter((course) => {
-    const matchesSearch = course.title.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = course.title.toLowerCase().includes(search.toLowerCase().trim());
     const matchesCategory = selectedCategory === 'All' || course.category === selectedCategory;
     const matchesWishlist = !showWishlistOnly || wishlist.includes(course.title);
     return matchesSearch && matchesCategory && matchesWishlist;
