@@ -358,7 +358,8 @@ Join our growing community of learners and contributors!
 - **GitHub Discussions**: Ask questions and share ideas
 - **Issues**: Report bugs and suggest features
 - **Pull Requests**: Contribute code improvements
-- **Email**: [contact@codevibe.dev]
+<!-- Fix: Converted plain text email to proper mailto link -->
+- **Email**: [contact@codevibe.dev](mailto:contact@codevibe.dev)
 
 ---
 
@@ -472,7 +473,8 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 - **Issues**: [GitHub Issues](https://github.com/JiyaBatra/CODEVIBE-/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/JiyaBatra/CODEVIBE-/discussions)
-- **Email**: jiyabatra@example.com
+<!-- Fix: Replaced placeholder example.com email with actual project email -->
+- **Email**: [contact@codevibe.dev](mailto:contact@codevibe.dev)
 
 ---
 
