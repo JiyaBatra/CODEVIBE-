@@ -7,8 +7,11 @@ const nodemailer = require("nodemailer");
 // Rate limit: 20 requests per 10 minutes (Increased for local testing)
 const forgotPasswordLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
-  max: process.env.NODE_ENV === "production" ? 20 : 1000, 
-  message: { message: "Too many requests from this IP, please try again after 10 minutes" },
+  max: process.env.NODE_ENV === "production" ? 20 : 1000,
+  message: {
+    message:
+      "Too many requests from this IP, please try again after 10 minutes",
+  },
 });
 
 const forgotPasswordLogic = async (req, res, next) => {
@@ -18,10 +21,13 @@ const forgotPasswordLogic = async (req, res, next) => {
     const user = await UserModel.findOne({
       $or: [{ email }, { Email: email }],
     });
-    
+
     // Always return a generic message to prevent email enumeration
     if (!user) {
-      return res.status(200).json({ success: true, message: "If an account exists, you'll receive a reset link." });
+      return res.status(200).json({
+        success: true,
+        message: "If an account exists, you'll receive a reset link.",
+      });
     }
 
     // Generate 32-byte secure token
@@ -34,9 +40,13 @@ const forgotPasswordLogic = async (req, res, next) => {
 
     // Automatically detect if the request came from localhost or the live site
     const origin = req.get("origin");
-    const clientUrl = (origin && (origin.includes("localhost") || origin.includes("127.0.0.1") || origin.includes("::1")))
-      ? origin
-      : (process.env.CLIENT_URL || "https://codevibeforyou.netlify.app");
+    const clientUrl =
+      origin &&
+      (origin.includes("localhost") ||
+        origin.includes("127.0.0.1") ||
+        origin.includes("::1"))
+        ? origin
+        : process.env.CLIENT_URL || "https://codevibeforyou.netlify.app";
 
     const resetLink = `${clientUrl}/ResetPassword?token=${token}`;
 
@@ -44,11 +54,19 @@ const forgotPasswordLogic = async (req, res, next) => {
     const rawEmailPass = process.env.EMAIL_PASS;
     const emailPass = rawEmailPass?.replace(/^"(.*)"$/, "$1");
     const emailService = process.env.EMAIL_SERVICE || "gmail";
-    const emailHost = process.env.EMAIL_HOST || (emailService === "gmail" ? "smtp.gmail.com" : undefined);
-    const emailPort = Number(process.env.EMAIL_PORT || (emailService === "gmail" ? 465 : 587));
-    const emailSecure = process.env.EMAIL_SECURE === "true" || emailPort === 465;
+    const emailHost =
+      process.env.EMAIL_HOST ||
+      (emailService === "gmail" ? "smtp.gmail.com" : undefined);
+    const emailPort = Number(
+      process.env.EMAIL_PORT || (emailService === "gmail" ? 465 : 587),
+    );
+    const emailSecure =
+      process.env.EMAIL_SECURE === "true" || emailPort === 465;
 
-    const emailFrom = process.env.EMAIL_FROM || emailUser || `no-reply@${(process.env.CLIENT_URL || "codevibeforyou.netlify.app").replace(/^https?:\/\//, "")}`;
+    const emailFrom =
+      process.env.EMAIL_FROM ||
+      emailUser ||
+      `no-reply@${(process.env.CLIENT_URL || "codevibeforyou.netlify.app").replace(/^https?:\/\//, "")}`;
     const mailOptions = {
       from: emailFrom,
       to: email,
@@ -65,7 +83,8 @@ const forgotPasswordLogic = async (req, res, next) => {
 
       return res.status(500).json({
         success: false,
-        message: "Email service is not configured. Please set EMAIL_USER and EMAIL_PASS in environment variables.",
+        message:
+          "Email service is not configured. Please set EMAIL_USER and EMAIL_PASS in environment variables.",
         // resetLink removed — exposing token in response bypasses email verification
       });
     }
@@ -81,12 +100,13 @@ const forgotPasswordLogic = async (req, res, next) => {
     };
 
     const transporter = nodemailer.createTransport(transporterConfig);
-    console.log("Nodemailer config:", {
-      host: transporterConfig.host,
-      port: transporterConfig.port,
-      secure: transporterConfig.secure,
-      user: emailUser,
-    });
+    if (process.env.NODE_ENV !== "production") {
+      console.log("Nodemailer config:", {
+        host: transporterConfig.host,
+        port: transporterConfig.port,
+        secure: transporterConfig.secure,
+      });
+    }
 
     try {
       await transporter.verify();
@@ -100,15 +120,14 @@ const forgotPasswordLogic = async (req, res, next) => {
 
       return res.status(500).json({
         success: false,
-        message: "Failed to send reset email. Please verify your Gmail SMTP credentials and settings.",
-        error: mailError.message,
-        response: mailError.response || null,
-        // resetLink removed — exposing token in response bypasses email verification
+        message: "Failed to send reset email. Please try again later.",
       });
     }
 
-    return res.status(200).json({ success: true, message: "If an account exists, you'll receive a reset link." });
-
+    return res.status(200).json({
+      success: true,
+      message: "If an account exists, you'll receive a reset link.",
+    });
   } catch (error) {
     console.error("Forgot password error:", error);
     next(error);
