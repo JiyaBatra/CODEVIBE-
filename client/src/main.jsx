@@ -105,7 +105,7 @@ import CLesson4 from './components/CLesson4.jsx';
 import CLesson5 from './components/CLesson5.jsx';
 import CLesson6 from './components/CLesson6.jsx';
 import CLesson7 from './components/CLesson7.jsx';
-import CLesson8 from './components/Clesson8.jsx';
+import CLesson8 from './components/CLesson8.jsx';
 import CLesson9 from './components/CLesson9.jsx';
 import CLesson10 from './components/CLesson10.jsx';
 import CLesson11 from './components/CLesson11.jsx';
@@ -249,7 +249,6 @@ createRoot(document.getElementById('root')).render(
           <Route path="/report/:email" element={<ViewReport />} />
           <Route path="/api" element={<App />} />
           <Route path="/Certificate" element={<Certificate />} />
-          <Route path="/report/:email" element={<ViewReport />} />
           <Route path="/CLesson" element={<CLesson />} />
           <Route path="/CssLesson" element={<CssLesson />} />
           <Route path="/JsLesson" element={<JsLesson />} />
