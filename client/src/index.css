@@ -2127,6 +2127,104 @@ select:focus {
   overflow-y: auto;
 }
 
+/* ── AI Error Explanations Sub-sections ── */
+.feedback-repeated-mistake-alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #2b1d0c 0%, #432b0f 100%);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.35);
+  padding: 12px 18px;
+  animation: repeatedPulse 2s infinite ease-in-out;
+}
+
+@keyframes repeatedPulse {
+  0% { box-shadow: inset 0 0 10px rgba(245, 158, 11, 0.1); }
+  50% { box-shadow: inset 0 0 15px rgba(245, 158, 11, 0.25); }
+  100% { box-shadow: inset 0 0 10px rgba(245, 158, 11, 0.1); }
+}
+
+.feedback-repeated-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.feedback-repeated-text {
+  color: #fef08a;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.feedback-section-title {
+  color: #f87171;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.feedback-explanation-text {
+  color: #fecaca;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.feedback-causes-list {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.feedback-cause-item {
+  color: #fca5a5;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+
+.feedback-cause-item:last-child {
+  margin-bottom: 0;
+}
+
+.feedback-fix-code {
+  background: #0d1117;
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  border-left: 4px solid #f87171;
+  border-radius: 6px;
+  padding: 12px;
+  margin: 4px 0 0;
+  overflow-x: auto;
+}
+
+.feedback-fix-code code {
+  color: #a7f3d0;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.feedback-learning-section {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.6) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.feedback-learning-title {
+  color: #fbbf24;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.feedback-learning-text {
+  color: #fde68a;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
 /* ── Expected vs Got diff ── */
 .feedback-diff {
   display: grid;

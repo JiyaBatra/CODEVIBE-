@@ -40,7 +40,25 @@ const ERROR_BADGE_LABEL = {
 };
 
 // ─── Simple Result Panel ─────────────────────────────────────────────────────
-const FeedbackPanel = ({ isSuccess, score, tries, executionTime, errorType, hint, expected, status }) => {
+const FeedbackPanel = ({
+  isSuccess,
+  score,
+  tries,
+  executionTime,
+  errorType,
+  hint,
+  expected,
+  got,
+  status,
+  explanation,
+  probableCauses,
+  suggestedFix,
+  learningTip,
+  repeatedMistake,
+  errorMessage
+}) => {
+  const [showRaw, setShowRaw] = useState(false);
+
   if (!isSuccess && !errorType && !status) return null;
 
   if (isSuccess) {
@@ -63,16 +81,86 @@ const FeedbackPanel = ({ isSuccess, score, tries, executionTime, errorType, hint
 
   return (
     <div className="feedback-panel feedback-panel--error">
-      <div className="feedback-error-header">
-        <span className="feedback-badge" style={{ background: "#ef4444" }}>❌ Wrong Answer</span>
-      </div>
-      {expected !== undefined && (
-        <div className="feedback-section">
-          <div style={{ color: "#94a3b8", fontSize: "0.85rem", marginBottom: "6px" }}>Expected Output:</div>
-          <pre className="feedback-raw" style={{ color: "#86efac" }}>{String(expected ?? "")}</pre>
+      {repeatedMistake && (
+        <div className="feedback-repeated-mistake-alert">
+          <span className="feedback-repeated-icon">⚠️</span>
+          <div className="feedback-repeated-text">
+            <strong>Repeated Mistake:</strong> {repeatedMistake.message}
+          </div>
         </div>
       )}
-      {hint && (
+
+      <div className="feedback-error-header">
+        <span className="feedback-badge" style={{ background: ERROR_BADGE_COLOR[errorType] || "#ef4444" }}>
+          {ERROR_BADGE_LABEL[errorType] || "❌ Error"}
+        </span>
+        {tries > 0 && <span className="feedback-line-badge">Attempt: {tries}</span>}
+        {executionTime > 0 && <span className="feedback-time-badge">⚡ {executionTime}ms</span>}
+      </div>
+
+      {explanation && (
+        <div className="feedback-section feedback-explanation-section">
+          <div className="feedback-section-title">💡 What went wrong?</div>
+          <p className="feedback-explanation-text">{explanation}</p>
+        </div>
+      )}
+
+      {probableCauses && probableCauses.length > 0 && (
+        <div className="feedback-section feedback-causes-section">
+          <div className="feedback-section-title">🔍 Probable Causes</div>
+          <ul className="feedback-causes-list">
+            {probableCauses.map((cause, idx) => (
+              <li key={idx} className="feedback-cause-item">{cause}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {suggestedFix && (
+        <div className="feedback-section feedback-fix-section">
+          <div className="feedback-section-title">🛠️ Suggested Fix</div>
+          <pre className="feedback-fix-code">
+            <code>{suggestedFix}</code>
+          </pre>
+        </div>
+      )}
+
+      {learningTip && (
+        <div className="feedback-section feedback-learning-section">
+          <div className="feedback-learning-title">📚 Learning Tip</div>
+          <p className="feedback-learning-text">{learningTip}</p>
+        </div>
+      )}
+
+      {expected !== undefined && (
+        <div className="feedback-section">
+          <div className="feedback-diff">
+            <div className="feedback-diff-block feedback-diff-expected">
+              <div className="feedback-diff-label">Expected Output</div>
+              <pre className="feedback-diff-code">{String(expected ?? "")}</pre>
+            </div>
+            {got !== undefined && (
+              <div className="feedback-diff-block feedback-diff-got">
+                <div className="feedback-diff-label">Your Output</div>
+                <pre className="feedback-diff-code">{String(got ?? "")}</pre>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {errorMessage && (
+        <div className="feedback-section feedback-technical-details">
+          <button className="feedback-toggle" onClick={() => setShowRaw(!showRaw)}>
+            {showRaw ? "▼ Hide Raw Technical Details" : "▶ Show Raw Technical Details"}
+          </button>
+          {showRaw && (
+            <pre className="feedback-raw">{errorMessage}</pre>
+          )}
+        </div>
+      )}
+
+      {hint && !explanation && (
         <div className="feedback-hint">
           <span className="feedback-hint-icon">💡</span>
           <span className="feedback-hint-text">{hint.replace(/^💡\s*/, "")}</span>
@@ -107,6 +195,28 @@ const Compiler = ({
   const [expected, setExpected]         = useState(undefined);
   const [got, setGot]                   = useState(undefined);
   const [status, setStatus]             = useState("");
+
+  // AI assistant error details states
+  const [explanation, setExplanation]   = useState("");
+  const [probableCauses, setProbableCauses] = useState([]);
+  const [suggestedFix, setSuggestedFix] = useState("");
+  const [learningTip, setLearningTip]   = useState("");
+  const [repeatedMistake, setRepeatedMistake] = useState(null);
+
+  const explainClientSideError = async (errorMessage, clientLanguage) => {
+    try {
+      const res = await axios.post(`${API_BASE_URL}/api/execute/explain`, {
+        error: errorMessage,
+        language: clientLanguage,
+        code,
+        email: localStorage.getItem("userEmail") || "guest@codevibe.com"
+      });
+      return res.data;
+    } catch (e) {
+      console.warn("Failed to fetch client error explanation:", e);
+      return null;
+    }
+  };
 
   const iframeRef = useRef(null);
   const startTimeRef = useRef(Date.now());
@@ -180,10 +290,31 @@ const Compiler = ({
     setExpected(undefined);
     setGot(undefined);
     setStatus("");
+    
+    // Clear AI explanations
+    setExplanation("");
+    setProbableCauses([]);
+    setSuggestedFix("");
+    setLearningTip("");
+    setRepeatedMistake(null);
+
     saveProgress(LessonId, sc, attempt);
   };
 
-  const fail = ({ type = "OutputMismatch", message = "", hint = "", line = null, ms = 0, exp, got: gotVal } = {}) => {
+  const fail = ({
+    type = "OutputMismatch",
+    message = "",
+    hint = "",
+    line = null,
+    ms = 0,
+    exp,
+    got: gotVal,
+    explanation = "",
+    probableCauses = [],
+    suggestedFix = "",
+    learningTip = "",
+    repeatedMistake = null
+  } = {}) => {
     setIsSuccess(false);
     setErrorType(type);
     setErrorLine(line);
@@ -194,6 +325,13 @@ const Compiler = ({
     setExpected(exp);
     setGot(gotVal);
     setStatus("");
+    
+    // Set AI explanations
+    setExplanation(explanation);
+    setProbableCauses(probableCauses);
+    setSuggestedFix(suggestedFix);
+    setLearningTip(learningTip);
+    setRepeatedMistake(repeatedMistake);
   };
 
   // ─── keyboard shortcuts ──────────────────────────────────────────────────
@@ -209,6 +347,11 @@ const Compiler = ({
         setErrorMessage("");
         setActiveHint("");
         setScore(null);
+        setExplanation("");
+        setProbableCauses([]);
+        setSuggestedFix("");
+        setLearningTip("");
+        setRepeatedMistake(null);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -307,21 +450,27 @@ const Compiler = ({
                 clearTimeout(killer);
               } catch(e) { document.body.textContent = "Error: " + (e?.message || e); }
             })();
-          <${"/"}script>
+          </script>
         </body>
       </html>
     `);
     iframeDoc.close();
-    setTimeout(() => {
+    setTimeout(async () => {
       const gotVal = (iframeDoc.body?.innerText || "").trim();
       const expStr = typeof expectedOutput === "string" ? expectedOutput : "[use function/regex]";
       if (gotVal.startsWith("Error:")) {
         const errMsg = gotVal.replace(/^Error:\s*/, "");
+        const explanationData = await explainClientSideError(gotVal, language);
         fail({
           type: errMsg.toLowerCase().includes("timeout") ? "TimeoutError" : "RuntimeError",
           message: gotVal,
           exp: expStr,
           got: gotVal,
+          explanation: explanationData?.explanation || "",
+          probableCauses: explanationData?.probableCauses || [],
+          suggestedFix: explanationData?.suggestedFix || "",
+          learningTip: explanationData?.learningTip || "",
+          repeatedMistake: explanationData?.repeatedMistake || null
         });
       } else if (decide(gotVal)) {
         pass(attempt);
@@ -363,10 +512,20 @@ const Compiler = ({
     iframeDoc.open();
     iframeDoc.write(html);
     iframeDoc.close();
-    setTimeout(() => {
+    setTimeout(async () => {
       const gotVal = (iframeDoc.body?.innerText || "").trim();
       if (gotVal.startsWith("Error:")) {
-        fail({ type: "RuntimeError", message: gotVal, got: gotVal });
+        const explanationData = await explainClientSideError(gotVal, "react");
+        fail({
+          type: "RuntimeError",
+          message: gotVal,
+          got: gotVal,
+          explanation: explanationData?.explanation || "",
+          probableCauses: explanationData?.probableCauses || [],
+          suggestedFix: explanationData?.suggestedFix || "",
+          learningTip: explanationData?.learningTip || "",
+          repeatedMistake: explanationData?.repeatedMistake || null
+        });
       } else if (decide(gotVal)) {
         pass(attempt);
       } else {
@@ -399,11 +558,16 @@ const Compiler = ({
     } catch (e) {
       const data = e?.response?.data || {};
       fail({
-        type:    data.errorType    || "ExecutionError",
-        message: data.stderr       || data.error || e?.message || String(e),
-        hint:    data.hint         || "",
-        line:    data.errorLine    || null,
-        ms:      data.executionTime || 0,
+        type:            data.errorType       || "ExecutionError",
+        message:         data.stderr          || data.error || e?.message || String(e),
+        hint:            data.hint            || "",
+        line:            data.errorLine       || null,
+        ms:              data.executionTime   || 0,
+        explanation:     data.explanation     || "",
+        probableCauses:  data.probableCauses  || [],
+        suggestedFix:    data.suggestedFix    || "",
+        learningTip:     data.learningTip     || "",
+        repeatedMistake: data.repeatedMistake || null
       });
       setStatus("");
     }
@@ -511,6 +675,11 @@ const Compiler = ({
             setErrorMessage("");
             setActiveHint("");
             setScore(null);
+            setExplanation("");
+            setProbableCauses([]);
+            setSuggestedFix("");
+            setLearningTip("");
+            setRepeatedMistake(null);
           }}
           className="compiler-btn compiler-btn--reset"
         >
@@ -542,6 +711,11 @@ const Compiler = ({
         expected={expected}
         got={got}
         status={status}
+        explanation={explanation}
+        probableCauses={probableCauses}
+        suggestedFix={suggestedFix}
+        learningTip={learningTip}
+        repeatedMistake={repeatedMistake}
       />
     </div>
   );

@@ -3,6 +3,7 @@ const { exec } = require("child_process");
 const path = require("path");
 const fs = require("fs");
 const ExecuteLog = require("../../models/execute.model");
+const { explainError, getRepeatedMistakes } = require("../../utils/errorExplainer");
 
 // ─── Error classification ───────────────────────────────────────────────────
 
@@ -134,6 +135,8 @@ const executeCode = async (req, res) => {
   if (!code.trim()) return res.status(400).json({ message: "No code provided" });
 
   let output = "", err = "", executionTime = 0, errorType = null, errorLine = null, hint = null, stderr = "";
+  let detailedExpl = null;
+  let repeatedMistake = null;
 
   try {
     switch ((language || "").toLowerCase()) {
@@ -180,6 +183,10 @@ const executeCode = async (req, res) => {
     errorLine = extractErrorLine(stderr);
     err = stderr;
     hint = generateHint(stderr, (language || "").toLowerCase());
+    
+    // Parse detailed explanations and fetch repeated mistakes from database logs
+    detailedExpl = explainError(stderr, language, code);
+    repeatedMistake = await getRepeatedMistakes(email, language);
   }
 
   // ─── Persist log ───────────────────────────────────────────────────────────
@@ -204,7 +211,12 @@ const executeCode = async (req, res) => {
       errorLine,
       hint,
       stderr,
-      executionTime
+      executionTime,
+      explanation: detailedExpl?.explanation || hint,
+      probableCauses: detailedExpl?.probableCauses || [],
+      suggestedFix: detailedExpl?.suggestedFix || "",
+      learningTip: detailedExpl?.learningTip || "",
+      repeatedMistake
     });
   }
 
@@ -215,4 +227,27 @@ const executeCode = async (req, res) => {
   });
 };
 
-module.exports = { executeCode };
+const explainClientError = async (req, res) => {
+  const { error: rawError = "", language = "javascript", code = "", email = "guest@codevibe.com" } = req.body || {};
+
+  if (!rawError.trim()) {
+    return res.status(400).json({ message: "No error message provided" });
+  }
+
+  try {
+    const detailedExpl = explainError(rawError, language, code);
+    const repeatedMistake = await getRepeatedMistakes(email, language);
+
+    return res.json({
+      explanation: detailedExpl.explanation,
+      probableCauses: detailedExpl.probableCauses,
+      suggestedFix: detailedExpl.suggestedFix,
+      learningTip: detailedExpl.learningTip,
+      repeatedMistake
+    });
+  } catch (err) {
+    return res.status(500).json({ message: "Error parsing explanation", error: err?.message || String(err) });
+  }
+};
+
+module.exports = { executeCode, explainClientError };
