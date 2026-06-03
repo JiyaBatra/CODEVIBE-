@@ -105,7 +105,7 @@ npm run dev
 
 ### 5. Verify Setup
 - Frontend: http://localhost:5173
-- Backend: http://localhost:5000
+- Backend: http://localhost:5002
 - MongoDB: Must be running locally or connection configured
 
 ---

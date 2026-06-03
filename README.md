@@ -146,8 +146,14 @@ CodeVibe removes friction from the learning journey. Whether you're a complete b
 
     Copy the environment template and fill in your values:
 
+### macOS/Linux
 ```bash
-    cp server/.env.example server/.env
+cp server/.env.example server/.env
+```
+
+### Windows PowerShell
+```powershell
+Copy-Item server/.env.example server/.env
 ```
 
    Then open `server/.env` and update at minimum:
@@ -221,7 +227,7 @@ CODEVIBE-/
 │   ├── routes/                     # API endpoints
 │   ├── models/                     # Database schemas
 │   ├── middleware/                 # Auth and validation middleware
-│   └── server.js                   # Server entry point
+│   └── index.js                   # Server entry point
 ├── CODE_OF_CONDUCT.md              # Community standards and behavior expectations
 ├── CONTRIBUTING.md                 # Contribution guidelines
 ├── LICENSE                         # MIT License
@@ -391,7 +397,7 @@ Thanks to all the amazing people who contribute to **CODEVIBE** 🚀
 ### Port Already in Use
 ```bash
 # Find process using port 5000
-lsof -i :5000
+lsof -i :5002
 # Kill the process
 kill -9 <PID>
 ```
