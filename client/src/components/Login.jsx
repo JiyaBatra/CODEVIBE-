@@ -22,9 +22,20 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     const nextErrors = {
-      email: email.trim() ? "" : "Email is required",
-      password: password.trim() ? "" : "Password is required",
+      email: !email.trim()
+        ? "Email is required"
+        : !emailRegex.test(email)
+          ? "Enter a valid email address"
+          : "",
+
+      password: !password.trim()
+        ? "Password is required"
+        : password.length < 8
+          ? "Password must be at least 8 characters"
+          : "",
     };
 
     setErrors(nextErrors);
@@ -78,7 +89,7 @@ const Login = () => {
 
       setResponseMsg(
         error.response?.data?.message ||
-          "Server error. Please try again."
+        "Server error. Please try again."
       );
     } finally {
       setLoading(false);
@@ -88,18 +99,18 @@ const Login = () => {
   return (
     <section className="login-section" id="login">
       <div className="login-container">
-        
+
         <div className="login-image">
-        <img
-  src={loginImage}
-  alt="Login"
-  loading="lazy"
-  style={{
-    width: "100%",
-    maxWidth: "500px",
-    height: "auto",
-  }}
-/>
+          <img
+            src={loginImage}
+            alt="Login"
+            loading="lazy"
+            style={{
+              width: "100%",
+              maxWidth: "500px",
+              height: "auto",
+            }}
+          />
         </div>
 
         <div className="login-card">
