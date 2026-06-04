@@ -879,6 +879,11 @@ h3 {
 
 /* Responsive footer */
 @media (max-width: 768px) {
+  .site-footer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
   .footer-top {
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
@@ -2555,6 +2560,17 @@ select:focus {
 
 /* Hamburger — hidden on desktop */
 /* Hamburger — hidden on desktop */
+/* Scroll margin for sections targeted by fixed navbar links */
+#courses,
+#roadmap-generator,
+#project-generator,
+#project-suggestions,
+.faq-section,
+#faq,
+#contact-footer {
+  scroll-margin-top: 80px;
+}
+
 .hamburger {
   display: none;
   position: fixed;
