@@ -238,6 +238,10 @@ const TermsOfService = () => {
   const [scrollPct, setScrollPct] = useState(0);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     const onScroll = () => {
       const el = document.documentElement;
       const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
