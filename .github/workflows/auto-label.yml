@@ -1,0 +1,112 @@
+name: Auto Label Issues
+
+on:
+  issues:
+    types: [opened, edited, reopened]
+
+permissions:
+  issues: write
+
+concurrency:
+  group: auto-label-issue-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+jobs:
+  label-issue:
+    name: Apply keyword labels
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Detect and apply labels
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issue = context.payload.issue;
+            const text = `${issue.title || ""}\n${issue.body || ""}`.toLowerCase();
+
+            const labelRules = [
+              {
+                name: "gssoc-2026",
+                color: "FF8C00",
+                description: "Issues related to GSSoC 2026",
+                patterns: [
+                  /\bgssoc\b/i,
+                  /\bgssoc['’]?\s*26\b/i,
+                  /\bgssoc\s*2026\b/i,
+                  /\bgirlscript summer of code\b/i,
+                  /\bgoogle summer of code\b/i,
+                  /\bworld gssoc\b/i,
+                ],
+              },
+              {
+                name: "type:bug",
+                color: "D73A4A",
+                description: "Something is not working",
+                patterns: [/\bbug\b/i, /\berror\b/i, /\bfix\b/i, /\bcrash\b/i, /\bfail(?:ed|ing)?\b/i],
+              },
+              {
+                name: "type:feature",
+                color: "A2EEEF",
+                description: "New feature or request",
+                patterns: [/\bfeature\b/i, /\benhancement\b/i, /\badd\b/i, /\bimplement\b/i],
+              },
+              {
+                name: "type:docs",
+                color: "0075CA",
+                description: "Documentation changes",
+                patterns: [/\bdocs?\b/i, /\bdocumentation\b/i, /\breadme\b/i, /\bguide\b/i],
+              },
+              {
+                name: "type:ui",
+                color: "1D76DB",
+                description: "User interface changes",
+                patterns: [/\bui\b/i, /\bux\b/i, /\bfrontend\b/i, /\bcss\b/i, /\bcomponent\b/i],
+              },
+              {
+                name: "good first issue",
+                color: "7057FF",
+                description: "Good for newcomers",
+                patterns: [/\bgood first issue\b/i, /\bbeginner\b/i, /\beasy\b/i, /\blevel\s*1\b/i],
+              },
+            ];
+
+            const labelsToApply = labelRules
+              .filter((rule) => rule.patterns.some((pattern) => pattern.test(text)))
+              .map((rule) => rule.name);
+
+            if (labelsToApply.length === 0) {
+              core.info("No keyword labels matched this issue.");
+              return;
+            }
+
+            for (const rule of labelRules.filter((rule) => labelsToApply.includes(rule.name))) {
+              try {
+                await github.rest.issues.getLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: rule.name,
+                });
+              } catch (error) {
+                if (error.status !== 404) {
+                  throw error;
+                }
+
+                await github.rest.issues.createLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  name: rule.name,
+                  color: rule.color,
+                  description: rule.description,
+                });
+              }
+            }
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              labels: labelsToApply,
+            });
+
+            core.info(`Applied labels: ${labelsToApply.join(", ")}`);
