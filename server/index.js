@@ -7,6 +7,13 @@ const routes = require("./routes/index");
 
 dotenv.config();
 
+console.log("--- ENVIRONMENT VARIABLE INITIALIZATION CHECK ---");
+console.log(`* EMAIL_USER loaded: ${Boolean(process.env.EMAIL_USER)}`);
+console.log(`* EMAIL_PASS loaded: ${Boolean(process.env.EMAIL_PASS)}`);
+console.log(`* JWT_SECRET loaded: ${Boolean(process.env.JWT_SECRET)}`);
+console.log(`* MONGODB_URI loaded: ${Boolean(process.env.MONGODB_URI || process.env.DB_URL)}`);
+console.log("-------------------------------------------------");
+
 const backend = express();
 backend.set("trust proxy", 1);
 const server = http.Server(backend);
@@ -92,7 +99,7 @@ mongoose
 
 const gracefulShutdown = (signal) => {
   console.log(`\n⚠️ ${signal} received. Starting graceful shutdown...`);
-  
+
   server.close(() => {
     console.log("🏁 HTTP server closed.");
     mongoose.connection.close(false).then(() => {
