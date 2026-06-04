@@ -3,6 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const http = require("http");
 const dotenv = require("dotenv");
+const rateLimit = require("express-rate-limit");
 const routes = require("./routes/index");
 
 dotenv.config();
@@ -11,8 +12,23 @@ const backend = express();
 backend.set("trust proxy", 1);
 const server = http.Server(backend);
 
+// Rate Limiter
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many requests from this IP. Please try again later.",
+  },
+});
+
 backend.use(express.json());
 backend.use(express.urlencoded({ extended: true }));
+
+// Apply rate limiting globally
+backend.use(limiter);
 
 // CORS Configuration - read allowed origins from environment or use defaults
 const allowedOrigins = (
@@ -64,10 +80,13 @@ backend.use(routes);
 backend.use((err, req, res, next) => {
   console.error("Unhandled server error:", err);
   const status = err.status || 500;
+
   res.status(status).json({
     success: false,
     message: err.message || "Internal server error",
-    ...(process.env.NODE_ENV !== "production" ? { stack: err.stack } : {}),
+    ...(process.env.NODE_ENV !== "production"
+      ? { stack: err.stack }
+      : {}),
   });
 });
 
@@ -92,16 +111,20 @@ mongoose
 
 const gracefulShutdown = (signal) => {
   console.log(`\n⚠️ ${signal} received. Starting graceful shutdown...`);
-  
+
   server.close(() => {
     console.log("🏁 HTTP server closed.");
-    mongoose.connection.close(false).then(() => {
-      console.log("🔌 MongoDB connection closed.");
-      process.exit(0);
-    }).catch((err) => {
-      console.error("❌ Error during MongoDB disconnection:", err);
-      process.exit(1);
-    });
+
+    mongoose.connection
+      .close(false)
+      .then(() => {
+        console.log("🔌 MongoDB connection closed.");
+        process.exit(0);
+      })
+      .catch((err) => {
+        console.error("❌ Error during MongoDB disconnection:", err);
+        process.exit(1);
+      });
   });
 };
 
