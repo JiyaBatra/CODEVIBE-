@@ -879,6 +879,11 @@ h3 {
 
 /* Responsive footer */
 @media (max-width: 768px) {
+  .site-footer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
   .footer-top {
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
@@ -886,6 +891,11 @@ h3 {
 
   .footer-brand {
     grid-column: 1 / -1;
+  }
+
+  #courses,
+  #contact-footer {
+    scroll-margin-top: 80px;
   }
 
   .footer-brand-copy {
