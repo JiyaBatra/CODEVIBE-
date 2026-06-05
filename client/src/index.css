@@ -1257,7 +1257,7 @@ h3 {
 }
 
 /* Buttons - Gaming Style */
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item) {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.scroll-navigator__btn) {
   background: linear-gradient(135deg, var(--primary-red), var(--secondary-pink));
   border: 2px solid transparent;
   color: var(--white);
@@ -1275,7 +1275,7 @@ button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item) {
   letter-spacing: 0.5px;
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item)::before {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.scroll-navigator__btn)::before {
   content: '';
   position: absolute;
   top: 0;
@@ -1287,23 +1287,23 @@ button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item)::be
   z-index: 1;
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):hover::before {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.scroll-navigator__btn):hover::before {
   left: 100%;
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):hover {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.scroll-navigator__btn):hover {
   transform: translateY(-3px) scale(1.05);
   background: linear-gradient(135deg, #ff6b81, #ff99ac);
   box-shadow: 0 0 25px rgba(255, 77, 109, 0.8);
   border-color: rgba(255, 255, 255, 0.4);
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):active {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.scroll-navigator__btn):active {
   transform: translateY(-1px) scale(1.02);
   box-shadow: 0 0 15px rgba(255, 77, 109, 0.6);
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):disabled {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.scroll-navigator__btn):disabled {
   background: linear-gradient(135deg, #666, #999);
   box-shadow: 0 0 10px rgba(100, 100, 100, 0.4);
   cursor: not-allowed;
@@ -1311,7 +1311,7 @@ button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):dis
   transform: none;
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):disabled:hover {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.scroll-navigator__btn):disabled:hover {
   transform: none;
 }
 

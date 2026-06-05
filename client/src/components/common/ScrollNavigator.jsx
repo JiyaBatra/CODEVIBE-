@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 
 const SCROLL_THRESHOLD = 250;
 const BOTTOM_THRESHOLD = 100;
@@ -44,7 +44,7 @@ const ScrollNavigator = () => {
         aria-label="Scroll to top"
         title="Scroll to top"
       >
-        <FaArrowUp aria-hidden="true" />
+        <FaChevronUp aria-hidden="true" />
       </button>
       <button
         className={`scroll-navigator__btn scroll-navigator__btn--down ${atBottom ? "scroll-navigator__btn--hidden" : ""}`}
@@ -53,7 +53,7 @@ const ScrollNavigator = () => {
         title="Scroll to bottom"
         disabled={atBottom}
       >
-        <FaArrowDown aria-hidden="true" />
+        <FaChevronDown aria-hidden="true" />
       </button>
     </div>
   );
