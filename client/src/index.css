@@ -1183,6 +1183,7 @@ h3 {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex: 1;
   width: 100%;
 }
 
@@ -1195,6 +1196,7 @@ h3 {
 }
 
 .login-card {
+  flex: 1;
   width: 100%;
   max-width: 450px;
   box-sizing: border-box;
