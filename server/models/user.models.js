@@ -12,6 +12,11 @@ const userSchema = new Schema({
     lowercase: true,
     trim: true,
   },
+  Email: {
+    type: String,
+    lowercase: true,
+    trim: true,
+  },
   college: {
     type: String,
     required: true,
@@ -30,12 +35,16 @@ const userSchema = new Schema({
   resetTokenExpiry: { type: Date },   // for password reset token expiry
 });
 
-userSchema.virtual("Email")
-  .get(function getEmailAlias() {
-    return this.email;
-  })
-  .set(function setEmailAlias(value) {
-    this.email = value;
-  });
+userSchema.pre("validate", function syncEmailAlias(next) {
+  if (!this.email && this.Email) {
+    this.email = this.Email;
+  }
+
+  if (this.email && !this.Email) {
+    this.Email = this.email;
+  }
+
+  next();
+});
 
 module.exports = model("User", userSchema, "users");

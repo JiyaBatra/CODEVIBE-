@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './ProjectGenerator.css';
+import Dropdown from './common/Dropdown';
 
 const PROJECTS_DATABASE = {
   "html-css": [
@@ -123,8 +124,7 @@ export default function ProjectGenerator() {
   const [tempSelection, setTempSelection] = useState("");
   const [renderedTier, setRenderedTier] = useState("");
 
-  const handleDropdownChange = (e) => {
-    const value = e.target.value;
+  const handleDropdownChange = (value) => {
     setTempSelection(value);
     
     // Instantly collapse the lower results view if toggled back to 'Select Domain'
@@ -138,7 +138,7 @@ export default function ProjectGenerator() {
   };
 
   return (
-    <section className="cv-reference-master-section">
+    <section id="project-generator" className="cv-reference-master-section">
       
       {/* Synchronized Header Container */}
       <div className="cv-reference-header-block">
@@ -152,18 +152,26 @@ export default function ProjectGenerator() {
 
       {/* Symmetrical Controls Input Row */}
       <div className="cv-reference-controls-row">
-        <select 
-          className="cv-reference-native-select"
+        <Dropdown
           value={tempSelection}
           onChange={handleDropdownChange}
-        >
-          <option value="">Select Domain</option>
-          <option value="html-css">HTML & CSS Styling Projects</option>
-          <option value="javascript">HTML, CSS & Core JS Apps</option>
-          <option value="react">React Component Frameworks</option>
-          <option value="fullstack">Full Stack MERN Architectures</option>
-          <option value="dsa-cpp">C++ Systems & DSA Tools</option>
-        </select>
+          options={[
+            { value: "html-css", label: "HTML & CSS Styling Projects" },
+            { value: "javascript", label: "HTML, CSS & Core JS Apps" },
+            { value: "react", label: "React Component Frameworks" },
+            { value: "fullstack", label: "Full Stack MERN Architectures" },
+            { value: "dsa-cpp", label: "C++ Systems & DSA Tools" }
+          ]}
+          placeholder="Select Domain"
+          style={{ minWidth: "270px" }}
+          triggerStyle={{
+            padding: "14px 18px",
+            borderRadius: "12px",
+            background: "#1a1a2e",
+            color: "white",
+            border: "1px solid rgba(255, 255, 255, 0.15)",
+          }}
+        />
 
         <button 
           className="cv-reference-action-btn"

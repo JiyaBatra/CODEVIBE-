@@ -30,7 +30,7 @@ export default function PasswordField({
           aria-label={visible ? "Hide password" : "Show password"}
           aria-pressed={visible}
         >
-          {visible ? <FaEyeSlash aria-hidden="true" /> : <FaEye aria-hidden="true" />}
+          {visible ? <FaEye aria-hidden="true" /> : <FaEyeSlash aria-hidden="true" />}
         </button>
       </div>
       {hint}

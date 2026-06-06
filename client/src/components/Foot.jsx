@@ -4,7 +4,7 @@ import { FaDiscord, FaLinkedin, FaGithub, FaYoutube } from 'react-icons/fa';
 
 const Foot = () => {
   return (
-    <footer className="site-footer lesson" role="contentinfo" aria-label="Site footer">
+    <footer className="site-footer lesson" role="contentinfo" aria-label="Site footer" id="contact-footer">
       <div className="footer-top">
         <div className="footer-brand">
           <p className="footer-brand-title">CodeVibe</p>

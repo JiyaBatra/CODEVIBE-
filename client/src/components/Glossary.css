@@ -1,0 +1,477 @@
+/* =========================================
+   CODEVIBE — Glossary Page Styles
+   ========================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;500;600;700&display=swap");
+
+/* ---------- Root Variables ---------- */
+:root {
+  --g-bg: #0d1117;
+  --g-surface: #161b22;
+  --g-surface2: #1e2530;
+  --g-border: #2d333b;
+  --g-text: #e6edf3;
+  --g-muted: #7d8590;
+  --g-accent: #ff4d6d;
+  --g-accent2: #ffd166;
+  --g-radius: 12px;
+  --g-font-body: "Sora", sans-serif;
+  --g-font-mono: "Space Mono", monospace;
+}
+
+/* ---------- Page Shell ---------- */
+.glossary-page {
+  min-height: 100vh;
+  background: var(--g-bg);
+  color: var(--g-text);
+  font-family: var(--g-font-body);
+}
+
+/* ---------- Hero ---------- */
+.glossary-hero {
+  position: relative;
+  padding: 72px 48px 64px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--g-border);
+}
+
+.glossary-hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 60% 80% at 10% 50%,
+      rgba(255, 77, 109, 0.12) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 40% 60% at 80% 20%,
+      rgba(255, 209, 102, 0.08) 0%,
+      transparent 60%
+    ),
+    linear-gradient(160deg, #0d1117 0%, #111827 100%);
+  pointer-events: none;
+}
+
+/* Grid lines */
+.glossary-hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 77, 109, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 77, 109, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.glossary-hero-content {
+  position: relative;
+  max-width: 680px;
+}
+
+.glossary-tag {
+  display: inline-block;
+  font-family: var(--g-font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--g-accent);
+  background: rgba(255, 77, 109, 0.1);
+  border: 1px solid rgba(255, 77, 109, 0.25);
+  border-radius: 4px;
+  padding: 4px 10px;
+  margin-bottom: 20px;
+}
+
+.glossary-title {
+  font-family: var(--g-font-body);
+  font-size: clamp(36px, 5vw, 64px);
+  font-weight: 700;
+  line-height: 1.05;
+  margin: 0 0 16px;
+  letter-spacing: -0.03em;
+}
+
+.glossary-title-accent {
+  color: var(--g-accent);
+  position: relative;
+}
+
+.glossary-subtitle {
+  font-size: 16px;
+  color: var(--g-muted);
+  margin: 0 0 32px;
+  line-height: 1.6;
+  max-width: 480px;
+}
+
+/* Search */
+.glossary-search-wrap {
+  position: relative;
+  max-width: 480px;
+}
+
+.glossary-search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: var(--g-muted);
+  pointer-events: none;
+}
+
+.glossary-search {
+  width: 100%;
+  padding: 14px 44px 14px 48px;
+  background: var(--g-surface);
+  border: 1px solid var(--g-border);
+  border-radius: var(--g-radius);
+  color: var(--g-text);
+  font-family: var(--g-font-body);
+  font-size: 15px;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.glossary-search:focus {
+  border-color: var(--g-accent);
+  box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.12);
+}
+
+.glossary-search::placeholder {
+  color: var(--g-muted);
+}
+
+.glossary-clear {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--g-muted);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px;
+  transition: color 0.2s;
+}
+
+.glossary-clear:hover {
+  color: var(--g-text);
+}
+
+.glossary-count {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--g-muted);
+  font-family: var(--g-font-mono);
+}
+
+/* ---------- Body Layout ---------- */
+.glossary-body {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 0;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+  align-items: start;
+}
+
+/* ---------- Sidebar ---------- */
+.glossary-sidebar {
+  position: sticky;
+  top: 24px;
+  padding: 32px 24px 32px 0;
+  border-right: 1px solid var(--g-border);
+}
+
+.glossary-sidebar-section {
+  margin-bottom: 32px;
+}
+
+.glossary-sidebar-heading {
+  font-family: var(--g-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--g-muted);
+  margin: 0 0 12px;
+}
+
+.glossary-cat-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--g-muted);
+  font-family: var(--g-font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s;
+}
+
+.glossary-cat-btn:hover {
+  color: var(--g-text);
+  background: var(--g-surface);
+}
+.glossary-cat-btn.active {
+  color: var(--g-text);
+  background: var(--g-surface);
+  border-color: var(--g-border);
+}
+
+.glossary-cat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* A–Z grid */
+.glossary-az {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+}
+
+.glossary-az-btn {
+  background: var(--g-surface);
+  border: 1px solid var(--g-border);
+  border-radius: 6px;
+  color: var(--g-muted);
+  font-family: var(--g-font-mono);
+  font-size: 11px;
+  padding: 6px 2px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+  grid-column: span 1;
+}
+
+.glossary-az-btn:first-child {
+  grid-column: span 5;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.glossary-az-btn:hover:not(.disabled) {
+  color: var(--g-text);
+  border-color: var(--g-accent);
+}
+.glossary-az-btn.active {
+  background: var(--g-accent);
+  border-color: var(--g-accent);
+  color: #fff;
+}
+.glossary-az-btn.disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+/* ---------- Main Content ---------- */
+.glossary-main {
+  padding: 32px 0 0 40px;
+}
+
+.glossary-letter-group {
+  margin-bottom: 48px;
+}
+
+.glossary-letter-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--g-border);
+}
+
+.glossary-letter-label {
+  font-family: var(--g-font-mono);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--g-accent);
+  line-height: 1;
+}
+
+.glossary-letter-count {
+  font-size: 12px;
+  color: var(--g-muted);
+  font-family: var(--g-font-mono);
+}
+
+.glossary-terms {
+  display: grid;
+  gap: 8px;
+}
+
+/* Cards */
+.glossary-card {
+  background: var(--g-surface);
+  border: 1px solid var(--g-border);
+  border-radius: var(--g-radius);
+  padding: 16px 20px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    background 0.2s;
+  overflow: hidden;
+}
+
+.glossary-card:hover {
+  border-color: rgba(255, 77, 109, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.glossary-card.expanded {
+  border-color: rgba(255, 77, 109, 0.5);
+  background: var(--g-surface2);
+}
+
+.glossary-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.glossary-card-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.glossary-term {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--g-text);
+  font-family: var(--g-font-body);
+}
+
+.glossary-badge {
+  font-size: 10px;
+  font-family: var(--g-font-mono);
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.glossary-chevron {
+  font-size: 20px;
+  color: var(--g-muted);
+  transition: transform 0.25s;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.glossary-chevron.open {
+  transform: rotate(90deg);
+  color: var(--g-accent);
+}
+
+.glossary-definition {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--g-muted);
+  max-height: 0;
+  overflow: hidden;
+  transition:
+    max-height 0.3s ease,
+    margin-top 0.3s ease,
+    color 0.2s;
+}
+
+.glossary-card.expanded .glossary-definition {
+  max-height: 200px;
+  margin-top: 12px;
+  color: #adbac7;
+}
+
+/* Empty state */
+.glossary-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 80px 40px;
+  color: var(--g-muted);
+  text-align: center;
+}
+
+.glossary-empty-icon {
+  font-size: 48px;
+}
+.glossary-empty p {
+  font-size: 16px;
+  margin: 0;
+}
+
+.glossary-reset-btn {
+  margin-top: 8px;
+  background: var(--g-accent);
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-family: var(--g-font-body);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.glossary-reset-btn:hover {
+  opacity: 0.85;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .glossary-body {
+    grid-template-columns: 1fr;
+  }
+
+  .glossary-sidebar {
+    position: static;
+    padding: 24px 0;
+    border-right: none;
+    border-bottom: 1px solid var(--g-border);
+  }
+
+  .glossary-main {
+    padding: 24px 0 0;
+  }
+
+  .glossary-hero {
+    padding: 48px 24px 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  .glossary-hero {
+    padding: 36px 16px 32px;
+  }
+
+  .glossary-body {
+    padding: 0 16px 60px;
+  }
+}

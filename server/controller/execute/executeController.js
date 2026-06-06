@@ -113,9 +113,9 @@ const runCommandWithTempFile = (commandBuilder, code, ext) =>
     exec(commandBuilder(filepath), { timeout: 8000 }, (error, stdout, stderr) => {
       const executionTime = Date.now() - startTime;
 
-      try { if (fs.existsSync(filepath)) fs.unlinkSync(filepath); } catch {}
-      try { if (fs.existsSync(`${filepath}.out`)) fs.unlinkSync(`${filepath}.out`); } catch {}
-      try { if (fs.existsSync(`${filepath.replace(/\.\w+$/, ".class")}`)) fs.unlinkSync(`${filepath.replace(/\.\w+$/, ".class")}`); } catch {}
+      try { if (fs.existsSync(filepath)) fs.unlinkSync(filepath); } catch { /* ignore */ }
+      try { if (fs.existsSync(`${filepath}.out`)) fs.unlinkSync(`${filepath}.out`); } catch { /* ignore */ }
+      try { if (fs.existsSync(`${filepath.replace(/\.\w+$/, ".class")}`)) fs.unlinkSync(`${filepath.replace(/\.\w+$/, ".class")}`); } catch { /* ignore */ }
 
       if (error) {
         const timedOut = error.killed || (error.signal === "SIGTERM") || String(error.message).includes("timeout");

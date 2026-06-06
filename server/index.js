@@ -76,19 +76,47 @@ const MONGODB_URL =
   process.env.MONGODB_URI ||
   "mongodb://127.0.0.1:27017/codevibe";
 
-mongoose
-  .connect(MONGODB_URL)
-  .then(() => {
-    const PORT = process.env.PORT || 5002;
+const FALLBACK_MONGODB_URL = "mongodb://127.0.0.1:27017/codevibe";
 
-    server.listen(PORT, () => {
-      console.log(`✅ Server Started on port ${PORT}`);
-      console.log("✅ Connected to MongoDB");
+const connectToMongo = async (url) => {
+  try {
+    await mongoose.connect(url, {
+      serverSelectionTimeoutMS: 10000,
     });
-  })
-  .catch((err) => {
+    return true;
+  } catch (err) {
     console.error("❌ MongoDB connection error:", err);
+    return false;
+  }
+};
+
+const startServer = async () => {
+  let connected = false;
+
+  if (MONGODB_URL && MONGODB_URL !== FALLBACK_MONGODB_URL) {
+    connected = await connectToMongo(MONGODB_URL);
+    if (!connected) {
+      console.warn("⚠️ Atlas connection failed. Falling back to local MongoDB...");
+      connected = await connectToMongo(FALLBACK_MONGODB_URL);
+    }
+  } else {
+    connected = await connectToMongo(MONGODB_URL || FALLBACK_MONGODB_URL);
+  }
+
+  if (!connected) {
+    console.error("❌ MongoDB connection failed for both Atlas and local fallback.");
+    return;
+  }
+
+  const PORT = process.env.PORT || 5002;
+
+  server.listen(PORT, () => {
+    console.log(`✅ Server Started on port ${PORT}`);
+    console.log("✅ Connected to MongoDB");
   });
+};
+
+startServer();
 
 const gracefulShutdown = (signal) => {
   console.log(`\n⚠️ ${signal} received. Starting graceful shutdown...`);

@@ -1,0 +1,44 @@
+name: Moderate Contributions
+
+on:
+  issues:
+    types: [opened, reopened, edited]
+  pull_request_target:
+    types: [opened, reopened, edited, synchronize]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: moderate-contributions-${{ github.event_name }}-${{ github.event.issue.number || github.event.pull_request.number }}
+  cancel-in-progress: false
+
+env:
+  # Contributors with more than this many open issues will have all open issues closed.
+  MAX_OPEN_ISSUES: 5
+  # Comma-separated GitHub logins to skip, for example: maintainer1,maintainer2
+  MODERATION_EXCLUDED_LOGINS: JiyaBatra
+
+jobs:
+  moderate:
+    name: Moderate issues and pull requests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Apply contribution rules
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { moderateContributions } = require(`${process.env.GITHUB_WORKSPACE}/.github/scripts/moderate-contributions.cjs`);
+
+            await moderateContributions({
+              github,
+              context,
+              core
+            });

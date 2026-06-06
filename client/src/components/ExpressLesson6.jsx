@@ -47,12 +47,41 @@ app.listen(3000, () => console.log('Server running on port 3000'));`}
         expectedOutput={`User ID`}
         onSuccess={handleSuccess}
       />
+    
+          {/* Lesson Footer Navigation */}
+<div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "30px",
+    paddingTop: "20px",
+    borderTop: "1px solid #333"
+  }}
+>
+  <button
+    onClick={() => navigate('/ExpressLesson5')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    ← Previous Lesson
+  </button>
 
-      {isCorrect && (
-        <Link to="/ExpressLesson7" onClick={goToNextLesson} className="next-lesson">
-          ⏭ NEXT LESSON
-        </Link>
-      )}
+  <button
+    onClick={() => navigate('/ExpressLesson7')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    Next Lesson →
+  </button>
+</div>
     </div>
   );
 };

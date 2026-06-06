@@ -472,7 +472,7 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 - **Issues**: [GitHub Issues](https://github.com/JiyaBatra/CODEVIBE-/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/JiyaBatra/CODEVIBE-/discussions)
-- **Email**: jiyabatra@example.com
+- **Email**: jiyabatra0007@gmail.com
 
 ---
 

@@ -42,10 +42,13 @@ const DynamicProgressSidebar = () => {
     if (!activeGroup) return;
 
     const email = localStorage.getItem("userEmail");
-    if (!email) return;
+    const token = localStorage.getItem("authToken");
+    if (!email || !token) return;
 
     axios
-      .get(`${API_BASE_URL}/api/progress/${email}`)
+      .get(`${API_BASE_URL}/api/progress/${email}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => setProgress((current) => mergeProgress(current, res.data)))
       .catch(() => {});
   }, [activeGroup]);
