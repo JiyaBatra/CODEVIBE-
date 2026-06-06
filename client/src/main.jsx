@@ -32,6 +32,7 @@ import {
   PrivateRoute,
   PublicRoute,
 } from './AuthProvider.jsx';
+import Chatbot from './components/Chatbot/Chatbot.jsx';
 
 // HTML Lessons
 import HtmlLesson from './components/HtmlLesson.jsx';
@@ -449,5 +450,10 @@ createRoot(document.getElementById('root')).render(
         </SearchProvider>
       </AuthProvider>
     </HashRouter>
+
+      <Target />
+      <Foot />
+      <Chatbot />
+    
   </StrictMode>
 );

@@ -76,15 +76,16 @@ const MONGODB_URL =
   process.env.MONGODB_URI ||
   "mongodb://127.0.0.1:27017/codevibe";
 
+const PORT = process.env.PORT || 5002;
+
+server.listen(PORT, () => {
+  console.log(`✅ Server Started on port ${PORT}`);
+});
+
 mongoose
   .connect(MONGODB_URL)
   .then(() => {
-    const PORT = process.env.PORT || 5002;
-
-    server.listen(PORT, () => {
-      console.log(`✅ Server Started on port ${PORT}`);
-      console.log("✅ Connected to MongoDB");
-    });
+    console.log("✅ Connected to MongoDB");
   })
   .catch((err) => {
     console.error("❌ MongoDB connection error:", err);
@@ -107,3 +108,5 @@ const gracefulShutdown = (signal) => {
 
 process.on("SIGINT", () => gracefulShutdown("SIGINT"));
 process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
+    console.warn("⚠️ MongoDB connection failed. Backend is running in database-less mode:", err.message || err);
+  ;
