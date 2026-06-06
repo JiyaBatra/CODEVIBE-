@@ -35,6 +35,49 @@ const Head = () => {
   const isHomePage =
     location.pathname === "/" || location.pathname === "/lessons";
 
+  const [activeSection, setActiveSection] = useState("");
+
+  useEffect(() => {
+    if (location.pathname !== "/lessons" && location.pathname !== "/") {
+      setActiveSection(location.pathname.replace("/", ""));
+      return;
+    }
+
+    const handleScroll = () => {
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 50) {
+        setActiveSection("contact");
+        return;
+      }
+
+      const sections = [
+        { id: "contact-footer", name: "contact" },
+        { id: "faq", name: "faq" },
+        { id: "project-suggestions", name: "projects" },
+        { id: "project-generator", name: "projects" },
+        { id: "roadmap-generator", name: "roadmap" },
+        { id: "courses", name: "courses" },
+      ];
+
+      let currentSection = "home";
+      for (const section of sections) {
+        const element = document.getElementById(section.id);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= 200) {
+            currentSection = section.name;
+            break;
+          }
+        }
+      }
+      setActiveSection(currentSection);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [location.pathname]);
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
@@ -131,7 +174,7 @@ useEffect(() => {
           {/* Desktop Nav */}
          <button
   type="button"
-  className="nav-link"
+  className={`nav-link ${activeSection === 'home' ? 'active' : ''}`}
   onClick={() => navigate("/lessons", { state: { scrollToTop: true } })}
 >
   <span>Home</span>
@@ -139,7 +182,7 @@ useEffect(() => {
 
 <button
   type="button"
-  className="nav-link"
+  className={`nav-link ${activeSection === 'courses' ? 'active' : ''}`}
   onClick={() => navigate("/lessons", { state: { scrollToCourses: true } })}
 >
   <span>Courses</span>
@@ -147,7 +190,7 @@ useEffect(() => {
 
 <button
   type="button"
-  className="nav-link"
+  className={`nav-link ${activeSection === 'roadmap' ? 'active' : ''}`}
   onClick={() => navigate("/lessons", { state: { scrollToRoadmap: true } })}
 >
   <span>Roadmap Generator</span>
@@ -160,7 +203,7 @@ useEffect(() => {
 >
   <button
     type="button"
-    className="nav-link dropdown-btn"
+    className={`nav-link dropdown-btn ${activeSection === 'projects' ? 'active' : ''}`}
     onClick={() => setShowProjects(!showProjects)}
   >
     <span>Projects</span>
@@ -203,7 +246,7 @@ useEffect(() => {
 </div>
 <button
   type="button"
-  className="nav-link"
+  className={`nav-link ${activeSection === 'faq' ? 'active' : ''}`}
   onClick={() => navigate("/lessons", { state: { scrollToFaq: true } })}
 >
   <span>FAQ</span>
@@ -211,7 +254,7 @@ useEffect(() => {
 
 <button
   type="button"
-  className="nav-link"
+  className={`nav-link ${activeSection === 'contact' ? 'active' : ''}`}
   onClick={() => navigate("/lessons", { state: { scrollToContact: true } })}
 >
   <span>Contact Us</span>
@@ -225,7 +268,7 @@ useEffect(() => {
               <StreakCounter />
               <button
               type="button"
-              className="nav-link"
+              className={`nav-link ${activeSection === 'leaderboard' ? 'active' : ''}`}
               onClick={() => navigate("/leaderboard")}
              >
              <FaTrophy className="nav-icon" />
@@ -234,7 +277,7 @@ useEffect(() => {
 
             <button
             type="button"
-            className="nav-link"
+            className={`nav-link ${activeSection === 'dashboard' ? 'active' : ''}`}
             onClick={() => navigate("/dashboard")}
             >
            <FaTachometerAlt className="nav-icon" />
@@ -258,7 +301,7 @@ useEffect(() => {
 
           <button
             type="button"
-            className="nav-link"
+            className={`nav-link ${activeSection === 'login' ? 'active' : ''}`}
             onClick={() => navigate("/login")}
           >
           <FaSignInAlt className="nav-icon" />
@@ -267,7 +310,7 @@ useEffect(() => {
 
           <button 
             type="button"
-            className="nav-link"
+            className={`nav-link ${activeSection === 'signup' ? 'active' : ''}`}
             onClick={() => navigate("/signup")}
           >
           <FaUserPlus className="nav-icon" />
@@ -298,11 +341,9 @@ useEffect(() => {
         className={`mobile-nav ${menuOpen ? "mobile-nav--open" : ""}`}
         aria-label="Mobile navigation"
       >
-        <NavLink
+        <Link
               to="/lessons"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
+              className={`nav-link ${activeSection === 'home' ? 'active' : ''}`}
               onClick={() => {
                  setMenuOpen(false);
                 window.scrollTo({
@@ -314,24 +355,20 @@ useEffect(() => {
               <FaHome className="nav-icon" />
 
               Home
-            </NavLink>
-            <NavLink
+            </Link>
+            <Link
               to="/lessons"
               state={{ scrollToFaq: true }}
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
+              className={`nav-link ${activeSection === 'faq' ? 'active' : ''}`}
               onClick={() => setMenuOpen(false)}
               
             >
               <FaQuestionCircle className="nav-icon" />
               FAQ
-            </NavLink>
-            <NavLink
+            </Link>
+            <Link
               to="/lessons"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
+              className={`nav-link ${activeSection === 'courses' ? 'active' : ''}`}
               onClick={() => {
                  setMenuOpen(false);
                 setTimeout(() => {
@@ -346,12 +383,10 @@ useEffect(() => {
             >
               <FaBook className="nav-icon" />
               Courses
-            </NavLink>
-            <NavLink
+            </Link>
+            <Link
               to="/lessons"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
+              className={`nav-link ${activeSection === 'contact' ? 'active' : ''}`}
               onClick={() => {
                  setMenuOpen(false);
 
@@ -367,17 +402,17 @@ useEffect(() => {
             >
               <FaEnvelope className="nav-icon" />
               Contact Us
-            </NavLink>
+            </Link>
 
         {user ? (
           <>
             <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.1)', marginBottom: '8px' }}>
               <StreakCounter />
             </div>
-            <Link to="/leaderboard" className="nav-link" onClick={() => setMenuOpen(false)}>
+            <Link to="/leaderboard" className={`nav-link ${activeSection === 'leaderboard' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>
               <FaTrophy className="nav-icon" /><span>Leaderboard</span>
             </Link>
-            <Link to="/dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
+            <Link to="/dashboard" className={`nav-link ${activeSection === 'dashboard' ? 'active' : ''}`} onClick={() => setMenuOpen(false)}>
               <FaTachometerAlt className="nav-icon" /><span>Dashboard</span>
             </Link>
             <Link to="/login" onClick={handleLogout} className="nav-link">
@@ -400,7 +435,7 @@ useEffect(() => {
             </Link>
             <Link
               to="/signup"
-              className="nav-link"
+              className={`nav-link ${activeSection === 'signup' ? 'active' : ''}`}
               onClick={() => setMenuOpen(false)}
             >
               <FaUserPlus className="nav-icon" />
@@ -417,7 +452,7 @@ useEffect(() => {
       >
         <Link
           to="/lessons"
-          className="nav-link"
+          className={`nav-link ${activeSection === 'faq' ? 'active' : ''}`}
           onClick={() => {
             setMenuOpen(false);
             navigate('/lessons', { state: { scrollToFaq: true } });
@@ -427,7 +462,7 @@ useEffect(() => {
         </Link>
         <button
           type="button"
-          className="nav-link"
+          className={`nav-link ${activeSection === 'roadmap' ? 'active' : ''}`}
           onClick={() => {
             setMenuOpen(false);
             navigate('/lessons', { state: { scrollToRoadmap: true } });
@@ -437,7 +472,7 @@ useEffect(() => {
         </button>
         <button
           type="button"
-          className="nav-link"
+          className={`nav-link ${activeSection === 'projects' ? 'active' : ''}`}
           onClick={() => {
             setMenuOpen(false);
             navigate('/lessons', { state: { scrollToProjectGenerator: true } });
@@ -447,7 +482,7 @@ useEffect(() => {
         </button>
         <button
           type="button"
-          className="nav-link"
+          className={`nav-link ${activeSection === 'projects' ? 'active' : ''}`}
           onClick={() => {
             setMenuOpen(false);
             navigate('/lessons', { state: { scrollToProjectSuggestions: true } });
@@ -457,7 +492,7 @@ useEffect(() => {
         </button>
         <button
           type="button"
-          className="nav-link"
+          className={`nav-link ${activeSection === 'courses' ? 'active' : ''}`}
           onClick={() => {
             setMenuOpen(false);
             navigate('/lessons', { state: { scrollToCourses: true } });
@@ -467,7 +502,7 @@ useEffect(() => {
         </button>
         <Link
           to="/glossary"
-          className="nav-link"
+          className={`nav-link ${activeSection === 'glossary' ? 'active' : ''}`}
           onClick={() => setMenuOpen(false)}
         >
           <span>Glossary</span>
