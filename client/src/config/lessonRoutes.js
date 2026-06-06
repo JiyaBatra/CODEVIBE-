@@ -10,7 +10,7 @@ export const lessonGroups = [
     lessons: Array.from({ length: 10 }, (_, index) => ({
       title: `HTML Lesson ${index + 1}`,
       path: `/HtmlLesson${index + 1}`,
-      lessonId: `html-lesson${index + 1}`,
+      lessonId: `html-lesson-${index + 1}`,
     })),
   },
   {

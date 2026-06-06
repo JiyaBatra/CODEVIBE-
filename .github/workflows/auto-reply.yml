@@ -20,7 +20,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const message = "Project maintainer is currently offline.\n\nYour issue/PR will be reviewed after 26th May.\n\nThanks for your patience.";
+            const message = "Thank you for your contribution! The maintainer will review your issue/PR shortly.\n\nWe appreciate your patience.";
 
             const issueNumber = context.payload.issue
               ? context.payload.issue.number
@@ -34,5 +34,5 @@ jobs:
                 body: message
               });
             } catch (error) {
-              core.warning(`Could not create auto-reply comment: ${error.message}`);
+              core.warning(`Could not post auto-reply comment (fork PR — expected): ${error.message}`);
             }

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
 import { Link } from 'react-router-dom';
+import CourseSidebar from './CourseSidebar';
 import { FaCheckCircle, FaArrowRight, FaServer, FaBookOpen, FaTrophy, FaRoute, FaShieldAlt, FaDatabase } from 'react-icons/fa';
 
 const ExpressLesson = () => {
@@ -116,7 +117,9 @@ const ExpressLesson = () => {
       </div>
 
       {/* Lessons Grid */}
-      <div className="lessons-grid">
+      <div className="lesson-layout-wrapper" style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="lessons-grid">
         {lessons.map((lesson, index) => {
           const difficultyStyle = getDifficultyColor(lesson.difficulty);
           const isCompleted = isDone(lesson.id);
@@ -192,6 +195,16 @@ const ExpressLesson = () => {
           );
         })}
       </div>
+        </div>
+        
+        <div className="desktop-sidebar" style={{ display: 'block', width: '0px', height: '0px', overflow: 'visible' }}>
+          <CourseSidebar 
+            coursePrefix={lessons[0]?.id ? lessons[0].id.split('-')[0] : 'course'} 
+            totalLessons={lessons.length} 
+            courseTitle={lessons[0]?.category || "Course"} 
+          />
+        </div>
+      </div>
 
       <style jsx>{`
         .express-lesson {
@@ -226,7 +239,8 @@ const ExpressLesson = () => {
 
         .header-icon {
           font-size: 3.5rem;
-          color: #000000;
+          color: #FFC857;
+          filter: drop-shadow(0 0 10px rgba(255,200,87,.5));
           background: white;
           border-radius: 20px;
           padding: 10px;
@@ -275,7 +289,7 @@ const ExpressLesson = () => {
         }
 
         .stat-icon {
-          color: #000000;
+          color: #FFC857;
         }
 
         .trophy-icon {
@@ -285,7 +299,7 @@ const ExpressLesson = () => {
 
         .progress-percent {
           font-weight: bold;
-          color: #000000;
+          color: #FFC857;
         }
 
         .progress-bar {
@@ -296,7 +310,7 @@ const ExpressLesson = () => {
         }
 
         .progress-fill {
-          background: linear-gradient(90deg, #000000, #333333);
+          background: linear-gradient(90deg,#FFC857,#FFD166);
           height: 100%;
           border-radius: 10px;
           transition: width 0.5s ease;
@@ -402,12 +416,12 @@ const ExpressLesson = () => {
         }
 
         .category-icon {
-          color: #000000;
+          color: #FFC857;
           font-size: 0.9rem;
         }
 
         .category-name {
-          color: #000000;
+          color: #FFC857;
           font-size: 0.8rem;
           font-weight: 500;
         }
@@ -419,6 +433,14 @@ const ExpressLesson = () => {
           font-weight: 600;
           min-height: 64px;
         }
+
+
+        .start-btn,
+        .start-btn *,
+        .course-card:hover .start-btn,
+        .course-card:hover .start-btn * {
+          color: #000;
+          }
 
         .course-meta {
           display: flex;
@@ -448,7 +470,10 @@ const ExpressLesson = () => {
           align-items: center;
           gap: 8px;
           padding: 10px 20px;
-          background: #000000;
+          background: linear-gradient(90deg,#FFC857,#FFD166);
+          box-shadow: 0 0 15px rgba(255, 200, 87, 0.4);
+          color: #08173D;
+          font-weight: 700;
           border: none;
           border-radius: 8px;
           color: white;
@@ -460,10 +485,10 @@ const ExpressLesson = () => {
         }
 
         .course-card:hover .start-btn {
-          background: #333333;
-          gap: 12px;
-        }
-
+    background: linear-gradient(90deg,#FFC857,#FFD166);
+    color: #08173D;
+    box-shadow: 0 0 25px rgba(255,200,87,.6);
+}
         .btn-arrow {
           transition: transform 0.3s ease;
         }
@@ -481,6 +506,16 @@ const ExpressLesson = () => {
         }
 
         /* Responsive Design */
+        @media (max-width: 1024px) {
+          .lesson-layout-wrapper {
+            flex-direction: column !important;
+          }
+          .desktop-sidebar {
+            width: 100% !important;
+            position: static !important;
+            margin-top: 32px;
+          }
+        }
         @media (max-width: 768px) {
           .express-lesson {
             padding: 20px;

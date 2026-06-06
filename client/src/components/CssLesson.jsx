@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import CourseSidebar from './CourseSidebar';
 import API_BASE_URL from '../config/api';
 import { FaCheckCircle, FaArrowRight, FaCss3Alt, FaBookOpen, FaTrophy, FaPaintBrush, FaMobileAlt } from 'react-icons/fa';
 
@@ -101,7 +102,9 @@ const CssLesson = () => {
       </div>
 
       {/* Lessons Grid */}
-      <div className="lessons-grid">
+      <div className="lesson-layout-wrapper" style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="lessons-grid">
         {lessons.map((lesson, index) => {
           const difficultyStyle = getDifficultyColor(lesson.difficulty);
           const isCompleted = isDone(lesson.id);
@@ -174,6 +177,16 @@ const CssLesson = () => {
           );
         })}
       </div>
+        </div>
+        
+        <div className="desktop-sidebar" style={{ display: 'block', width: '0px', height: '0px', overflow: 'visible' }}>
+          <CourseSidebar 
+            coursePrefix={lessons[0]?.id ? lessons[0].id.split('-')[0] : 'course'} 
+            totalLessons={lessons.length} 
+            courseTitle={lessons[0]?.category || "Course"} 
+          />
+        </div>
+      </div>
 
       <style jsx>{`
         .css-lesson {
@@ -208,7 +221,8 @@ const CssLesson = () => {
 
         .header-icon {
           font-size: 3.5rem;
-          color: #2965f1;
+          color: #08173D;
+          filter: drop-shadow(0 0 10px #ffffff);
           animation: float 3s ease-in-out infinite;
         }
 
@@ -264,7 +278,7 @@ const CssLesson = () => {
 
         .progress-percent {
           font-weight: bold;
-          color: #2965f1;
+          color: #4CC9F0;
         }
 
         .progress-bar {
@@ -275,7 +289,7 @@ const CssLesson = () => {
         }
 
         .progress-fill {
-          background: linear-gradient(90deg, #2965f1, #00b894);
+          background: linear-gradient(90deg,#08173D,#162456);
           height: 100%;
           border-radius: 10px;
           transition: width 0.5s ease;
@@ -315,7 +329,11 @@ const CssLesson = () => {
 
         /* Course Card */
         .course-card {
-          background: rgba(255, 255, 255, 0.05);
+            background: linear-gradient(
+    135deg,
+    rgba(192,132,252,0.12),
+    rgba(236,72,153,0.08)
+  );
           backdrop-filter: blur(10px);
           border-radius: 16px;
           padding: 24px;
@@ -331,10 +349,10 @@ const CssLesson = () => {
           height: 100%;
         }
 
-        .course-card:hover {
-          background: rgba(255, 255, 255, 0.08);
-          border-color: rgba(41, 101, 241, 0.3);
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        .course-card:hover .start-btn {
+          background: linear-gradient(90deg,#08173D,#162456);
+          box-shadow: 0 0 25px rgba(76, 201, 240, 0.6);
+          transform: translateY(-2px);
         }
 
         .badge-container {
@@ -383,7 +401,7 @@ const CssLesson = () => {
         }
 
         .course-category {
-          color: #2965f1;
+          color: #ec4899;
           font-size: 0.85rem;
           margin-bottom: 8px;
           font-weight: 500;
@@ -417,7 +435,8 @@ const CssLesson = () => {
           align-items: center;
           gap: 8px;
           padding: 10px 20px;
-          background: #2965f1;
+          background: linear-gradient(90deg,#08173D,#162456);
+          box-shadow: 0 0 15px rgba(76, 201, 240, 0.4);
           border: none;
           border-radius: 8px;
           color: white;
@@ -450,6 +469,16 @@ const CssLesson = () => {
         }
 
         /* Responsive Design */
+        @media (max-width: 1024px) {
+          .lesson-layout-wrapper {
+            flex-direction: column !important;
+          }
+          .desktop-sidebar {
+            width: 100% !important;
+            position: static !important;
+            margin-top: 32px;
+          }
+        }
         @media (max-width: 768px) {
           .css-lesson {
             padding: 20px;

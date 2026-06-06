@@ -4,6 +4,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import API_BASE_URL from "../config/api";
+import Dropdown from "./common/Dropdown";
 
 const defaultBackgroundUrl = "src/assets/completion certificate.png";
 
@@ -116,25 +117,23 @@ const completedLessons = info?.completedLessons || 0;
           onChange={(e)=>setEmail(e.target.value)}
         />
 
-        <select
+        <Dropdown
           value={courseName}
-          onChange={(e)=>setCourseName(e.target.value)}
-        >
-
-          <option value="">Select Course</option>
-          <option>HTML</option>
-          <option>CSS</option>
-          <option>C</option>
-          <option>JavaScript</option>
-          <option>OOP</option>
-          <option>DSA</option>
-          <option>DBMS</option>
-          <option>MongoDB</option>
-          <option>Node.js</option>
-          <option>Express.js</option>
-          <option>React.js</option>
-
-        </select>
+          onChange={setCourseName}
+          options={["HTML", "CSS", "C", "JavaScript", "OOP", "DSA", "DBMS", "MongoDB", "Node.js", "Express.js", "React.js"]}
+          placeholder="Select Course"
+          style={{ width: "100%" }}
+          triggerStyle={{
+            padding: "1rem",
+            borderRadius: "4px",
+            border: "2px solid var(--primary-red)",
+            background: "#0f1419",
+            color: courseName ? "var(--text-primary)" : "#666",
+            fontSize: "1rem",
+            width: "100%",
+            textAlign: "left"
+          }}
+        />
 
         <button
           onClick={fetchData}

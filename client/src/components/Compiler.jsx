@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 // Dynamic API URL config resolving to localhost in dev and Render live server in production
 import API_BASE_URL from "../config/api";
+import Dropdown from "./common/Dropdown";
 
 const SCORING = (attempt) =>
   attempt === 1 ? 100 :
@@ -306,7 +307,7 @@ const Compiler = ({
                 clearTimeout(killer);
               } catch(e) { document.body.textContent = "Error: " + (e?.message || e); }
             })();
-          <\/script>
+          <${"/"}script>
         </body>
       </html>
     `);
@@ -441,25 +442,37 @@ const Compiler = ({
   return (
     <div className="compiler">
       {!fixedLanguage && (
-        <select
+        <Dropdown
           value={language}
-          onChange={(e) => setLanguage(e.target.value)}
-          className="compiler-lang-select"
-        >
-          <option value="html">HTML</option>
-          <option value="css">CSS</option>
-          <option value="js">JavaScript</option>
-          <option value="dsa-js">DSA (JavaScript)</option>
-          <option value="oop-js">OOP (JavaScript)</option>
-          <option value="react">React (JSX)</option>
-          <option value="node">Node.js (server)</option>
-          <option value="c">C (server)</option>
-          <option value="cpp">C++ (server)</option>
-          <option value="python">Python (server)</option>
-          <option value="java">Java (server)</option>
-          <option value="dbms">DBMS/SQL (server)</option>
-          <option value="mongo">Mongo (server)</option>
-        </select>
+          onChange={(val) => setLanguage(val)}
+          options={[
+            { value: "html", label: "HTML" },
+            { value: "css", label: "CSS" },
+            { value: "js", label: "JavaScript" },
+            { value: "dsa-js", label: "DSA (JavaScript)" },
+            { value: "oop-js", label: "OOP (JavaScript)" },
+            { value: "react", label: "React (JSX)" },
+            { value: "node", label: "Node.js (server)" },
+            { value: "c", label: "C (server)" },
+            { value: "cpp", label: "C++ (server)" },
+            { value: "python", label: "Python (server)" },
+            { value: "java", label: "Java (server)" },
+            { value: "dbms", label: "DBMS/SQL (server)" },
+            { value: "mongo", label: "Mongo (server)" }
+          ]}
+          placeholder="Select Language"
+          style={{ width: "100%", maxWidth: "300px", marginBottom: "12px" }}
+          triggerStyle={{
+            background: "#161b22",
+            color: "#e6edf3",
+            border: "1px solid rgba(255, 77, 109, 0.4)",
+            borderRadius: "8px",
+            padding: "8px 12px",
+            fontSize: "0.9rem",
+            width: "100%",
+            textAlign: "left"
+          }}
+        />
       )}
 
       <div className="compiler-editor-wrap">
@@ -513,7 +526,7 @@ const Compiler = ({
         ref={iframeRef}
         className="compiler-preview"
         title="code-output"
-        sandbox="allow-scripts"
+        sandbox="allow-scripts allow-same-origin"
       />
 
       {/* ── rich feedback panel ── */}

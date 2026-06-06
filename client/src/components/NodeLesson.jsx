@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import CourseSidebar from './CourseSidebar';
 import API_BASE_URL from '../config/api';
 import { FaCheckCircle, FaArrowRight, FaNodeJs, FaBookOpen, FaTrophy, FaServer, FaDatabase, FaRocket } from 'react-icons/fa';
 
@@ -116,7 +117,9 @@ const NodeLesson = () => {
       </div>
 
       {/* Lessons Grid */}
-      <div className="lessons-grid">
+      <div className="lesson-layout-wrapper" style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="lessons-grid">
         {lessons.map((lesson, index) => {
           const difficultyStyle = getDifficultyColor(lesson.difficulty);
           const isCompleted = isDone(lesson.id);
@@ -192,6 +195,16 @@ const NodeLesson = () => {
           );
         })}
       </div>
+        </div>
+        
+        <div className="desktop-sidebar" style={{ display: 'block', width: '0px', height: '0px', overflow: 'visible' }}>
+          <CourseSidebar 
+            coursePrefix={lessons[0]?.id ? lessons[0].id.split('-')[0] : 'course'} 
+            totalLessons={lessons.length} 
+            courseTitle={lessons[0]?.category || "Course"} 
+          />
+        </div>
+      </div>
 
       <style jsx>{`
         .node-lesson {
@@ -226,7 +239,8 @@ const NodeLesson = () => {
 
         .header-icon {
           font-size: 3.5rem;
-          color: #68a063;
+          color: #34D399;
+          filter: drop-shadow(0 0 10px rgba(52,211,153,.9));
           animation: float 3s ease-in-out infinite;
         }
 
@@ -272,7 +286,7 @@ const NodeLesson = () => {
         }
 
         .stat-icon {
-          color: #68a063;
+          color: #34D399;
         }
 
         .trophy-icon {
@@ -282,7 +296,7 @@ const NodeLesson = () => {
 
         .progress-percent {
           font-weight: bold;
-          color: #68a063;
+          color: #34D399;
         }
 
         .progress-bar {
@@ -293,7 +307,7 @@ const NodeLesson = () => {
         }
 
         .progress-fill {
-          background: linear-gradient(90deg, #68a063, #8bc34a);
+          background: linear-gradient(90deg,#68a063,8cc84b);
           height: 100%;
           border-radius: 10px;
           transition: width 0.5s ease;
@@ -445,7 +459,8 @@ const NodeLesson = () => {
           align-items: center;
           gap: 8px;
           padding: 10px 20px;
-          background: #68a063;
+          background: linear-gradient(90deg,#10B981,#34D399);
+          box-shadow: 0 0 15px rgba(52, 211, 153, 0.4);
           border: none;
           border-radius: 8px;
           color: white;
@@ -457,8 +472,8 @@ const NodeLesson = () => {
         }
 
         .course-card:hover .start-btn {
-          background: #4c7a47;
-          gap: 12px;
+          background: linear-gradient(90deg,#10B981,#34D399);
+          box-shadow: 0 0 25px rgba(52,211,153,.6);
         }
 
         .btn-arrow {
@@ -478,6 +493,16 @@ const NodeLesson = () => {
         }
 
         /* Responsive Design */
+        @media (max-width: 1024px) {
+          .lesson-layout-wrapper {
+            flex-direction: column !important;
+          }
+          .desktop-sidebar {
+            width: 100% !important;
+            position: static !important;
+            margin-top: 32px;
+          }
+        }
         @media (max-width: 768px) {
           .node-lesson {
             padding: 20px;

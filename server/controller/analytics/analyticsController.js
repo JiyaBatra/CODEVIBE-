@@ -47,15 +47,21 @@ const getProgressScores = (scores) => {
 
 const normalizeDateValue = (value) => {
   if (!value) return null;
+  let date;
   if (typeof value === 'string' || value instanceof Date) {
-    const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? null : date.toISOString().slice(0, 10);
+    date = new Date(value);
+  } else if (typeof value === 'object' && value !== null) {
+    date = new Date(value.createdAt || value.x || value.date);
+  } else {
+    return null;
   }
-  if (typeof value === 'object' && value !== null) {
-    const date = new Date(value.createdAt || value.x || value.date);
-    return Number.isNaN(date.getTime()) ? null : date.toISOString().slice(0, 10);
-  }
-  return null;
+  
+  if (Number.isNaN(date.getTime())) return null;
+  
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 };
 
 const getLearningStreak = (values) => {
@@ -66,6 +72,25 @@ const getLearningStreak = (values) => {
   ).sort((a, b) => new Date(b) - new Date(a));
 
   if (!uniqueDates.length) return 0;
+
+  const getLocalDateStr = (d) => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const todayStr = getLocalDateStr(new Date());
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = getLocalDateStr(yesterday);
+
+  const newestDateStr = uniqueDates[0];
+
+  // If the most recent activity is older than yesterday, the current streak is broken.
+  if (newestDateStr !== todayStr && newestDateStr !== yesterdayStr) {
+    return 0;
+  }
 
   let streak = 1;
   let previousDate = new Date(uniqueDates[0]);
@@ -84,6 +109,128 @@ const getLearningStreak = (values) => {
   }
 
   return streak;
+};
+
+/**
+ * Returns the longest ever consecutive-day streak from a list of date values.
+ */
+const getLongestStreak = (values) => {
+  if (!Array.isArray(values) || values.length === 0) return 0;
+
+  const uniqueDates = Array.from(
+    new Set(values.map((d) => normalizeDateValue(d)).filter(Boolean))
+  ).sort((a, b) => new Date(a) - new Date(b));
+
+  if (!uniqueDates.length) return 0;
+
+  let longest = 1;
+  let current = 1;
+
+  for (let i = 1; i < uniqueDates.length; i += 1) {
+    const prev = new Date(uniqueDates[i - 1]);
+    const curr = new Date(uniqueDates[i]);
+    const diffDays = Math.round((curr - prev) / (1000 * 60 * 60 * 24));
+    if (diffDays === 1) {
+      current += 1;
+      if (current > longest) longest = current;
+    } else {
+      current = 1;
+    }
+  }
+
+  return longest;
+};
+
+/**
+ * Returns how many distinct weeks (Mon–Sun) the user has had at least one activity.
+ */
+const getWeeklyStreak = (values) => {
+  if (!Array.isArray(values) || values.length === 0) return 0;
+
+  const weekKeys = new Set();
+  values.forEach((v) => {
+    const d = normalizeDateValue(v);
+    if (!d) return;
+    const date = new Date(d);
+    const dayOfWeek = date.getDay(); // 0 = Sun
+    const monday = new Date(date);
+    monday.setDate(date.getDate() - ((dayOfWeek + 6) % 7));
+    weekKeys.add(monday.toISOString().slice(0, 10));
+  });
+
+  const sorted = Array.from(weekKeys).sort((a, b) => new Date(b) - new Date(a));
+  if (!sorted.length) return 0;
+
+  let streak = 1;
+  for (let i = 1; i < sorted.length; i += 1) {
+    const diff = Math.round(
+      (new Date(sorted[i - 1]) - new Date(sorted[i])) / (1000 * 60 * 60 * 24)
+    );
+    if (diff === 7) streak += 1;
+    else break;
+  }
+
+  return streak;
+};
+
+/**
+ * Builds a heatmap map: { 'YYYY-MM-DD': count } for the last `weeks` weeks.
+ * Count = number of lesson events on that day (intensity).
+ */
+const buildHeatmapData = (events, weeks = 32) => {
+  const dayMs = 24 * 60 * 60 * 1000;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const start = new Date(today.getTime() - dayMs * (weeks * 7 - 1));
+  const countMap = {};
+
+  events.forEach((event) => {
+    const d = normalizeDateValue(event.createdAt || event.x);
+    if (!d) return;
+    const eventDate = new Date(d);
+    if (eventDate >= start && eventDate <= today) {
+      countMap[d] = (countMap[d] || 0) + 1;
+    }
+  });
+
+  return countMap;
+};
+
+/**
+ * Builds this-week vs last-week summary stats.
+ */
+const buildWeeklyStats = (events) => {
+  const now = new Date();
+  const dayOfWeek = now.getDay();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((dayOfWeek + 6) % 7));
+  monday.setHours(0, 0, 0, 0);
+
+  const lastMonday = new Date(monday);
+  lastMonday.setDate(monday.getDate() - 7);
+
+  let thisWeekLessons = 0, thisWeekPoints = 0, thisWeekTime = 0;
+  let lastWeekLessons = 0, lastWeekPoints = 0, lastWeekTime = 0;
+
+  events.forEach((event) => {
+    const d = new Date(event.createdAt);
+    if (d >= monday) {
+      thisWeekLessons += 1;
+      thisWeekPoints += event.points || 0;
+      thisWeekTime += event.learningTime || 0;
+    } else if (d >= lastMonday) {
+      lastWeekLessons += 1;
+      lastWeekPoints += event.points || 0;
+      lastWeekTime += event.learningTime || 0;
+    }
+  });
+
+  return {
+    thisWeek: { lessons: thisWeekLessons, points: thisWeekPoints, time: thisWeekTime },
+    lastWeek: { lessons: lastWeekLessons, points: lastWeekPoints, time: lastWeekTime },
+    lessonsDelta: thisWeekLessons - lastWeekLessons,
+    pointsDelta: thisWeekPoints - lastWeekPoints,
+  };
 };
 
 const buildSubjectHistory = (subject, lessons, completedLessonIds, events, scores) => {
@@ -156,10 +303,21 @@ const getAnalytics = async (req, res) => {
       return res.status(403).json({ message: 'Forbidden' });
     }
 
+    console.log(`[getAnalytics] Querying user with email: "${email}"`);
     const [user, progress, events] = await Promise.all([
-      User.findOne({ Email: email }).lean(),
-      Progress.findOne({ email }).lean(),
-      Analytics.find({ email }).sort({ createdAt: 1 }).lean(),
+      User.findOne({
+        $or: [
+          { email },
+          { Email: email }
+        ],
+      })
+        .select('username Email college year bio avatarUrl joinedAt')
+        .lean(),
+      Progress.findOne({ email }).select('scores completedLessons').lean(),
+      Analytics.find({ email })
+        .select('lessonId score points coins learningTime createdAt type')
+        .sort({ createdAt: 1 })
+        .lean(),
     ]);
 
     if (!user) {
@@ -180,7 +338,9 @@ const getAnalytics = async (req, res) => {
     );
 
     const lessons = progressLessonIds.length
-      ? await Lesson.find({ lessonId: { $in: progressLessonIds } }).lean()
+      ? await Lesson.find({ lessonId: { $in: progressLessonIds } })
+          .select('lessonId order createdAt')
+          .lean()
       : [];
 
     const scoreValues = Object.values(scores).filter((value) => typeof value === 'number');
@@ -247,6 +407,39 @@ const getAnalytics = async (req, res) => {
       return acc;
     }, {});
 
+    // True per-subject totals from lessonRoutes config (server-side mirror)
+    const SUBJECT_TOTALS = {
+      HTML: 10, CSS: 14, JavaScript: 29, 'C Programming': 17,
+      DBMS: 12, DSA: 12, Express: 10, MongoDB: 8,
+      'Node.js': 12, OOP: 14, React: 13,
+    };
+
+    // Weak subjects: averageScore < 60 and at least 1 lesson completed
+    const weakSubjects = subjects
+      .filter((s) => s.completedLessons > 0 && s.averageScore < 60 && s.averageScore > 0)
+      .map((s) => ({
+        subject: s.subject,
+        averageScore: s.averageScore,
+        completedLessons: s.completedLessons,
+        totalLessons: SUBJECT_TOTALS[s.subject] || s.totalLessons,
+      }))
+      .sort((a, b) => a.averageScore - b.averageScore);
+
+    // Solved / unsolved per subject using known totals
+    const subjectSolvedStats = subjects.map((s) => ({
+      subject: s.subject,
+      solved: s.completedLessons,
+      total: SUBJECT_TOTALS[s.subject] || s.totalLessons || s.completedLessons,
+      unsolved: Math.max(0, (SUBJECT_TOTALS[s.subject] || s.totalLessons || s.completedLessons) - s.completedLessons),
+    }));
+
+    const eventDates = events.map((e) => e.createdAt);
+    const currentStreak = getLearningStreak(eventDates);
+    const longestStreak = getLongestStreak(eventDates);
+    const weeklyStreak = getWeeklyStreak(eventDates);
+    const weeklyStats = buildWeeklyStats(events);
+    const heatmapData = buildHeatmapData(events, 32);
+
     const userLessons = lessons;
     const stats = {
       lessonsCompleted: completedLessons.length,
@@ -260,8 +453,13 @@ const getAnalytics = async (req, res) => {
       coinsEarned: events.reduce((sum, event) => sum + (event.coins || 0), 0),
       learningTime: events.reduce((sum, event) => sum + (event.learningTime || 0), 0),
       quizAttempts: events.filter((event) => event.type === 'quiz').length,
-      streak: getLearningStreak(events),
+      streak: currentStreak,
+      longestStreak,
+      weeklyStreak,
       lastUpdated: events.length ? events[events.length - 1].createdAt : null,
+      xp: progress?.xp || 0,
+      level: progress?.level || 1,
+      badges: progress?.badges || [],
     };
 
     const analytics = {
@@ -281,11 +479,15 @@ const getAnalytics = async (req, res) => {
         learningTime: events.map((event) => ({ x: event.createdAt, y: event.learningTime || 0 })),
       },
       subjectHistory,
+      weakSubjects,
+      subjectSolvedStats,
+      weeklyStats,
+      heatmapData,
     };
 
     const profile = {
       username: user.username,
-      email: user.Email,
+      email: user.email,
       college: user.college,
       year: user.year,
       bio: user.bio || '',
@@ -311,4 +513,5 @@ const getAnalytics = async (req, res) => {
 
 module.exports = {
   getAnalytics,
+  getLearningStreak,
 };

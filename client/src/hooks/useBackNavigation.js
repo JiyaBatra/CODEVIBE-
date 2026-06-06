@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"; //added useState
 import { useLocation, useNavigate } from "react-router-dom";
 import { resolveBackNavigation } from "../config/backNavigation";
 
@@ -15,18 +15,20 @@ export function useBackNavigation() {
     () => resolveBackNavigation(location.pathname),
     [location.pathname]
   );
+
   const navigationStackRef = useRef([location.pathname]);
+  const [stackSize, setStackSize] = useState(1); // added — tracks stack length reactively
 
   useEffect(() => {
     const currentPath = location.pathname;
     const stack = navigationStackRef.current;
-
     if (stack[stack.length - 1] !== currentPath) {
       stack.push(currentPath);
+      setStackSize(stack.length); // added — triggers re-render so canGoBack stays fresh
     }
   }, [location.pathname]);
 
-  const canGoBack = navigationStackRef.current.length > 1;
+  const canGoBack = stackSize > 1; // changed — now reactive, not stale ref read
   const fallbackTo = config?.fallbackTo || HOME_FALLBACK_ROUTE;
 
   const goBack = useCallback(() => {
@@ -34,7 +36,6 @@ export function useBackNavigation() {
       navigate(-1);
       return;
     }
-
     navigate(fallbackTo, { replace: true });
   }, [navigate, canGoBack, fallbackTo]);
 

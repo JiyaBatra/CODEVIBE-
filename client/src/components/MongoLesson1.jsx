@@ -6,7 +6,6 @@ const MongoLesson1 = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const navigate = useNavigate();
   const handleSuccess = () => setIsCorrect(true);
-  const goToNextLesson = () => navigate('/MongoLesson2');
 
   return (
     <div className="lesson">
@@ -63,11 +62,29 @@ run().catch(console.dir);`}
         onSuccess={handleSuccess}
       />
 
-      {isCorrect && (
-        <Link to="/MongoLesson2" onClick={goToNextLesson} className="next-lesson">
-          ⏭ NEXT LESSON
-        </Link>
-      )}
+       {/* Lesson Footer Navigation */}
+<div
+  style={{
+    display: "flex",
+    justifyContent: "flex-end",
+    width: "100%",
+    marginTop: "30px",
+    paddingTop: "20px",
+    borderTop: "1px solid #333"
+  }}
+>
+  <button
+    onClick={() => navigate('/MongoLesson2')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    Next Lesson →
+  </button>
+</div>
     </div>
   );
 };

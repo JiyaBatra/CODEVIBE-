@@ -1,5 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import './config/axiosSetup'; // Global axios auth interceptor – must be before component imports
 import './index.css';
 
 import {
@@ -25,6 +26,8 @@ import Compiler from './components/Compiler.jsx';
 import Certificate from './components/Certificate.jsx';
 import ViewReport from './components/ViewReport.jsx';
 import DynamicProgressSidebar from './components/DynamicProgressSidebar.jsx';
+import Leaderboard from './components/Leaderboard.jsx';
+import Flashcard from './components/Flashcard.jsx';
 import {
   AuthProvider,
   PrivateRoute,
@@ -144,6 +147,7 @@ import DsaLesson9 from './components/DsaLesson9.jsx';
 import DsaLesson10 from './components/DsaLesson10.jsx';
 import DsaLesson11 from './components/DsaLesson11.jsx';
 import DsaLesson12 from './components/DsaLesson12.jsx';
+import DsaLesson13 from './components/DsaLesson13.jsx';
 
 
 // Express Lessons
@@ -217,10 +221,11 @@ import ReactLesson10 from './components/ReactLesson10.jsx';
 import ReactLesson11 from './components/ReactLesson11.jsx';
 import ReactLesson12 from './components/ReactLesson12.jsx';
 import ReactLesson13 from './components/ReactLesson13.jsx';
-import ScrollToTop from "./components/ScrollToTop";
+import ScrollNavigator from "./components/common/ScrollNavigator";
 import GlobalBackNav from "./components/common/GlobalBackNav.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import { SearchProvider } from "./context/SearchContext.jsx";
+import  Contact  from "./components/Contact.jsx";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -228,10 +233,10 @@ createRoot(document.getElementById('root')).render(
       <AuthProvider>
         <SearchProvider>
           <Head />
-        <DynamicProgressSidebar />
-        <ScrollToTop />
-        <GlobalBackNav />
-        <ErrorBoundary>
+          <DynamicProgressSidebar />
+          <ScrollNavigator />
+          <GlobalBackNav />
+          <ErrorBoundary>
         <Routes>
           {/* General Routes */}
           <Route path="/" element={<Navigate to="/lessons" replace />} />
@@ -241,6 +246,8 @@ createRoot(document.getElementById('root')).render(
           <Route path="/ForgetPassword" element={<ForgetPassword />} />
           <Route path="/ResetPassword" element={<ResetPassword />} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/flashcards" element={<Flashcard />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/report/:email" element={<ViewReport />} />
@@ -251,6 +258,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/CssLesson" element={<CssLesson />} />
           <Route path="/JsLesson" element={<JsLesson />} />
           <Route path="/Compiler" element={<Compiler />} />
+          <Route path="/contact" element={<Contact />} />
 
           {/* HTML Lessons */}
           <Route path="/HtmlLesson" element={<HtmlLesson />} />
@@ -362,6 +370,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/DsaLesson10" element={<DsaLesson10 />} />
           <Route path="/DsaLesson11" element={<DsaLesson11 />} />
           <Route path="/DsaLesson12" element={<DsaLesson12 />} />
+          <Route path="/DsaLesson13" element={<DsaLesson13 />} />
 
 
           {/* Express Lessons 1–10 */}

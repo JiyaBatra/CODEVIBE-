@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
 import { Link } from 'react-router-dom';
+import CourseSidebar from './CourseSidebar';
 import { FaCheckCircle, FaArrowRight, FaDatabase, FaBookOpen, FaTrophy, FaSearch, FaPlus, FaEdit, FaTrash, FaChartLine } from 'react-icons/fa';
 
 const MongoLesson = () => {
@@ -38,7 +39,7 @@ const MongoLesson = () => {
       default: return { bg: '#636e7220', color: '#b2bec3', border: '#636e72' };
     }
   };
-
+  
   const getCategoryIcon = (category) => {
     switch(category) {
       case 'CRUD Operations': return <FaDatabase />;
@@ -121,7 +122,9 @@ const MongoLesson = () => {
       </div>
 
       {/* Lessons Grid */}
-      <div className="lessons-grid">
+      <div className="lesson-layout-wrapper" style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="lessons-grid">
         {lessons.map((lesson, index) => {
           const difficultyStyle = getDifficultyColor(lesson.difficulty);
           const isCompleted = isDone(lesson.id);
@@ -205,6 +208,16 @@ const MongoLesson = () => {
           );
         })}
       </div>
+        </div>
+        
+        <div className="desktop-sidebar" style={{ display: 'block', width: '0px', height: '0px', overflow: 'visible' }}>
+          <CourseSidebar 
+            coursePrefix={lessons[0]?.id ? lessons[0].id.split('-')[0] : 'course'} 
+            totalLessons={lessons.length} 
+            courseTitle={lessons[0]?.category || "Course"} 
+          />
+        </div>
+      </div>
 
       <style jsx>{`
         .mongo-lesson {
@@ -239,7 +252,8 @@ const MongoLesson = () => {
 
         .header-icon {
           font-size: 3.5rem;
-          color: #4db33d;
+          color: #3CB371;
+          filter: drop-shadow(0 0 10px rgba(60, 179, 113, 0.5));
           animation: float 3s ease-in-out infinite;
         }
 
@@ -285,7 +299,7 @@ const MongoLesson = () => {
         }
 
         .stat-icon {
-          color: #4db33d;
+          color: #3CB371;
         }
 
         .trophy-icon {
@@ -295,7 +309,7 @@ const MongoLesson = () => {
 
         .progress-percent {
           font-weight: bold;
-          color: #4db33d;
+          color: #3CB371;
         }
 
         .progress-bar {
@@ -306,7 +320,7 @@ const MongoLesson = () => {
         }
 
         .progress-fill {
-          background: linear-gradient(90deg, #4db33d, #8bc34a);
+          background: linear-gradient(90deg,#2E8B57,#3CB371);
           height: 100%;
           border-radius: 10px;
           transition: width 0.5s ease;
@@ -412,12 +426,12 @@ const MongoLesson = () => {
         }
 
         .category-icon {
-          color: #4db33d;
+          color: #3CB371;
           font-size: 0.9rem;
         }
 
         .category-name {
-          color: #4db33d;
+          color: #3CB371;
           font-size: 0.8rem;
           font-weight: 500;
         }
@@ -467,7 +481,8 @@ const MongoLesson = () => {
           align-items: center;
           gap: 8px;
           padding: 10px 20px;
-          background: #4db33d;
+          background: linear-gradient(90deg,#2E8B57,#3CB371);
+          box-shadow: 0 0 15px rgba(60, 179, 113, 0.4);
           border: none;
           border-radius: 8px;
           color: white;
@@ -479,8 +494,9 @@ const MongoLesson = () => {
         }
 
         .course-card:hover .start-btn {
-          background: #3d8a30;
-          gap: 12px;
+          background: linear-gradient(90deg,#3CB371,#20B2AA);
+          box-shadow: 0 0 25px rgba(60, 179, 113, 0.6);
+          transform: translateY(-2px);
         }
 
         .btn-arrow {
@@ -500,6 +516,16 @@ const MongoLesson = () => {
         }
 
         /* Responsive Design */
+        @media (max-width: 1024px) {
+          .lesson-layout-wrapper {
+            flex-direction: column !important;
+          }
+          .desktop-sidebar {
+            width: 100% !important;
+            position: static !important;
+            margin-top: 32px;
+          }
+        }
         @media (max-width: 768px) {
           .mongo-lesson {
             padding: 20px;

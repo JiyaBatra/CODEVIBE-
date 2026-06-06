@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
 import { Link } from 'react-router-dom';
+import CourseSidebar from './CourseSidebar';
 import { FaCheckCircle, FaArrowRight, FaJs, FaBookOpen, FaTrophy, FaReact, FaDatabase, FaRocket } from 'react-icons/fa';
 
 const JsLesson = () => {
@@ -130,7 +131,9 @@ const JsLesson = () => {
       </div>
 
       {/* Lessons Grid */}
-      <div className="lessons-grid">
+      <div className="lesson-layout-wrapper" style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="lessons-grid">
         {lessons.map((lesson, index) => {
           const difficultyStyle = getDifficultyColor(lesson.difficulty);
           const isCompleted = isDone(lesson.id);
@@ -206,6 +209,16 @@ const JsLesson = () => {
           );
         })}
       </div>
+        </div>
+        
+        <div className="desktop-sidebar" style={{ display: 'block', width: '0px', height: '0px', overflow: 'visible' }}>
+          <CourseSidebar 
+            coursePrefix={lessons[0]?.id ? lessons[0].id.split('-')[0] : 'course'} 
+            totalLessons={lessons.length} 
+            courseTitle={lessons[0]?.category || "Course"} 
+          />
+        </div>
+      </div>
 
       <style jsx>{`
         .js-lesson {
@@ -240,7 +253,8 @@ const JsLesson = () => {
 
         .header-icon {
           font-size: 3.5rem;
-          color: #f7df1e;
+          color: #FFD166;
+          filter: drop-shadow(0 0 10px rgba(255,200,87,.9));
           animation: float 3s ease-in-out infinite;
         }
 
@@ -286,7 +300,7 @@ const JsLesson = () => {
         }
 
         .stat-icon {
-          color: #f7df1e;
+          color: #FFD166;
         }
 
         .trophy-icon {
@@ -296,7 +310,7 @@ const JsLesson = () => {
 
         .progress-percent {
           font-weight: bold;
-          color: #f7df1e;
+          color: #FFD166;
         }
 
         .progress-bar {
@@ -307,7 +321,7 @@ const JsLesson = () => {
         }
 
         .progress-fill {
-          background: linear-gradient(90deg, #f7df1e, #f39c12);
+          background: linear-gradient(90deg, #FFD166, #facc15);
           height: 100%;
           border-radius: 10px;
           transition: width 0.5s ease;
@@ -468,22 +482,38 @@ const JsLesson = () => {
           align-items: center;
           gap: 8px;
           padding: 10px 20px;
-          background: #f7df1e;
+          background: #FFD166;
+          color: #000;
+          font-weight: 700;
+          box-shadow: 0 0 15px rgba(255, 209, 102, 0.4);
           border: none;
           border-radius: 8px;
-          color: #1a1a2e;
           font-weight: bold;
           cursor: pointer;
           transition: all 0.3s ease;
           width: 100%;
           justify-content: center;
         }
-
-        .course-card:hover .start-btn {
-          background: #f39c12;
-          gap: 12px;
+        
+        .course-category {
+          color: #FACC15;
         }
 
+
+        .course-card:hover .start-btn {
+        background: #FFD166;
+        color: #000;
+        box-shadow: 0 0 25px rgba(255,209,102,.6);
+        }
+
+
+        .start-btn,
+        .start-btn *,
+        .course-card:hover .start-btn,
+        .course-card:hover .start-btn * {
+          color: #000;
+          }
+          
         .btn-arrow {
           transition: transform 0.3s ease;
         }
@@ -501,6 +531,16 @@ const JsLesson = () => {
         }
 
         /* Responsive Design */
+        @media (max-width: 1024px) {
+          .lesson-layout-wrapper {
+            flex-direction: column !important;
+          }
+          .desktop-sidebar {
+            width: 100% !important;
+            position: static !important;
+            margin-top: 32px;
+          }
+        }
         @media (max-width: 768px) {
           .js-lesson {
             padding: 20px;

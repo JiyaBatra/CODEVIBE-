@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Confetti from "react-confetti";
+import { useWindowSize } from "react-use";
 import {
   ArrowRight,
   BarChart3,
@@ -10,9 +12,12 @@ import {
   Star,
   UserCircle,
   Wand2,
+  Flame,
+  CheckCircle2
 } from "lucide-react";
 import { useAuth } from "../AuthProvider.jsx";
 import API_BASE_URL from "../config/api";
+import DailyQuests from "./DailyQuests.jsx";
 import "./Dashboard.css";
 
 const formatNumber = (value) => {
@@ -64,19 +69,29 @@ const getSubjectGradient = (subject) => {
   return SUBJECT_GRADIENTS[key] || generateFallbackGradient(subject);
 };
 
-const buildHeatmapCells = (events = [], streak = 0, weeks = 10) => {
+const ALL_POSSIBLE_BADGES = [
+  { id: "first_blood", label: "First Blood", desc: "Complete your very first lesson" },
+  { id: "night_owl", label: "Night Owl", desc: "Complete a lesson between 12 AM and 5 AM" },
+  { id: "fast_learner", label: "Fast Learner", desc: "Complete 5 lessons in a single day" },
+  { id: "weekend_warrior", label: "Weekend Warrior", desc: "Complete 5 lessons on a weekend" },
+  { id: "html_master", label: "HTML Master", desc: "Complete all HTML lessons" }
+];
+
+const buildHeatmapCells = (heatmapData = {}, streak = 0, events = [], weeks = 10) => {
   const dayMs = 24 * 60 * 60 * 1000;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const totalDays = weeks * 7;
   const start = new Date(today.getTime() - dayMs * (totalDays - 1));
-  const activeDates = events.reduce((acc, event) => {
-    const date = new Date(event.x || event.createdAt || event.date || "");
-    if (!date || Number.isNaN(date.getTime())) return acc;
+
+  // Merge server heatmapData with event-derived counts for backward compat
+  const activeDates = { ...heatmapData };
+  events.forEach((event) => {
+    const date = new Date(event.x || event.createdAt || event.date || '');
+    if (!date || Number.isNaN(date.getTime())) return;
     const key = date.toISOString().slice(0, 10);
-    acc[key] = (acc[key] || 0) + 1;
-    return acc;
-  }, {});
+    if (!activeDates[key]) activeDates[key] = 0;
+  });
 
   for (let offset = 0; offset < Math.min(streak, totalDays); offset += 1) {
     const streakDate = new Date(today.getTime() - offset * dayMs);
@@ -87,38 +102,133 @@ const buildHeatmapCells = (events = [], streak = 0, weeks = 10) => {
   return Array.from({ length: totalDays }, (_, index) => {
     const date = new Date(start.getTime() + index * dayMs);
     const dateKey = date.toISOString().slice(0, 10);
-    return {
-      date,
-      active: Boolean(activeDates[dateKey]),
-      count: activeDates[dateKey] || 0,
-    };
+    const count = activeDates[dateKey] || 0;
+    return { date, count, active: count > 0 };
   });
 };
 
-const HeatmapCalendar = ({ events = [], streak = 0, weeks = 10 }) => {
-  const heatmapCells = useMemo(() => buildHeatmapCells(events, streak, weeks), [events, streak, weeks]);
+// Returns intensity class: 0-4 based on count
+const getHeatIntensity = (count) => {
+  if (count === 0) return 0;
+  if (count === 1) return 1;
+  if (count <= 2) return 2;
+  if (count <= 4) return 3;
+  return 4;
+};
+
+const HeatmapCalendar = ({ heatmapData = {}, events = [], streak = 0 }) => {
+  const containerRef = React.useRef(null);
+  const [weeks, setWeeks] = useState(32);
+
+  React.useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver(entries => {
+      for (let entry of entries) {
+        // Each column is 12px cell + 6px gap = 18px
+        const calculatedWeeks = Math.floor(entry.contentRect.width / 18);
+        setWeeks(Math.max(4, calculatedWeeks));
+      }
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const heatmapCells = useMemo(
+    () => buildHeatmapCells(heatmapData, streak, events, weeks),
+    [heatmapData, events, streak, weeks]
+  );
 
   return (
-    <div className="heatmap-calendar">
+    <div className="heatmap-calendar" ref={containerRef}>
       <div className="heatmap-label-row">
         <span>Recent activity</span>
         <div className="heatmap-legend">
-          <span className="heatmap-legend-dot heatmap-legend-dot--inactive" />
-          <span>Inactive</span>
-          <span className="heatmap-legend-dot heatmap-legend-dot--active" />
-          <span>Active</span>
+          {[0,1,2,3,4].map((lvl) => (
+            <span
+              key={lvl}
+              className={`heatmap-legend-dot heatmap-legend-dot--level-${lvl}`}
+              title={['None','1 lesson','2 lessons','3-4 lessons','5+ lessons'][lvl]}
+            />
+          ))}
+          <span>More</span>
         </div>
       </div>
       <div className="heatmap-grid" role="grid">
         {heatmapCells.map((cell) => (
           <div
             key={cell.date.toISOString()}
-            className={`heatmap-cell ${cell.active ? "heatmap-cell--active" : ""}`}
-            title={`${formatShortDate(cell.date)}${cell.active ? " — Active" : " — Rest"}`}
+            className={`heatmap-cell heatmap-cell--level-${getHeatIntensity(cell.count)}`}
+            title={`${formatShortDate(cell.date)}${cell.count > 0 ? ` — ${cell.count} lesson${cell.count > 1 ? 's' : ''}` : ' — Rest'}`}
             role="button"
-            aria-label={`${formatShortDate(cell.date)} ${cell.active ? "active" : "inactive"}`}
+            aria-label={`${formatShortDate(cell.date)} ${cell.count} lessons`}
           />
         ))}
+      </div>
+    </div>
+  );
+};
+
+const StreakWeekVisualizer = ({ events = [], streak = 0 }) => {
+  const dayMs = 24 * 60 * 60 * 1000;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  // Get last 7 days
+  const last7Days = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(today.getTime() - (6 - i) * dayMs);
+    return {
+      date: d,
+      dayName: d.toLocaleDateString('en-US', { weekday: 'short' }),
+      dateKey: d.toISOString().slice(0, 10),
+      isToday: i === 6
+    };
+  });
+
+  // Calculate active dates for last 7 days
+  const activeDates = events.reduce((acc, event) => {
+    const d = new Date(event.x || event.createdAt || event.date || "");
+    if (d && !Number.isNaN(d.getTime())) {
+      acc[d.toISOString().slice(0, 10)] = true;
+    }
+    return acc;
+  }, {});
+
+  for (let offset = 0; offset < Math.min(streak, 7); offset += 1) {
+    const streakDate = new Date(today.getTime() - offset * dayMs);
+    activeDates[streakDate.toISOString().slice(0, 10)] = true;
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '1.5rem', background: 'rgba(0,0,0,0.2)', padding: '16px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+        <h4 style={{ margin: 0, fontSize: '0.95rem', color: '#ffb8d9', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
+          <Flame size={16} color="#ffb8d9" fill="#ffb8d9" style={{ flexShrink: 0 }} /> {streak} Day Streak
+        </h4>
+        <span style={{ fontSize: '0.75rem', opacity: 0.6, whiteSpace: 'nowrap' }}>Keep it burning!</span>
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: '4px' }}>
+        {last7Days.map((day, idx) => {
+          const isActive = activeDates[day.dateKey];
+          return (
+            <div key={day.dateKey} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
+              <div style={{
+                width: '32px', height: '32px',
+                borderRadius: '50%',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: isActive ? 'rgba(255, 77, 109, 0.2)' : 'transparent',
+                border: `2px solid ${isActive ? '#ff4d4d' : 'rgba(255,255,255,0.1)'}`,
+                boxShadow: isActive ? '0 0 10px rgba(255, 77, 109, 0.4)' : 'none',
+                color: isActive ? '#ff4d4d' : 'rgba(255,255,255,0.2)',
+                transition: 'all 0.3s ease'
+              }}>
+                {isActive ? <Flame size={16} fill="#ff4d4d" /> : <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'currentColor' }} />}
+              </div>
+              <span style={{ fontSize: '0.65rem', opacity: day.isToday ? 1 : 0.5, fontWeight: day.isToday ? 'bold' : 'normal', color: day.isToday ? '#ffb8d9' : 'white' }}>
+                {day.dayName}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -551,6 +661,20 @@ const Dashboard = () => {
 
   const email = user?.email || "";
 
+  const { width, height } = useWindowSize();
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [prevLevel, setPrevLevel] = useState(null);
+
+  useEffect(() => {
+    if (analytics?.stats?.level) {
+      if (prevLevel !== null && analytics.stats.level > prevLevel) {
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 5000);
+      }
+      setPrevLevel(analytics.stats.level);
+    }
+  }, [analytics?.stats?.level, prevLevel]);
+
   useEffect(() => {
     if (!token || !email) return;
 
@@ -685,7 +809,7 @@ const Dashboard = () => {
       },
       {
         label: "Subjects Active",
-        value: formatNumber(analytics?.subjects.length || 0),
+        value: formatNumber(analytics?.subjects?.length || 0),
         icon: <LayoutDashboard />,
       },
       {
@@ -702,6 +826,11 @@ const Dashboard = () => {
         label: "Learning Streak",
         value: formatNumber(stats.streak),
         icon: <UserCircle />,
+      },
+      {
+        label: "Longest Streak",
+        value: formatNumber(analytics?.subjects?.length || 0),
+        icon: <Star />,
       },
     ];
   }, [analytics]);
@@ -799,6 +928,7 @@ const Dashboard = () => {
   return (
 
     <section className="dashboard-shell">
+      {showConfetti && <Confetti width={width} height={height} recycle={false} numberOfPieces={500} />}
       <header className="dashboard-hero">
         <div>
           <p className="dashboard-subtitle">Welcome back</p>
@@ -850,34 +980,90 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              <div className="profile-details">
-                <div>
-                  <span>Joined</span>
-                  <strong>{analytics?.profile?.joinedAt ? new Date(analytics.profile.joinedAt).toLocaleDateString() : "—"}</strong>
+              <div className="gamification-progress" style={{ margin: '1.5rem 0', padding: '1.2rem', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' }}>
+                  <span style={{ fontWeight: '600', color: '#ffb8d9', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Star size={16} fill="#ffb8d9" /> Level {analytics?.stats?.level || 1}
+                  </span>
+                  <span style={{ fontSize: '0.9rem', opacity: 0.7 }}>
+                    {analytics?.stats?.xp || 0} / {(analytics?.stats?.level || 1) * 100} XP
+                  </span>
                 </div>
-                <div className="profile-details-row">
-                  <div>
-                    <span>Streak</span>
-                    <strong>{formatNumber(analytics?.stats?.streak)}</strong>
-                  </div>
-                  <div className="profile-clock">
-                    <span>Clock</span>
-                    <strong>{currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</strong>
-                  </div>
+                <div style={{ background: 'rgba(255, 255, 255, 0.1)', borderRadius: '8px', height: '8px', overflow: 'hidden' }}>
+                  <div style={{ 
+                    background: 'linear-gradient(90deg, #ffb8d9, #c386ff)', 
+                    height: '100%', 
+                    borderRadius: '8px',
+                    width: `${Math.min(100, ((analytics?.stats?.xp || 0) / ((analytics?.stats?.level || 1) * 100)) * 100)}%`,
+                    transition: 'width 1s cubic-bezier(0.4, 0, 0.2, 1)'
+                  }}></div>
+                </div>
+                <div style={{ textAlign: 'center', marginTop: '0.8rem', fontSize: '0.8rem', opacity: 0.6 }}>
+                  {((analytics?.stats?.level || 1) * 100) - (analytics?.stats?.xp || 0)} XP to next level
+                </div>
+                <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  {ALL_POSSIBLE_BADGES.map(badge => {
+                    const isEarned = analytics?.stats?.badges?.includes(badge.id);
+                    return (
+                      <span 
+                        key={badge.id} 
+                        title={badge.desc}
+                        style={{ 
+                          fontSize: '0.75rem', 
+                          background: 'rgba(255,255,255,0.1)', 
+                          padding: '4px 8px', 
+                          borderRadius: '6px', 
+                          color: '#fff',
+                          opacity: isEarned ? 1 : 0.4,
+                          filter: isEarned ? 'none' : 'grayscale(100%)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          cursor: 'help',
+                          transition: 'all 0.2s ease'
+                        }}
+                      >
+                        {isEarned ? '🏆' : '🔒'} {badge.label}
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
 
-              <div className="profile-actions">
+              <div className="profile-details">
+                <div className="profile-detail-item">
+                  <span className="detail-label">Joined</span>
+                  <strong className="detail-value">{analytics?.profile?.joinedAt ? new Date(analytics.profile.joinedAt).toLocaleDateString() : "—"}</strong>
+                </div>
+                <StreakWeekVisualizer events={analytics?.analytics?.timelines?.points || []} streak={analytics?.stats?.streak || 0} />
+
+                <div className="profile-detail-item">
+                  <span className="detail-label">Current Streak</span>
+                  <strong className="detail-value">{formatNumber(analytics?.stats?.streak)} days</strong>
+                </div>
+                <div className="profile-detail-item">
+                  <span className="detail-label">Longest Streak</span>
+                  <strong className="detail-value">{formatNumber(analytics?.stats?.longestStreak || 0)} days</strong>
+                </div>
+                <div className="profile-detail-item">
+                  <span className="detail-label">Local Time</span>
+                  <strong className="detail-value clock-value">{currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</strong>
+                </div>
+              </div>
+
+              <div className={`profile-actions ${editMode ? "profile-actions--edit" : ""}`}>
                 <button className="ghost-button" onClick={() => setEditMode((prev) => !prev)}>
                   {editMode ? "Cancel" : "Edit Profile"}
                 </button>
-                <button
-                  className="primary-button"
-                  onClick={handleSaveProfile}
-                  disabled={!editMode || saving}
-                >
-                  {saving ? "Saving..." : "Save profile"}
-                </button>
+                {editMode && (
+                  <button
+                    className="primary-button"
+                    onClick={handleSaveProfile}
+                    disabled={saving}
+                  >
+                    {saving ? "Saving..." : "Save profile"}
+                  </button>
+                )}
               </div>
 
               {editMode && (
@@ -972,15 +1158,178 @@ const Dashboard = () => {
                   <div className="chart-panel heatmap-card">
                     <div className="chart-panel-header">
                       <span>Activity Heatmap</span>
+                      <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.4)' }}>Intensity = lessons/day</span>
                     </div>
                     <HeatmapCalendar
+                      heatmapData={analytics?.analytics?.heatmapData || {}}
                       events={analytics?.analytics?.timelines?.points || []}
                       streak={analytics?.stats?.streak || 0}
-                      weeks={32}
                     />
                   </div>
                 </div>
               </section>
+
+              {/* ── Streak Breakdown ── */}
+              <section className="analytics-section glass-card" style={{ marginTop: '24px' }}>
+                <div className="section-header">
+                  <div>
+                    <p className="section-overline">Consistency</p>
+                    <h2>Streak breakdown</h2>
+                  </div>
+                </div>
+                <div className="stats-grid" style={{ marginTop: '16px' }}>
+                  {[
+                    { label: '🔥 Current Streak', value: `${analytics?.stats?.streak ?? 0} days`, sub: 'Consecutive days active' },
+                    { label: '🏆 Longest Streak', value: `${analytics?.stats?.longestStreak ?? 0} days`, sub: 'All-time personal best' },
+                    { label: '📅 Weekly Streak',  value: `${analytics?.stats?.weeklyStreak ?? 0} weeks`, sub: 'Consecutive active weeks' },
+                    { label: '⏱ Learning Time',  value: formatTime(analytics?.stats?.learningTime || 0), sub: 'Total time spent learning' },
+                  ].map((item) => (
+                    <article key={item.label} className="stat-card glass-card">
+                      <p className="stat-value" style={{ fontSize: '1.4rem' }}>{item.value}</p>
+                      <p className="stat-label">{item.label}</p>
+                      <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem', marginTop: '4px' }}>{item.sub}</p>
+                    </article>
+                  ))}
+                </div>
+              </section>
+
+              {/* ── This Week vs Last Week ── */}
+              {analytics?.analytics?.weeklyStats && (
+                <section className="analytics-section glass-card" style={{ marginTop: '24px' }}>
+                  <div className="section-header">
+                    <div>
+                      <p className="section-overline">Weekly comparison</p>
+                      <h2>This week vs last week</h2>
+                    </div>
+                  </div>
+                  <div className="stats-grid" style={{ marginTop: '16px' }}>
+                    {[
+                      {
+                        label: 'Lessons',
+                        thisWeek: analytics.analytics.weeklyStats.thisWeek.lessons,
+                        lastWeek: analytics.analytics.weeklyStats.lastWeek.lessons,
+                        delta: analytics.analytics.weeklyStats.lessonsDelta,
+                      },
+                      {
+                        label: 'Points',
+                        thisWeek: analytics.analytics.weeklyStats.thisWeek.points,
+                        lastWeek: analytics.analytics.weeklyStats.lastWeek.points,
+                        delta: analytics.analytics.weeklyStats.pointsDelta,
+                      },
+                      {
+                        label: 'Time',
+                        thisWeek: formatTime(analytics.analytics.weeklyStats.thisWeek.time),
+                        lastWeek: formatTime(analytics.analytics.weeklyStats.lastWeek.time),
+                        delta: null,
+                      },
+                    ].map((item) => (
+                      <article key={item.label} className="stat-card glass-card">
+                        <p className="stat-label" style={{ marginBottom: '10px', fontWeight: 600 }}>{item.label}</p>
+                        <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-end' }}>
+                          <div>
+                            <p className="stat-value" style={{ fontSize: '1.5rem' }}>{item.thisWeek}</p>
+                            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>This week</p>
+                          </div>
+                          <div>
+                            <p className="stat-value" style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.45)' }}>{item.lastWeek}</p>
+                            <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.72rem' }}>Last week</p>
+                          </div>
+                          {item.delta !== null && (
+                            <span style={{
+                              marginLeft: 'auto',
+                              fontSize: '0.85rem',
+                              fontWeight: 700,
+                              color: item.delta >= 0 ? '#4ade80' : '#f87171',
+                              background: item.delta >= 0 ? 'rgba(74,222,128,0.12)' : 'rgba(248,113,113,0.12)',
+                              padding: '3px 9px',
+                              borderRadius: '20px',
+                            }}>
+                              {item.delta >= 0 ? `+${item.delta}` : item.delta}
+                            </span>
+                          )}
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* ── Weak Topics ── */}
+              {analytics?.analytics?.weakSubjects?.length > 0 && (
+                <section className="analytics-section glass-card" style={{ marginTop: '24px', border: '1px solid rgba(248,113,113,0.25)' }}>
+                  <div className="section-header">
+                    <div>
+                      <p className="section-overline" style={{ color: '#f87171' }}>Needs attention</p>
+                      <h2>📉 Weak topics</h2>
+                    </div>
+                    <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem' }}>Score below 60%</span>
+                  </div>
+                  <div className="subject-grid" style={{ marginTop: '16px' }}>
+                    {analytics.analytics.weakSubjects.map((item) => (
+                      <article key={item.subject} className="subject-card glass-card" style={{ border: '1px solid rgba(248,113,113,0.2)' }}>
+                        <div className="subject-header">
+                          <div>
+                            <p>{item.subject}</p>
+                            <small>{item.completedLessons} of {item.totalLessons} lessons done</small>
+                          </div>
+                          <div className="subject-score" style={{ color: '#f87171' }}>
+                            {item.averageScore}%
+                          </div>
+                        </div>
+                        <div style={{ margin: '12px 0', height: '6px', borderRadius: '4px', background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
+                          <div style={{ height: '100%', width: `${item.averageScore}%`, borderRadius: '4px', background: 'linear-gradient(90deg, #f87171, #fbbf24)' }} />
+                        </div>
+                        <button
+                          className="ghost-button"
+                          style={{ width: '100%', marginTop: '8px', fontSize: '0.82rem' }}
+                          onClick={() => navigate('/lessons')}
+                        >
+                          Revisit topic →
+                        </button>
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* ── Solved / Unsolved per Subject ── */}
+              {analytics?.analytics?.subjectSolvedStats?.length > 0 && (
+                <section className="analytics-section glass-card" style={{ marginTop: '24px' }}>
+                  <div className="section-header">
+                    <div>
+                      <p className="section-overline">Completion map</p>
+                      <h2>✅ Solved vs unsolved</h2>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '16px' }}>
+                    {analytics.analytics.subjectSolvedStats.map((item) => {
+                      const pct = item.total > 0 ? Math.round((item.solved / item.total) * 100) : 0;
+                      const grad = getSubjectGradient(item.subject);
+                      return (
+                        <div key={item.subject}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '0.88rem' }}>
+                            <span style={{ color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>{item.subject}</span>
+                            <span style={{ color: 'rgba(255,255,255,0.5)' }}>
+                              <span style={{ color: grad.end, fontWeight: 700 }}>{item.solved}</span> / {item.total} lessons
+                              &nbsp;·&nbsp;
+                              <span style={{ color: '#f87171' }}>{item.unsolved} left</span>
+                            </span>
+                          </div>
+                          <div style={{ height: '8px', borderRadius: '6px', background: 'rgba(255,255,255,0.07)', overflow: 'hidden' }}>
+                            <div style={{
+                              height: '100%',
+                              width: `${pct}%`,
+                              borderRadius: '6px',
+                              background: `linear-gradient(90deg, ${grad.start}, ${grad.end})`,
+                              transition: 'width 0.6s ease',
+                            }} />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </section>
+              )}
 
               <section className="subjects-section">
                 <div className="section-title-row">
@@ -994,6 +1343,10 @@ const Dashboard = () => {
                 </div>
 
                 <div className="subject-grid">
+                  <DailyQuests 
+                    xpEarnedToday={timelineData.points.length > 1 ? (timelineData.totalPoints - (timelineData.points[timelineData.points.length-2]?.value || 0)) : 0} 
+                    lessonsCompletedToday={analytics?.stats?.lessonsCompleted || 0} 
+                  />
                   {subjectCards.length ? (
                     subjectCards.map((subject) => (
                       <article key={subject.title} className="subject-card glass-card">

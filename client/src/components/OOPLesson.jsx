@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
 import { Link } from 'react-router-dom';
+import CourseSidebar from './CourseSidebar';
 import { FaCheckCircle, FaArrowRight, FaObjectGroup, FaBookOpen, FaTrophy, FaCode, FaProjectDiagram, FaCrown } from 'react-icons/fa';
 
 const OOPLesson = () => {
@@ -120,7 +121,9 @@ const OOPLesson = () => {
       </div>
 
       {/* Lessons Grid */}
-      <div className="lessons-grid">
+      <div className="lesson-layout-wrapper" style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="lessons-grid">
         {lessons.map((lesson, index) => {
           const difficultyStyle = getDifficultyColor(lesson.difficulty);
           const isCompleted = isDone(lesson.id);
@@ -196,6 +199,16 @@ const OOPLesson = () => {
           );
         })}
       </div>
+        </div>
+        
+        <div className="desktop-sidebar" style={{ display: 'block', width: '0px', height: '0px', overflow: 'visible' }}>
+          <CourseSidebar 
+            coursePrefix={lessons[0]?.id ? lessons[0].id.split('-')[0] : 'course'} 
+            totalLessons={lessons.length} 
+            courseTitle={lessons[0]?.category || "Course"} 
+          />
+        </div>
+      </div>
 
       <style jsx>{`
         .oop-lesson {
@@ -230,7 +243,8 @@ const OOPLesson = () => {
 
         .header-icon {
           font-size: 3.5rem;
-          color: #e17055;
+          color: #e67e5f;
+          filter: drop-shadow(0 0 6px rgba(230,126,95,0.9));
           animation: float 3s ease-in-out infinite;
         }
 
@@ -286,7 +300,7 @@ const OOPLesson = () => {
 
         .progress-percent {
           font-weight: bold;
-          color: #e17055;
+          color: #e67e5f;
         }
 
         .progress-bar {
@@ -449,7 +463,8 @@ const OOPLesson = () => {
           align-items: center;
           gap: 8px;
           padding: 10px 20px;
-          background: #e17055;
+          background: linear-gradient(90deg,#f4a261,#e67e5f);
+          box-shadow: 0 0 15px rgba(255, 92, 122, 0.4);
           border: none;
           border-radius: 8px;
           color: white;
@@ -460,10 +475,10 @@ const OOPLesson = () => {
           justify-content: center;
         }
 
-        .course-card:hover .start-btn {
-          background: #d63031;
-          gap: 12px;
-        }
+.course-card:hover .start-btn {
+    background: linear-gradient(90deg,#F87171,#FF5C7A);
+    box-shadow: 0 0 25px rgba(255,92,122,.6);
+}
 
         .btn-arrow {
           transition: transform 0.3s ease;
@@ -482,6 +497,16 @@ const OOPLesson = () => {
         }
 
         /* Responsive Design */
+        @media (max-width: 1024px) {
+          .lesson-layout-wrapper {
+            flex-direction: column !important;
+          }
+          .desktop-sidebar {
+            width: 100% !important;
+            position: static !important;
+            margin-top: 32px;
+          }
+        }
         @media (max-width: 768px) {
           .oop-lesson {
             padding: 20px;

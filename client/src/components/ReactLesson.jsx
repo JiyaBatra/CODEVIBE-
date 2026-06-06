@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import CourseSidebar from './CourseSidebar';
 import API_BASE_URL from '../config/api';
 import { FaCheckCircle, FaArrowRight, FaReact, FaBookOpen, FaTrophy, FaRocket, FaCode, FaRoute } from 'react-icons/fa';
 
@@ -119,7 +120,9 @@ const ReactLesson = () => {
       </div>
 
       {/* Lessons Grid */}
-      <div className="lessons-grid">
+      <div className="lesson-layout-wrapper" style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="lessons-grid">
         {lessons.map((lesson, index) => {
           const difficultyStyle = getDifficultyColor(lesson.difficulty);
           const isCompleted = isDone(lesson.id);
@@ -195,6 +198,16 @@ const ReactLesson = () => {
           );
         })}
       </div>
+        </div>
+        
+        <div className="desktop-sidebar" style={{ display: 'block', width: '0px', height: '0px', overflow: 'visible' }}>
+          <CourseSidebar 
+            coursePrefix={lessons[0]?.id ? lessons[0].id.split('-')[0] : 'course'} 
+            totalLessons={lessons.length} 
+            courseTitle={lessons[0]?.category || "Course"} 
+          />
+        </div>
+      </div>
 
       <style jsx>{`
         .react-lesson {
@@ -230,6 +243,7 @@ const ReactLesson = () => {
         .header-icon {
           font-size: 3.5rem;
           color: #61dafb;
+          filter: drop-shadow(0 0 12px rgba(97, 218, 251, 0.9));
           animation: spin 10s linear infinite, float 3s ease-in-out infinite;
         }
 
@@ -305,7 +319,7 @@ const ReactLesson = () => {
         }
 
         .progress-fill {
-          background: linear-gradient(90deg, #61dafb, #4fa8d1);
+          background: linear-gradient(90deg, #61dafb, #38bdf8);
           height: 100%;
           border-radius: 10px;
           transition: width 0.5s ease;
@@ -421,6 +435,14 @@ const ReactLesson = () => {
           font-weight: 500;
         }
 
+        
+        .start-btn,
+        .start-btn *,
+        .course-card:hover .start-btn,
+        .course-card:hover .start-btn * {
+          color: #08173d;
+          }
+
         .course-title {
           color: white;
           font-size: 1.2rem;
@@ -457,7 +479,7 @@ const ReactLesson = () => {
           align-items: center;
           gap: 8px;
           padding: 10px 20px;
-          background: #61dafb;
+          background: linear-gradient(90deg,#61dafb,#38bdf8);
           border: none;
           border-radius: 8px;
           color: #1a1a2e;
@@ -490,6 +512,16 @@ const ReactLesson = () => {
         }
 
         /* Responsive Design */
+        @media (max-width: 1024px) {
+          .lesson-layout-wrapper {
+            flex-direction: column !important;
+          }
+          .desktop-sidebar {
+            width: 100% !important;
+            position: static !important;
+            margin-top: 32px;
+          }
+        }
         @media (max-width: 768px) {
           .react-lesson {
             padding: 20px;

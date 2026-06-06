@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Compiler from './Compiler';
 import { Link, useNavigate } from 'react-router-dom';
+import './Lesson.css';
 
 const HtmlLesson4 = () => {
   const [isCorrect, setIsCorrect] = useState(false);
@@ -15,48 +16,67 @@ const HtmlLesson4 = () => {
   };
 
   return (
-    <div className="lesson">
-      <h1>Lesson 4: Html Attribute</h1>
-        <p>
+    <div className="lesson-content" style={{ padding: "20px"}}>
+
+      <h1 className='lesson-title'>
+        Lesson 4: Html Attribute
+      </h1>
+
+      {/*SECTION 1*/}
+      <section className="lesson-section">
+
+        <h2 className="section-title">
+          Basic Structure
+        </h2>
+
+        <p className="lesson-text">
           An attribute is extra information added inside an HTML tag to give more control or settings to that tag.
+        </p>
+
+        <p className="lesson-text">
           It helps define the behaviour, appearance, or properties of HTML elements.
         </p>
-    
 
-        <h3>BASIC STRUCTURE</h3>
-        <pre>
-{`<tagname attribute="value">content</tagname>
+        <pre className="code-block">
+          {`<tagname attribute="value">content</tagname>
 
 For example:
 <a href="http://www.google.com">Visit Google</a>`}
         </pre>
-                  <br/>
-    <hr/>
+      </section>
 
-        <h3>Common HTML Attributes</h3>
-        <ul>
-          <li><dt>href</dt> <dd>Defines the URL for a link.</dd></li>
-          <li><dt>src</dt> <dd>Source of image/audio/video/file.</dd></li>
-          <li><dt>alt</dt> <dd>Alternate text for image.</dd></li>
-          <li><dt>title</dt> <dd>Tooltip text on hover.</dd></li>
-          <li><dt>id</dt> <dd>Unique identifier.</dd></li>
-          <li><dt>class</dt> <dd>Used to group elements.</dd></li>
-          <li><dt>style</dt> <dd>Inline CSS to style element.</dd></li>
-          <li><dt>target</dt> <dd>Defines where to open (_blank, _self).</dd></li>
-          <li><dt>type</dt> <dd>Type of input field.</dd></li>
-          <li><dt>value</dt> <dd>Sets default value.</dd></li>
-          <li><dt>placeholder</dt> <dd>Hint text inside input box.</dd></li>
-          <li><dt>disabled</dt> <dd>Disables the element.</dd></li>
-          <li><dt>readonly</dt> <dd>Makes input field read-only.</dd></li>
-          <li><dt>height</dt> <dd>Set height of image.</dd></li>
-          <li><dt>width</dt> <dd>Set width of image.</dd></li>
+      {/*SECTION 2 */}
+      <section className="lesson-section">
+        <h2 className="section-title">
+          Common HTML Attributes
+        </h2>
+
+        <ul className="lesson-list">
+          <li>href - Defines the URL for a link.</li>
+          <li>src - Source of image/audio/video/file.</li>
+          <li>alt - Alternate text for image.</li>
+          <li>title - Tooltip text on hover.</li>
+          <li>id - Unique identifier.</li>
+          <li>class - Used to group elements.</li>
+          <li>style - Inline CSS to style element.</li>
+          <li>target - Defines where to open (_blank, _self).</li>
+          <li>type - Type of input field.</li>
+          <li>value - Sets default value.</li>
+          <li>placeholder - Hint text inside input box.</li>
+          <li>disabled - Disables the element.</li>
+          <li>readonly - Makes input field read-only.</li>
+          <li>heigh - Set height of image.</li>
+          <li>width - Set width of image.</li>          
         </ul>
-                  <br/>
-    <hr/>
-    
-    <h2> 💻 Try Yourself, Follow Instructions!</h2>
+      </section>
 
-        <pre className="compiler-instruction">{`
+      {/*SECTION 3 */}
+      <section className="lesson-section">
+        <h2 className="section-title">
+          Try Yourself, Follow Instructions!
+        </h2>
+
+        <pre className="code-block">{`
 <!-- Instruction 1: Create an anchor tag with href="https://www.google.com" and text "Go to Google" -->
 <a href="https://www.google.com">Go to Google</a>
 
@@ -68,10 +88,8 @@ For example:
 
 <!-- Instruction 4: Create a paragraph with title="Hover Text" and text "This is a paragraph." -->
 <p title="Hover Text">This is a paragraph.</p>
-        `}</pre>
-
-      
-      
+        `}
+        </pre>
 
       <Compiler
         hint="💡 Review the lesson instructions carefully. Make sure your output matches exactly."
@@ -86,7 +104,42 @@ For example:
 
       {isCorrect && (
         <Link to="/HtmlLesson5">⏭ NEXT LESSON</Link>
-      )}
+      )}        
+      </section>
+       {/* Lesson Footer Navigation */}
+<div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "30px",
+    paddingTop: "20px",
+    borderTop: "1px solid #333"
+  }}
+>
+  <button
+    onClick={() => navigate('/HtmlLesson3')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    ← Previous Lesson
+  </button>
+
+  <button
+    onClick={() => navigate('/HtmlLesson5')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    Next Lesson →
+  </button>
+</div>
     </div>
   );
 };

@@ -57,13 +57,16 @@ const forgotPasswordLogic = async (req, res, next) => {
     };
 
     if (!emailUser || !emailPass) {
+      // Log reset link only in development for debugging
+      if (process.env.NODE_ENV !== "production") {
+        console.error("[DEV ONLY] Reset link:", resetLink);
+      }
       console.error("❌ EMAIL_USER or EMAIL_PASS is missing.");
-      console.error("Reset link:", resetLink);
 
       return res.status(500).json({
         success: false,
         message: "Email service is not configured. Please set EMAIL_USER and EMAIL_PASS in environment variables.",
-        resetLink,
+        // resetLink removed — exposing token in response bypasses email verification
       });
     }
 
@@ -90,14 +93,17 @@ const forgotPasswordLogic = async (req, res, next) => {
       await transporter.sendMail(mailOptions);
     } catch (mailError) {
       console.error("Nodemailer error:", mailError);
-      console.warn("Reset link:", resetLink);
+      // Log reset link only in development for debugging
+      if (process.env.NODE_ENV !== "production") {
+        console.warn("[DEV ONLY] Reset link:", resetLink);
+      }
 
       return res.status(500).json({
         success: false,
         message: "Failed to send reset email. Please verify your Gmail SMTP credentials and settings.",
         error: mailError.message,
         response: mailError.response || null,
-        resetLink,
+        // resetLink removed — exposing token in response bypasses email verification
       });
     }
 
