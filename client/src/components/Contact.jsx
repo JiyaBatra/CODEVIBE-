@@ -14,7 +14,7 @@ const Contact = () => {
   const handleSubmit = (e)=>{
     e.preventDefault();
     alert("Message Sent!");
-    e.target.reser();
+    e.target.reset();
   };
 
 
