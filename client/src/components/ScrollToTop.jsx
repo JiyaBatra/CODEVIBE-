@@ -33,7 +33,7 @@ const ScrollToTop = () => {
 
     return showButton ? (
         <button
-            className="scroll-to-top"
+            className="scroll-navigator__btn"
             onClick={scrollToTop}
             aria-label="Scroll to top"
         >
