@@ -3183,10 +3183,14 @@ select:focus {
   background: rgba(26, 31, 58, 0.95);
   padding: 20px;
   width: 280px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   border-radius: 12px;
   border: 2px solid rgba(255, 77, 109, 0.5);
   box-shadow: 0 0 20px rgba(255, 77, 109, 0.25);
   transition: all 0.3s ease;
+  min-height: 290px;
 }
 
 .testimonial-card:hover {
@@ -3199,14 +3203,19 @@ select:focus {
   font-size: 1rem;
   color: #b0b8d4;
   margin-bottom: 15px;
+
 }
 
-.testimonial-card h4 {
+.testimonial-feedback {
+  flex-grow: 1;
+}
+
+
+.testimonial-card h3{
   color: #ff85a1;
   font-weight: 600;
 
 }
-
 /* ===== VIEW REPORT PAGE ===== */
 
 .vr-wrapper {
