@@ -7,6 +7,7 @@ const CourseSidebar = ({ coursePrefix, totalLessons, courseTitle }) => {
   const [progressData, setProgressData] = useState(null);
   const [completedCount, setCompletedCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [popMessage, setPopMessage] = useState('');
 
   useEffect(() => {
@@ -76,11 +77,12 @@ const CourseSidebar = ({ coursePrefix, totalLessons, courseTitle }) => {
         .gami-fab-container {
           position: fixed;
           bottom: 20px;
-          left: 20px;
+          right: 20px;
+          left: auto;
           z-index: 9999;
           display: flex;
           flex-direction: column;
-          align-items: flex-start;
+          align-items: flex-end;
           gap: 12px;
         }
 
@@ -121,7 +123,8 @@ const CourseSidebar = ({ coursePrefix, totalLessons, courseTitle }) => {
         .gami-expanded-card {
           position: fixed;
           bottom: 100px;
-          left: 40px;
+          right: 40px;
+          left: auto;
           z-index: 9999;
           background: linear-gradient(145deg, rgba(20,20,30,0.95), rgba(30,30,45,0.95));
           border-radius: 24px;
@@ -131,26 +134,63 @@ const CourseSidebar = ({ coursePrefix, totalLessons, courseTitle }) => {
           width: 320px;
           backdrop-filter: blur(15px);
           animation: popScaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-          transform-origin: bottom left;
+          transform-origin: bottom right;
+          max-height: 80vh;
+          overflow-y: auto;
+          transition: width 0.3s ease, padding 0.3s ease;
         }
 
-        .gami-close-btn {
+        .gami-expanded-card.collapsed {
+          width: auto;
+          padding: 12px;
+        }
+
+        .gami-expanded-card.collapsed .gami-card-content {
+          display: none;
+        }
+
+        .gami-collapse-btn {
           position: absolute;
-          top: 15px;
-          right: 15px;
-          background: rgba(255, 77, 109, 0.15);
-          border: 1px solid rgba(255, 77, 109, 0.3);
-          color: #ff4d4d;
+          top: 12px;
+          left: 12px;
+          background: rgba(59, 130, 246, 0.2);
+          border: 1px solid rgba(59, 130, 246, 0.4);
+          color: #60a5fa;
+          width: 28px;
           height: 28px;
-          padding: 0 12px;
-          border-radius: 14px;
+          border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
           transition: all 0.2s ease;
-          font-size: 12px;
+          font-size: 14px;
+          padding: 0;
+        }
+
+        .gami-collapse-btn:hover {
+          background: rgba(59, 130, 246, 0.4);
+          border-color: rgba(59, 130, 246, 0.6);
+        }
+
+        .gami-close-btn {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          background: rgba(255, 77, 109, 0.15);
+          border: 1px solid rgba(255, 77, 109, 0.3);
+          color: #ff4d4d;
+          height: 28px;
+          width: 28px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          font-size: 14px;
           font-weight: 600;
+          padding: 0;
         }
 
         .gami-close-btn:hover {
@@ -191,12 +231,15 @@ const CourseSidebar = ({ coursePrefix, totalLessons, courseTitle }) => {
       {isOpen && (
         <>
           <div className="gami-backdrop" onClick={() => setIsOpen(false)}></div>
-          <div className="gami-expanded-card">
-            <button className="gami-close-btn" onClick={() => setIsOpen(false)}>
-              Close ✕
+          <div className={`gami-expanded-card ${isCollapsed ? 'collapsed' : ''}`}>
+            <button className="gami-collapse-btn" onClick={() => setIsCollapsed(!isCollapsed)} title={isCollapsed ? 'Expand' : 'Collapse'}>
+              {isCollapsed ? '→' : '←'}
+            </button>
+            <button className="gami-close-btn" onClick={() => setIsOpen(false)} title="Close">
+              ✕
             </button>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="gami-card-content" style={{ display: 'flex', flexDirection: 'column', gap: '24px', marginTop: '8px' }}>
             {/* Course Progress Section */}
             <div>
               <h4 style={{ color: 'white', margin: '0 0 16px 0', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '8px' }}>

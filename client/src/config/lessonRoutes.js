@@ -64,6 +64,36 @@ export const lessonGroups = [
     })),
   },
   {
+    course: "Graphs",
+    key: "graph",
+    modulePath: "/GraphLesson",
+    lessons: Array.from({ length: 10 }, (_, index) => ({
+      title: `Graph Lesson ${index + 1}`,
+      path: `/GraphLesson/${index + 1}`,
+      lessonId: `graph-lesson-${index + 1}`,
+    })),
+  },
+  {
+    course: "Trees",
+    key: "tree",
+    modulePath: "/TreeLesson",
+    lessons: Array.from({ length: 10 }, (_, index) => ({
+      title: `Tree Lesson ${index + 1}`,
+      path: `/TreeLesson/${index + 1}`,
+      lessonId: `tree-lesson-${index + 1}`,
+    })),
+  },
+  {
+    course: "Dynamic Programming",
+    key: "dp",
+    modulePath: "/DPLesson",
+    lessons: Array.from({ length: 10 }, (_, index) => ({
+      title: `DP Lesson ${index + 1}`,
+      path: `/DPLesson/${index + 1}`,
+      lessonId: `dp-lesson-${index + 1}`,
+    })),
+  },
+  {
     course: "Express",
     key: "express",
     modulePath: "/ExpressLesson",
