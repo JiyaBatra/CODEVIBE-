@@ -36,11 +36,11 @@ const Contact = () => {
           <p>Fill the form below and we'll get back to you as soon as possible</p>
           <form onSubmit={handleSubmit} className='message-input'>
             <div className='message-input-top'>
-              <input type="text" placeholder='Enter your full name' required/>
-              <input type="email" placeholder='Enter you email' required/>
+              <input type="text" placeholder='Enter your full name' aria-label='Full Name' required/>
+              <input type="email" placeholder='Enter your email' aria-label='Email Address' required/>
             </div>
-            <input type="text" placeholder='Subject' required/>
-            <textarea type="text" placeholder='Message' required/>
+            <input type="text" placeholder='Subject' aria-label='Subject' required/>
+            <textarea placeholder='Message' aria-label='Message' required/>
             <button type='submit'>
               <FiSend />
               Send Message
