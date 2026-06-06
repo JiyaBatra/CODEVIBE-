@@ -1,10 +1,10 @@
 [build]
-  command = "npm run build --workspace=client"
-  publish = "client/dist"
+  base = "client"
+  command = "npm run build"
+  publish = "dist"
 
 [build.environment]
   NODE_VERSION = "20"
-  MONGOMS_DISABLE_POSTINSTALL = "1"
 
 [[headers]]
   for = "/*"
