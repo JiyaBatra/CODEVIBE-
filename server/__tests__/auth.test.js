@@ -36,7 +36,7 @@ describe("POST /api/auth/register", () => {
         year: "3rd Year",
       });
 
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(201);
     expect(res.body.success).toBe(true);
     expect(res.body).toHaveProperty("token");
     expect(res.body.user).toHaveProperty("username", "testuser");
