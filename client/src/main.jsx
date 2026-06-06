@@ -27,6 +27,7 @@ import Certificate from './components/Certificate.jsx';
 import ViewReport from './components/ViewReport.jsx';
 import DynamicProgressSidebar from './components/DynamicProgressSidebar.jsx';
 import Leaderboard from './components/Leaderboard.jsx';
+import Flashcard from './components/Flashcard.jsx';
 import {
   AuthProvider,
   PrivateRoute,
@@ -146,6 +147,7 @@ import DsaLesson9 from './components/DsaLesson9.jsx';
 import DsaLesson10 from './components/DsaLesson10.jsx';
 import DsaLesson11 from './components/DsaLesson11.jsx';
 import DsaLesson12 from './components/DsaLesson12.jsx';
+import DsaLesson13 from './components/DsaLesson13.jsx';
 
 
 // Express Lessons
@@ -223,6 +225,7 @@ import ScrollNavigator from "./components/common/ScrollNavigator";
 import GlobalBackNav from "./components/common/GlobalBackNav.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import { SearchProvider } from "./context/SearchContext.jsx";
+import  Contact  from "./components/Contact.jsx";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -244,6 +247,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/ResetPassword" element={<ResetPassword />} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/flashcards" element={<Flashcard />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/report/:email" element={<ViewReport />} />
@@ -254,6 +258,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/CssLesson" element={<CssLesson />} />
           <Route path="/JsLesson" element={<JsLesson />} />
           <Route path="/Compiler" element={<Compiler />} />
+          <Route path="/contact" element={<Contact />} />
 
           {/* HTML Lessons */}
           <Route path="/HtmlLesson" element={<HtmlLesson />} />
@@ -365,6 +370,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/DsaLesson10" element={<DsaLesson10 />} />
           <Route path="/DsaLesson11" element={<DsaLesson11 />} />
           <Route path="/DsaLesson12" element={<DsaLesson12 />} />
+          <Route path="/DsaLesson13" element={<DsaLesson13 />} />
 
 
           {/* Express Lessons 1–10 */}

@@ -26,9 +26,13 @@ jobs:
               ? context.payload.issue.number
               : context.payload.pull_request.number;
 
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: issueNumber,
-              body: message
-            });
+            try {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body: message
+              });
+            } catch (error) {
+              core.warning(`Could not post auto-reply comment (fork PR — expected): ${error.message}`);
+            }

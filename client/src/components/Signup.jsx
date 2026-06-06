@@ -23,25 +23,23 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
-  // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     setResponseMsg("");
 
-    // Validate year selection
+    // 🔐 Frontend validations
     if (!formData.year) {
       setResponseMsg("Please select your year");
       return;
     }
 
-    // Password Match Validation
     if (formData.password !== formData.confirmPassword) {
       setResponseMsg("Passwords do not match");
       return;
@@ -50,127 +48,97 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(
+      const res = await axios.post(
         `${API_BASE_URL}/api/auth/register`,
         {
-          username: formData.username,
-          email: formData.email,
-          college: formData.college,
+          username: formData.username.trim(),
+          email: formData.email.trim().toLowerCase(),
+          college: formData.college.trim(),
           year: formData.year,
           password: formData.password,
         }
       );
 
-      console.log("✅ Signup successful:", response.data);
+      const data = res.data;
 
-      if (response.data.success) {
-        setResponseMsg(
-          response.data.message || "Account created successfully"
-        );
+      if (data.success) {
+        setResponseMsg(data.message || "Account created successfully 🎉");
 
         setTimeout(() => {
           navigate("/login", { state: location.state });
-        }, 1500);
+        }, 1200);
       } else {
-        setResponseMsg(
-          response.data.message || "Signup failed"
-        );
+        // backend rejected but 200 OK case
+        setResponseMsg(data.message || "Signup failed");
       }
     } catch (error) {
-      console.error(
-        "❌ Signup error:",
-        error.response?.data || error.message
-      );
+      console.error("❌ Signup error:", error.response?.data || error.message);
 
-      setResponseMsg(
+      const msg =
         error.response?.data?.message ||
-        "Server error. Please try again."
-      );
+        "Something went wrong. Please try again.";
+
+      setResponseMsg(msg);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section className="login-section">
+    <section className="login-section" id="signup">
       <div className="login-container">
 
-        {/* Left Side Image */}
+        {/* Left Image */}
         <div className="login-image">
           <img src={registerImage} alt="Signup" />
         </div>
 
-        {/* Signup Form */}
+        {/* Form */}
         <div className="login-card">
           <form className="login-form" onSubmit={handleSubmit}>
 
             <h1>Create Account</h1>
 
             {/* Username */}
-            <label htmlFor="username">
-              USERNAME:
-            </label>
-
+            <label>USERNAME:</label>
             <input
-              type="text"
-              id="username"
               name="username"
-              placeholder="Enter username"
               value={formData.username}
               onChange={handleChange}
+              placeholder="Enter username"
               required
             />
 
-            {/* College Name */}
-            <label htmlFor="college">
-              COLLEGE NAME:
-            </label>
-
+            {/* College */}
+            <label>COLLEGE NAME:</label>
             <input
-              type="text"
-              id="college"
               name="college"
-              placeholder="Enter college name"
               value={formData.college}
               onChange={handleChange}
+              placeholder="Enter college name"
               required
             />
 
             {/* Year */}
-            <label htmlFor="year">
-              YEAR:
-            </label>
-
+            <label>YEAR:</label>
             <Dropdown
               value={formData.year}
-              onChange={(val) => setFormData({ ...formData, year: val })}
+              onChange={(val) =>
+                setFormData((prev) => ({ ...prev, year: val }))
+              }
               options={["1st Year", "2nd Year", "3rd Year", "4th Year"]}
               placeholder="Select Year"
               style={{ width: "100%" }}
-              triggerStyle={{
-                padding: "1rem",
-                borderRadius: "4px",
-                border: "2px solid var(--primary-red)",
-                background: "#0f1419",
-                color: formData.year ? "var(--text-primary)" : "#666",
-                fontSize: "1rem",
-                width: "100%",
-                textAlign: "left"
-              }}
             />
 
             {/* Email */}
-            <label htmlFor="email">
-              EMAIL ID:
-            </label>
-
+            <label>EMAIL:</label>
             <input
               type="email"
-              id="email"
               name="email"
-              placeholder="Enter email"
               value={formData.email}
               onChange={handleChange}
+              placeholder="Enter email"
               required
             />
 
@@ -180,10 +148,10 @@ const Signup = () => {
               label="PASSWORD:"
               value={formData.password}
               onChange={(e) =>
-                setFormData({
-                  ...formData,
+                setFormData((prev) => ({
+                  ...prev,
                   password: e.target.value,
-                })
+                }))
               }
             />
 
@@ -193,33 +161,26 @@ const Signup = () => {
               label="CONFIRM PASSWORD:"
               value={formData.confirmPassword}
               onChange={(e) =>
-                setFormData({
-                  ...formData,
+                setFormData((prev) => ({
+                  ...prev,
                   confirmPassword: e.target.value,
-                })
+                }))
               }
             />
 
-            {/* Submit Button */}
+            {/* Submit */}
             <button type="submit" disabled={loading}>
-              {loading
-                ? "CREATING ACCOUNT..."
-                : "CREATE ACCOUNT"}
+              {loading ? "CREATING ACCOUNT..." : "CREATE ACCOUNT"}
             </button>
 
-            {/* Response Message */}
+            {/* Message */}
             {responseMsg && (
-              <p
-                style={{
-                  color: "white",
-                  marginTop: "10px",
-                }}
-              >
+              <p style={{ color: "#fff", marginTop: "10px" }}>
                 {responseMsg}
               </p>
             )}
 
-            {/* Login Link */}
+            {/* Login */}
             <p>
               Already have an account?{" "}
               <Link to="/login" state={location.state}>

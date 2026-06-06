@@ -33,7 +33,9 @@ const DSALesson = () => {
     { id: 'dsa-lesson-9', title: "Stack (Detailed)", category: "Linear DS", lessons: "1 lesson", description: "Deep dive into stack implementation and applications.", difficulty: "Intermediate", duration: "30 mins" },
     { id: 'dsa-lesson-10', title: "Queue (Detailed)", category: "Linear DS", lessons: "1 lesson", description: "Comprehensive queue implementation and types.", difficulty: "Intermediate", duration: "30 mins" },
     { id: 'dsa-lesson-11', title: "Linked List (Detailed)", category: "Linear DS", lessons: "1 lesson", description: "Master linked list operations and problem-solving.", difficulty: "Advanced", duration: "45 mins" },
-    { id: 'dsa-lesson-12', title: "Stack (Implementation)", category: "Linear DS", lessons: "1 lesson", description: "Build a complete stack from scratch with all operations.", difficulty: "Advanced", duration: "35 mins", isProject: false }
+    { id: 'dsa-lesson-12', title: "Stack (Implementation)", category: "Linear DS", lessons: "1 lesson", description: "Build a complete stack from scratch with all operations.", difficulty: "Advanced", duration: "35 mins", isProject: false },
+    { id: 'dsa-lesson-13', title: "Important Leetcode Questions", category: "Linear DS", lessons: "1 lesson", description: "Inteview Asked DSA Question", difficulty: "Advanced", duration: "60 min mins"}
+
   ];
 
   const getDifficultyColor = (difficulty) => {

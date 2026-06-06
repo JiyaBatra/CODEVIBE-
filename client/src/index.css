@@ -49,7 +49,7 @@ a:hover {
 
 /* Header Styling - Gaming Minecraft Inspired */
 header {
-  background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #050710 100%);
   color: white;
   padding: 1rem 2.5rem;
   display: grid;
@@ -57,10 +57,9 @@ header {
   grid-template-rows: auto auto;
   align-items: center;
   gap: 0.5rem 2rem;
-  border-bottom: 3px solid #ff4d6d;
+  /* border-bottom: 3px solid #ff4d6d;
   box-shadow: 0 0 30px rgba(255, 77, 109, 0.5),
-    inset 0 0 20px rgba(255, 77, 109, 0.1);
-  position: relative;
+  inset 0 0 20px rgba(255, 77, 109, 0.1); */
   overflow-x: hidden;
   z-index: 99998;
 }
@@ -142,21 +141,26 @@ header img:hover {
 .header-nav {
   display: flex;
   gap: 0.75rem;
-  z-index: 1;
   align-items: center;
   grid-column: 3;
   grid-row: 1;
-  justify-self: end;
+  justify-content: space-between;
+  background-color: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
+}
+
+.header-navlink{
+  display: flex;
+  gap: 10px;
 }
 
 .nav-link {
   text-decoration: none;
   color: white;
   font-weight: 600;
-  background: linear-gradient(135deg, rgba(255, 77, 109, 0.25), rgba(255, 133, 161, 0.25));
-  border: 2px solid rgba(255, 77, 109, 0.6);
+  background: transparent;
+  border: none;
   padding: 0.55rem 1rem;
-  border-radius: 8px;
+  border-radius: 0;
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -183,18 +187,57 @@ header img:hover {
 }
 
 .nav-link:hover {
-  background: linear-gradient(135deg, rgba(255, 77, 109, 0.6), rgba(255, 133, 161, 0.6));
-  border-color: #ff4d6d;
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 0 20px rgba(255, 77, 109, 0.8);
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+  background: transparent;
+  border-color: transparent;
+  transform: none;
+  box-shadow: none;
+  text-shadow: none;
+  filter: none;
+}
+
+.nav-link {
+  position: relative;
+  text-decoration: none;
+  color: white;
+  padding: 10px 16px;
+}
+
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 1px;
+  width: 70%;
+  height: 4px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg , #e50965);
+  border-radius: 999px;
+  opacity: 0.85;
+  transition: width 0.25s ease, height 0.25s ease, background 0.25s ease, opacity 0.25s ease, box-shadow 0.25s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 82%;
+  height: 4px;
+  opacity: 1;
+  background: linear-gradient(90deg, #ff5fa3, #ffd3e5);
+  box-shadow: 0 0 8px rgba(255, 140, 190, 0.35);
+}
+
+.nav-link:hover {
+  color: #ffe6ef;
 }
 
 /* Hamburger Button - Hidden on larger screens */
 .hamburger-btn {
   display: none;
-  background: linear-gradient(135deg, rgba(255, 77, 109, 0.2), rgba(255, 133, 161, 0.2));
-  border: 2px solid rgba(255, 77, 109, 0.5);
+  background: transparent;
+  border: 2px solid transparent;
   color: white;
   width: 45px;
   height: 45px;
@@ -205,7 +248,7 @@ header img:hover {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 10px rgba(255, 77, 109, 0.3);
+  box-shadow: none;
   padding: 0;
   margin: 0;
 }
@@ -216,10 +259,11 @@ header img:hover {
 }
 
 .hamburger-btn:hover {
-  background: linear-gradient(135deg, rgba(255, 77, 109, 0.5), rgba(255, 133, 161, 0.5));
-  border-color: #ff4d6d;
-  box-shadow: 0 0 15px rgba(255, 77, 109, 0.8);
-  transform: scale(1.08);
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  transform: none;
+  filter: none;
 }
 
 .hamburger-btn:active {
@@ -866,6 +910,12 @@ h3 {
   .footer-brand-title {
     font-size: 1.5rem;
   }
+  .footer-brand,
+  .footer-links,
+  .footer-social {
+    align-items: center;
+    text-align: center;
+  }
 }
 
 /* Progress Container */
@@ -1213,7 +1263,7 @@ h3 {
 }
 
 /* Buttons - Gaming Style */
-button {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item) {
   background: linear-gradient(135deg, var(--primary-red), var(--secondary-pink));
   border: 2px solid transparent;
   color: var(--white);
@@ -1231,7 +1281,7 @@ button {
   letter-spacing: 0.5px;
 }
 
-button::before {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item)::before {
   content: '';
   position: absolute;
   top: 0;
@@ -1243,23 +1293,23 @@ button::before {
   z-index: 1;
 }
 
-button:hover::before {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):hover::before {
   left: 100%;
 }
 
-button:hover {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):hover {
   transform: translateY(-3px) scale(1.05);
   background: linear-gradient(135deg, #ff6b81, #ff99ac);
   box-shadow: 0 0 25px rgba(255, 77, 109, 0.8);
   border-color: rgba(255, 255, 255, 0.4);
 }
 
-button:active {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):active {
   transform: translateY(-1px) scale(1.02);
   box-shadow: 0 0 15px rgba(255, 77, 109, 0.6);
 }
 
-button:disabled {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):disabled {
   background: linear-gradient(135deg, #666, #999);
   box-shadow: 0 0 10px rgba(100, 100, 100, 0.4);
   cursor: not-allowed;
@@ -1267,8 +1317,36 @@ button:disabled {
   transform: none;
 }
 
-button:disabled:hover {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):disabled:hover {
   transform: none;
+}
+
+/* Navbar buttons must stay transparent and flat */
+.header-nav button.nav-link,
+.header-nav .nav-link,
+.mobile-nav button.nav-link,
+.mobile-nav .nav-link,
+.dropdown-btn {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  outline: none !important;
+  appearance: none !important;
+  margin: 0 !important;
+  padding: 0.55rem 1rem !important;
+  transform: none !important;
+}
+
+.header-nav button.nav-link:hover,
+.header-nav .nav-link:hover,
+.mobile-nav button.nav-link:hover,
+.mobile-nav .nav-link:hover,
+.dropdown-btn:hover {
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
 
 /* Compiler - Gaming IDE Style */
@@ -1321,6 +1399,173 @@ textarea::placeholder {
   box-shadow: inset 0 0 20px rgba(255, 77, 109, 0.15);
   min-height: 150px;
   color: var(--text-primary);
+}
+/* =========================================
+   DROPDOWN CONTAINER
+========================================= */
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* =========================================
+   PROJECTS BUTTON
+========================================= */
+
+.dropdown-btn,
+.dropdown-btn:hover,
+.dropdown-btn:focus,
+.dropdown-btn:active,
+.dropdown-btn.active {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  border-color: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+  outline: none !important;
+  padding: 0.55rem 1rem !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+
+.dropdown-btn::before,
+.dropdown-btn:hover::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* Active state when dropdown is open */
+
+.dropdown-btn.active {
+  box-shadow: none;
+  filter: none;
+}
+
+/* =========================================
+   ARROW
+========================================= */
+
+.dropdown-arrow {
+  transition: transform 0.3s ease;
+  font-size: 14px;
+}
+
+.rotate-arrow {
+  transform: rotate(180deg);
+}
+
+/* =========================================
+   DROPDOWN PANEL
+========================================= */
+
+.dropdown-content {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 280px;
+
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #050710 100%);
+  backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+
+  padding: 8px;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+
+  z-index: 9999;
+
+  animation: none;
+}
+
+/* =========================================
+   DROPDOWN POINTER
+========================================= */
+
+.dropdown-content::before {
+  content: "";
+
+  position: absolute;
+
+  top: -7px;
+  left: 50%;
+
+  width: 14px;
+  height: 14px;
+
+  background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #050710 100%);
+
+  transform: translateX(-50%) rotate(45deg);
+
+  border-left: 1px solid rgba(255, 95, 135, 0.25);
+  border-top: 1px solid rgba(255, 95, 135, 0.25);
+}
+
+/* =========================================
+   MENU ITEMS
+========================================= */
+
+.dropdown-item {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 14px 18px;
+
+  background: transparent;
+  border: none;
+
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+
+.dropdown-item:hover {
+  background: transparent;
+  color: white;
+}
+
+/* Icons */
+
+.dropdown-item svg {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* =========================================
+   OPEN ANIMATION
+========================================= */
+
+@keyframes dropdownOpen {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
 .output h3 {
@@ -1831,9 +2076,10 @@ select:focus {
     justify-content: center;
     font-size: 1.25rem;
     padding: 1rem 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-    border-width: 2px;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
   }
 }
 
@@ -2223,10 +2469,11 @@ select:focus {
 .site-header {
   background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
   color: white;
-  padding: 1.5rem 2rem;
+  /* padding: 1.5rem 2rem; */
   border-bottom: 3px solid #ff4d6d;
   box-shadow: 0 0 30px rgba(255, 77, 109, 0.5),
     inset 0 0 20px rgba(255, 77, 109, 0.1);
+    padding: 20px;
   position: relative;
   overflow: visible;
   /* allow dropdown to escape */
@@ -2234,7 +2481,7 @@ select:focus {
   flex-direction: column;
   gap: 0.75rem;
   width: 100%;
-  z-index: 99998;
+  margin-top: 30px;
 }
 
 /* Animated glow layer */
@@ -2253,9 +2500,25 @@ select:focus {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: relative;
-  z-index: 1;
+  position: fixed;
+  top:0;
+  left: 0;
+  z-index: 999999;
   width: 100%;
+  background: linear-gradient(
+    135deg,
+    #0a0e27 0%,
+    #1a1f3a 50%,
+    #0a0e27 100%
+  );
+
+  padding: 1rem 2.5rem;
+  border-bottom: 3px solid #ff4d6d;
+
+}
+.header-title-row,
+.header-search-row {
+  margin-top: 80px; 
 }
 
 /* Logo */
@@ -2420,16 +2683,10 @@ select:focus {
   justify-content: center;
   font-size: 1.2rem;
   padding: 1rem 1.5rem;
-}
-
-/* ── Row 2: Title ──────────────────────────────────────────── */
-.header-title-row {
-  text-align: center;
-  z-index: 1;
-  position: relative;
-}
-
-.site-header h1 {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
   font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 900;
   background: linear-gradient(135deg, #ff4d6d, #ff85a1, #ff6b81);
@@ -2465,7 +2722,6 @@ select:focus {
   justify-content: center;
   align-items: center;
   position: relative;
-  z-index: 10;
   width: 100%;
 }
 
@@ -3075,4 +3331,128 @@ select:focus {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.ham-nav{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.contact-heading{
+  color: var(--primary-red);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.contact-header{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.message-box{
+  border: 1px solid pink;
+  display: flex;
+  flex-direction: column;
+  width: 700px;
+  padding: 20px;
+  border-radius: 10px;
+  gap: 10px;
+}
+.message-box h4{
+  font-size: 20px;
+  color: var(--primary-red)
+}
+.message-input{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.message-input-top{
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+.message-input-top input {
+  width: 100%;
+}
+.social-flex{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.social-flex a{
+   display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 20px;
+  font-weight: 500;
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 77, 109, 0.25);
+  background: rgba(255, 77, 109, 0.05);
+  transition: all 0.3s ease;
+}
+.social-flex a:hover {
+  color: white;
+  border-color: var(--primary-red);
+  background: rgba(255, 77, 109, 0.15);
+  box-shadow: 0 0 12px rgba(255, 77, 109, 0.35);
+  transform: translateY(-2px);
+  text-shadow: 0 0 8px rgba(255, 77, 109, 0.4);
+}
+
+.social-flex a svg {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.contact-main{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.other-contact{
+  border: 1px solid pink;
+  display: flex;
+  flex-direction: column;
+  width: 700px;
+  padding: 20px;
+  border-radius: 10px;
+  gap: 10px;
+}
+
+.contact-page{
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin: 40px;
+}
+
+.other-contact h4{
+    font-size: 20px;
+  color: var(--primary-red)
+}
+.other-contact h5{
+    font-size: 18px;
+  color: var(--primary-red)
+}
+
+.contact-feedback{
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 77, 109, 0.25);
+  background: rgba(255, 77, 109, 0.05);
+  transition: all 0.3s ease;
+}
+
+.message-box input{
+  height: 20px;
 }

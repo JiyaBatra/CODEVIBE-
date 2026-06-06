@@ -138,7 +138,7 @@ export default function ProjectGenerator() {
   };
 
   return (
-    <section className="cv-reference-master-section">
+    <section id="project-generator" className="cv-reference-master-section">
       
       {/* Synchronized Header Container */}
       <div className="cv-reference-header-block">

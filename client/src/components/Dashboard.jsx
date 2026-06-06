@@ -1031,39 +1031,39 @@ const Dashboard = () => {
               </div>
 
               <div className="profile-details">
-                <div>
-                  <span>Joined</span>
-                  <strong>{analytics?.profile?.joinedAt ? new Date(analytics.profile.joinedAt).toLocaleDateString() : "—"}</strong>
+                <div className="profile-detail-item">
+                  <span className="detail-label">Joined</span>
+                  <strong className="detail-value">{analytics?.profile?.joinedAt ? new Date(analytics.profile.joinedAt).toLocaleDateString() : "—"}</strong>
                 </div>
                 <StreakWeekVisualizer events={analytics?.analytics?.timelines?.points || []} streak={analytics?.stats?.streak || 0} />
 
-                <div className="profile-details-row" style={{ marginTop: '1rem' }}>
-                  <div>
-                    <span>Current Streak</span>
-                    <strong>{formatNumber(analytics?.stats?.streak)}</strong>
-                  </div>
-                  <div>
-                    <span>Longest Streak</span>
-                    <strong>{formatNumber(analytics?.stats?.longestStreak || 0)}</strong>
-                  </div>
-                  <div className="profile-clock">
-                    <span>Clock</span>
-                    <strong>{currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</strong>
-                  </div>
+                <div className="profile-detail-item">
+                  <span className="detail-label">Current Streak</span>
+                  <strong className="detail-value">{formatNumber(analytics?.stats?.streak)} days</strong>
+                </div>
+                <div className="profile-detail-item">
+                  <span className="detail-label">Longest Streak</span>
+                  <strong className="detail-value">{formatNumber(analytics?.stats?.longestStreak || 0)} days</strong>
+                </div>
+                <div className="profile-detail-item">
+                  <span className="detail-label">Local Time</span>
+                  <strong className="detail-value clock-value">{currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</strong>
                 </div>
               </div>
 
-              <div className="profile-actions">
+              <div className={`profile-actions ${editMode ? "profile-actions--edit" : ""}`}>
                 <button className="ghost-button" onClick={() => setEditMode((prev) => !prev)}>
                   {editMode ? "Cancel" : "Edit Profile"}
                 </button>
-                <button
-                  className="primary-button"
-                  onClick={handleSaveProfile}
-                  disabled={!editMode || saving}
-                >
-                  {saving ? "Saving..." : "Save profile"}
-                </button>
+                {editMode && (
+                  <button
+                    className="primary-button"
+                    onClick={handleSaveProfile}
+                    disabled={saving}
+                  >
+                    {saving ? "Saving..." : "Save profile"}
+                  </button>
+                )}
               </div>
 
               {editMode && (

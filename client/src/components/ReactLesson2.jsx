@@ -38,11 +38,40 @@ const element = <h1>Hello JSX!</h1>;`}
         onSuccess={handleSuccess}
       />
 
-      {isCorrect && (
-        <Link to="/ReactLesson3" onClick={goToNextLesson} className="next-lesson">
-          ⏭ NEXT LESSON
-        </Link>
-      )}
+       {/* Lesson Footer Navigation */}
+<div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "30px",
+    paddingTop: "20px",
+    borderTop: "1px solid #333"
+  }}
+>
+  <button
+    onClick={() => navigate('/ReactLesson1')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    ← Previous Lesson
+  </button>
+
+  <button
+    onClick={() => navigate('/ReactLesson3')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    Next Lesson →
+  </button>
+</div>
     </div>
   );
 };

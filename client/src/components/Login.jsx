@@ -86,7 +86,7 @@ const Login = () => {
   };
 
   return (
-    <section className="login-section">
+    <section className="login-section" id="login">
       <div className="login-container">
         
         <div className="login-image">

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import API_BASE_URL from "./config/api";
 import Glossary from "./components/Glossary";
+import Flashcard from './components/Flashcard';
 
 const App = () => {
   const [data, setData] = useState("");

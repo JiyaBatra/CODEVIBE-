@@ -1,5 +1,7 @@
 // controller/certificate/certificatecontroller.js
-const Progress = require('../../models/progress');
+const Progress = require("../../models/progress");
+
+const PASS_MARK = 50;
 
 // Maps display course name → lesson-ID prefix
 const getCoursePrefix = (courseName) => {
@@ -8,7 +10,6 @@ const getCoursePrefix = (courseName) => {
     .trim()
     .replace(/\s+/g, "")
     .replace(/\./g, "");
-
   const map = {
     javascript: "js-",
     reactjs: "react-",
@@ -21,7 +22,6 @@ const getCoursePrefix = (courseName) => {
     html: "html-",
     css: "css-",
   };
-
   return map[key] || `${key}-`;
 };
 
@@ -40,7 +40,6 @@ exports.getCertificateInfo = async (req, res) => {
     if (!email) {
       return res.status(401).json({ message: "Unauthorized user" });
     }
-
     if (!courseName) {
       return res.status(400).json({ message: "courseName required" });
     }
@@ -50,27 +49,38 @@ exports.getCertificateInfo = async (req, res) => {
 
     const prefix = getCoursePrefix(courseName);
 
-    // Use prefix-based lookup so "JavaScript" → scores["js-lesson-1"] etc.
     const scoresObj = progress.scores instanceof Map
       ? Object.fromEntries(progress.scores)
       : (progress.scores?.toObject ? progress.scores.toObject() : progress.scores || {});
 
-  const courseScores = Object.entries(scoresObj)
-    .filter(([lessonId]) => lessonId.toLowerCase().startsWith(prefix))
-    .map(([, val]) => val);
+    const courseScores = Object.entries(scoresObj)
+      .filter(([lessonId]) => lessonId.toLowerCase().startsWith(prefix))
+      .map(([, val]) => val);
 
+    const score = courseScores.length
+      ? Math.round(
+        courseScores.reduce((a, b) => a + b, 0) /
+          courseScores.length,
+      )
+      : 0;
 
-     const score = courseScores.length
-       ? Math.round(
-           courseScores.reduce((a, b) => a + b, 0) /
-           courseScores.length
-         )
-       : 0;
-
-    // Count only lessons that belong to this course
     const completedLessons = (progress.completedLessons || []).filter((id) =>
-      id.toLowerCase().startsWith(prefix)
+      id.toLowerCase().startsWith(prefix),
     ).length;
+
+    // Enforce minimum completion before issuing certificate
+    if (completedLessons === 0) {
+      return res.status(403).json({
+        message: "You must complete at least one lesson in this course to earn a certificate.",
+      });
+    }
+
+    // Enforce minimum passing score before issuing certificate
+    if (score < PASS_MARK) {
+      return res.status(403).json({
+        message: `You need a minimum score of ${PASS_MARK}% to earn a certificate. Your current score is ${score}%.`,
+      });
+    }
 
     const feedbackMessage = calculateFeedback(score);
 
@@ -80,8 +90,9 @@ exports.getCertificateInfo = async (req, res) => {
       score,
       completedLessons,
       feedbackMessage,
-      certificateImageUrl: "url or base64 of generated cert image"
+      certificateImageUrl: "url or base64 of generated cert image",
     });
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

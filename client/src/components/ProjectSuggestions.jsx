@@ -59,10 +59,11 @@ const ProjectSuggestions = () => {
 
   return (
     <section
+      id="project-suggestions"
       style={{
         marginTop: "40px",
         marginBottom: "80px",
-        padding: "40px",
+        padding: "20px 15px",
         borderRadius: "24px",
         background: "linear-gradient(135deg, rgba(20,20,40,0.95), rgba(10,10,30,0.95))",
         border: "1px solid rgba(255, 0, 128, 0.3)",

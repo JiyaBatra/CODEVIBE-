@@ -7,7 +7,8 @@ import FAQ from "./FAQ";
 import Testimonials from "./testimonials";
 import EmptyState from "./EmptyState";
 import { FaBookOpen, FaHeart, FaSearch } from "react-icons/fa";
-import { useDebounce } from '../hooks/useDebounce'; // added
+import { useDebounce } from '../hooks/useDebounce';
+import { useSearch } from '../context/SearchContext.jsx';
 
 // Images
 import htmlLogo from '../assets/htmlLogo.png';
@@ -24,8 +25,8 @@ import axios from 'axios';
 import API_BASE_URL from '../config/api';
 
 const Courses = () => {
-  const [search, setSearch] = useState('');
-  const debouncedSearch = useDebounce(search, 350); // added
+  const { query, setQuery } = useSearch();
+  const debouncedQuery = useDebounce(query, 350);
   const [user, setUser] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [wishlist, setWishlist] = useState([]);
@@ -57,15 +58,62 @@ const Courses = () => {
   }, []);
   const location = useLocation();
   useEffect(() => {
+    if (location.state?.scrollToTop) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     if (location.state?.scrollToFaq) {
       const element = document.querySelector('.faq-section');
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       } else {
-        // Fallback to checking by component tag if wrapper class varies
         document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' });
       }
-      // Clear navigation history state so it doesn't trigger on a normal page reload
+    }
+
+    if (location.state?.scrollToRoadmap) {
+      const element = document.getElementById('roadmap-generator');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    if (location.state?.scrollToProjectGenerator) {
+      const element = document.getElementById('project-generator');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    if (location.state?.scrollToProjectSuggestions) {
+      const element = document.getElementById('project-suggestions');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    if (location.state?.scrollToCourses) {
+      const element = document.getElementById('courses') || document.getElementById('courses-section');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    if (location.state?.scrollToContact) {
+      const element = document.getElementById('contact-footer');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    if (
+      location.state?.scrollToTop ||
+      location.state?.scrollToFaq ||
+      location.state?.scrollToRoadmap ||
+      location.state?.scrollToProjectGenerator ||
+      location.state?.scrollToProjectSuggestions ||
+      location.state?.scrollToContact
+    ) {
       window.history.replaceState({}, document.title);
     }
   }, [location]);
@@ -91,7 +139,7 @@ const Courses = () => {
     { title: 'JS for Beginners', prefix: 'js', total: 29, desc: 'Learn how to give functionality to websites.', img: jsLogo, link: '/JsLesson', level: 'Intermediate', duration: '29 lessons', time: '6h 30m', category: 'Frontend' },
     { title: 'C Language for You!', prefix: 'c', total: 17, desc: 'Master the fundamentals of C programming.', img: cLogo, link: '/CLesson', level: 'Beginner', duration: '17 lessons', time: '4h', category: 'Programming' },
     { title: 'OOP Concepts', prefix: 'oop', total: 14, desc: 'Learn object-oriented programming concepts.', img: OOPLogo, link: '/OopLesson', level: 'Intermediate', duration: '14 lessons', time: '3h 30m' , category: 'Programming' },
-    { title: 'Data Structures & Algorithms', prefix: 'dsa', total: 12, desc: 'Build strong problem-solving skills.', img: dsaLogo, link: '/DsaLesson', level: 'Advanced', duration: '12 lessons', time: '8h', category: 'Programming' },
+    { title: 'Data Structures & Algorithms', prefix: 'dsa', total: 13, desc: 'Build strong problem-solving skills.', img: dsaLogo, link: '/DsaLesson', level: 'Advanced', duration: '12 lessons', time: '8h', category: 'Programming' },
     { title: 'Node.js', prefix: 'node', total: 12, desc: 'Learn backend development with Node.js.', img: nodeLogo, link: '/NodeLesson', level: 'Intermediate', duration: '12 lessons', time: '3h' , category: 'Backend' },
     { title: 'React.js', prefix: 'react', total: 13, desc: 'Build modern frontend applications.', img: reactLogo, link: '/ReactLesson', level: 'Intermediate', duration: '13 lessons', time: '5h' , category: 'Frontend' },
     { title: 'Express.js', prefix: 'express', total: 10, desc: 'Fast and minimal backend framework.', img: expressLogo, link: '/ExpressLesson', level: 'Intermediate', duration: '10 lessons', time: '2h 30m' , category: 'Backend' },
@@ -101,7 +149,7 @@ const Courses = () => {
   const categories = ['All', ...new Set(courses.map(course => course.category))];
 
   const filteredCourses = courses.filter((course) => {
-    const matchesSearch = course.title.toLowerCase().includes(debouncedSearch.trim().toLowerCase()); // ✅ changed search → debouncedSearch
+    const matchesSearch = course.title.toLowerCase().includes(debouncedQuery.trim().toLowerCase());
     const matchesCategory = selectedCategory === 'All' || course.category === selectedCategory;
     const matchesWishlist = !showWishlistOnly || wishlist.includes(course.title);
     return matchesSearch && matchesCategory && matchesWishlist;
@@ -117,7 +165,7 @@ const Courses = () => {
   };
 
   return (
-    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 20px' }}>
+    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 20px' }} id='courses'>
 
       <style>{`
         @keyframes heartPop {
@@ -435,7 +483,7 @@ const Courses = () => {
             ? "You haven't bookmarked any courses yet. Click the bookmark icon on any course to save it!"
             : "We couldn't find any courses matching your selected category or search query."}
           buttonText="Show All Courses"
-          onButtonClick={() => { setSelectedCategory("All"); setSearch(""); setShowWishlistOnly(false); }}
+          onButtonClick={() => { setSelectedCategory("All"); setQuery(""); setShowWishlistOnly(false); }}
         />
       )}
       <RoadmapGenerator />

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import Compiler from "./Compiler";
 import { useNavigate, Link } from "react-router-dom";
-
 const HtmlLesson10 = () => {
   const [isCorrect, setIsCorrect] = useState(false);
+  const navigate = useNavigate();
+  
 
   const handleSuccess = () => {
     setIsCorrect(true);
@@ -134,6 +135,28 @@ const HtmlLesson10 = () => {
           </div>
         </div>
       )}
+   
+<div
+  style={{
+    display: "flex",
+    justifyContent: "flex-start",
+    marginTop: "30px",
+    paddingTop: "20px",
+    borderTop: "1px solid #333"
+  }}
+>
+  <button
+    onClick={() => navigate('/HtmlLesson9')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    ← Previous Lesson
+  </button>
+</div>
     </div>
   );
 };

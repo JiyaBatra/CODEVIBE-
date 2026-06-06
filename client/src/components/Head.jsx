@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { NavLink, Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthProvider.jsx";
 import { useSearch } from "../context/SearchContext.jsx";
 import { useDebounce } from "../hooks/useDebounce"; // added
-import { FaSignInAlt, FaSignOutAlt, FaUserPlus, FaTachometerAlt, FaGamepad, FaSearch, FaTimes, FaTrophy } from "react-icons/fa";
+import { FaSignInAlt, FaSignOutAlt, FaUserPlus, FaTachometerAlt, FaGamepad, FaSearch, FaTimes, FaHome, FaQuestionCircle, FaBook, FaEnvelope, FaTrophy } from "react-icons/fa";
 import logo from "../assets/favicon.png";
 import StreakCounter from "./StreakCounter.jsx";
+import { FaChevronDown, FaTasks, FaLightbulb } from "react-icons/fa";
 
 const COURSES = [
   { label: "HTML Basics", path: "/HtmlLesson" },
@@ -44,6 +45,20 @@ const Head = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const [showProjects, setShowProjects] = useState(false);
+
+useEffect(() => {
+  const closeDropdown = () => {
+    setShowProjects(false);
+  };
+
+  document.addEventListener("click", closeDropdown);
+
+  return () => {
+    document.removeEventListener("click", closeDropdown);
+  };
+}, []);
 
   //  Filtering now runs only when debouncedQuery changes, not on every keystroke
   useEffect(() => {
@@ -99,61 +114,172 @@ const Head = () => {
 
   return (
     <header className="site-header" ref={wrapperRef}>
-      {/* Row 1: Logo + Nav + Hamburger */}
-      <div className="header-top">
-        <div className="header-logo-wrapper">
-          <Link to="/" aria-label="Go to homepage" className="logo-link">
-            <img
-              src={logo}
-              alt="CodeVibe Logo"
-              title="CodeVibe - Learn. Practice. Master."
-            />
-          </Link>
-        </div>
+      <nav className="header-nav" aria-label="Main navigation">
+        {/* Row 1: Logo + Nav + Hamburger */}
+        <div className="header-top">
 
-        {/* Desktop Nav */}
-        <nav className="header-nav" aria-label="Main navigation">
-          {/* 1. Public Link: Available to everyone */}
-          <Link
-            to="/lessons"
-            state={{ scrollToFaq: true }}
-            className="nav-link"
-          >
-            <span>FAQ</span>
-          </Link>
+          <div className="header-logo-wrapper">
+            <Link to="/" aria-label="Go to homepage" className="logo-link">
+              <img
+                src={logo}
+                alt="CodeVibe Logo"
+                title="CodeVibe - Learn. Practice. Master."
+              />
+            </Link>
+          </div>
+
+          {/* Desktop Nav */}
+         <button
+  type="button"
+  className="nav-link"
+  onClick={() => navigate("/lessons", { state: { scrollToTop: true } })}
+>
+  <span>Home</span>
+</button>
+
+<button
+  type="button"
+  className="nav-link"
+  onClick={() => navigate("/lessons", { state: { scrollToCourses: true } })}
+>
+  <span>Courses</span>
+</button>
+
+<button
+  type="button"
+  className="nav-link"
+  onClick={() => navigate("/lessons", { state: { scrollToRoadmap: true } })}
+>
+  <span>Roadmap Generator</span>
+</button>
+
+
+<div
+  className="dropdown"
+  onClick={(e) => e.stopPropagation()}
+>
+  <button
+    type="button"
+    className="nav-link dropdown-btn"
+    onClick={() => setShowProjects(!showProjects)}
+  >
+    <span>Projects</span>
+    <FaChevronDown
+      className={`dropdown-arrow ${
+        showProjects ? "rotate-arrow" : ""
+      }`}
+    />
+  </button>
+
+  {showProjects && (
+    <div className="dropdown-content">
+      <button
+        className="dropdown-item"
+        onClick={() => {
+          navigate("/lessons", {
+            state: { scrollToProjectGenerator: true }
+          });
+          setShowProjects(false);
+        }}
+      >
+        <FaTasks />
+        <span>Project Milestone</span>
+      </button>
+
+      <button
+        className="dropdown-item"
+        onClick={() => {
+          navigate("/lessons", {
+            state: { scrollToProjectSuggestions: true }
+          });
+          setShowProjects(false);
+        }}
+      >
+        <FaLightbulb />
+        <span>Project Ideas</span>
+      </button>
+    </div>
+  )}
+</div>
+<button
+  type="button"
+  className="nav-link"
+  onClick={() => navigate("/lessons", { state: { scrollToFaq: true } })}
+>
+  <span>FAQ</span>
+</button>
+
+<button
+  type="button"
+  className="nav-link"
+  onClick={() => navigate("/contact", { state: { scrollToContact: true } })}
+>
+  <span>Contact Us</span>
+</button>
 
           {/* 2. Conditional Links based on Auth State */}
-          {user ? (
+          <div className="header-navlink">
+
+            {user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
               <StreakCounter />
-              <Link to="/leaderboard" className="nav-link">
-                <FaTrophy className="nav-icon" />
-                <span>Leaderboard</span>
-              </Link>
-              <Link to="/dashboard" className="nav-link">
-                <FaTachometerAlt className="nav-icon" />
-                <span>Dashboard</span>
-              </Link>
-              <Link to="/login" onClick={handleLogout} className="nav-link">
-                <FaSignOutAlt className="nav-icon" />
-                <span>Logout</span>
-              </Link>
-            </div>
-          ) : (
-            <>
-              <Link to="/login" className="nav-link">
-                <FaSignInAlt className="nav-icon" />
-                <span>Login</span>
-              </Link>
-              <Link to="/signup" className="nav-link">
-                <FaUserPlus className="nav-icon" />
-                <span>Sign Up</span>
-              </Link>
-            </>
-          )}
-        </nav>
+              <button
+              type="button"
+              className="nav-link"
+              onClick={() => navigate("/leaderboard")}
+             >
+             <FaTrophy className="nav-icon" />
+             <span>LeaderBoard</span>
+            </button>
 
-      </div>
+            <button
+            type="button"
+            className="nav-link"
+            onClick={() => navigate("/dashboard")}
+            >
+           <FaTachometerAlt className="nav-icon" />
+           <span>Dashboard</span>
+           </button>
+          <button
+           type="button"
+           className="nav-link"
+           onClick={() => {
+           handleLogout();
+           navigate("/login");
+           }}
+>
+          <FaSignOutAlt className="nav-icon" />
+          <span>Logout</span>
+          </button>
+              
+            </div>
+            ) : (
+              <>
+
+          <button
+            type="button"
+            className="nav-link"
+            onClick={() => navigate("/login")}
+          >
+          <FaSignInAlt className="nav-icon" />
+          <span>Login</span>
+          </button>
+
+          <button 
+            type="button"
+            className="nav-link"
+            onClick={() => navigate("/signup")}
+          >
+          <FaUserPlus className="nav-icon" />
+          <span>Sign Up</span>
+          </button>
+              
+              </>
+            )}
+          </div>
+        </div>
+      </nav>
+
 
       {/* Hamburger for mobile */}
       <button
@@ -172,13 +298,77 @@ const Head = () => {
         className={`mobile-nav ${menuOpen ? "mobile-nav--open" : ""}`}
         aria-label="Mobile navigation"
       >
-        <Link
-          to="/glossary"
-          className="nav-link"
-          onClick={() => setMenuOpen(false)}
-        >
-          <span>Glossary</span>
-        </Link>
+        <NavLink
+              to="/lessons"
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+              onClick={() => {
+                 setMenuOpen(false);
+                window.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                });
+              }}
+            >
+              <FaHome className="nav-icon" />
+
+              Home
+            </NavLink>
+            <NavLink
+              to="/lessons"
+              state={{ scrollToFaq: true }}
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+              onClick={() => setMenuOpen(false)}
+              
+            >
+              <FaQuestionCircle className="nav-icon" />
+              FAQ
+            </NavLink>
+            <NavLink
+              to="/lessons"
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+              onClick={() => {
+                 setMenuOpen(false);
+                setTimeout(() => {
+                  document
+                    .getElementById("courses")
+                    ?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                }, 100);
+              }}
+            >
+              <FaBook className="nav-icon" />
+              Courses
+            </NavLink>
+            <NavLink
+              to="/lessons"
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+              onClick={() => {
+                 setMenuOpen(false);
+
+                setTimeout(() => {
+                  document
+                    .getElementById("contact-footer")
+                    ?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                }, 100);
+              }}
+            >
+              <FaEnvelope className="nav-icon" />
+              Contact Us
+            </NavLink>
+
         {user ? (
           <>
             <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.1)', marginBottom: '8px' }}>
@@ -220,7 +410,70 @@ const Head = () => {
         )}
       </nav>
 
-      {/* Row 2: Title */}
+      {/* Mobile Nav Drawer */}
+      <nav
+        className={`mobile-nav ${menuOpen ? "mobile-nav--open" : ""}`}
+        aria-label="Mobile navigation"
+      >
+        <Link
+          to="/lessons"
+          className="nav-link"
+          onClick={() => {
+            setMenuOpen(false);
+            navigate('/lessons', { state: { scrollToFaq: true } });
+          }}
+        >
+          <span>FAQ</span>
+        </Link>
+        <button
+          type="button"
+          className="nav-link"
+          onClick={() => {
+            setMenuOpen(false);
+            navigate('/lessons', { state: { scrollToRoadmap: true } });
+          }}
+        >
+          <span>Roadmap Generator</span>
+        </button>
+        <button
+          type="button"
+          className="nav-link"
+          onClick={() => {
+            setMenuOpen(false);
+            navigate('/lessons', { state: { scrollToProjectGenerator: true } });
+          }}
+        >
+          <span>Project Milestone</span>
+        </button>
+        <button
+          type="button"
+          className="nav-link"
+          onClick={() => {
+            setMenuOpen(false);
+            navigate('/lessons', { state: { scrollToProjectSuggestions: true } });
+          }}
+        >
+          <span>Project Suggestions</span>
+        </button>
+        <button
+          type="button"
+          className="nav-link"
+          onClick={() => {
+            setMenuOpen(false);
+            navigate('/lessons', { state: { scrollToCourses: true } });
+          }}
+        >
+          <span>Courses</span>
+        </button>
+        <Link
+          to="/glossary"
+          className="nav-link"
+          onClick={() => setMenuOpen(false)}
+        >
+          <span>Glossary</span>
+        </Link>
+      </nav>
+
       {isHomePage && (
         <div className="header-title-row">
           <h1>
