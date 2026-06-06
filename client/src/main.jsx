@@ -246,18 +246,16 @@ createRoot(document.getElementById('root')).render(
               <Route path="/ForgetPassword" element={<ForgetPassword />} />
               <Route path="/ResetPassword" element={<ResetPassword />} />
               <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-              <Route path="/leaderboard" element={<Leaderboard />} />
-              <Route path="/flashcards" element={<Flashcard />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/report/:email" element={<ViewReport />} />
               <Route path="/api" element={<App />} />
               <Route path="/Certificate" element={<Certificate />} />
+              <Route path="/report/:email" element={<ViewReport />} />
               <Route path="/CLesson" element={<PrivateRoute><CLesson /></PrivateRoute>} />
               <Route path="/CssLesson" element={<PrivateRoute><CssLesson /></PrivateRoute>} />
               <Route path="/JsLesson" element={<PrivateRoute><JsLesson /></PrivateRoute>} />
               <Route path="/Compiler" element={<PrivateRoute><Compiler /></PrivateRoute>} />
-              <Route path="/contact" element={<Contact />} />
 
               {/* HTML Lessons */}
               <Route element={<PrivateRoute />}>
