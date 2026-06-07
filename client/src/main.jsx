@@ -447,13 +447,9 @@ createRoot(document.getElementById('root')).render(
 
         <Target />
         <Foot />
+        <Chatbot />
         </SearchProvider>
       </AuthProvider>
     </HashRouter>
-
-      <Target />
-      <Foot />
-      <Chatbot />
-    
   </StrictMode>
 );

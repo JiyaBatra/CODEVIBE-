@@ -71,33 +71,62 @@ backend.use((err, req, res, next) => {
   });
 });
 
-const MONGODB_URL =
-  process.env.DB_URL ||
-  process.env.MONGODB_URI ||
-  "mongodb://127.0.0.1:27017/codevibe";
-
 const PORT = process.env.PORT || 5002;
 
 server.listen(PORT, () => {
   console.log(`✅ Server Started on port ${PORT}`);
 });
 
-mongoose
-  .connect(MONGODB_URL)
-  .then(() => {
-    console.log("✅ Connected to MongoDB");
-  })
-  .catch((err) => {
-    console.error("❌ MongoDB connection error:", err);
-  });
+const connectDB = async () => {
+  const configuredUri = process.env.DB_URL || process.env.MONGODB_URI;
+  if (configuredUri) {
+    try {
+      await mongoose.connect(configuredUri);
+      console.log("✅ Connected to MongoDB (from environment variable)");
+      return;
+    } catch (err) {
+      console.error("❌ MongoDB connection error for configured URI:", err);
+      process.exit(1);
+    }
+  }
+
+  // Try local MongoDB
+  const localUri = "mongodb://127.0.0.1:27017/codevibe";
+  try {
+    await mongoose.connect(localUri, { serverSelectionTimeoutMS: 2000 });
+    console.log("✅ Connected to local MongoDB");
+  } catch (err) {
+    console.warn("⚠️ Local MongoDB connection failed. Starting in-memory MongoDB database...");
+    try {
+      const { MongoMemoryServer } = require("mongodb-memory-server");
+      const mongoServer = await MongoMemoryServer.create();
+      const inMemoryUri = mongoServer.getUri();
+      console.log(`✨ In-Memory MongoDB started at: ${inMemoryUri}`);
+      await mongoose.connect(inMemoryUri);
+      console.log("✅ Connected to In-Memory MongoDB");
+      
+      // Store the server instance on the mongoose connection so we can stop it on shutdown
+      mongoose.connection.mongoServer = mongoServer;
+    } catch (memErr) {
+      console.error("❌ Failed to start or connect to in-memory MongoDB:", memErr);
+      process.exit(1);
+    }
+  }
+};
+
+connectDB();
 
 const gracefulShutdown = (signal) => {
   console.log(`\n⚠️ ${signal} received. Starting graceful shutdown...`);
   
   server.close(() => {
     console.log("🏁 HTTP server closed.");
-    mongoose.connection.close(false).then(() => {
+    mongoose.connection.close(false).then(async () => {
       console.log("🔌 MongoDB connection closed.");
+      if (mongoose.connection.mongoServer) {
+        await mongoose.connection.mongoServer.stop();
+        console.log("🛑 In-Memory MongoDB stopped.");
+      }
       process.exit(0);
     }).catch((err) => {
       console.error("❌ Error during MongoDB disconnection:", err);
@@ -108,5 +137,3 @@ const gracefulShutdown = (signal) => {
 
 process.on("SIGINT", () => gracefulShutdown("SIGINT"));
 process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
-    console.warn("⚠️ MongoDB connection failed. Backend is running in database-less mode:", err.message || err);
-  ;
