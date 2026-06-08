@@ -19,7 +19,7 @@ const resetPassword = async (req, res, next) => {
     if (!passwordValidation.isValid) {
       return res.status(400).json({
         success: false,
-        message: "Password does not meet security requirements",
+        message: "Password should contain uppercase letter, number, special Character",
         passwordErrors: passwordValidation.errors,
       });
     }
