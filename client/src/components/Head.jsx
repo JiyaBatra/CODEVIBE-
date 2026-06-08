@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { NavLink, Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthProvider.jsx";
 import { useSearch } from "../context/SearchContext.jsx";
-import { useDebounce } from "../hooks/useDebounce"; // added
+import { useDebounce } from "../hooks/useDebounce";
 import { FaSignInAlt, FaSignOutAlt, FaUserPlus, FaTachometerAlt, FaGamepad, FaSearch, FaTimes, FaHome, FaQuestionCircle, FaBook, FaEnvelope, FaTrophy } from "react-icons/fa";
 import logo from "../assets/favicon.png";
 import StreakCounter from "./StreakCounter.jsx";
@@ -27,6 +27,7 @@ const Head = () => {
   const [suggestions, setSuggestions] = useState([]);
   const [focused, setFocused] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchError, setSearchError] = useState("");
   const inputRef = useRef(null);
   const wrapperRef = useRef(null);
   const navigate = useNavigate();
@@ -48,17 +49,17 @@ const Head = () => {
 
   const [showProjects, setShowProjects] = useState(false);
 
-useEffect(() => {
-  const closeDropdown = () => {
-    setShowProjects(false);
-  };
+  useEffect(() => {
+    const closeDropdown = () => {
+      setShowProjects(false);
+    };
 
-  document.addEventListener("click", closeDropdown);
+    document.addEventListener("click", closeDropdown);
 
-  return () => {
-    document.removeEventListener("click", closeDropdown);
-  };
-}, []);
+    return () => {
+      document.removeEventListener("click", closeDropdown);
+    };
+  }, []);
 
   //  Filtering now runs only when debouncedQuery changes, not on every keystroke
   useEffect(() => {
@@ -73,7 +74,12 @@ useEffect(() => {
   }, [debouncedQuery]);
 
   const handleSearch = (value) => {
-    setQuery(value); // still updates instantly so input stays responsive
+    setQuery(value);
+
+    if (searchError) {
+      setSearchError("");
+    }
+
     if (value.trim().length === 0) {
       setSuggestions([]);
     }
@@ -92,9 +98,20 @@ useEffect(() => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const trimmedQuery = query.trim();
+
+    if (!trimmedQuery) {
+      setSearchError("Please enter a course name before searching.");
+      return;
+    }
+
+    setSearchError("");
+
     const exactMatch = COURSES.find(
-      (c) => c.label.toLowerCase() === query.trim().toLowerCase(),
+      (c) => c.label.toLowerCase() === trimmedQuery.toLowerCase(),
     );
+
     if (exactMatch) {
       handleSelect(exactMatch);
     } else {
@@ -112,6 +129,7 @@ useEffect(() => {
   const clearSearch = () => {
     setQuery("");
     setSuggestions([]);
+    setSearchError("");
     inputRef.current?.focus();
   };
 
@@ -132,157 +150,153 @@ useEffect(() => {
           </div>
 
           {/* Desktop Nav */}
-         <button
-  type="button"
-  className="nav-link"
-  onClick={() => navigate("/lessons", { state: { scrollToTop: true } })}
->
-  <span>Home</span>
-</button>
+          <button
+            type="button"
+            className="nav-link"
+            onClick={() => navigate("/lessons", { state: { scrollToTop: true } })}
+          >
+            <span>Home</span>
+          </button>
 
-<button
-  type="button"
-  className="nav-link"
-  onClick={() => navigate("/lessons", { state: { scrollToCourses: true } })}
->
-  <span>Courses</span>
-</button>
+          <button
+            type="button"
+            className="nav-link"
+            onClick={() => navigate("/lessons", { state: { scrollToCourses: true } })}
+          >
+            <span>Courses</span>
+          </button>
 
-<button
-  type="button"
-  className="nav-link"
-  onClick={() => navigate("/lessons", { state: { scrollToRoadmap: true } })}
->
-  <span>Roadmap Generator</span>
-</button>
+          <button
+            type="button"
+            className="nav-link"
+            onClick={() => navigate("/lessons", { state: { scrollToRoadmap: true } })}
+          >
+            <span>Roadmap Generator</span>
+          </button>
 
+          <div
+            className="dropdown"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="nav-link dropdown-btn"
+              onClick={() => setShowProjects(!showProjects)}
+            >
+              <span>Projects</span>
+              <FaChevronDown
+                className={`dropdown-arrow ${
+                  showProjects ? "rotate-arrow" : ""
+                }`}
+              />
+            </button>
 
-<div
-  className="dropdown"
-  onClick={(e) => e.stopPropagation()}
->
-  <button
-    type="button"
-    className="nav-link dropdown-btn"
-    onClick={() => setShowProjects(!showProjects)}
-  >
-    <span>Projects</span>
-    <FaChevronDown
-      className={`dropdown-arrow ${
-        showProjects ? "rotate-arrow" : ""
-      }`}
-    />
-  </button>
+            {showProjects && (
+              <div className="dropdown-content">
+                <button
+                  className="dropdown-item"
+                  onClick={() => {
+                    navigate("/lessons", {
+                      state: { scrollToProjectGenerator: true }
+                    });
+                    setShowProjects(false);
+                  }}
+                >
+                  <FaTasks />
+                  <span>Project Milestone</span>
+                </button>
 
-  {showProjects && (
-    <div className="dropdown-content">
-      <button
-        className="dropdown-item"
-        onClick={() => {
-          navigate("/lessons", {
-            state: { scrollToProjectGenerator: true }
-          });
-          setShowProjects(false);
-        }}
-      >
-        <FaTasks />
-        <span>Project Milestone</span>
-      </button>
+                <button
+                  className="dropdown-item"
+                  onClick={() => {
+                    navigate("/lessons", {
+                      state: { scrollToProjectSuggestions: true }
+                    });
+                    setShowProjects(false);
+                  }}
+                >
+                  <FaLightbulb />
+                  <span>Project Ideas</span>
+                </button>
+              </div>
+            )}
+          </div>
 
-      <button
-        className="dropdown-item"
-        onClick={() => {
-          navigate("/lessons", {
-            state: { scrollToProjectSuggestions: true }
-          });
-          setShowProjects(false);
-        }}
-      >
-        <FaLightbulb />
-        <span>Project Ideas</span>
-      </button>
-    </div>
-  )}
-</div>
-<button
-  type="button"
-  className="nav-link"
-  onClick={() => navigate("/lessons", { state: { scrollToFaq: true } })}
->
-  <span>FAQ</span>
-</button>
+          <button
+            type="button"
+            className="nav-link"
+            onClick={() => navigate("/lessons", { state: { scrollToFaq: true } })}
+          >
+            <span>FAQ</span>
+          </button>
 
-<button
-  type="button"
-  className="nav-link"
-  onClick={() => navigate("/contact", { state: { scrollToContact: true } })}
->
-  <span>Contact Us</span>
-</button>
+          <button
+            type="button"
+            className="nav-link"
+            onClick={() => navigate("/contact", { state: { scrollToContact: true } })}
+          >
+            <span>Contact Us</span>
+          </button>
 
           {/* 2. Conditional Links based on Auth State */}
           <div className="header-navlink">
-
             {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' , color: 'white'}}>
-              <StreakCounter />
-              <button
-              type="button"
-              className="nav-link"
-              onClick={() => navigate("/leaderboard")}
-             >
-             <FaTrophy className="nav-icon" />
-             <span>LeaderBoard</span>
-            </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', color: 'white' }}>
+                <StreakCounter />
+                <button
+                  type="button"
+                  className="nav-link"
+                  onClick={() => navigate("/leaderboard")}
+                >
+                  <FaTrophy className="nav-icon" />
+                  <span>LeaderBoard</span>
+                </button>
 
-            <button
-            type="button"
-            className="nav-link"
-            onClick={() => navigate("/dashboard")}
-            >
-           <FaTachometerAlt className="nav-icon" />
-           <span>Dashboard</span>
-           </button>
-          <button
-           type="button"
-           className="nav-link"
-           onClick={() => {
-           handleLogout();
-           navigate("/login");
-           }}
->
-          <FaSignOutAlt className="nav-icon" />
-          <span>Logout</span>
-          </button>
-              
-            </div>
+                <button
+                  type="button"
+                  className="nav-link"
+                  onClick={() => navigate("/dashboard")}
+                >
+                  <FaTachometerAlt className="nav-icon" />
+                  <span>Dashboard</span>
+                </button>
+
+                <button
+                  type="button"
+                  className="nav-link"
+                  onClick={() => {
+                    handleLogout();
+                    navigate("/login");
+                  }}
+                >
+                  <FaSignOutAlt className="nav-icon" />
+                  <span>Logout</span>
+                </button>
+              </div>
             ) : (
               <>
+                <button
+                  type="button"
+                  className="nav-link"
+                  onClick={() => navigate("/login")}
+                >
+                  <FaSignInAlt className="nav-icon" />
+                  <span>Login</span>
+                </button>
 
-          <button
-            type="button"
-            className="nav-link"
-            onClick={() => navigate("/login")}
-          >
-          <FaSignInAlt className="nav-icon" />
-          <span>Login</span>
-          </button>
-
-          <button 
-            type="button"
-            className="nav-link"
-            onClick={() => navigate("/signup")}
-          >
-          <FaUserPlus className="nav-icon" />
-          <span>Sign Up</span>
-          </button>
-              
+                <button
+                  type="button"
+                  className="nav-link"
+                  onClick={() => navigate("/signup")}
+                >
+                  <FaUserPlus className="nav-icon" />
+                  <span>Sign Up</span>
+                </button>
               </>
             )}
           </div>
         </div>
       </nav>
-
 
       {/* Hamburger for mobile */}
       <button
@@ -302,75 +316,72 @@ useEffect(() => {
         aria-label="Mobile navigation"
       >
         <NavLink
-              to="/lessons"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
-              onClick={() => {
-                 setMenuOpen(false);
-                window.scrollTo({
-                  top: 0,
+          to="/lessons"
+          className={({ isActive }) =>
+            isActive ? "nav-link active" : "nav-link"
+          }
+          onClick={() => {
+            setMenuOpen(false);
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          }}
+        >
+          <FaHome className="nav-icon" />
+          Home
+        </NavLink>
+        <NavLink
+          to="/lessons"
+          state={{ scrollToFaq: true }}
+          className={({ isActive }) =>
+            isActive ? "nav-link active" : "nav-link"
+          }
+          onClick={() => setMenuOpen(false)}
+        >
+          <FaQuestionCircle className="nav-icon" />
+          FAQ
+        </NavLink>
+        <NavLink
+          to="/lessons"
+          className={({ isActive }) =>
+            isActive ? "nav-link active" : "nav-link"
+          }
+          onClick={() => {
+            setMenuOpen(false);
+            setTimeout(() => {
+              document
+                .getElementById("courses")
+                ?.scrollIntoView({
                   behavior: "smooth",
+                  block: "start",
                 });
-              }}
-            >
-              <FaHome className="nav-icon" />
-
-              Home
-            </NavLink>
-            <NavLink
-              to="/lessons"
-              state={{ scrollToFaq: true }}
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
-              onClick={() => setMenuOpen(false)}
-              
-            >
-              <FaQuestionCircle className="nav-icon" />
-              FAQ
-            </NavLink>
-            <NavLink
-              to="/lessons"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
-              onClick={() => {
-                 setMenuOpen(false);
-                setTimeout(() => {
-                  document
-                    .getElementById("courses")
-                    ?.scrollIntoView({
-                      behavior: "smooth",
-                      block: "start",
-                    });
-                }, 100);
-              }}
-            >
-              <FaBook className="nav-icon" />
-              Courses
-            </NavLink>
-            <NavLink
-              to="/lessons"
-              className={({ isActive }) =>
-                isActive ? "nav-link active" : "nav-link"
-              }
-              onClick={() => {
-                 setMenuOpen(false);
-
-                setTimeout(() => {
-                  document
-                    .getElementById("contact-footer")
-                    ?.scrollIntoView({
-                      behavior: "smooth",
-                      block: "start",
-                    });
-                }, 100);
-              }}
-            >
-              <FaEnvelope className="nav-icon" />
-              Contact Us
-            </NavLink>
+            }, 100);
+          }}
+        >
+          <FaBook className="nav-icon" />
+          Courses
+        </NavLink>
+        <NavLink
+          to="/lessons"
+          className={({ isActive }) =>
+            isActive ? "nav-link active" : "nav-link"
+          }
+          onClick={() => {
+            setMenuOpen(false);
+            setTimeout(() => {
+              document
+                .getElementById("contact-footer")
+                ?.scrollIntoView({
+                  behavior: "smooth",
+                  block: "start",
+                });
+            }, 100);
+          }}
+        >
+          <FaEnvelope className="nav-icon" />
+          Contact Us
+        </NavLink>
 
         {user ? (
           <>
@@ -525,9 +536,19 @@ useEffect(() => {
                 <FaTimes />
               </button>
             )}
-            <button type="submit" className="search-btn" aria-label="Search">
+            <button
+              type="submit"
+              className="search-btn"
+              aria-label="Search"
+            >
               Search
             </button>
+
+            {searchError && (
+              <div className="search-error" role="alert">
+                {searchError}
+              </div>
+            )}
 
             {/* Suggestions Dropdown */}
             {focused && suggestions.length > 0 && (
