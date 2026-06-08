@@ -1406,8 +1406,7 @@ h3 {
 }
 
 /* Buttons - Gaming Style */
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle) {
-  background: linear-gradient(135deg,
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):not(.faq-question) {  background: linear-gradient(135deg,
       var(--primary-red),
       var(--secondary-pink));
   border: 2px solid transparent;
@@ -1426,7 +1425,7 @@ button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not
   letter-spacing: 0.5px;
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle)::before {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):not(.faq-question) {
   content: "";
   position: absolute;
   top: 0;
@@ -1441,32 +1440,30 @@ button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not
   z-index: 1;
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):hover::before {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):not(.faq-question):hover::before {
   left: 100%;
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):hover {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):not(.faq-question):hover {
   transform: translateY(-3px) scale(1.05);
   background: linear-gradient(135deg, #ff6b81, #ff99ac);
   box-shadow: 0 0 25px rgba(255, 77, 109, 0.8);
   border-color: rgba(255, 255, 255, 0.4);
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):active {
-  transform: translateY(-1px) scale(1.02);
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):not(.faq-question){  transform: translateY(-1px) scale(1.02);
   box-shadow: 0 0 15px rgba(255, 77, 109, 0.6);
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):disabled {
-  background: linear-gradient(135deg, #666, #999);
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):not(.faq-question) {
   box-shadow: 0 0 10px rgba(100, 100, 100, 0.4);
   cursor: not-allowed;
   opacity: 0.6;
   transform: none;
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):disabled:hover {
-  transform: none;
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):not(.faq-question):hover {  box-shadow: 0 0 15px rgba(255, 77, 109, 0.8);
+  transform: translateY(-3px) scale(1.05);
 }
 
 /* Navbar buttons must stay transparent and flat */
@@ -3638,4 +3635,11 @@ select:focus {
 
 .message-box input {
   height: 20px;
+}
+
+.faq-question {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
