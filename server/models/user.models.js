@@ -33,6 +33,8 @@ const userSchema = new Schema({
   },
   resetToken: { type: String },       // for password reset token
   resetTokenExpiry: { type: Date },   // for password reset token expiry
+  avatarUrl: { type: String, default: "" }, 
+  bio: { type: String, default: "" },
 });
 
 userSchema.pre("validate", function syncEmailAlias(next) {
