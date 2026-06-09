@@ -512,16 +512,27 @@ const Compiler = ({
       <div className="compiler-editor-wrap">
         {/* toolbar */}
         <div className="compiler-toolbar">
-          <button title="Copy Code" onClick={copyCode} className="compiler-btn compiler-btn--copy">
+          <button
+            title="Copy Code"
+            aria-label="Copy code to clipboard"
+            onClick={copyCode}
+            className="compiler-btn compiler-btn--copy"
+          >
             📋 Copy
           </button>
-          <button title="Download Code" onClick={downloadCode} className="compiler-btn compiler-btn--download">
+          <button
+            title="Download Code"
+            aria-label="Download code as file"
+            onClick={downloadCode}
+            className="compiler-btn compiler-btn--download"
+          >
             ⬇️ Download
           </button>
         </div>
 
         {/* editor */}
         <textarea
+          aria-label="Code editor"
           value={code}
           onChange={(e) => setCode(e.target.value)}
           className="compiler-textarea"
@@ -530,13 +541,37 @@ const Compiler = ({
         />
       </div>
 
+      {/* Hidden aria-live region — announces status to screen readers without
+           affecting visual layout (Issue #1072: screen reader announcements) */}
+      <div
+        aria-live="polite"
+        aria-atomic="true"
+        style={{
+          position: "absolute",
+          width: "1px",
+          height: "1px",
+          overflow: "hidden",
+          clip: "rect(0 0 0 0)",
+          whiteSpace: "nowrap",
+          border: 0,
+        }}
+      >
+        {status}
+      </div>
+
       {/* action row */}
       <div className="compiler-actions">
-        <button title="Run (Ctrl + Enter)" onClick={runCode} className="compiler-btn compiler-btn--run">
+        <button
+          title="Run (Ctrl + Enter)"
+          aria-label="Run code (Ctrl+Enter)"
+          onClick={runCode}
+          className="compiler-btn compiler-btn--run"
+        >
           ▶ Run
         </button>
         <button
           title="Reset (Ctrl + R)"
+          aria-label="Reset code to initial state (Ctrl+R)"
           onClick={() => {
             setCode(initialCode);
             setStatus("");
@@ -551,7 +586,7 @@ const Compiler = ({
           ↺ Reset
         </button>
         {status && !isSuccess && !errorType && (
-          <span className="compiler-status">{status}</span>
+          <span className="compiler-status" aria-hidden="true">{status}</span>
         )}
       </div>
 

@@ -265,3 +265,10 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ── Compiler button focus styles (keyboard accessibility — Issue #1072) ── */
+.compiler-btn:focus-visible {
+  outline: 2px solid #ff5f8f;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(255, 95, 143, 0.25);
+}

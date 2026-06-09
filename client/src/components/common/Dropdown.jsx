@@ -62,6 +62,9 @@ const Dropdown = ({ value, onChange, options, placeholder, style, dropdownStyle,
 
       <button
         type="button"
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        aria-label={`Select language: ${displayLabel}`}
         onClick={() => setIsOpen(!isOpen)}
         style={{
           display: "flex",
@@ -73,7 +76,6 @@ const Dropdown = ({ value, onChange, options, placeholder, style, dropdownStyle,
           background: "rgba(255, 255, 255, 0.08)",
           color: value ? "#fff" : "rgba(255, 255, 255, 0.7)",
           border: "1px solid rgba(255, 255, 255, 0.15)",
-          outline: "none",
           fontSize: "1rem",
           fontWeight: "500",
           cursor: "pointer",
@@ -93,6 +95,7 @@ const Dropdown = ({ value, onChange, options, placeholder, style, dropdownStyle,
       >
         <span>{displayLabel}</span>
         <FaChevronDown
+          aria-hidden="true"
           style={{
             marginLeft: "10px",
             fontSize: "0.85rem",
@@ -105,6 +108,8 @@ const Dropdown = ({ value, onChange, options, placeholder, style, dropdownStyle,
 
       {isOpen && (
         <ul
+          role="listbox"
+          aria-label="Language options"
           className="custom-dropdown-list"
           style={{
             position: "absolute",
@@ -129,7 +134,16 @@ const Dropdown = ({ value, onChange, options, placeholder, style, dropdownStyle,
           }}
         >
           <li
+            role="option"
+            aria-selected={value === ""}
+            tabIndex={0}
             onClick={() => handleSelect("")}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                handleSelect("");
+              }
+            }}
             style={{
               padding: "10px 16px",
               cursor: "pointer",
@@ -154,8 +168,17 @@ const Dropdown = ({ value, onChange, options, placeholder, style, dropdownStyle,
 
             return (
               <li
+                role="option"
+                aria-selected={isSelected}
+                tabIndex={0}
                 key={val}
                 onClick={() => handleSelect(val)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleSelect(val);
+                  }
+                }}
                 style={{
                   padding: "10px 16px",
                   cursor: "pointer",

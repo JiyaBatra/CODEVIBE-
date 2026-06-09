@@ -24,7 +24,9 @@ describe("Compiler Copy Button - Rapid Click Test", () => {
     }
 
     // ✅ stable assertion (NOT clipboard)
-    expect(screen.getByText(/code copied/i)).toBeInTheDocument();
+    // Note: "Code copied!" appears in both the visible status span AND the
+    // aria-live region added for screen reader support (Issue #1072).
+    expect(screen.getAllByText(/code copied/i).length).toBeGreaterThan(0);
   });
 
   it("does not break UI after repeated clicks", () => {
