@@ -274,7 +274,7 @@ exports.completeLesson = async (req, res) => {
       }
     );
 
-    const user = await User.findOne({ Email: email }).lean();
+    const user = await User.findOne({ email }).lean();
 
     try {
       await Analytics.create({
