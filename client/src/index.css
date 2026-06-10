@@ -1406,7 +1406,7 @@ h3 {
 }
 
 /* Buttons - Gaming Style */
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle) {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):not(.scroll-navigator__btn):not(.faq-question) {
   background: linear-gradient(135deg,
       var(--primary-red),
       var(--secondary-pink));
@@ -1426,7 +1426,7 @@ button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not
   letter-spacing: 0.5px;
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle)::before {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):not(.scroll-navigator__btn):not(.faq-question)::before {
   content: "";
   position: absolute;
   top: 0;
@@ -1441,23 +1441,23 @@ button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not
   z-index: 1;
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):hover::before {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):not(.scroll-navigator__btn):not(.faq-question):hover::before {
   left: 100%;
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):hover {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):not(.scroll-navigator__btn):not(.faq-question):hover {
   transform: translateY(-3px) scale(1.05);
   background: linear-gradient(135deg, #ff6b81, #ff99ac);
   box-shadow: 0 0 25px rgba(255, 77, 109, 0.8);
   border-color: rgba(255, 255, 255, 0.4);
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):active {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):not(.scroll-navigator__btn):not(.faq-question):active {
   transform: translateY(-1px) scale(1.02);
   box-shadow: 0 0 15px rgba(255, 77, 109, 0.6);
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):disabled {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):not(.scroll-navigator__btn):not(.faq-question):disabled {
   background: linear-gradient(135deg, #666, #999);
   box-shadow: 0 0 10px rgba(100, 100, 100, 0.4);
   cursor: not-allowed;
@@ -1465,7 +1465,7 @@ button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not
   transform: none;
 }
 
-button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):disabled:hover {
+button:not(.nav-link):not(.dropdown-btn):not(.hamburger):not(.dropdown-item):not(.password-field__toggle):not(.scroll-navigator__btn):not(.faq-question):disabled:hover {
   transform: none;
 }
 
@@ -3173,7 +3173,7 @@ select:focus {
   height: 48px;
   border-radius: 50%;
   border: 1.5px solid rgba(255, 77, 109, 0.5);
-  background: rgba(26, 31, 58, 0.75);
+  background: rgba(26, 31, 58, 0.85);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   color: #ffffff;
@@ -3182,6 +3182,7 @@ select:focus {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: visible;
   box-shadow:
     0 4px 15px rgba(0, 0, 0, 0.3),
     0 0 12px rgba(255, 77, 109, 0.25);
@@ -3189,6 +3190,13 @@ select:focus {
   padding: 0;
   margin: 0;
   line-height: 1;
+}
+
+.scroll-navigator__btn svg {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  flex-shrink: 0;
 }
 
 .scroll-navigator__btn:hover {
@@ -3199,6 +3207,16 @@ select:focus {
     0 0 22px rgba(255, 77, 109, 0.55);
   transform: scale(1.12);
   color: #ffffff;
+}
+
+.scroll-navigator__btn:focus-visible {
+  outline: 2px solid #ff4d6d;
+  outline-offset: 3px;
+  background: rgba(255, 77, 109, 0.25);
+  border-color: rgba(255, 77, 109, 0.85);
+  box-shadow:
+    0 6px 25px rgba(0, 0, 0, 0.4),
+    0 0 22px rgba(255, 77, 109, 0.55);
 }
 
 .scroll-navigator__btn:active {
@@ -3212,7 +3230,7 @@ select:focus {
 
 .scroll-navigator__btn--hidden:hover {
   transform: none;
-  background: rgba(26, 31, 58, 0.75);
+  background: rgba(26, 31, 58, 0.85);
   border-color: rgba(255, 77, 109, 0.5);
   box-shadow:
     0 4px 15px rgba(0, 0, 0, 0.3),

@@ -37,8 +37,9 @@ const ScrollNavigator = () => {
   if (!showNavigator) return null;
 
   return (
-    <div className="scroll-navigator" aria-label="Scroll navigation">
+    <div className="scroll-navigator" role="navigation" aria-label="Scroll navigation">
       <button
+        type="button"
         className="scroll-navigator__btn scroll-navigator__btn--up"
         onClick={scrollToTop}
         aria-label="Scroll to top"
@@ -47,6 +48,7 @@ const ScrollNavigator = () => {
         <FaArrowUp aria-hidden="true" />
       </button>
       <button
+        type="button"
         className={`scroll-navigator__btn scroll-navigator__btn--down ${atBottom ? "scroll-navigator__btn--hidden" : ""}`}
         onClick={scrollToBottom}
         aria-label="Scroll to bottom"
