@@ -228,6 +228,7 @@ import { SearchProvider } from "./context/SearchContext.jsx";
 import  Contact  from "./components/Contact.jsx";
 import LessonLayout from "./components/LessonLayout.jsx";
 import BookmarksPage from "./components/BookmarksPage.jsx";
+import PomodoroTimer from "./components/PomodoroTimer.jsx";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -238,6 +239,7 @@ createRoot(document.getElementById('root')).render(
           <DynamicProgressSidebar />
           <ScrollNavigator />
           <GlobalBackNav />
+          <PomodoroTimer />
           <ErrorBoundary>
             <Routes>
               {/* General Routes (no auth needed) */}

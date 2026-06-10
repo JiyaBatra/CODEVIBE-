@@ -7,6 +7,7 @@ import {
   ArrowRight,
   BarChart3,
   BookOpen,
+  Clock,
   LayoutDashboard,
   Sparkles,
   Star,
@@ -832,6 +833,11 @@ const Dashboard = () => {
         label: "Longest Streak",
         value: formatNumber(analytics?.subjects?.length || 0),
         icon: <Star />,
+      },
+      {
+        label: "Focus Sessions",
+        value: formatNumber(stats.focusSessions || 0),
+        icon: <Clock />,
       },
     ];
   }, [analytics]);
