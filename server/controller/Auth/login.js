@@ -29,9 +29,9 @@ const login = async (req, res, next) => {
 
 
     if (!user) {
-      return res.status(404).json({
+      return res.status(401).json({
         success: false,
-        message: "User not found",
+        message: "Invalid email or password",
       });
     }
 
@@ -46,7 +46,10 @@ const login = async (req, res, next) => {
     }
 
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password",
+      });
     }
 
     const token = jwt.sign(
