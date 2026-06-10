@@ -10,7 +10,8 @@
     "dev": "nodemon index.js",
     "dev:watch": "nodemon index.js",
     "build": "echo Backend build not required",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "node tests/cors.test.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
