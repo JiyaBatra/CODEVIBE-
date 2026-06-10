@@ -15,6 +15,7 @@ const examRoutes = require('./examRoutes');
 const notesRoutes = require('./notesRoutes');
 const bookmarkRoutes = require('./bookmarkRoutes');
 const notificationRoutes = require('./notificationRoutes');
+const reportRoutes = require('./reportRoutes');
 
 router.use('/feedback', feedbackRoutes);
 router.use('/progress', progressRoutes);
@@ -30,5 +31,6 @@ router.use('/exam', examRoutes);
 router.use('/notes', notesRoutes);
 router.use('/bookmarks', bookmarkRoutes);
 router.use('/notifications', notificationRoutes);
+router.use('/report', reportRoutes);
 
 module.exports = router;
