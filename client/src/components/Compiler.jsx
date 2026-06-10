@@ -40,8 +40,21 @@ const ERROR_BADGE_LABEL = {
   ExecutionError:   "❌ Execution Error",
 };
 
-// ─── Simple Result Panel ─────────────────────────────────────────────────────
-const FeedbackPanel = ({ isSuccess, score, tries, executionTime, errorType, hint, expected, status }) => {
+// ─── Rich Result Panel ───────────────────────────────────────────────────────
+const FeedbackPanel = ({
+  isSuccess,
+  score,
+  tries,
+  executionTime,
+  errorType,
+  errorLine,
+  errorMessage,
+  hint,
+  expected,
+  got,
+  status,
+  isPlayground
+}) => {
   if (!isSuccess && !errorType && !status) return null;
 
   if (isSuccess) {
@@ -49,30 +62,77 @@ const FeedbackPanel = ({ isSuccess, score, tries, executionTime, errorType, hint
       <div className="feedback-panel feedback-panel--success">
         <div className="feedback-success-header">
           <span className="feedback-success-icon">✅</span>
-          <span className="feedback-success-title">Correct! Well done!</span>
+          <span className="feedback-success-title">
+            {isPlayground ? "Execution Successful!" : "Correct! Well done!"}
+          </span>
         </div>
-        <div className="feedback-success-meta">
-          <span className="feedback-meta-chip">🏆 Score: <b>{score}</b></span>
-          <span className="feedback-meta-chip">🔁 Attempt: <b>{tries}</b></span>
-          {executionTime > 0 && (
+        {!isPlayground && (
+          <div className="feedback-success-meta">
+            <span className="feedback-meta-chip">🏆 Score: <b>{score}</b></span>
+            <span className="feedback-meta-chip">🔁 Attempt: <b>{tries}</b></span>
+            {executionTime > 0 && (
+              <span className="feedback-meta-chip">⚡ {executionTime}ms</span>
+            )}
+          </div>
+        )}
+        {isPlayground && executionTime > 0 && (
+          <div className="feedback-success-meta">
             <span className="feedback-meta-chip">⚡ {executionTime}ms</span>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     );
   }
 
+  const badgeColor = ERROR_BADGE_COLOR[errorType] || "#ef4444";
+  const badgeLabel = ERROR_BADGE_LABEL[errorType] || "❌ Error";
+
+  // Check if we should show a diff (both expected and got are defined)
+  const hasDiff = expected !== undefined && got !== undefined;
+
   return (
     <div className="feedback-panel feedback-panel--error">
       <div className="feedback-error-header">
-        <span className="feedback-badge" style={{ background: "#ef4444" }}>❌ Wrong Answer</span>
+        <span className="feedback-badge" style={{ background: badgeColor }}>
+          {badgeLabel}
+        </span>
+        {errorLine !== null && (
+          <span className="feedback-line-badge">Line {errorLine}</span>
+        )}
+        {executionTime > 0 && (
+          <span className="feedback-time-badge">{executionTime}ms</span>
+        )}
       </div>
-      {expected !== undefined && (
+
+      {errorMessage && (
         <div className="feedback-section">
-          <div style={{ color: "#94a3b8", fontSize: "0.85rem", marginBottom: "6px" }}>Expected Output:</div>
-          <pre className="feedback-raw" style={{ color: "#86efac" }}>{String(expected ?? "")}</pre>
+          <div style={{ color: "#94a3b8", fontSize: "0.85rem", marginBottom: "6px" }}>Error Details:</div>
+          <pre className="feedback-raw">{errorMessage}</pre>
         </div>
       )}
+
+      {hasDiff ? (
+        <div className="feedback-section">
+          <div className="feedback-diff">
+            <div className="feedback-diff-block feedback-diff-expected">
+              <div className="feedback-diff-label">Expected Output</div>
+              <pre className="feedback-diff-code">{String(expected ?? "")}</pre>
+            </div>
+            <div className="feedback-diff-block feedback-diff-got">
+              <div className="feedback-diff-label">Actual Output</div>
+              <pre className="feedback-diff-code">{String(got ?? "")}</pre>
+            </div>
+          </div>
+        </div>
+      ) : (
+        expected !== undefined && (
+          <div className="feedback-section">
+            <div style={{ color: "#94a3b8", fontSize: "0.85rem", marginBottom: "6px" }}>Expected Output:</div>
+            <pre className="feedback-raw" style={{ color: "#86efac" }}>{String(expected ?? "")}</pre>
+          </div>
+        )
+      )}
+
       {hint && (
         <div className="feedback-hint">
           <span className="feedback-hint-icon">💡</span>
@@ -112,6 +172,8 @@ const Compiler = ({
 
   const iframeRef = useRef(null);
   const startTimeRef = useRef(Date.now());
+
+  const isPlayground = !LessonId;
 
   useEffect(() => {
     startTimeRef.current = Date.now();
@@ -172,7 +234,7 @@ const Compiler = ({
 
   // ── pass / fail helpers ──────────────────────────────────────────────────
   const pass = (attempt, ms = 0) => {
-    const sc = SCORING(attempt);
+    const sc = isPlayground ? null : SCORING(attempt);
     setScore(sc);
     setIsSuccess(true);
     setErrorType(null);
@@ -182,10 +244,12 @@ const Compiler = ({
     setExpected(undefined);
     setGot(undefined);
     setStatus("");
-    saveProgress(LessonId, sc, attempt);
+    if (!isPlayground) {
+      saveProgress(LessonId, sc, attempt);
+    }
   };
 
-  const logMistake = async ({ type = "OutputMismatch", message = "", exp = "", got: gotVal = "" } = {}) => {
+  const logMistake = async ({ type = "OutputMismatch", message = "", exp = "", got: gotVal } = {}) => {
     if (serverLanguages.includes(language)) return;
     if (!token) return;
 
@@ -225,7 +289,7 @@ const Compiler = ({
     setGot(gotVal);
     setStatus("");
 
-    if (!serverLanguages.includes(language)) {
+    if (!serverLanguages.includes(language) && !isPlayground) {
       logMistake({ type, message, exp, got: gotVal });
     }
   };
@@ -249,12 +313,32 @@ const Compiler = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [code, initialCode, language, tries]);
 
+  // ─── editor keyboard helper (Tab indentation & Escape blur) ───────────────
+  const handleEditorKeyDown = (e) => {
+    if (e.key === "Tab") {
+      e.preventDefault();
+      const { selectionStart, selectionEnd } = e.target;
+      const newCode = code.substring(0, selectionStart) + "  " + code.substring(selectionEnd);
+      setCode(newCode);
+      const target = e.target;
+      setTimeout(() => {
+        target.selectionStart = target.selectionEnd = selectionStart + 2;
+      }, 0);
+    } else if (e.key === "Escape") {
+      e.target.blur();
+    }
+  };
+
   // ─── client-side runners ─────────────────────────────────────────────────
 
   const runHTML = (attempt, iframeDoc) => {
     iframeDoc.open();
     iframeDoc.write(code);
     iframeDoc.close();
+    if (isPlayground) {
+      pass(attempt);
+      return;
+    }
     setTimeout(() => {
       let expVal = "";
       if (typeof expectedOutput !== "function") {
@@ -286,6 +370,13 @@ const Compiler = ({
   };
 
   const runCSS = (attempt, iframeDoc, iframeWin) => {
+    if (isPlayground) {
+      iframeDoc.open();
+      iframeDoc.write(`<html><head><style>${code}</style></head><body><h1>CSS Playground</h1><p>Type CSS to style this page.</p></body></html>`);
+      iframeDoc.close();
+      pass(attempt);
+      return;
+    }
     if (typeof expectedOutput !== "object" || Array.isArray(expectedOutput) || expectedOutput === null) {
       fail({ type: "ExecutionError", message: "expectedOutput for CSS must be an object like { 'h1': { color: 'rgb(...)' } }" });
       return;
@@ -354,13 +445,17 @@ const Compiler = ({
         fail({
           type: errMsg.toLowerCase().includes("timeout") ? "TimeoutError" : "RuntimeError",
           message: gotVal,
-          exp: expStr,
+          exp: isPlayground ? undefined : expStr,
           got: gotVal,
         });
-      } else if (decide(gotVal)) {
-        pass(attempt);
       } else {
-        fail({ type: "OutputMismatch", message: "", exp: expStr, got: gotVal });
+        if (isPlayground) {
+          pass(attempt);
+        } else if (decide(gotVal)) {
+          pass(attempt);
+        } else {
+          fail({ type: "OutputMismatch", message: "", exp: expStr, got: gotVal });
+        }
       }
     }, 300);
   };
@@ -401,10 +496,14 @@ const Compiler = ({
       const gotVal = (iframeDoc.body?.innerText || "").trim();
       if (gotVal.startsWith("Error:")) {
         fail({ type: "RuntimeError", message: gotVal, got: gotVal });
-      } else if (decide(gotVal)) {
-        pass(attempt);
       } else {
-        fail({ type: "OutputMismatch", message: "", got: gotVal });
+        if (isPlayground) {
+          pass(attempt);
+        } else if (decide(gotVal)) {
+          pass(attempt);
+        } else {
+          fail({ type: "OutputMismatch", message: "", got: gotVal });
+        }
       }
     }, 700);
   };
@@ -424,7 +523,9 @@ const Compiler = ({
       const out = String(res.data.output ?? "").trim();
       const ms  = res.data.executionTime || 0;
       setStatus("");
-      if (decide(out)) {
+      if (isPlayground) {
+        pass(attempt, ms);
+      } else if (decide(out)) {
         pass(attempt, ms);
       } else {
         const expStr = typeof expectedOutput === "string" ? expectedOutput : "[use function/regex]";
@@ -535,6 +636,7 @@ const Compiler = ({
           aria-label="Code editor"
           value={code}
           onChange={(e) => setCode(e.target.value)}
+          onKeyDown={handleEditorKeyDown}
           className="compiler-textarea"
           placeholder={`// Type your code here. Use console.log for JS outputs.\n// For React define function App(){ return <h1>Hello</h1> }\n// Server languages will be executed by backend: POST /api/execute/:language`}
           spellCheck={false}
@@ -611,6 +713,7 @@ const Compiler = ({
         expected={expected}
         got={got}
         status={status}
+        isPlayground={isPlayground}
       />
     </div>
   );

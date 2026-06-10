@@ -58,6 +58,11 @@ const Dropdown = ({ value, onChange, options, placeholder, style, dropdownStyle,
         .custom-dropdown-list::-webkit-scrollbar-thumb:hover {
           background: rgba(255, 75, 110, 0.7);
         }
+        .custom-dropdown-list li:focus-visible {
+          outline: 2px solid #ff4d88;
+          outline-offset: -2px;
+          background: rgba(255, 75, 110, 0.15);
+        }
       `}</style>
 
       <button

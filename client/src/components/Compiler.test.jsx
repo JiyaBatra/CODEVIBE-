@@ -29,14 +29,15 @@ describe("Compiler Copy Button - Rapid Click Test", () => {
     expect(screen.getAllByText(/code copied/i).length).toBeGreaterThan(0);
   });
 
-  it("does not break UI after repeated clicks", () => {
+  it("does not break UI after repeated clicks", async () => {
+    const user = userEvent.setup();
     render(<Compiler />);
 
     const btn = screen.getByTitle("Copy Code");
 
-    fireEvent.click(btn);
-    fireEvent.click(btn);
-    fireEvent.click(btn);
+    await user.click(btn);
+    await user.click(btn);
+    await user.click(btn);
 
     expect(btn).toBeInTheDocument();
   });
