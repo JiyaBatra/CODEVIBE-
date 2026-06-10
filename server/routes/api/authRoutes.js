@@ -14,7 +14,6 @@ const verifyToken = require("../../middleware/authMiddleware");
 Router.post("/register", authLimiter, register);
 Router.post("/login", authLimiter, login);
 Router.post("/forgot-password", authLimiter, forgotPassword);
-Router.post("/ForgotPassword", authLimiter, forgotPassword);
 Router.post("/reset-password", authLimiter, resetPassword);
 Router.put("/profile", verifyToken, updateProfile);
 
