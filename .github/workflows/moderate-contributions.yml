@@ -17,9 +17,9 @@ concurrency:
 
 env:
   # Contributors with more than this many open issues will have all open issues closed.
-  MAX_OPEN_ISSUES: 5
+  MAX_OPEN_ISSUES: 20
   # Comma-separated GitHub logins to skip, for example: maintainer1,maintainer2
-  MODERATION_EXCLUDED_LOGINS: JiyaBatra
+  MODERATION_EXCLUDED_LOGINS: JiyaBatra,Pcmhacker-piro
 
 jobs:
   moderate:
