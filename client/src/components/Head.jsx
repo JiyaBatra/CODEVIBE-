@@ -3,7 +3,7 @@ import { NavLink, Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthProvider.jsx";
 import { useSearch } from "../context/SearchContext.jsx";
 import { useDebounce } from "../hooks/useDebounce"; // added
-import { FaSignInAlt, FaSignOutAlt, FaUserPlus, FaTachometerAlt, FaGamepad, FaSearch, FaTimes, FaHome, FaQuestionCircle, FaBook, FaEnvelope, FaTrophy, FaMedal } from "react-icons/fa";
+import { FaSignInAlt, FaSignOutAlt, FaUserPlus, FaTachometerAlt, FaGamepad, FaSearch, FaTimes, FaHome, FaQuestionCircle, FaBook, FaEnvelope, FaTrophy, FaMedal, FaChartBar } from "react-icons/fa";
 import logo from "../assets/favicon.png";
 import StreakCounter from "./StreakCounter.jsx";
 import NotificationBell from "./common/NotificationBell.jsx";
@@ -249,6 +249,15 @@ useEffect(() => {
             <button
             type="button"
             className="nav-link"
+            onClick={() => navigate("/report")}
+            >
+            <FaChartBar className="nav-icon" />
+            <span>Report</span>
+            </button>
+
+            <button
+            type="button"
+            className="nav-link"
             onClick={() => navigate("/dashboard")}
             >
            <FaTachometerAlt className="nav-icon" />
@@ -402,6 +411,9 @@ useEffect(() => {
             </Link>
             <Link to="/badges" className="nav-link" onClick={() => setMenuOpen(false)}>
               <FaMedal className="nav-icon" /><span>Badges</span>
+            </Link>
+            <Link to="/report" className="nav-link" onClick={() => setMenuOpen(false)}>
+              <FaChartBar className="nav-icon" /><span>Report</span>
             </Link>
             <Link to="/dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
               <FaTachometerAlt className="nav-icon" /><span>Dashboard</span>

@@ -25,6 +25,7 @@ import Foot from './components/Foot.jsx';
 import Compiler from './components/Compiler.jsx';
 import Certificate from './components/Certificate.jsx';
 import ViewReport from './components/ViewReport.jsx';
+import WeeklyReport from './components/WeeklyReport.jsx';
 import DynamicProgressSidebar from './components/DynamicProgressSidebar.jsx';
 import Leaderboard from './components/Leaderboard.jsx';
 import BadgesPage from './components/BadgesPage.jsx';
@@ -255,6 +256,7 @@ createRoot(document.getElementById('root')).render(
               <Route path="/bookmarks" element={<PrivateRoute><BookmarksPage /></PrivateRoute>} />
               <Route path="/leaderboard" element={<Leaderboard />} />
               <Route path="/badges" element={<BadgesPage />} />
+              <Route path="/report" element={<WeeklyReport />} />
               <Route path="/flashcards" element={<Flashcard />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />

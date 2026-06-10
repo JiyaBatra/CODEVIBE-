@@ -1,0 +1,211 @@
+.wr-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+  color: #e0e0f0;
+}
+
+.wr-loading,
+.wr-empty {
+  text-align: center;
+  padding: 80px 20px;
+  color: #808090;
+}
+
+.wr-empty-msg {
+  font-size: 1rem;
+  margin-top: 12px;
+}
+
+.wr-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.wr-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 4px;
+}
+
+.wr-subtitle {
+  font-size: 0.85rem;
+  color: #808090;
+  margin: 0;
+}
+
+.wr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.wr-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px 16px;
+  text-align: center;
+}
+
+.wr-card--wide {
+  grid-column: 1 / -1;
+}
+
+.wr-card-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #808090;
+  margin-bottom: 8px;
+}
+
+.wr-card-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.wr-sub-meta {
+  font-size: 0.75rem;
+  color: #606070;
+  margin-top: 4px;
+}
+
+.wr-delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.wr-delta--up {
+  color: #34d399;
+}
+
+.wr-delta--down {
+  color: #f87171;
+}
+
+.wr-delta--neutral {
+  color: #808090;
+}
+
+.wr-multi-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-top: 8px;
+}
+
+.wr-multi-item {
+  text-align: center;
+}
+
+.wr-multi-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.wr-multi-label {
+  font-size: 0.7rem;
+  color: #808090;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.wr-insight {
+  background: rgba(52, 211, 153, 0.08);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  color: #e0e0f0;
+}
+
+.wr-insight--warn {
+  background: rgba(248, 113, 113, 0.08);
+  border-color: rgba(248, 113, 113, 0.2);
+}
+
+.wr-section {
+  margin-top: 28px;
+}
+
+.wr-section-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #c0c0d0;
+  margin: 0 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.wr-subject-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wr-subject-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+}
+
+.wr-subject-name {
+  flex: 0 0 100px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #c0c0d0;
+}
+
+.wr-subject-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.wr-subject-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff5f8f, #ff8fb5);
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+.wr-subject-score {
+  flex: 0 0 40px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #e0e0f0;
+  text-align: right;
+}
+
+.wr-subject-lessons {
+  flex: 0 0 80px;
+  font-size: 0.75rem;
+  color: #808090;
+  text-align: right;
+}
+
+.wr-footer {
+  text-align: center;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.85rem;
+  color: #606070;
+}
