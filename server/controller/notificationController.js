@@ -1,5 +1,15 @@
 const Notification = require("../models/notification");
 
+exports.createNotificationHelper = async ({ email, type, message, relatedEntity }) => {
+  try {
+    const notif = await Notification.create({ email, type, message, relatedEntity });
+    return notif;
+  } catch (err) {
+    console.error("Failed to create notification:", err);
+    return null;
+  }
+};
+
 exports.getNotifications = async (req, res) => {
   try {
     const notifs = await Notification.find({ email: req.user.email })

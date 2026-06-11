@@ -1,5 +1,6 @@
 // controller/exam/examController.js
 const ExamResult = require('../../models/examResult');
+const { createNotificationHelper } = require('../notificationController');
 
 /**
  * POST /api/exam/submit
@@ -37,6 +38,15 @@ exports.submitExam = async (req, res) => {
       passed,
       attemptedAt: new Date(),
     });
+
+    if (passed) {
+      createNotificationHelper({
+        email,
+        type: 'exam_result',
+        message: `You passed the ${courseId} exam with ${score}/${totalQuestions} (${percentage}%)`,
+        relatedEntity: courseId,
+      });
+    }
 
     return res.status(201).json({
       message: 'Exam result saved',

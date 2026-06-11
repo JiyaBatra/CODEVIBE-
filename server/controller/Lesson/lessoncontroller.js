@@ -2,6 +2,8 @@ const Lesson = require('../../models/lesson');
 const Progress = require('../../models/progress');
 const User = require('../../models/user.models');
 const Analytics = require('../../models/analytics');
+const Notification = require('../../models/notification');
+const { createNotificationHelper } = require('../notificationController');
 
 const LESSON_ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/i;
 const MAX_LESSON_ID_LENGTH = 80;
@@ -291,6 +293,32 @@ exports.completeLesson = async (req, res) => {
       });
     } catch (analyticsErr) {
       console.error('Analytics event creation failed:', analyticsErr);
+    }
+
+    if (isNewCompletion) {
+      createNotificationHelper({
+        email,
+        type: 'lesson_complete',
+        message: `You completed the lesson: "${lessonId}"`,
+        relatedEntity: lessonId,
+      });
+
+      const streakMilestones = [3, 7, 14, 21, 30, 60, 100];
+      if (streakMilestones.includes(currentStreak)) {
+        const existingMilestone = await Notification.findOne({
+          email,
+          type: 'streak_milestone',
+          message: { $regex: `${currentStreak}-day` },
+        });
+        if (!existingMilestone) {
+          createNotificationHelper({
+            email,
+            type: 'streak_milestone',
+            message: `🔥 ${currentStreak}-day streak! Keep learning!`,
+            relatedEntity: `${currentStreak}`,
+          });
+        }
+      }
     }
 
     res.json({

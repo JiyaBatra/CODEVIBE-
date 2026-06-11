@@ -1,5 +1,6 @@
 // controller/certificate/certificatecontroller.js
 const Progress = require("../../models/progress");
+const { createNotificationHelper } = require("../notificationController");
 
 const PASS_MARK = 50;
 
@@ -83,6 +84,13 @@ exports.getCertificateInfo = async (req, res) => {
     }
 
     const feedbackMessage = calculateFeedback(score);
+
+    createNotificationHelper({
+      email,
+      type: "certificate_earned",
+      message: `Congratulations! You earned a certificate for "${courseName}" with ${score}%`,
+      relatedEntity: courseName,
+    });
 
     res.json({
       studentName: progress.username || "Student",
