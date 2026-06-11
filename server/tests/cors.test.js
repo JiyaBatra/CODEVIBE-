@@ -43,6 +43,7 @@ describe("CORS Configuration", () => {
       .options("/")
       .set("Access-Control-Request-Method", "GET");
 
+    expect(res.status).toBe(403);
     expect(res.headers["access-control-allow-origin"]).toBeUndefined();
   });
 
@@ -52,6 +53,7 @@ describe("CORS Configuration", () => {
       .set("Origin", "http://evil.com")
       .set("Access-Control-Request-Method", "GET");
 
+    expect(res.status).toBe(403);
     expect(res.headers["access-control-allow-origin"]).toBeUndefined();
   });
 
@@ -61,6 +63,7 @@ describe("CORS Configuration", () => {
       .set("Origin", "http://localhost")
       .set("Access-Control-Request-Method", "GET");
 
+    expect(res.status).toBe(403);
     expect(res.headers["access-control-allow-origin"]).toBeUndefined();
   });
 

@@ -50,6 +50,15 @@ const isLocalDevOrigin = (origin = "") => {
 backend.use(
   cors({
     origin: (origin, callback) => {
+      // Reject missing Origin headers consistently to avoid loosening CORS
+      // protections in development mode.
+      if (!origin) {
+        console.warn("⚠️ [CORS] Rejected request without Origin header");
+        const corsError = new Error("Not allowed by CORS");
+        corsError.status = 403;
+        return callback(corsError);
+      }
+
       if (
         allowedOrigins.includes(origin) ||
         isLocalDevOrigin(origin) ||
@@ -58,14 +67,10 @@ backend.use(
         return callback(null, true);
       }
 
-      if (!origin) {
-        console.log("❌ Blocked request with missing Origin header");
-        return callback(null, false);
-      }
-
-      console.log("❌ Blocked CORS origin:", origin);
-
-      return callback(null, false); // 👈 IMPORTANT CHANGE
+      console.warn(`⚠️ [CORS] Blocked origin: ${origin}`);
+      const corsError = new Error("Not allowed by CORS");
+      corsError.status = 403;
+      return callback(corsError);
     },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
