@@ -130,7 +130,7 @@ const runSpawn = (cmd, args, opts = {}) =>
 
     const timer = setTimeout(() => {
       timedOut = true;
-      try { child.kill("SIGKILL"); } catch (_e) { /* ignore */ }
+      try { child.kill("SIGKILL"); } catch (e) { /* ignore */ }
     }, EXEC_TIMEOUT_MS);
 
     child.stdout?.on("data", (d) => (stdout += d.toString()));
@@ -151,7 +151,7 @@ const runSpawn = (cmd, args, opts = {}) =>
 // Run user code in a temp directory with minimal shell exposure.
 const runCodeInTempDir = async (language, code) => {
   const tmpDir = await makeTempDir();
-  const _results = { stdout: "", stderr: "", executionTime: 0, timedOut: false };
+  const results = { stdout: "", stderr: "", executionTime: 0, timedOut: false };
 
   // Use a randomly-named file basename to avoid predictable filenames.
   const baseName = `usercode_${Date.now()}_${crypto.randomBytes(4).toString("hex")}`;
@@ -222,9 +222,9 @@ const runCodeInTempDir = async (language, code) => {
     // Best-effort cleanup of temp dir (async). Ignore errors during cleanup.
     try {
       const files = await fs.readdir(tmpDir);
-      await Promise.all(files.map((f) => fs.unlink(path.join(tmpDir, f)).catch(() => { /* ignore cleanup errors */ })));
-      await fs.rmdir(tmpDir).catch(() => { /* ignore cleanup errors */ });
-    } catch (_e) {
+      await Promise.all(files.map((f) => fs.unlink(path.join(tmpDir, f)).catch(() => {})));
+      await fs.rmdir(tmpDir).catch(() => {});
+    } catch (e) {
       // ignore cleanup errors
     }
   }
