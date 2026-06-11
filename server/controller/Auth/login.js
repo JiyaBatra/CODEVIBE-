@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../../models/user.models");
+const { JWT_SECRET, JWT_EXPIRES_IN } = require("../../config/jwt");
 
 const escapeRegex = (value = "") => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -50,8 +51,8 @@ const login = async (req, res, next) => {
 
     const token = jwt.sign(
       { userId: user._id, email: user.email || user.Email, username: user.username },
-      process.env.JWT_SECRET || "codevibe_default_secret",
-      { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN }
     );
 
     return res.status(200).json({

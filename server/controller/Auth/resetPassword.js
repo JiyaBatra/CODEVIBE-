@@ -1,25 +1,45 @@
 // controller/Auth/resetPassword.js
 const bcrypt = require("bcryptjs");
 const UserModel = require("../../models/user.models");
+const { validatePassword } = require("../../utils/passwordValidator");
 
 const resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
 
     if (!token || !newPassword) {
-      return res.status(400).json({ message: "Token and new password are required" });
+      return res.status(400).json({ 
+        success: false,
+        message: "Token and new password are required" 
+      });
+    }
+
+    // 📌 Validate password strength
+    const passwordValidation = validatePassword(newPassword);
+    if (!passwordValidation.isValid) {
+      return res.status(400).json({
+        success: false,
+        message: "Password does not meet security requirements",
+        passwordErrors: passwordValidation.errors,
+      });
     }
 
     // Find user by token
     const user = await UserModel.findOne({ resetToken: token });
     
     if (!user) {
-      return res.status(400).json({ message: "Invalid or expired reset token" });
+      return res.status(400).json({ 
+        success: false,
+        message: "Invalid or expired reset token" 
+      });
     }
 
     // Check expiry
     if (user.resetTokenExpiry < Date.now()) {
-      return res.status(400).json({ message: "Invalid or expired reset token" });
+      return res.status(400).json({ 
+        success: false,
+        message: "Invalid or expired reset token" 
+      });
     }
 
     // Update password
@@ -33,11 +53,18 @@ const resetPassword = async (req, res) => {
     
     await user.save();
 
-    return res.status(200).json({ success: true, message: "Password reset successfully" });
+    return res.status(200).json({ 
+      success: true, 
+      message: "Password reset successfully" 
+    });
 
   } catch (error) {
     console.error("Reset password error:", error);
-    return res.status(500).json({ success: false, message: "Server error during password reset", error: error.message });
+    return res.status(500).json({ 
+      success: false, 
+      message: "Server error during password reset", 
+      error: error.message 
+    });
   }
 };
 

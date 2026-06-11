@@ -1,0 +1,5 @@
+- [x] Gather relevant files for scroll behavior (index.css, ScrollNavigator.jsx, DynamicProgressSidebar.jsx, LessonLayout.jsx)
+- [x] Remove scroll/jank trigger (index.css: body transition removed)
+- [x] Reduce render pressure during scroll (ScrollNavigator.jsx: rAF-throttled scroll listener + state guards)
+- [ ] Run client lint/build/tests to confirm no breakage
+- [ ] Manual verification: scroll; confirm no white space gap and no lag

@@ -47,15 +47,21 @@ const getProgressScores = (scores) => {
 
 const normalizeDateValue = (value) => {
   if (!value) return null;
+  let date;
   if (typeof value === 'string' || value instanceof Date) {
-    const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? null : date.toISOString().slice(0, 10);
+    date = new Date(value);
+  } else if (typeof value === 'object' && value !== null) {
+    date = new Date(value.createdAt || value.x || value.date);
+  } else {
+    return null;
   }
-  if (typeof value === 'object' && value !== null) {
-    const date = new Date(value.createdAt || value.x || value.date);
-    return Number.isNaN(date.getTime()) ? null : date.toISOString().slice(0, 10);
-  }
-  return null;
+  
+  if (Number.isNaN(date.getTime())) return null;
+  
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 };
 
 const getLearningStreak = (values) => {
@@ -66,6 +72,25 @@ const getLearningStreak = (values) => {
   ).sort((a, b) => new Date(b) - new Date(a));
 
   if (!uniqueDates.length) return 0;
+
+  const getLocalDateStr = (d) => {
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const todayStr = getLocalDateStr(new Date());
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = getLocalDateStr(yesterday);
+
+  const newestDateStr = uniqueDates[0];
+
+  // If the most recent activity is older than yesterday, the current streak is broken.
+  if (newestDateStr !== todayStr && newestDateStr !== yesterdayStr) {
+    return 0;
+  }
 
   let streak = 1;
   let previousDate = new Date(uniqueDates[0]);
@@ -278,15 +303,21 @@ const getAnalytics = async (req, res) => {
       return res.status(403).json({ message: 'Forbidden' });
     }
 
+    console.log(`[getAnalytics] Querying user with email: "${email}"`);
     const [user, progress, events] = await Promise.all([
       User.findOne({
-      $or: [
-      { email },
-      { Email: email }
-      ],      
-      }).lean(),
-      Progress.findOne({ email }).lean(),
-      Analytics.find({ email }).sort({ createdAt: 1 }).lean(),
+        $or: [
+          { email },
+          { Email: email }
+        ],
+      })
+        .select('username Email college year bio avatarUrl joinedAt')
+        .lean(),
+      Progress.findOne({ email }).select('scores completedLessons xp level badges').lean(),
+      Analytics.find({ email })
+        .select('lessonId score points coins learningTime createdAt type')
+        .sort({ createdAt: 1 })
+        .lean(),
     ]);
 
     if (!user) {
@@ -307,7 +338,9 @@ const getAnalytics = async (req, res) => {
     );
 
     const lessons = progressLessonIds.length
-      ? await Lesson.find({ lessonId: { $in: progressLessonIds } }).lean()
+      ? await Lesson.find({ lessonId: { $in: progressLessonIds } })
+          .select('lessonId order createdAt')
+          .lean()
       : [];
 
     const scoreValues = Object.values(scores).filter((value) => typeof value === 'number');
@@ -407,7 +440,13 @@ const getAnalytics = async (req, res) => {
     const weeklyStats = buildWeeklyStats(events);
     const heatmapData = buildHeatmapData(events, 32);
 
-    const userLessons = lessons;
+    const totalStaticLessons = Object.values(SUBJECT_TOTALS).reduce(
+  (sum, count) => sum + count,
+  0
+);
+    const userLessons = lessons.length
+  ? lessons
+  : Array(totalStaticLessons).fill(null);
     const stats = {
       lessonsCompleted: completedLessons.length,
       totalLessons: userLessons.length,
@@ -424,6 +463,9 @@ const getAnalytics = async (req, res) => {
       longestStreak,
       weeklyStreak,
       lastUpdated: events.length ? events[events.length - 1].createdAt : null,
+      xp: progress?.xp || 0,
+      level: progress?.level || 1,
+      badges: progress?.badges || [],
     };
 
     const analytics = {
@@ -451,7 +493,7 @@ const getAnalytics = async (req, res) => {
 
     const profile = {
       username: user.username,
-      email: user.Email,
+      email: user.email,
       college: user.college,
       year: user.year,
       bio: user.bio || '',
@@ -477,4 +519,5 @@ const getAnalytics = async (req, res) => {
 
 module.exports = {
   getAnalytics,
+  getLearningStreak,
 };

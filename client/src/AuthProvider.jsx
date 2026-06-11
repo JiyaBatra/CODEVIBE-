@@ -1,5 +1,5 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 const AuthContext = createContext(null);
 
@@ -72,7 +72,7 @@ export const PrivateRoute = ({ children }) => {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
-  return children;
+  return children ?? <Outlet />;
 };
 
 export const PublicRoute = ({ children }) => {

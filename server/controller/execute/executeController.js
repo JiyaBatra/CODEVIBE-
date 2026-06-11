@@ -1,7 +1,11 @@
 // controllers/execute/executeController.js
-const { exec } = require("child_process");
+// Security-hardening: replace shell `exec()` usage with spawn/execFile
+// and safe temporary file handling. See TODO for full sandboxing note.
+const { spawn } = require("child_process");
 const path = require("path");
-const fs = require("fs");
+const fs = require("fs/promises");
+const os = require("os");
+const crypto = require("crypto");
 const ExecuteLog = require("../../models/execute.model");
 
 // ─── Error classification ───────────────────────────────────────────────────
@@ -95,83 +99,160 @@ const generateHint = (stderr = "", language = "") => {
   return "💡 Review your code carefully. Compare it with the example in the lesson above.";
 };
 
-// ─── Command runner with timing ──────────────────────────────────────────────
+// ─── Safer command runner using spawn (no shell interpolation) ──────────────
+// Notes:
+// - We avoid building shell command strings; we pass args as arrays to spawn.
+// - Temporary files are placed in a fresh temp directory under OS tmp.
+// - Process is killed after `EXEC_TIMEOUT_MS` milliseconds.
+// - This is NOT a full sandbox — running arbitrary user code can still
+//   perform malicious actions. Prefer containerized execution for production.
 
-const runCommandWithTempFile = (commandBuilder, code, ext) =>
-  new Promise((resolve, reject) => {
-    const filename = `temp_${Date.now()}.${ext}`;
-    const filepath = path.join(process.cwd(), filename);
+const EXEC_TIMEOUT_MS = 8000;
 
-    try {
-      fs.writeFileSync(filepath, code);
-    } catch (e) {
-      return reject({ stderr: `Failed to write temp file: ${e.message}`, timedOut: false });
-    }
+const makeTempDir = async () => {
+  const base = await fs.mkdtemp(path.join(os.tmpdir(), "codevibe-"));
+  return base;
+};
 
-    const startTime = Date.now();
+const safeWriteFile = async (dir, name, content) => {
+  const filePath = path.join(dir, name);
+  await fs.writeFile(filePath, content, { mode: 0o600 });
+  return filePath;
+};
 
-    exec(commandBuilder(filepath), { timeout: 8000 }, (error, stdout, stderr) => {
-      const executionTime = Date.now() - startTime;
+const runSpawn = (cmd, args, opts = {}) =>
+  new Promise((resolve) => {
+    const child = spawn(cmd, args, { shell: false, ...opts });
+    let stdout = "";
+    let stderr = "";
+    let timedOut = false;
+    const start = Date.now();
 
-      try { if (fs.existsSync(filepath)) fs.unlinkSync(filepath); } catch { /* ignore error */ }
-      try { if (fs.existsSync(`${filepath}.out`)) fs.unlinkSync(`${filepath}.out`); } catch { /* ignore error */ }
-      try { if (fs.existsSync(`${filepath.replace(/\.\w+$/, ".class")}`)) fs.unlinkSync(`${filepath.replace(/\.\w+$/, ".class")}`); } catch { /* ignore error */ }
+    const timer = setTimeout(() => {
+      timedOut = true;
+      try { child.kill("SIGKILL"); } catch (_e) { /* ignore */ }
+    }, EXEC_TIMEOUT_MS);
 
-      if (error) {
-        const timedOut = error.killed || (error.signal === "SIGTERM") || String(error.message).includes("timeout");
-        return reject({ stderr: stderr || error.message, timedOut, executionTime });
-      }
-      resolve({ stdout, executionTime });
+    child.stdout?.on("data", (d) => (stdout += d.toString()));
+    child.stderr?.on("data", (d) => (stderr += d.toString()));
+
+    child.on("close", (code, signal) => {
+      clearTimeout(timer);
+      const executionTime = Date.now() - start;
+      resolve({ code, signal, stdout, stderr, timedOut, executionTime });
+    });
+
+    child.on("error", (err) => {
+      clearTimeout(timer);
+      resolve({ code: null, signal: null, stdout, stderr: String(err), timedOut, executionTime: Date.now() - start });
     });
   });
+
+// Run user code in a temp directory with minimal shell exposure.
+const runCodeInTempDir = async (language, code) => {
+  const tmpDir = await makeTempDir();
+  const results = { stdout: "", stderr: "", executionTime: 0, timedOut: false };
+
+  // Use a randomly-named file basename to avoid predictable filenames.
+  const baseName = `usercode_${Date.now()}_${crypto.randomBytes(4).toString("hex")}`;
+
+  try {
+    switch (language) {
+      case "c": {
+        const src = `${baseName}.c`;
+        const out = path.join(tmpDir, `${baseName}.out`);
+        const srcPath = await safeWriteFile(tmpDir, src, code);
+
+        // Compile with gcc (args array prevents shell injection)
+        const compile = await runSpawn("gcc", [srcPath, "-o", out]);
+        if (compile.code !== 0) return { stderr: compile.stderr || compile.stdout, executionTime: compile.executionTime, timedOut: compile.timedOut };
+
+        const run = await runSpawn(out, [], { cwd: tmpDir });
+        return { stdout: run.stdout, stderr: run.stderr, executionTime: run.executionTime, timedOut: run.timedOut };
+      }
+
+      case "cpp": {
+        const src = `${baseName}.cpp`;
+        const out = path.join(tmpDir, `${baseName}.out`);
+        const srcPath = await safeWriteFile(tmpDir, src, code);
+
+        const compile = await runSpawn("g++", [srcPath, "-o", out]);
+        if (compile.code !== 0) return { stderr: compile.stderr || compile.stdout, executionTime: compile.executionTime, timedOut: compile.timedOut };
+
+        const run = await runSpawn(out, [], { cwd: tmpDir });
+        return { stdout: run.stdout, stderr: run.stderr, executionTime: run.executionTime, timedOut: run.timedOut };
+      }
+
+      case "python": {
+        const src = `${baseName}.py`;
+        const srcPath = await safeWriteFile(tmpDir, src, code);
+        const run = await runSpawn("python3", [srcPath]);
+        return { stdout: run.stdout, stderr: run.stderr, executionTime: run.executionTime, timedOut: run.timedOut };
+      }
+
+      case "java": {
+        const src = `${baseName}.java`;
+        const srcPath = await safeWriteFile(tmpDir, src, code);
+        // Java requires class with same name as file; baseName used consistently
+        const compile = await runSpawn("javac", [srcPath]);
+        if (compile.code !== 0) return { stderr: compile.stderr || compile.stdout, executionTime: compile.executionTime, timedOut: compile.timedOut };
+
+        const className = path.basename(src, ".java");
+        const run = await runSpawn("java", ["-cp", tmpDir, className]);
+        return { stdout: run.stdout, stderr: run.stderr, executionTime: run.executionTime, timedOut: run.timedOut };
+      }
+
+      case "node":
+      case "javascript": {
+        const src = `${baseName}.js`;
+        const srcPath = await safeWriteFile(tmpDir, src, code);
+        const run = await runSpawn("node", [srcPath]);
+        return { stdout: run.stdout, stderr: run.stderr, executionTime: run.executionTime, timedOut: run.timedOut };
+      }
+
+      case "dbms":
+      case "mongo": {
+        return { stdout: "✅ Simulated DB/MS execution: Query parsed successfully.", stderr: "", executionTime: 0, timedOut: false };
+      }
+
+      default:
+        return { stderr: `Language '${language}' not supported`, executionTime: 0, timedOut: false };
+    }
+  } finally {
+    // Best-effort cleanup of temp dir (async). Ignore errors during cleanup.
+    try {
+      const files = await fs.readdir(tmpDir);
+      await Promise.all(files.map((f) => fs.unlink(path.join(tmpDir, f)).catch(() => { /* ignore cleanup errors */ })));
+      await fs.rmdir(tmpDir).catch(() => { /* ignore cleanup errors */ });
+    } catch (_e) {
+      // ignore cleanup errors
+    }
+  }
+};
 
 // ─── Main controller ─────────────────────────────────────────────────────────
 
 const executeCode = async (req, res) => {
-  const { language } = req.params;
+  const language = String(req.params.language || "").toLowerCase();
   const { email = "guest@codevibe.com", code = "" } = req.body || {};
 
-  if (!code.trim()) return res.status(400).json({ message: "No code provided" });
+  // Basic validation
+  const allowed = new Set(["c", "cpp", "python", "java", "node", "javascript", "dbms", "mongo"]);
+  if (!allowed.has(language)) return res.status(400).json({ message: `Language '${language}' not supported` });
+  if (!code || !String(code).trim()) return res.status(400).json({ message: "No code provided" });
+
+  // Sanitize simple headers: email should be a string and limited length
+  const safeEmail = String(email).slice(0, 254);
 
   let output = "", err = "", executionTime = 0, errorType = null, errorLine = null, hint = null, stderr = "";
 
   try {
-    switch ((language || "").toLowerCase()) {
-      case "c":
-        ({ stdout: output, executionTime } = await runCommandWithTempFile(
-          (file) => `gcc "${file}" -o "${file}.out" && "${file}.out"`, code, "c"
-        ));
-        break;
-      case "cpp":
-        ({ stdout: output, executionTime } = await runCommandWithTempFile(
-          (file) => `g++ "${file}" -o "${file}.out" && "${file}.out"`, code, "cpp"
-        ));
-        break;
-      case "python":
-        ({ stdout: output, executionTime } = await runCommandWithTempFile(
-          (file) => `python3 "${file}"`, code, "py"
-        ));
-        break;
-      case "java":
-        ({ stdout: output, executionTime } = await runCommandWithTempFile(
-          (file) => `javac "${file}" && java -cp "${path.dirname(file)}" ${path.basename(file, ".java")}`,
-          code, "java"
-        ));
-        break;
-      case "node":
-      case "javascript":
-        ({ stdout: output, executionTime } = await runCommandWithTempFile(
-          (file) => `node "${file}"`, code, "js"
-        ));
-        break;
-      case "dbms":
-      case "mongo":
-        output = "✅ Simulated DB/MS execution: Query parsed successfully.";
-        executionTime = 0;
-        break;
-      default:
-        return res.status(400).json({ message: `Language '${language}' not supported` });
-    }
+    const result = await runCodeInTempDir(language, String(code));
+    output = result.stdout || "";
+    stderr = result.stderr || "";
+    executionTime = result.executionTime || 0;
+    if (result.timedOut) throw { stderr: stderr || "Execution timed out", timedOut: true, executionTime };
+    if (stderr && stderr.length && !output) throw { stderr, timedOut: false, executionTime };
   } catch (e) {
     stderr = e?.stderr || String(e) || "Unknown execution error";
     const timedOut = e?.timedOut || false;
@@ -179,15 +260,15 @@ const executeCode = async (req, res) => {
     errorType = classifyError(stderr, timedOut);
     errorLine = extractErrorLine(stderr);
     err = stderr;
-    hint = generateHint(stderr, (language || "").toLowerCase());
+    hint = generateHint(stderr, language);
   }
 
   // ─── Persist log ───────────────────────────────────────────────────────────
   try {
     await ExecuteLog.create({
-      email,
+      email: safeEmail,
       language,
-      code,
+      code: String(code).slice(0, 10000), // limit stored code to avoid huge docs
       output: err ? "" : String(output || "").trim(),
       error: err ? String(err).trim() : ""
     });

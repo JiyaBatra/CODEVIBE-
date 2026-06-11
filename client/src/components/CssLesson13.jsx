@@ -1,6 +1,8 @@
 // src/pages/CssLesson13.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 const questions = [
   // 5 Average questions - 1 mark each
@@ -24,15 +26,35 @@ const questions = [
 ];
 
 const CssLesson13 = () => {
+  const COURSE_ID = 'css';
+  const MAX_SCORE = questions.reduce((sum, q) => sum + q.marks, 0); // 25
+
   const [answers, setAnswers] = useState({});
   const [score, setScore] = useState(null);
+  const [pastResult, setPastResult] = useState(null);
+  const [saving, setSaving] = useState(false);
   const navigate = useNavigate();
+
+  // Fetch the most recent saved result on mount so score survives a refresh
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (!token) return;
+    axios
+      .get(`${API_BASE_URL}/api/exam/results?courseId=${COURSE_ID}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        const results = res.data?.results || [];
+        if (results.length > 0) setPastResult(results[0]);
+      })
+      .catch(() => {});
+  }, []);
 
   const handleOptionChange = (qId, option) => {
     setAnswers(prev => ({ ...prev, [qId]: option }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let totalScore = 0;
     questions.forEach(q => {
@@ -41,16 +63,45 @@ const CssLesson13 = () => {
       }
     });
     setScore(totalScore);
+
+    // Persist result to backend
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      setSaving(true);
+      try {
+        await axios.post(
+          `${API_BASE_URL}/api/exam/submit`,
+          { courseId: COURSE_ID, score: totalScore, totalQuestions: MAX_SCORE, passingScore: 44 },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      } catch (err) {
+        console.error('Failed to save exam result:', err);
+      } finally {
+        setSaving(false);
+      }
+    }
   };
 
   const goToNextLesson = () => {
-    navigate('/Certificate'); // ya jo bhi next route hai
+    navigate('/Certificate');
   };
 
   return (
     <div className="lesson">
       <h1 className="lesson-title">CSS Lesson 13: MCQ Test</h1>
       <p>Answer all questions. You need at least 11 points to unlock the next lesson.</p>
+
+      {/* Show previously saved score after a page refresh */}
+      {score === null && pastResult && (
+        <div style={{ marginBottom: '20px', padding: '12px 16px', background: '#1e293b', borderRadius: '8px', border: '1px solid #334155' }}>
+          <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.9rem' }}>
+            📋 Your last attempt ({new Date(pastResult.attemptedAt).toLocaleDateString()}):&nbsp;
+            <strong style={{ color: pastResult.passed ? '#22c55e' : '#f87171' }}>
+              {pastResult.score}/{MAX_SCORE} ({pastResult.percentage}%)
+            </strong>
+          </p>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit}>
         {questions.map(q => (
@@ -77,7 +128,7 @@ const CssLesson13 = () => {
           </button>
         ) : (
           <div>
-            <h3>Your Score: {score} / 20</h3>
+            <h3>Your Score: {score} / {MAX_SCORE}{saving && <span style={{ fontSize: '0.85rem', marginLeft: '10px', color: '#94a3b8' }}>Saving…</span>}</h3>
             {score >= 11 ? (
               <>
                 <p>Awesome! You passed and unlocked the next lesson.</p>
@@ -93,6 +144,41 @@ const CssLesson13 = () => {
           </div>
         )}
       </form>
+       {/* Lesson Footer Navigation */}
+<div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "30px",
+    paddingTop: "20px",
+    borderTop: "1px solid #333"
+  }}
+>
+  <button
+    onClick={() => navigate('/CssLesson12')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    ← Previous Lesson
+  </button>
+
+  <button
+    onClick={() => navigate('/CssLesson14')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    Next Lesson →
+  </button>
+</div>
+
     </div>
   );
 };

@@ -14,28 +14,25 @@ const userSchema = new Schema({
   },
   college: {
     type: String,
-    required: true,
     trim: true,
   },
   year: {
     type: String,
-    required: true,
     trim: true,
   },
   password: {
     type: String,
-    required: true,
+  },
+  googleId: {
+    type: String,
+    sparse: true,
+    unique: true,
+  },
+  profilePicture: {
+    type: String,
   },
   resetToken: { type: String },       // for password reset token
   resetTokenExpiry: { type: Date },   // for password reset token expiry
 });
-
-userSchema.virtual("Email")
-  .get(function getEmailAlias() {
-    return this.email;
-  })
-  .set(function setEmailAlias(value) {
-    this.email = value;
-  });
 
 module.exports = model("User", userSchema, "users");

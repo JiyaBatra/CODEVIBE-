@@ -1,0 +1,55 @@
+.bookmark-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #808090;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s;
+  padding: 6px;
+}
+
+.bookmark-btn:hover {
+  background: rgba(255, 95, 143, 0.15);
+  color: #ff5f8f;
+  border-color: rgba(255, 95, 143, 0.3);
+}
+
+.bookmark-btn--active {
+  color: #ff5f8f;
+  background: rgba(255, 95, 143, 0.12);
+  border-color: rgba(255, 95, 143, 0.25);
+}
+
+.bookmark-btn--active:hover {
+  background: rgba(255, 95, 143, 0.2);
+}
+
+.lesson-bookmark-fab {
+  position: fixed;
+  bottom: 90px;
+  right: 24px;
+  z-index: 1000;
+}
+
+.lesson-bookmark-fab .bookmark-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  background: #1a1a2e;
+  border: 2px solid rgba(255, 95, 143, 0.3);
+}
+
+.lesson-bookmark-fab .bookmark-btn:hover {
+  background: #2a2a3e;
+  border-color: #ff5f8f;
+  box-shadow: 0 4px 20px rgba(255, 95, 143, 0.3);
+}
+
+.lesson-bookmark-fab .bookmark-btn--active {
+  border-color: #ff5f8f;
+  box-shadow: 0 4px 20px rgba(255, 95, 143, 0.3);
+}

@@ -49,6 +49,7 @@ const JsLesson20 = () => {
       <Compiler
         hint="💡 Hint: Create a JavaScript program that: 1. Has a button with id 'btn' and text 'Click Me'."
         LessonId="js-lesson-20"
+        lessonTitle="JS Lesson 20 - DOM Button Click"
         language="js"
         initialCode={`// Write your code below
 
@@ -66,6 +67,40 @@ const JsLesson20 = () => {
           ⏭ NEXT LESSON
         </Link>
       )}
+       {/* Lesson Footer Navigation */}
+<div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "30px",
+    paddingTop: "20px",
+    borderTop: "1px solid #333"
+  }}
+>
+  <button
+    onClick={() => navigate('/JsLesson19')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    ← Previous Lesson
+  </button>
+
+  <button
+    onClick={() => navigate('/JsLesson21')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    Next Lesson →
+  </button>
+</div>
     </div>
   );
 };

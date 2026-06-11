@@ -30,12 +30,29 @@ const NodeLesson1 = () => {
       </pre>
 
       <button onClick={handleSuccess}>Mark as Completed ✅</button>
-
-      {isCorrect && (
-        <Link to="/NodeLesson2" className="next-lesson" onClick={goToNextLesson}>
-          ⏭ NEXT LESSON
-        </Link>
-      )}
+     {/* Lesson Footer Navigation */}
+<div
+  style={{
+    display: "flex",
+    justifyContent: "flex-end",
+    width: "100%",
+    marginTop: "30px",
+    paddingTop: "20px",
+    borderTop: "1px solid #333"
+  }}
+>
+  <button
+    onClick={() => navigate('/NodeLesson2')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    Next Lesson →
+  </button>
+</div>
     </div>
   );
 };

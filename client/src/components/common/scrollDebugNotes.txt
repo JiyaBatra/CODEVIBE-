@@ -1,0 +1,5 @@
+Scroll gap/lag debug notes:
+- If white space appears during scroll until contents load, likely layout recalculation / images/fonts loading / route/content suspense.
+- Current fixes: removed body transition, rAF-throttled ScrollNavigator updates.
+- Next candidates (if still failing): reduce infinite animations on lesson pages; ensure root/page containers have min-height and no extra margin; pre-load images/fonts; verify any lazy-loading with placeholder background.
+

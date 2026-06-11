@@ -111,6 +111,7 @@ const HtmlLesson1 = () => {
         <Compiler
         hint="💡 Review the lesson instructions carefully. Make sure your output matches exactly." 
         LessonId="html-lesson1"
+        lessonTitle="HTML Lesson 1 - Basic Headings"
         expectedOutput={`<h1> heading 1 </h1> <h6> last heading </h6> <p> paragraph </p>`}
         initialCode={`<h1> heading 1 </h1>\n<h6> last heading </h6>\n<p> paragraph </p>`}
         onSuccess={handleSuccess}
@@ -120,6 +121,29 @@ const HtmlLesson1 = () => {
         <Link to="/HtmlLesson2" className='next-lesson-btn'>NEXT LESSON</Link>
       )}
       </section>
+         {/* Lesson Footer Navigation */}
+<div
+  style={{
+    display: "flex",
+    justifyContent: "flex-end",
+    width: "100%",
+    marginTop: "30px",
+    paddingTop: "20px",
+    borderTop: "1px solid #333"
+  }}
+>
+  <button
+    onClick={() => navigate('/HtmlLesson2')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    Next Lesson →
+  </button>
+</div>
   </div>
   );
 };

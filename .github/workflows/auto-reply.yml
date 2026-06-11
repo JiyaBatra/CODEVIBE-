@@ -1,0 +1,38 @@
+name: Auto Reply While Away
+
+on:
+  issues:
+    types: [opened]
+  pull_request:
+    types: [opened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+jobs:
+  auto-comment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Post auto reply
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const message = "Thank you for your contribution! The maintainer will review your issue/PR shortly.\n\nWe appreciate your patience.";
+
+            const issueNumber = context.payload.issue
+              ? context.payload.issue.number
+              : context.payload.pull_request.number;
+
+            try {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body: message
+              });
+            } catch (error) {
+              core.warning(`Could not post auto-reply comment (fork PR — expected): ${error.message}`);
+            }

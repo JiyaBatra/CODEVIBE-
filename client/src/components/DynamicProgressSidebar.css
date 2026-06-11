@@ -1,16 +1,22 @@
+:root {
+  --sidebar-width: 280px;
+  --sidebar-collapsed-width: 56px;
+}
+
 .dynamic-progress-sidebar {
   position: fixed;
-  top: 0;
+  top: 62px;
   bottom: 0;
   left: 0;
   z-index: 40;
   width: var(--sidebar-width);
+  height: calc(100vh - 62px);
   max-height: none;
   display: flex;
   flex-direction: column;
   gap: 18px;
   padding: 18px;
-  overflow: hidden;
+  overflow: visible;
   color: #ffffff;
   background:
     radial-gradient(circle at top, rgba(255, 77, 109, 0.2), transparent 36%),
@@ -26,14 +32,16 @@
 
 .dynamic-progress-sidebar--collapsed {
   width: var(--sidebar-collapsed-width);
-  min-height: 100vh;
+  min-height: calc(100vh - 62px);
   padding: 16px 8px;
   display: flex;
   align-items: center;
 }
 
 .dynamic-progress-sidebar--collapsed .dynamic-progress-sidebar__toggle {
+  position: static;
   width: 100%;
+  margin: auto;
   padding: 2px;
 }
 
@@ -52,15 +60,33 @@
   font-weight: 800;
   line-height: 1;
   box-shadow: 0 0 18px rgba(255, 77, 109, 0.45);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+.dynamic-progress-sidebar__toggle:hover {
+  transform: scale(1.05);
 }
 
 /* --- TEXT WRAPPING ALIGNMENTS --- */
 .dynamic-progress-sidebar__header {
+  position: relative;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
   width: 100%;
+}
+
+.dynamic-progress-sidebar__header .dynamic-progress-sidebar__toggle {
+  position: absolute;
+  right: -16px;
+  top: 16px;
+  z-index: 99999;
+  border-radius: 0 8px 8px 0;
+  box-shadow: 4px 0 12px rgba(255, 77, 109, 0.4);
 }
 
 .dynamic-progress-sidebar__header-text-container {
@@ -186,6 +212,11 @@
   border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 8px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .dynamic-progress-sidebar__link span {
@@ -218,57 +249,30 @@
   background: #ff4d6d;
 }
 
-/* --- FIXED: MOVES CONTENT SO SIDEBAR DOES NOT OVERWRITE TEXT --- */
-
-/* When the sidebar is active and visible on screen */
-.codevibe-layout-managed {
-  padding-left: var(--sidebar-width);
-  transition: padding-left 0.2s ease;
-}
-
-/* When the sidebar is collapsed down to its icon tray strip */
-.codevibe-layout-managed.codevibe-layout-sidebar-collapsed {
-  padding-left: var(--sidebar-collapsed-width);
-}
-
-/* Fallback check: If layout elements are wrapped in a nested inner .lesson container */
-.codevibe-layout-managed .lesson {
-  margin-left: 0 !important;
-}
-
-.dynamic-progress-sidebar__link {
-  transition:
-    background 0.25s ease,
-    border-color 0.25s ease,
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
-}
-
 .dynamic-progress-sidebar__link:hover {
   transform: translateX(4px);
   border-color: rgba(255, 77, 109, 0.4);
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
 }
+
 .dynamic-progress-sidebar__link:focus-visible,
 .dynamic-progress-sidebar__toggle:focus-visible {
   outline: 2px solid #ff4d6d;
   outline-offset: 3px;
 }
 
-.dynamic-progress-sidebar__toggle {
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    background 0.25s ease;
+/* --- LAYOUT: PUSH CONTENT RIGHT SO SIDEBAR DOESN'T OVERLAP --- */
+.codevibe-layout-managed {
+  padding-left: var(--sidebar-width);
+  transition: padding-left 0.2s ease;
 }
 
-.dynamic-progress-sidebar__toggle:hover {
-  transform: scale(1.05);
+.codevibe-layout-managed.codevibe-layout-sidebar-collapsed {
+  padding-left: var(--sidebar-collapsed-width);
 }
 
-:root {
-  --sidebar-width: var(--sidebar-width);
-  --sidebar-collapsed-width: var(--sidebar-collapsed-width);
+.codevibe-layout-managed .lesson {
+  margin-left: 0 !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -278,4 +282,3 @@
     transition: none !important;
   }
 }
-

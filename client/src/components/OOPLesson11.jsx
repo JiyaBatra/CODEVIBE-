@@ -50,11 +50,40 @@ class Num {
         onSuccess={() => setOk(true)}
       />
 
-      {ok && (
-        <Link to="/OOPLesson12" onClick={() => nav('/OOPLesson12')}>
-          ⏭ NEXT LESSON
-        </Link>
-      )}
+        {/* Lesson Footer Navigation */}
+<div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "30px",
+    paddingTop: "20px",
+    borderTop: "1px solid #333"
+  }}
+>
+  <button
+    onClick={() => nav('/OOPLesson10')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    ← Previous Lesson
+  </button>
+
+  <button
+    onClick={() => nav('/OOPLesson12')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    Next Lesson →
+  </button>
+</div>
     </div>
   );
 };

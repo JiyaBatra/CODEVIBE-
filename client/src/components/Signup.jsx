@@ -1,17 +1,22 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "../AuthProvider.jsx";
 import API_BASE_URL from "../config/api";
 import registerImage from "../assets/registerImage.png";
 import PasswordField from "./PasswordField";
+import PasswordStrengthIndicator from "./PasswordStrengthIndicator";
+import Dropdown from "./common/Dropdown";
+import { FcGoogle } from "react-icons/fc";
 
 const Signup = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { login } = useAuth();
 
   const [formData, setFormData] = useState({
     username: "",
-    collegeName: "",
+    college: "",
     year: "",
     email: "",
     password: "",
@@ -19,84 +24,28 @@ const Signup = () => {
   });
 
   const [responseMsg, setResponseMsg] = useState("");
+  const [passwordErrors, setPasswordErrors] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
-  };
-
-  // Username Validation
-  const handleUsernameChange = (e) => {
-    const value = e.target.value;
-
-    setUsername(value);
-
-    setErrors((prev) => ({
-      ...prev,
-      username: validateUsername(value),
     }));
   };
 
-  // College Validation
-  const handleCollegeChange = (e) => {
-    const value = e.target.value;
-
-    setCollege(value);
-
-    setErrors((prev) => ({
-      ...prev,
-      college: validateCollege(value),
-    }));
-  };
-
-  // Year Validation
-  const handleYearChange = (e) => {
-    const value = e.target.value;
-
-    if (/^\d{0,4}$/.test(value)) {
-      setYear(value);
-
-      setErrors((prev) => ({
-        ...prev,
-        year: validateYear(value),
-      }));
-    }
-  };
-
-  // Email Validation
-  const handleEmailChange = (e) => {
-    const value = e.target.value;
-
-    setEmail(value);
-
-    setErrors((prev) => ({
-      ...prev,
-      email: validateEmail(value),
-    }));
-  };
-
-  // Password Validation
-  const handlePasswordChange = (e) => {
-    const value = e.target.value;
-
-    setPassword(value);
-
-    setErrors((prev) => ({
-      ...prev,
-      password: validatePassword(value),
-    }));
-  };
-
-  // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     setResponseMsg("");
+    setPasswordErrors([]);
 
-    // Password Match Validation
+    // 🔐 Frontend validations
+    if (!formData.year) {
+      setResponseMsg("Please select your year");
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setResponseMsg("Passwords do not match");
       return;
@@ -105,138 +54,105 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(
+      const res = await axios.post(
         `${API_BASE_URL}/api/auth/register`,
         {
-          username: formData.username,
-          Email: formData.email,
-          college: formData.collegeName,
+          username: formData.username.trim(),
+          email: formData.email.trim().toLowerCase(),
+          college: formData.college.trim(),
           year: formData.year,
           password: formData.password,
         }
       );
 
-      console.log("✅ Signup successful:", response.data);
+      const data = res.data;
 
-      if (response.data.success) {
-        setResponseMsg(
-          response.data.message || "Account created successfully"
-        );
+      if (data.success) {
+        setResponseMsg(data.message || "Account created successfully 🎉");
+
+        // Authenticate the user automatically after successful registration
+        login(data.user, data.token);
 
         setTimeout(() => {
-          navigate("/login", { state: location.state });
-        }, 1500);
+          navigate("/dashboard", { state: location.state });
+        }, 1200);
       } else {
-        setResponseMsg(
-          response.data.message || "Signup failed"
-        );
+        // backend rejected but 200 OK case
+        setResponseMsg(data.message || "Signup failed");
       }
     } catch (error) {
-      console.error(
-        "❌ Signup error:",
-        error.response?.data || error.message
-      );
+      console.error("❌ Signup error:", error.response?.data || error.message);
 
-      setResponseMsg(
-        error.response?.data?.message ||
-        "Server error. Please try again."
-      );
+      // Handle password validation errors from backend
+      if (error.response?.data?.passwordErrors) {
+        setPasswordErrors(error.response.data.passwordErrors);
+        setResponseMsg("Password does not meet security requirements");
+      } else {
+        const msg =
+          error.response?.data?.message ||
+          "Something went wrong. Please try again.";
+        setResponseMsg(msg);
+      }
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section className="login-section">
+    <section className="login-section" id="signup">
       <div className="login-container">
 
-        {/* Left Side Image */}
+        {/* Left Image */}
         <div className="login-image">
           <img src={registerImage} alt="Signup" />
         </div>
 
-        {/* Signup Form */}
+        {/* Form */}
         <div className="login-card">
           <form className="login-form" onSubmit={handleSubmit}>
 
             <h1>Create Account</h1>
 
             {/* Username */}
-            <label htmlFor="username">
-              USERNAME:
-            </label>
-
+            <label>USERNAME:</label>
             <input
-              type="text"
-              id="username"
               name="username"
-              placeholder="Enter username"
               value={formData.username}
               onChange={handleChange}
+              placeholder="Enter username"
               required
             />
 
-            {/* College Name */}
-            <label htmlFor="collegeName">
-              COLLEGE NAME:
-            </label>
-
+            {/* College */}
+            <label>COLLEGE NAME:</label>
             <input
-              type="text"
-              id="collegeName"
-              name="collegeName"
-              placeholder="Enter college name"
-              value={formData.collegeName}
+              name="college"
+              value={formData.college}
               onChange={handleChange}
+              placeholder="Enter college name"
               required
             />
 
             {/* Year */}
-            <label htmlFor="year">
-              YEAR:
-            </label>
-
-            <select
-              id="year"
-              name="year"
+            <label>YEAR:</label>
+            <Dropdown
               value={formData.year}
-              onChange={handleChange}
-              required
-            >
-              <option value="">
-                Select Year
-              </option>
-
-              <option value="1st Year">
-                1st Year
-              </option>
-
-              <option value="2nd Year">
-                2nd Year
-              </option>
-
-              <option value="3rd Year">
-                3rd Year
-              </option>
-
-              <option value="4th Year">
-                4th Year
-              </option>
-
-            </select>
+              onChange={(val) =>
+                setFormData((prev) => ({ ...prev, year: val }))
+              }
+              options={["1st Year", "2nd Year", "3rd Year", "4th Year"]}
+              placeholder="Select Year"
+              style={{ width: "100%" }}
+            />
 
             {/* Email */}
-            <label htmlFor="email">
-              EMAIL ID:
-            </label>
-
+            <label>EMAIL:</label>
             <input
               type="email"
-              id="email"
               name="email"
-              placeholder="Enter email"
               value={formData.email}
               onChange={handleChange}
+              placeholder="Enter email"
               required
             />
 
@@ -246,12 +162,39 @@ const Signup = () => {
               label="PASSWORD:"
               value={formData.password}
               onChange={(e) =>
-                setFormData({
-                  ...formData,
+                setFormData((prev) => ({
+                  ...prev,
                   password: e.target.value,
-                })
+                }))
               }
             />
+
+            {/* Password Strength Indicator */}
+            {formData.password && (
+              <PasswordStrengthIndicator password={formData.password} />
+            )}
+
+            {/* Backend Password Errors */}
+            {passwordErrors.length > 0 && (
+              <div style={{
+                backgroundColor: "rgba(255, 77, 109, 0.1)",
+                border: "1px solid #ff4d6d",
+                padding: "0.75rem",
+                borderRadius: "6px",
+                marginTop: "0.75rem",
+              }}>
+                <p style={{ color: "#ff4d6d", margin: "0 0 0.5rem 0", fontSize: "0.9rem", fontWeight: "600" }}>
+                  Password Requirements:
+                </p>
+                <ul style={{ margin: 0, paddingLeft: "1.25rem", color: "rgba(255, 255, 255, 0.85)" }}>
+                  {passwordErrors.map((error, idx) => (
+                    <li key={idx} style={{ fontSize: "0.85rem", marginBottom: "0.25rem" }}>
+                      {error}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* Confirm Password */}
             <PasswordField
@@ -259,33 +202,53 @@ const Signup = () => {
               label="CONFIRM PASSWORD:"
               value={formData.confirmPassword}
               onChange={(e) =>
-                setFormData({
-                  ...formData,
+                setFormData((prev) => ({
+                  ...prev,
                   confirmPassword: e.target.value,
-                })
+                }))
               }
             />
 
-            {/* Submit Button */}
+            {/* Submit */}
             <button type="submit" disabled={loading}>
-              {loading
-                ? "CREATING ACCOUNT..."
-                : "CREATE ACCOUNT"}
+              {loading ? "CREATING ACCOUNT..." : "CREATE ACCOUNT"}
             </button>
 
-            {/* Response Message */}
+            <div style={{ textAlign: "center", margin: "15px 0", color: "#ccc", fontSize: "0.9rem" }}>
+              OR
+            </div>
+
+            <button
+              type="button"
+              onClick={() => window.location.href = `${API_BASE_URL}/api/auth/google`}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+                backgroundColor: "white",
+                color: "#333",
+                border: "none",
+                width: "100%",
+                padding: "12px",
+                borderRadius: "25px",
+                cursor: "pointer",
+                fontWeight: "bold",
+                fontSize: "1rem"
+              }}
+            >
+              <FcGoogle size={24} />
+              Sign in with Google
+            </button>
+
+            {/* Message */}
             {responseMsg && (
-              <p
-                style={{
-                  color: "white",
-                  marginTop: "10px",
-                }}
-              >
+              <p style={{ color: "#fff", marginTop: "10px" }}>
                 {responseMsg}
               </p>
             )}
 
-            {/* Login Link */}
+            {/* Login */}
             <p>
               Already have an account?{" "}
               <Link to="/login" state={location.state}>

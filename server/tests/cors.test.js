@@ -1,146 +1,95 @@
-const express = require("express");
-const cors = require("cors");
-const http = require("http");
+const request = require("supertest");
+const mongoose = require("mongoose");
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(",").map((o) => o.trim())
-  : [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "http://localhost:3000",
-      "http://127.0.0.1:5173",
-      "http://127.0.0.1:5174",
-      "https://codevibeforyou.netlify.app",
-    ];
+let app;
 
-const isLocalDevOrigin = (origin = "") => {
-  try {
-    const { hostname, port, protocol } = new URL(origin);
-    const isLocalHost =
-      hostname === "localhost" ||
-      hostname === "127.0.0.1" ||
-      hostname === "::1";
-    return protocol.startsWith("http") && isLocalHost && Boolean(port);
-  } catch {
-    return false;
-  }
-};
+beforeAll(async () => {
+  process.env.ALLOWED_ORIGINS = "http://localhost:5173,http://localhost:5174,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:5174,https://codevibeforyou.netlify.app";
+  process.env.NODE_ENV = "development";
 
-// This matches the logic we WANT to achieve (rejecting missing origin)
-const buildCorsMw = () =>
-  cors({
-    origin: (origin, callback) => {
-      if (
-        origin &&
-        (allowedOrigins.includes(origin) ||
-          isLocalDevOrigin(origin) ||
-          /^https:\/\/deploy-preview-\d+--codevibeforyou\.netlify\.app$/.test(
-            origin
-          ))
-      ) {
-        return callback(null, true);
-      }
-      return callback(null, false);
-    },
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
+  jest.isolateModules(() => {
+    const { backend } = require("../index");
+    app = backend;
+  });
+});
+
+afterAll(async () => {
+  await mongoose.connection.close();
+});
+
+describe("CORS Configuration", () => {
+  test("should allow requests from allowed origins", async () => {
+    const res = await request(app)
+      .options("/")
+      .set("Origin", "http://localhost:5173")
+      .set("Access-Control-Request-Method", "GET");
+
+    expect(res.status).toBe(204);
+    expect(res.headers["access-control-allow-origin"]).toBe("http://localhost:5173");
   });
 
-function makeServer() {
-  return new Promise((resolve, reject) => {
-    const app = express();
-    app.use(buildCorsMw());
-    app.get("/api/health", (_req, res) => res.json({ ok: true }));
-    const server = app.listen(0, () => resolve(server));
-    server.on("error", reject);
-  });
-}
+  test("should allow requests from localhost development origins", async () => {
+    const res = await request(app)
+      .options("/")
+      .set("Origin", "http://localhost:3000")
+      .set("Access-Control-Request-Method", "GET");
 
-function request(host, port, origin) {
-  return new Promise((resolve, reject) => {
-    const req = http.request(
-      { host, port, path: "/api/health", method: "GET", headers: origin ? { Origin: origin } : {} },
-      (res) => {
-        const chunks = [];
-        res.on("data", (c) => chunks.push(c));
-        res.on("end", () => {
-          const hasCors = !!res.headers["access-control-allow-origin"];
-          resolve({ status: res.statusCode, hasCors });
-        });
-      }
-    );
-    req.on("error", reject);
-    req.end();
-  });
-}
-
-async function run() {
-  const server = await makeServer();
-  const { port } = server.address();
-
-  const pass = [];
-  const fail = [];
-
-  async function caseOf(label, fn) {
-    try {
-      await fn();
-      pass.push(label);
-    } catch (err) {
-      fail.push({ label, err: err.message });
-    }
-  }
-
-  // --- missing Origin header: should NOT emit CORS header ---
-  await caseOf("rejects request without Origin header", async () => {
-    const { hasCors } = await request("127.0.0.1", port);
-    if (hasCors) {
-      throw new Error(
-        `expected CORS header to be absent for missing Origin`
-      );
-    }
+    expect(res.status).toBe(204);
+    expect(res.headers["access-control-allow-origin"]).toBe("http://localhost:3000");
   });
 
-  // --- allowed origins: CORS header emitted ---
-  for (const o of [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://codevibeforyou.netlify.app",
-    "https://deploy-preview-42--codevibeforyou.netlify.app",
-    "http://localhost:3000",
-  ]) {
-    await caseOf(`allows explicitly configured origin: ${o}`, async () => {
-      const { hasCors } = await request("127.0.0.1", port, o);
-      if (!hasCors) {
-        throw new Error(
-          `expected CORS header to be present for allowed origin ${o}`
-        );
-      }
-    });
-  }
+  test("should reject requests with missing Origin header", async () => {
+    const res = await request(app)
+      .options("/")
+      .set("Access-Control-Request-Method", "GET");
 
-  // --- unknown origin: CORS header absent ---
-  await caseOf("rejects unknown cross-origin request", async () => {
-    const { hasCors } = await request("127.0.0.1", port, "https://evil.example");
-    if (hasCors) {
-      throw new Error(
-        `expected CORS header to be absent for blocked origin`
-      );
-    }
+    expect(res.headers["access-control-allow-origin"]).toBeUndefined();
   });
 
-  server.close();
+  test("should reject requests from disallowed origins", async () => {
+    const res = await request(app)
+      .options("/")
+      .set("Origin", "http://evil.com")
+      .set("Access-Control-Request-Method", "GET");
 
-  console.log(`PASS — ${pass.length} test(s)`);
-  if (pass.length) console.log("  " + pass.join("\n  "));
+    expect(res.headers["access-control-allow-origin"]).toBeUndefined();
+  });
 
-  if (fail.length) {
-    console.log(`FAIL — ${fail.length} test(s)`);
-    for (const { label, err } of fail) {
-      console.log(`  ${label}: ${err}`);
-    }
-    process.exitCode = 1;
-  }
-}
+  test("should reject requests from localhost without port", async () => {
+    const res = await request(app)
+      .options("/")
+      .set("Origin", "http://localhost")
+      .set("Access-Control-Request-Method", "GET");
 
-run();
+    expect(res.headers["access-control-allow-origin"]).toBeUndefined();
+  });
+
+  test("should allow requests from deploy preview Netlify URLs", async () => {
+    const res = await request(app)
+      .options("/")
+      .set("Origin", "https://deploy-preview-123--codevibeforyou.netlify.app")
+      .set("Access-Control-Request-Method", "GET");
+
+    expect(res.status).toBe(204);
+    expect(res.headers["access-control-allow-origin"]).toBe("https://deploy-preview-123--codevibeforyou.netlify.app");
+  });
+
+  test("should allow requests from production Netlify URL", async () => {
+    const res = await request(app)
+      .options("/")
+      .set("Origin", "https://codevibeforyou.netlify.app")
+      .set("Access-Control-Request-Method", "GET");
+
+    expect(res.status).toBe(204);
+    expect(res.headers["access-control-allow-origin"]).toBe("https://codevibeforyou.netlify.app");
+  });
+
+  test("should allow credentialed requests from allowed origins", async () => {
+    const res = await request(app)
+      .get("/api")
+      .set("Origin", "http://localhost:5173");
+
+    expect(res.headers["access-control-allow-credentials"]).toBe("true");
+    expect(res.headers["access-control-allow-origin"]).toBe("http://localhost:5173");
+  });
+});

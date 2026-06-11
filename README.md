@@ -84,6 +84,13 @@ CodeVibe removes friction from the learning journey. Whether you're a complete b
 - Customized certificate design with student details
 - Printable and shareable format
 
+### 7. My Mistakes Dashboard (NEW)
+- **Track Recurring Errors**: Identify the most common coding mistakes in your submissions
+- **Pattern Recognition**: Categorizes errors by type (Syntax Errors, Logic Errors, Array Index Errors, etc.)
+- **Smart Suggestions**: Get recommended lessons to review for each mistake category
+- **Severity Levels**: Visual indicators (High/Medium/Low) show which errors need most attention
+- **Learning Insights**: Understand your weak areas and focus revision efforts efficiently
+
 ---
 
 ## Learning Paths
@@ -212,6 +219,12 @@ CODEVIBE-/
 ├── client/                         # React frontend application
 │   ├── src/
 │   │   ├── components/             # React components (lessons, compiler, dashboard)
+│   │   │   ├── Dashboard.jsx       # Main dashboard with analytics
+│   │   │   ├── MyMistakesDashboard.jsx  # Track recurring coding mistakes (NEW)
+│   │   │   ├── Compiler.jsx        # Code editor and executor
+│   │   │   └── ...                 # Other lesson components
+│   │   ├── hooks/                  # Custom React hooks
+│   │   │   └── useMistakes.js      # Hook for fetching mistakes data (NEW)
 │   │   ├── assets/                 # Images, icons, static files
 │   │   ├── App.jsx                 # Main app component
 │   │   ├── main.jsx                # React entry point
@@ -219,6 +232,15 @@ CODEVIBE-/
 │   └── package.json
 ├── server/                         # Node.js/Express backend
 │   ├── routes/                     # API endpoints
+│   │   ├── api/
+│   │   │   ├── progressRoutes.js   # Progress tracking endpoints
+│   │   │   ├── mistakesRoutes.js   # Mistakes dashboard endpoints (NEW)
+│   │   │   └── ...                 # Other route files
+│   │   └── index.js                # Route aggregator
+│   ├── controller/                 # Request handlers
+│   │   ├── progress/               # Progress logic
+│   │   ├── mistakes/               # Mistakes analysis logic (NEW)
+│   │   └── ...                     # Other controllers
 │   ├── models/                     # Database schemas
 │   ├── middleware/                 # Auth and validation middleware
 │   └── server.js                   # Server entry point
@@ -248,6 +270,10 @@ CODEVIBE-/
 ### Progress Tracking
 - `GET /api/progress/:userId` - Get user progress dashboard
 - `POST /api/progress/track` - Record lesson completion
+
+### Mistakes Dashboard (NEW)
+- `GET /api/mistakes/:email` - Fetch user's recurring coding mistakes
+- `GET /api/mistakes/:email/:pattern` - Get detailed info about a specific error pattern
 
 ### Certificates
 - `GET /api/certificates/:userId` - Generate certificate
@@ -297,6 +323,7 @@ Complete All Lessons → Take Final Exam → View Results → Receive Certificat
 
 ## Future Enhancements
 
+- [x] **My Mistakes Dashboard** - Track and analyze recurring coding errors (IMPLEMENTED)
 - [ ] Real-time code collaboration (pair programming)
 - [ ] Advanced DSA practice modules with visualizations
 - [ ] System programming and competitive coding tracks
@@ -472,7 +499,7 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 - **Issues**: [GitHub Issues](https://github.com/JiyaBatra/CODEVIBE-/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/JiyaBatra/CODEVIBE-/discussions)
-- **Email**: jiyabatra@example.com
+- **Email**: jiyabatra0007@gmail.com
 
 ---
 
@@ -485,3 +512,15 @@ Made with ❤️ by the **CodeVibe Team**
 **[⬆ back to top](#codevibe---learn-practice-master-code)**
 
 </div>
+
+## 🐳 Quick Start with Docker
+
+You can now run the entire CodeVibe application (Frontend, Backend, and Database) with a single command using Docker.
+
+**Prerequisites:** Ensure you have [Docker](https://www.docker.com/products/docker-desktop/) installed on your system.
+
+1. Clone the repository: `git clone <repo-url>`
+2. Navigate to the root directory: `cd CODEVIBE-`
+3. Start the containers:
+   ```bash
+   docker-compose up --build

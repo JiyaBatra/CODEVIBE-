@@ -2,18 +2,45 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const UserModel = require("../../models/user.models");
 const momsvalidation = require("../../services/validationScheme");
-
-const escapeRegex = (value = "") => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const { JWT_SECRET, JWT_EXPIRES_IN } = require("../../config/jwt");
+const { validatePassword } = require("../../utils/passwordValidator");
 
 const register = async (req, res, next) => {
   try {
     const username = req.body.username?.trim();
-    const email = (req.body.email || req.body.Email || "").trim().toLowerCase();
-    const college = (req.body.college || req.body.collegeName || "").trim();
+    const email = req.body.email?.trim().toLowerCase();
+    const college = req.body.college?.trim();
     const year = req.body.year?.trim();
     const password = req.body.password;
 
-    const { error } = momsvalidation.validate({ username, email, password, college, year });
+    console.log("📝 Register attempt:");
+    console.log({
+      username,
+      email,
+      college,
+      year,
+    });
+
+    // Password validation
+    const passwordValidation = validatePassword(password);
+
+    if (!passwordValidation.isValid) {
+      return res.status(400).json({
+        success: false,
+        message: "Password does not meet security requirements",
+        passwordErrors: passwordValidation.errors,
+      });
+    }
+
+    // Joi validation
+    const { error } = momsvalidation.validate({
+      username,
+      email,
+      password,
+      college,
+      year,
+    });
+
     if (error) {
       return res.status(400).json({
         success: false,
@@ -21,22 +48,25 @@ const register = async (req, res, next) => {
       });
     }
 
+    // Check existing user
     const userExist = await UserModel.findOne({
-      $or: [
-        { email },
-        { Email: { $regex: `^${escapeRegex(email)}$`, $options: "i" } },
-      ],
+      email: email,
     });
+
+    console.log("🔍 Existing user:", userExist);
+
     if (userExist) {
-      return res.status(400).json({
+      return res.status(409).json({
         success: false,
         message: "User already exists",
       });
     }
 
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const userCreate = new UserModel({
+    // Create user
+    const userCreate = await UserModel.create({
       username,
       email,
       password: hashedPassword,
@@ -44,43 +74,45 @@ const register = async (req, res, next) => {
       year,
     });
 
-    await userCreate.save();
+    console.log("✅ User created:", userCreate._id);
 
+    // Generate JWT
     const token = jwt.sign(
-      { userId: userCreate._id, email, username },
-      process.env.JWT_SECRET || "codevibe_default_secret",
-      { expiresIn: process.env.JWT_EXPIRES_IN || "7d" }
+      {
+        userId: userCreate._id,
+        email: userCreate.email,
+        username: userCreate.username,
+      },
+      JWT_SECRET,
+      {
+        expiresIn: JWT_EXPIRES_IN,
+      }
     );
 
-    res.status(200).json({
+    return res.status(201).json({
       success: true,
       message: "User registered successfully",
       token,
       user: {
-        username,
-        email,
-        college,
-        year,
-        bio: "",
-        avatarUrl: "",
-        joinedAt: userCreate.joinedAt,
+        id: userCreate._id,
+        username: userCreate.username,
+        email: userCreate.email,
+        college: userCreate.college,
+        year: userCreate.year,
       },
     });
   } catch (error) {
-    console.error("Registration error:", error);
+    console.error("❌ Registration Error");
+    console.error("Message:", error.message);
+    console.error("Code:", error.code);
+    console.error("Key Pattern:", error.keyPattern);
+    console.error("Key Value:", error.keyValue);
 
     if (error.code === 11000) {
-      return res.status(400).json({
+      return res.status(409).json({
         success: false,
-        message: "User already exists",
-      });
-    }
-
-    if (error.name === "ValidationError") {
-      const firstError = Object.values(error.errors)[0];
-      return res.status(400).json({
-        success: false,
-        message: firstError?.message || "Invalid signup data",
+        message: "Duplicate entry detected",
+        field: Object.keys(error.keyPattern || {})[0],
       });
     }
 

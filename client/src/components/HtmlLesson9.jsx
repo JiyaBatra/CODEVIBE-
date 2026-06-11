@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
+import API_BASE_URL from "../config/api";
 
 const HtmlLesson9 = () => {
   const navigate = useNavigate();
@@ -102,9 +104,29 @@ const HtmlLesson9 = () => {
     },
   ];
 
-  const [selectedOptions, setSelectedOptions] = useState(Array(questions.length).fill(null));
+  const COURSE_ID = 'html';
+  const TOTAL = questions.length;
+
+  const [selectedOptions, setSelectedOptions] = useState(Array(TOTAL).fill(null));
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(null);
+  const [pastResult, setPastResult] = useState(null);
+  const [saving, setSaving] = useState(false);
+
+  // On mount, fetch the most recent saved result so it survives a refresh
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (!token) return;
+    axios
+      .get(`${API_BASE_URL}/api/exam/results?courseId=${COURSE_ID}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        const results = res.data?.results || [];
+        if (results.length > 0) setPastResult(results[0]);
+      })
+      .catch(() => {}); // silently ignore — user may not be logged in
+  }, []);
 
   const handleOptionChange = (questionIndex, optionIndex) => {
     const updatedSelections = [...selectedOptions];
@@ -112,7 +134,7 @@ const HtmlLesson9 = () => {
     setSelectedOptions(updatedSelections);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     let calculatedScore = 0;
     selectedOptions.forEach((selected, index) => {
       if (selected === questions[index].correctAnswer) {
@@ -122,11 +144,21 @@ const HtmlLesson9 = () => {
     setScore(calculatedScore);
     setSubmitted(true);
 
-    if (calculatedScore >= 10) {
-      // Bonus: delay before navigating so user can see score first
-      setTimeout(() => {
-        navigate("/html/lesson10");
-      }, 2000);
+    // Persist to backend so the score survives a page refresh
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      setSaving(true);
+      try {
+        await axios.post(
+          `${API_BASE_URL}/api/exam/submit`,
+          { courseId: COURSE_ID, score: calculatedScore, totalQuestions: TOTAL, passingScore: 67 },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      } catch (err) {
+        console.error('Failed to save exam result:', err);
+      } finally {
+        setSaving(false);
+      }
     }
   };
 
@@ -134,6 +166,18 @@ const HtmlLesson9 = () => {
     <div className="lesson">
       <h1>Lesson 9: HTML Quiz (MCQ)</h1>
       <p>Test your HTML knowledge by answering the following questions:</p>
+
+      {/* Show a previously saved score if the user comes back after a refresh */}
+      {!submitted && pastResult && (
+        <div style={{ marginBottom: '20px', padding: '12px 16px', background: '#1e293b', borderRadius: '8px', border: '1px solid #334155' }}>
+          <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.9rem' }}>
+            📋 Your last attempt ({new Date(pastResult.attemptedAt).toLocaleDateString()}):&nbsp;
+            <strong style={{ color: pastResult.passed ? '#22c55e' : '#f87171' }}>
+              {pastResult.score}/{pastResult.totalQuestions} ({pastResult.percentage}%)
+            </strong>
+          </p>
+        </div>
+      )}
 
       {questions.map((q, i) => (
         <div key={i} className="question-block" style={{ marginBottom: "20px" }}>
@@ -160,14 +204,48 @@ const HtmlLesson9 = () => {
         </button>
       ) : (
         <div style={{ marginTop: "20px" }}>
-          <h2>Your Score: {score} / {questions.length}</h2>
+          <h2>Your Score: {score} / {TOTAL}{saving && <span style={{ fontSize: '0.85rem', marginLeft: '10px', color: '#94a3b8' }}>Saving…</span>}</h2>
           {score >= 10 ? (
-            <Link to="/HtmlLesson10" >⏭ NEXT LESSON</Link>
+            <Link to="/HtmlLesson10">⏭ NEXT LESSON</Link>
           ) : (
             <p>Keep practicing! Try again to reach Lesson 10.</p>
           )}
         </div>
       )}
+       {/* Lesson Footer Navigation */}
+<div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "30px",
+    paddingTop: "20px",
+    borderTop: "1px solid #333"
+  }}
+>
+  <button
+    onClick={() => navigate('/HtmlLesson8')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    ← Previous Lesson
+  </button>
+
+  <button
+    onClick={() => navigate('/HtmlLesson10')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    Next Lesson →
+  </button>
+</div>
     </div>
   );
 };

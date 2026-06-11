@@ -43,8 +43,40 @@ class Point {
         expectedOutput={(o)=>o.trim()==="3 4"}
         onSuccess={()=>setOk(true)}
       />
+   {/* Lesson Footer Navigation */}
+<div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "30px",
+    paddingTop: "20px",
+    borderTop: "1px solid #333"
+  }}
+>
+  <button
+    onClick={() => nav('/OOPLesson1')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    ← Previous Lesson
+  </button>
 
-      {ok && <Link to="/OOPLesson3" onClick={()=>nav('/OOPLesson3')}>⏭ NEXT LESSON</Link>}
+  <button
+    onClick={() => nav('/OOPLesson3')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    Next Lesson →
+  </button>
+</div>
     </div>
   );
 };

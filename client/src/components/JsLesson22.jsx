@@ -23,12 +23,9 @@ const JsLesson22 = () => {
         <p>
           Template literals allow you to embed variables and expressions inside strings using backticks <code>` `</code> instead of quotes.
         </p>
-        <p>
-          Syntax:<br />
-          <code>
-            `Hello ${variable}, welcome!`
-          </code>
-        </p>
+      <div className="tags-to-try">
+  <p>Concepts to Try: template literals, backticks, {'${}'}, variables</p>
+</div>
         <p>
           Example:<br />
           <code>
@@ -60,15 +57,41 @@ const JsLesson22 = () => {
         onSuccess={handleSuccess}
       />
 
-      {isCorrect && (
-        <Link
-          to="/JsLesson23"
-          style={{ marginTop: '20px', display: 'inline-block', fontWeight: 'bold' }}
-          onClick={goToNextLesson}
-        >
-          ⏭ NEXT LESSON
-        </Link>
-      )}
+    
+       {/* Lesson Footer Navigation */}
+<div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    marginTop: "30px",
+    paddingTop: "20px",
+    borderTop: "1px solid #333"
+  }}
+>
+  <button
+    onClick={() => navigate('/JsLesson21')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    ← Previous Lesson
+  </button>
+
+  <button
+    onClick={() => navigate('/JsLesson23')}
+    style={{
+      padding: "10px 20px",
+      borderRadius: "8px",
+      border: "none",
+      cursor: "pointer"
+    }}
+  >
+    Next Lesson →
+  </button>
+</div>
     </div>
   );
 };

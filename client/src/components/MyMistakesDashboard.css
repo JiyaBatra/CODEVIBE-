@@ -1,0 +1,346 @@
+/* === My Mistakes Dashboard Widget Styling === */
+
+.mistakes-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.14) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border: 1px solid rgba(248, 113, 113, 0.24);
+  box-shadow: 0 20px 80px rgba(248, 113, 113, 0.06);
+  border-radius: 16px;
+  margin-top: 24px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mistakes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.mistakes-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.header-subtitle {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  display: block;
+  margin-top: 4px;
+}
+
+/* Loading State */
+.mistakes-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 20px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+  color: #fb923c;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Empty & Error States */
+.mistakes-empty,
+.mistakes-error {
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.08) 0%, rgba(248, 113, 113, 0.02) 100%);
+  border-color: rgba(248, 113, 113, 0.2);
+}
+
+.mistakes-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.mistakes-message svg {
+  color: #ef4444;
+}
+
+.mistakes-message p {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.mistakes-message small {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 4px;
+}
+
+/* Mistakes List */
+.mistakes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mistake-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(248, 113, 113, 0.18);
+  border-radius: 16px;
+  transition: all 0.2s ease;
+}
+
+.mistake-card:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(248, 113, 113, 0.3);
+  transform: translateX(3px);
+}
+
+.mistake-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mistake-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mistake-icon {
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+}
+
+.mistake-name h3 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.mistake-stats {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mistake-count {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.count-number {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #f87171;
+}
+
+.count-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mistake-progress {
+  flex: 1;
+  min-width: 120px;
+}
+
+.progress-bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #fda4af, #f87171);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.mistake-suggestion {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.75);
+  padding: 8px 12px;
+  background: rgba(248, 113, 113, 0.08);
+  border-radius: 10px;
+  border-left: 2px solid rgba(248, 113, 113, 0.4);
+}
+
+.mistake-suggestion svg {
+  color: #8b5cf6;
+  flex-shrink: 0;
+}
+
+.mistake-severity {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.severity-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.severity-high {
+  background: rgba(248, 113, 113, 0.16);
+  color: #f87171;
+}
+
+.severity-medium {
+  background: rgba(251, 146, 60, 0.16);
+  color: #fb923c;
+}
+
+.severity-low {
+  background: rgba(52, 211, 153, 0.16);
+  color: #4ade80;
+}
+
+.severity-high {
+  background: rgba(248, 113, 113, 0.15);
+  color: #fca5a5;
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.severity-medium {
+  background: rgba(251, 146, 60, 0.15);
+  color: #fed7aa;
+  border: 1px solid rgba(251, 146, 60, 0.3);
+}
+
+.severity-low {
+  background: rgba(74, 222, 128, 0.15);
+  color: #bfdbfe;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+.mistakes-footer {
+  text-align: center;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .mistakes-dashboard {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .mistakes-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .mistake-card {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mistake-stats {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .mistake-progress {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .mistake-severity {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  .severity-badge {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mistakes-dashboard {
+    padding: 12px;
+  }
+
+  .mistake-card {
+    padding: 12px;
+  }
+
+  .mistake-name h3 {
+    font-size: 0.85rem;
+  }
+
+  .count-number {
+    font-size: 1.2rem;
+  }
+
+  .mistake-suggestion {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
+
+  .mistakes-footer {
+    font-size: 0.75rem;
+  }
+}

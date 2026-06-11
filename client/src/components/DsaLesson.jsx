@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import CourseSidebar from './CourseSidebar';
 import API_BASE_URL from '../config/api';
 import { FaCheckCircle, FaArrowRight, FaCode, FaBookOpen, FaTrophy, FaChartLine, FaDatabase, FaLink, FaLayerGroup } from 'react-icons/fa';
 
@@ -32,7 +33,9 @@ const DSALesson = () => {
     { id: 'dsa-lesson-9', title: "Stack (Detailed)", category: "Linear DS", lessons: "1 lesson", description: "Deep dive into stack implementation and applications.", difficulty: "Intermediate", duration: "30 mins" },
     { id: 'dsa-lesson-10', title: "Queue (Detailed)", category: "Linear DS", lessons: "1 lesson", description: "Comprehensive queue implementation and types.", difficulty: "Intermediate", duration: "30 mins" },
     { id: 'dsa-lesson-11', title: "Linked List (Detailed)", category: "Linear DS", lessons: "1 lesson", description: "Master linked list operations and problem-solving.", difficulty: "Advanced", duration: "45 mins" },
-    { id: 'dsa-lesson-12', title: "Stack (Implementation)", category: "Linear DS", lessons: "1 lesson", description: "Build a complete stack from scratch with all operations.", difficulty: "Advanced", duration: "35 mins", isProject: false }
+    { id: 'dsa-lesson-12', title: "Stack (Implementation)", category: "Linear DS", lessons: "1 lesson", description: "Build a complete stack from scratch with all operations.", difficulty: "Advanced", duration: "35 mins", isProject: false },
+    { id: 'dsa-lesson-13', title: "Important Leetcode Questions", category: "Linear DS", lessons: "1 lesson", description: "Inteview Asked DSA Question", difficulty: "Advanced", duration: "60 min mins"}
+
   ];
 
   const getDifficultyColor = (difficulty) => {
@@ -117,7 +120,9 @@ const DSALesson = () => {
       </div>
 
       {/* Lessons Grid */}
-      <div className="lessons-grid">
+      <div className="lesson-layout-wrapper" style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="lessons-grid">
         {lessons.map((lesson, index) => {
           const difficultyStyle = getDifficultyColor(lesson.difficulty);
           const isCompleted = isDone(lesson.id);
@@ -189,6 +194,16 @@ const DSALesson = () => {
             </Link>
           );
         })}
+      </div>
+        </div>
+        
+        <div className="desktop-sidebar" style={{ display: 'block', width: '0px', height: '0px', overflow: 'visible' }}>
+          <CourseSidebar 
+            coursePrefix={lessons[0]?.id ? lessons[0].id.split('-')[0] : 'course'} 
+            totalLessons={lessons.length} 
+            courseTitle={lessons[0]?.category || "Course"} 
+          />
+        </div>
       </div>
 
       <style jsx>{`
@@ -472,6 +487,16 @@ const DSALesson = () => {
         }
 
         /* Responsive Design */
+        @media (max-width: 1024px) {
+          .lesson-layout-wrapper {
+            flex-direction: column !important;
+          }
+          .desktop-sidebar {
+            width: 100% !important;
+            position: static !important;
+            margin-top: 32px;
+          }
+        }
         @media (max-width: 768px) {
           .dsa-lesson {
             padding: 20px;

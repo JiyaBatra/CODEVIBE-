@@ -13,15 +13,33 @@ const ScrollNavigator = () => {
     const scrollHeight = document.documentElement.scrollHeight;
     const clientHeight = window.innerHeight;
 
-    setShowNavigator(scrollY > SCROLL_THRESHOLD);
-    setAtBottom(scrollHeight - scrollY - clientHeight < BOTTOM_THRESHOLD);
+    // Avoid triggering React state updates on every scroll tick.
+    setShowNavigator((prev) => (scrollY > SCROLL_THRESHOLD ? true : false) || prev);
+    setAtBottom((prev) => {
+      const next = scrollHeight - scrollY - clientHeight < BOTTOM_THRESHOLD;
+      return prev === next ? prev : next;
+    });
   }, []);
+
+  const handleScrollRaf = useCallback(() => {
+    // Store RAF id on the function object to avoid extra renders/refs.
+    // (Using a property is safe here because this component instance owns it.)
+    if (handleScrollRaf.rafId) return;
+
+    handleScrollRaf.rafId = window.requestAnimationFrame(() => {
+      handleScroll();
+      handleScrollRaf.rafId = null;
+    });
+  }, [handleScroll]);
+
+
 
   useEffect(() => {
     handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
+    window.addEventListener("scroll", handleScrollRaf, { passive: true });
+    return () => window.removeEventListener("scroll", handleScrollRaf);
+  }, [handleScroll, handleScrollRaf]);
+
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
