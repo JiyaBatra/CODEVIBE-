@@ -312,7 +312,7 @@ const makeMockMongoClient = (storage) => {
 // ============================================================
 // MOCK EXPRESS
 // ============================================================
-const makeMockExpress = (logs) => {
+const makeMockExpress = (_logs) => {
   const express = () => {
     const app = {
       _routes: {},

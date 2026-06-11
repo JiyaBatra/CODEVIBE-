@@ -2,7 +2,7 @@
 const bcrypt = require("bcryptjs");
 const UserModel = require("../../models/user.models");
 
-const resetPassword = async (req, res, next) => {
+const resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
 

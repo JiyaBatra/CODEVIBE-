@@ -61,7 +61,7 @@ backend.use(
 backend.use(routes);
 
 // Central JSON error handler for API responses
-backend.use((err, req, res, next) => {
+backend.use((err, req, res, _next) => {
   console.error("Unhandled server error:", err);
   const status = err.status || 500;
   res.status(status).json({
