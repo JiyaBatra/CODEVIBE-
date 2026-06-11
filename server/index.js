@@ -48,18 +48,27 @@ const isLocalDevOrigin = (origin = "") => {
 backend.use(
   cors({
     origin: (origin, callback) => {
-  if (
-    origin &&
-    (allowedOrigins.includes(origin) ||
-      isLocalDevOrigin(origin) ||
-      /^https:\/\/deploy-preview-\d+--codevibeforyou\.netlify\.app$/.test(origin))
-  ) {
+      // Reject missing Origin headers consistently to avoid loosening CORS
+      // protections in development mode.
+      if (!origin) {
+        console.warn("⚠️ [CORS] Rejected request without Origin header");
+        const corsError = new Error("Not allowed by CORS");
+        corsError.status = 403;
+        return callback(corsError);
+      }
+
+      if (
+        allowedOrigins.includes(origin) ||
+        isLocalDevOrigin(origin) ||
+        /^https:\/\/deploy-preview-\d+--codevibeforyou\.netlify\.app$/.test(origin)
+      ) {
         return callback(null, true);
       }
 
-      console.log("❌ Blocked CORS origin:", origin);
-
-      return callback(null, false); // 👈 IMPORTANT CHANGE
+      console.warn(`⚠️ [CORS] Blocked origin: ${origin}`);
+      const corsError = new Error("Not allowed by CORS");
+      corsError.status = 403;
+      return callback(corsError);
     },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
@@ -70,7 +79,7 @@ backend.use(
 backend.use(routes);
 
 // Central JSON error handler for API responses
-backend.use((err, req, res, next) => {
+backend.use((err, req, res, _next) => {
   console.error("Unhandled server error:", err);
   const status = err.status || 500;
   res.status(status).json({

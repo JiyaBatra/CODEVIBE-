@@ -29,17 +29,23 @@ const isLocalDevOrigin = (origin = "") => {
 const buildCorsMw = () =>
   cors({
     origin: (origin, callback) => {
+      if (!origin) {
+        const corsError = new Error("Not allowed by CORS");
+        corsError.status = 403;
+        return callback(corsError);
+      }
       if (
-        origin &&
-        (allowedOrigins.includes(origin) ||
-          isLocalDevOrigin(origin) ||
-          /^https:\/\/deploy-preview-\d+--codevibeforyou\.netlify\.app$/.test(
-            origin
-          ))
+        allowedOrigins.includes(origin) ||
+        isLocalDevOrigin(origin) ||
+        /^https:\/\/deploy-preview-\d+--codevibeforyou\.netlify\.app$/.test(
+          origin
+        )
       ) {
         return callback(null, true);
       }
-      return callback(null, false);
+      const corsError = new Error("Not allowed by CORS");
+      corsError.status = 403;
+      return callback(corsError);
     },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
@@ -51,6 +57,9 @@ function makeServer() {
     const app = express();
     app.use(buildCorsMw());
     app.get("/api/health", (_req, res) => res.json({ ok: true }));
+    app.use((err, req, res, _next) => {
+      res.status(err.status || 500).json({ error: err.message });
+    });
     const server = app.listen(0, () => resolve(server));
     server.on("error", reject);
   });
@@ -90,9 +99,12 @@ async function run() {
     }
   }
 
-  // --- missing Origin header: should NOT emit CORS header ---
+  // --- missing Origin header: should NOT emit CORS header and return 403 ---
   await caseOf("rejects request without Origin header", async () => {
-    const { hasCors } = await request("127.0.0.1", port);
+    const { status, hasCors } = await request("127.0.0.1", port);
+    if (status !== 403) {
+      throw new Error(`expected status 403 for missing Origin, got ${status}`);
+    }
     if (hasCors) {
       throw new Error(
         `expected CORS header to be absent for missing Origin`
@@ -109,7 +121,10 @@ async function run() {
     "http://localhost:3000",
   ]) {
     await caseOf(`allows explicitly configured origin: ${o}`, async () => {
-      const { hasCors } = await request("127.0.0.1", port, o);
+      const { status, hasCors } = await request("127.0.0.1", port, o);
+      if (status !== 200) {
+        throw new Error(`expected status 200 for allowed origin, got ${status}`);
+      }
       if (!hasCors) {
         throw new Error(
           `expected CORS header to be present for allowed origin ${o}`
@@ -118,9 +133,12 @@ async function run() {
     });
   }
 
-  // --- unknown origin: CORS header absent ---
+  // --- unknown origin: CORS header absent and returns 403 ---
   await caseOf("rejects unknown cross-origin request", async () => {
-    const { hasCors } = await request("127.0.0.1", port, "https://evil.example");
+    const { status, hasCors } = await request("127.0.0.1", port, "https://evil.example");
+    if (status !== 403) {
+      throw new Error(`expected status 403 for blocked origin, got ${status}`);
+    }
     if (hasCors) {
       throw new Error(
         `expected CORS header to be absent for blocked origin`
