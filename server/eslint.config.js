@@ -14,6 +14,7 @@ export default defineConfig([
       globals: {
         ...globals.node,
         ...globals.commonjs,
+        ...globals.jest,
       },
       parserOptions: {
         ecmaVersion: 'latest',

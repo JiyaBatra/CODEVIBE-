@@ -9,7 +9,7 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ message: "Code and language are required" });
     }
     const slug = crypto.randomBytes(6).toString("base64url");
-    const snippet = await Snippet.create({
+    const _snippet = await Snippet.create({
       code, language, lessonId,
       title: title || "Untitled",
       username: username || "Anonymous",

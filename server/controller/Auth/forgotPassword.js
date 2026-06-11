@@ -11,7 +11,7 @@ const forgotPasswordLimiter = rateLimit({
   message: { message: "Too many requests from this IP, please try again after 10 minutes" },
 });
 
-const forgotPasswordLogic = async (req, res, next) => {
+const forgotPasswordLogic = async (req, res, _next) => {
   try {
     const email = (req.body.email || req.body.Email || "").trim().toLowerCase();
 

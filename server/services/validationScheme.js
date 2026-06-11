@@ -9,7 +9,7 @@ const momsvalidation = joi.object({
         .pattern(/[A-Z]/, 'uppercase')
         .pattern(/[a-z]/, 'lowercase')
         .pattern(/[0-9]/, 'digit')
-        .pattern(/[!@#$%^&*()_+\-=\[\]{}|;:'",.<>?/]/, 'special')
+        .pattern(/[!@#$%^&*()_+\-=[\]{}|;:'",.<>?/]/, 'special')
         .required()
         .messages({
             'string.min': 'Password must be at least 8 characters long',

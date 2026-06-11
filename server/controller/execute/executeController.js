@@ -151,7 +151,7 @@ const runSpawn = (cmd, args, opts = {}) =>
 // Run user code in a temp directory with minimal shell exposure.
 const runCodeInTempDir = async (language, code) => {
   const tmpDir = await makeTempDir();
-  const results = { stdout: "", stderr: "", executionTime: 0, timedOut: false };
+  const _results = { stdout: "", stderr: "", executionTime: 0, timedOut: false };
 
   // Use a randomly-named file basename to avoid predictable filenames.
   const baseName = `usercode_${Date.now()}_${crypto.randomBytes(4).toString("hex")}`;

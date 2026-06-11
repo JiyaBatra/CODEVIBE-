@@ -90,7 +90,7 @@ const getSubjectFromLessonId = (lessonId) => {
   return lessonId.split("-")[0]?.replace(/\d+$/, "") || null;
 };
 
-const checkAndAwardBadges = (progress, { score, analyticsEvents = [] }) => {
+const checkAndAwardBadges = (progress, { _score, analyticsEvents = [] }) => {
   const earnedBadgeIds = new Set(progress.badges || []);
   const newlyEarned = [];
 

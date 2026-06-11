@@ -169,7 +169,7 @@ exports.getMistakes = async (req, res) => {
       email,
       totalErrors: errorLogs.length,
       uniqueMistakes: mistakes.length,
-      mistakes: mistakes.map(({pattern, weight, ...rest}) => rest), // Remove internal fields
+      mistakes: mistakes.map(({_pattern, _weight, ...rest}) => rest), // Remove internal fields
     });
   } catch (err) {
     console.error("Error fetching mistakes:", err);
