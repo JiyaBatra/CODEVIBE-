@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from "../AuthProvider.jsx";
 import { useSearch } from "../context/SearchContext.jsx";
 import { FaSignInAlt, FaSignOutAlt, FaUserPlus, FaTachometerAlt, FaGamepad, FaSearch, FaTimes } from "react-icons/fa";
+import NotificationBell from "./common/NotificationBell";
 import logo from "../assets/websitelogo.png";
 
 const COURSES = [
@@ -92,6 +93,7 @@ const clearSearch = () => {
         <nav className="header-nav" aria-label="Main navigation">
           {user ? (
             <>
+              <NotificationBell />
               <Link to="/dashboard" className="nav-link">
                 <FaTachometerAlt className="nav-icon" />
                 <span>Dashboard</span>

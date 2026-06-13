@@ -9,6 +9,7 @@ const executeRoutes = require('./executeRoutes');
 const certificateRoutes = require("./certificateRoutes");
 const contributorRoutes = require("./contributorRoutes");
 const analyticsRoutes = require('./analytics');
+const notificationRoutes = require('./notificationRoutes');
 
 router.use('/feedback', feedbackRoutes);
 router.use('/progress', progressRoutes);
@@ -18,5 +19,6 @@ router.use('/analytics', analyticsRoutes);
 router.use('/execute', executeRoutes);
 router.use('/certificate', certificateRoutes);
 router.use('/contributors', contributorRoutes);
+router.use('/notifications', notificationRoutes);
 
 module.exports = router;
