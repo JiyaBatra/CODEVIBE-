@@ -53,3 +53,30 @@
   border-color: #ff5f8f;
   box-shadow: 0 4px 20px rgba(255, 95, 143, 0.3);
 }
+
+.bookmark-btn--loading {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.bookmark-btn--loading:hover {
+  background: rgba(255, 255, 255, 0.1); /* prevent hover override */
+  color: #808090;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Spinner */
+.bookmark-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #ff5f8f;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -102,3 +102,28 @@
 .search-input::placeholder {
   color: #bbb;
 }
+
+/* Password mismatch / error styles */
+.input-error {
+  border: 1px solid #ff4d6d !important;
+  box-shadow: 0 0 10px rgba(255, 77, 109, 0.18);
+}
+
+.password-error-message {
+  color: #ff4d6d;
+  font-weight: 700;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.password-error-banner {
+  background: rgba(255, 77, 109, 0.08);
+  border: 1px solid rgba(255, 77, 109, 0.22);
+  color: #ff4d6d;
+  padding: 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+}

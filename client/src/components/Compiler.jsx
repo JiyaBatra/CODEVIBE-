@@ -470,6 +470,7 @@ const Compiler = ({
 
   // ─── orchestrator ────────────────────────────────────────────────────────
   const runCode = async () => {
+    
     const isFirstPass = score === null;
     const attempt = isFirstPass ? tries + 1 : tries;
     if (isFirstPass) { setTries(attempt); setScore(null); }
@@ -496,7 +497,30 @@ const Compiler = ({
     if (language === "react")                return runReact(attempt, iframeDoc);
     fail({ type: "ExecutionError", message: "Unsupported language in this setup." });
   };
+  useEffect(() => {
+  const handleKeyDown = (e) => {
+    // Ctrl + Enter => Run Code
+    if (e.ctrlKey && e.key === "Enter") {
+      e.preventDefault();
+      runCode();
+    }
 
+    // Esc => Clear feedback/status
+    if (e.key === "Escape") {
+      setStatus("");
+      setIsSuccess(false);
+      setErrorType(null);
+      setErrorMessage("");
+      setActiveHint("");
+    }
+  };
+
+  window.addEventListener("keydown", handleKeyDown);
+
+  return () => {
+    window.removeEventListener("keydown", handleKeyDown);
+  };
+}, [code, language]);
   // ─── render ──────────────────────────────────────────────────────────────
   return (
     <div className="compiler">

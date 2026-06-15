@@ -10,13 +10,14 @@
   left: 0;
   z-index: 40;
   width: var(--sidebar-width);
-  height: calc(100vh - 62px);
+  height: calc(100vh - 72px);
   max-height: none;
   display: flex;
   flex-direction: column;
   gap: 18px;
   padding: 18px;
   overflow: visible;
+  overflow-x: visible;
   color: #ffffff;
   background:
     radial-gradient(circle at top, rgba(255, 77, 109, 0.2), transparent 36%),
@@ -26,8 +27,11 @@
   box-shadow:
     inset -1px 0 0 rgba(255, 255, 255, 0.04),
     18px 0 36px rgba(0, 0, 0, 0.24);
-  backdrop-filter: blur(14px);
-  transition: width 0.2s ease, padding 0.2s ease;
+  backdrop-filter: blur(4px);
+  will-change: width, transform;
+transform: translateZ(0);
+backface-visibility: hidden;
+  transition: width 0.3s ease, padding 0.3s ease,background 0.3s ease;
 }
 
 .dynamic-progress-sidebar--collapsed {
@@ -78,16 +82,18 @@
   justify-content: space-between;
   gap: 12px;
   width: 100%;
+  flex-shrink: 0;
 }
 
 .dynamic-progress-sidebar__header .dynamic-progress-sidebar__toggle {
   position: absolute;
-  right: -16px;
-  top: 16px;
+  right: 12px;
+  top: 12px;
   z-index: 99999;
   border-radius: 0 8px 8px 0;
   box-shadow: 4px 0 12px rgba(255, 77, 109, 0.4);
 }
+
 
 .dynamic-progress-sidebar__header-text-container {
   display: flex;
@@ -123,7 +129,9 @@
   gap: 14px;
   align-items: center;
   margin-top: 6px;
+  flex-shrink: 0;
 }
+
 
 /* --- GRAPHICS & METRICS --- */
 .dynamic-progress-sidebar__ring {
@@ -184,6 +192,7 @@
   padding-right: 4px;
   scrollbar-color: rgba(255, 77, 109, 0.7) rgba(18, 20, 43, 0.9);
   scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
 }
 
 .dynamic-progress-sidebar__nav::-webkit-scrollbar {
@@ -217,6 +226,7 @@
     border-color 0.25s ease,
     transform 0.25s ease,
     box-shadow 0.25s ease;
+  will-change: transform;
 }
 
 .dynamic-progress-sidebar__link span {
@@ -250,7 +260,7 @@
 }
 
 .dynamic-progress-sidebar__link:hover {
-  transform: translateX(4px);
+  transform: translateX(2px);
   border-color: rgba(255, 77, 109, 0.4);
   background: rgba(255, 255, 255, 0.08);
 }
@@ -280,5 +290,49 @@
   .dynamic-progress-sidebar__link,
   .dynamic-progress-sidebar__toggle {
     transition: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .codevibe-layout-managed,
+  .codevibe-layout-managed.codevibe-layout-sidebar-collapsed {
+    padding-left: 0 !important;
+  }
+
+  .dynamic-progress-sidebar--collapsed {
+    width: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+  }
+
+.dynamic-progress-sidebar--collapsed .dynamic-progress-sidebar__toggle {
+    position: fixed;
+    left: 6px;
+    top: 10%;
+    transform: translateY(-50%);
+
+    width: 36px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 10000;
+    border-radius: 0 8px 8px 0;
+
+    font-size: 18px;
+    font-weight: 700;
+    overflow: visible;
+}
+
+  .dynamic-progress-sidebar:not(.dynamic-progress-sidebar--collapsed) {
+    width: min(280px, 85vw);
+    padding: 18px;
+    z-index: 9999;
   }
 }

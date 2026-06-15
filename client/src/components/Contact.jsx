@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   FaDiscord,
   FaGithub,
@@ -15,6 +16,17 @@ const Contact = () => {
     e.preventDefault();
     alert("Message Sent!");
     e.currentTarget.reset();
+    useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "instant"
+    });
+  }, []);
+  
+  const handleSubmit = (e)=>{
+    e.preventDefault();
+    alert("Message Sent!");
+    e.target.reset();
   };
 
 
@@ -30,7 +42,6 @@ const Contact = () => {
         <p>We'd love to hear from you! Whether you have a question or feedback - we're here to help</p>
       </div>
       <div className='contact-main'>
-        <div></div>
         <div className='message-box'>
           <h4>Send Us a message</h4>
           <p>Fill the form below and we'll get back to you as soon as possible</p>
@@ -41,9 +52,8 @@ const Contact = () => {
             </div>
             <input type="text" placeholder='Subject' required/>
             <textarea type="text" placeholder='Message' required/>
-            <button type='submit'>
-              <FiSend />
-              Send Message
+            <button type='submit' className='send-btn'>
+              <FiSend />Send Message
             </button>
           </form>
         </div>

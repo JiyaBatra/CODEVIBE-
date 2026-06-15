@@ -97,12 +97,18 @@ if (user?.email) {
       }
     }
 
-    if (location.state?.scrollToContact) {
-      const element = document.getElementById('contact-footer');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
+if (location.state?.scrollToContact) {
+  setTimeout(() => {
+    const element = document.getElementById("contact-footer");
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
+  }, 300);
+}
 
     if (
       location.state?.scrollToTop ||

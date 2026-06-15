@@ -133,6 +133,15 @@ const connectToMongo = async () => {
   try {
     await mongoose.connect(MONGODB_URL, MONGOOSE_OPTIONS);
     console.log("✅ Connected to MongoDB");
+
+    // Sync model indexes with the database (resolves index conflicts like non-sparse googleId)
+    try {
+      const UserModel = require("./models/user.models");
+      await UserModel.syncIndexes();
+      console.log("✅ Database indexes synced successfully");
+    } catch (syncErr) {
+      console.error("⚠️ Failed to sync database indexes:", syncErr.message);
+    }
   } catch (err) {
     console.error("❌ MongoDB connection error:", err);
     if (process.env.NODE_ENV === "production") {

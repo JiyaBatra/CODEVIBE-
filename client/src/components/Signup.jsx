@@ -26,6 +26,10 @@ const Signup = () => {
   const [responseMsg, setResponseMsg] = useState("");
   const [passwordErrors, setPasswordErrors] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+  const passwordMismatch =
+    (formData.password || formData.confirmPassword) &&
+    formData.password !== formData.confirmPassword;
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -36,6 +40,7 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitAttempted(true);
 
     setResponseMsg("");
     setPasswordErrors([]);
@@ -47,7 +52,6 @@ const Signup = () => {
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setResponseMsg("Passwords do not match");
       return;
     }
 
@@ -161,12 +165,13 @@ const Signup = () => {
               id="password"
               label="PASSWORD:"
               value={formData.password}
-              onChange={(e) =>
+              onChange={(e) => {
+                setSubmitAttempted(false);
                 setFormData((prev) => ({
                   ...prev,
                   password: e.target.value,
-                }))
-              }
+                }));
+              }}
             />
 
             {/* Password Strength Indicator */}
@@ -201,15 +206,32 @@ const Signup = () => {
               id="confirmPassword"
               label="CONFIRM PASSWORD:"
               value={formData.confirmPassword}
-              onChange={(e) =>
+              hasError={submitAttempted && passwordMismatch}
+              onChange={(e) => {
+                setSubmitAttempted(false);
                 setFormData((prev) => ({
                   ...prev,
                   confirmPassword: e.target.value,
-                }))
-              }
+                }));
+              }}
             />
 
-            {/* Submit */}
+            {submitAttempted && passwordMismatch && (
+              <div style={{
+                backgroundColor: "rgba(255, 77, 109, 0.2)",
+                border: "1px solid #ff4d6d",
+                color: "#ff4d6d",
+                padding: "0.75rem",
+                borderRadius: "6px",
+                marginTop: "0.75rem",
+                marginBottom: "0.75rem",
+                fontWeight: "bold",
+                textAlign: "center"
+              }} role="alert">
+                Passwords do not match
+              </div>
+            )}
+
             <button type="submit" disabled={loading}>
               {loading ? "CREATING ACCOUNT..." : "CREATE ACCOUNT"}
             </button>

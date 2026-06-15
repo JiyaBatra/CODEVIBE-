@@ -3018,6 +3018,12 @@ select:focus {
   transform: scale(1.04);
 }
 
+.search-btn:hover {
+  background: linear-gradient(135deg, #ff6b81, #ff99ac);
+  box-shadow: 0 0 20px rgba(255, 77, 109, 0.8);
+  transform: scale(1.04);
+}
+
 /* Suggestions dropdown */
 .search-suggestions {
   position: absolute;
@@ -3154,11 +3160,12 @@ select:focus {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  z-index: 9999;
+  z-index: 99999;
   display: flex;
   flex-direction: column;
   gap: 10px;
   animation: scrollNavFadeIn 0.3s ease;
+  pointer-events: none;
 }
 
 @keyframes scrollNavFadeIn {
@@ -3194,6 +3201,7 @@ select:focus {
   padding: 0;
   margin: 0;
   line-height: 1;
+  pointer-events: auto;
 }
 
 .scroll-navigator__btn:hover {
@@ -3211,17 +3219,10 @@ select:focus {
 }
 
 .scroll-navigator__btn--hidden {
-  opacity: 0.35;
+  opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-}
-
-.scroll-navigator__btn--hidden:hover {
-  transform: none;
-  background: rgba(26, 31, 58, 0.75);
-  border-color: rgba(255, 77, 109, 0.5);
-  box-shadow:
-    0 4px 15px rgba(0, 0, 0, 0.3),
-    0 0 12px rgba(255, 77, 109, 0.25);
+  transform: scale(0.8);
 }
 
 @media (max-width: 768px) {
@@ -3535,10 +3536,15 @@ select:focus {
   border: 1px solid pink;
   display: flex;
   flex-direction: column;
-  width: 700px;
-  padding: 20px;
+  flex: 2;
+  width: 100%;
+  max-width: 700px;
+  padding: 24px;
   border-radius: 10px;
   gap: 10px;
+    background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 15px rgba(255,77,109,0.15);
 }
 
 .message-box h4 {
@@ -3562,11 +3568,38 @@ select:focus {
   width: 100%;
 }
 
+.message-box textarea {
+  min-height: 140px;
+  padding: 14px;
+  border-radius: 6px;
+  resize: vertical;
+}
+
+.send-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  width: fit-content;
+  min-width: 180px;
+
+  padding: 14px 24px;
+  margin-top: 10px;
+
+  align-self: center;
+
+  border: none;
+  border-radius: 8px;
+
+  cursor: pointer;
+}
 .social-flex {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
+
 
 .social-flex a {
   display: flex;
@@ -3608,10 +3641,15 @@ select:focus {
   border: 1px solid pink;
   display: flex;
   flex-direction: column;
-  width: 700px;
-  padding: 20px;
+  flex: 1;
+  width: 100%;
+  max-width: 350px;
+  padding: 24px;
   border-radius: 10px;
   gap: 10px;
+    background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 15px rgba(255,77,109,0.15);
 }
 
 .contact-page {
@@ -3642,5 +3680,70 @@ select:focus {
 }
 
 .message-box input {
-  height: 20px;
+  height: 48px;
+  padding: 0 14px;
+  border-radius: 6px;
+}
+
+.message-box input:focus,
+.message-box textarea:focus {
+  outline: none;
+  border-color: var(--primary-red);
+
+  box-shadow:
+    0 0 5px rgba(255,77,109,.4),
+    0 0 15px rgba(255,77,109,.25);
+}
+
+.message-box,
+.other-contact {
+  transition: all .3s ease;
+}
+
+.message-box:hover,
+.other-contact:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px rgba(255,77,109,.25);
+}
+
+@media (max-width: 768px) {
+  .contact-main {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .message-box,
+  .other-contact {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .message-input-top {
+    flex-direction: column;
+  }
+
+  .contact-page {
+    margin: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-main {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .message-box,
+  .other-contact {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .message-input-top {
+    flex-direction: column;
+  }
+
+  .contact-page {
+    margin: 20px;
+  }
 }

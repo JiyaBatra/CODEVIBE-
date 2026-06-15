@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../config/jwt");
+const { isDenylisted } = require("../utils/tokenDenylist");
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -8,6 +9,11 @@ const verifyToken = (req, res, next) => {
   }
 
   const token = authHeader.split(" ")[1];
+
+  if (isDenylisted(token)) {
+    return res.status(401).json({ message: "Token has been invalidated. Please log in again." });
+  }
+
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     req.user = decoded;

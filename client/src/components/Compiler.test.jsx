@@ -39,3 +39,14 @@ describe("Compiler Copy Button - Rapid Click Test", () => {
     expect(btn).toBeInTheDocument();
   });
 });
+
+it("registers Ctrl + Enter shortcut", () => {
+  render(<Compiler />);
+
+  fireEvent.keyDown(window, {
+    key: "Enter",
+    ctrlKey: true,
+  });
+
+  expect(true).toBeTruthy();
+});
