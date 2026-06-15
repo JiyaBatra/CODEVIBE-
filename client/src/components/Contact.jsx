@@ -11,10 +11,10 @@ import {
 } from "react-icons/fi";
 
 const Contact = () => {
-  const handleSubmit = (e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault();
     alert("Message Sent!");
-    e.target.reser();
+    e.currentTarget.reset();
   };
 
 
