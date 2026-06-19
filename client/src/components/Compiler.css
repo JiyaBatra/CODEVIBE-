@@ -1,0 +1,401 @@
+/* client/src/components/Compiler.css */
+
+/* ─── Main Compiler Container ─────────────────────────────────────────────── */
+.compiler {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+  background: #0d1117;
+  border-radius: 12px;
+  border: 1px solid #30363d;
+}
+
+/* ─── Editor Wrapper ──────────────────────────────────────────────────────── */
+.compiler-editor-wrap {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0d1117;
+}
+
+/* ─── Toolbar ─────────────────────────────────────────────────────────────── */
+.compiler-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #161b22;
+  border-bottom: 1px solid #30363d;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.compiler-toolbar-left,
+.compiler-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ─── Toolbar Buttons ────────────────────────────────────────────────────── */
+.compiler-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #21262d;
+  color: #c9d1d9;
+}
+
+.compiler-btn:hover {
+  background: #30363d;
+  transform: translateY(-1px);
+}
+
+.compiler-btn:active {
+  transform: translateY(0px);
+}
+
+.compiler-btn--copy {
+  background: #1f6feb;
+  color: white;
+}
+
+.compiler-btn--copy:hover {
+  background: #388bfd;
+}
+
+.compiler-btn--download {
+  background: #238636;
+  color: white;
+}
+
+.compiler-btn--download:hover {
+  background: #2ea043;
+}
+
+.compiler-btn--run {
+  background: #ff4d6d;
+  color: white;
+  padding: 8px 24px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.compiler-btn--run:hover {
+  background: #ff6b8a;
+  box-shadow: 0 0 20px rgba(255, 77, 109, 0.3);
+}
+
+.compiler-btn--reset {
+  background: #da3633;
+  color: white;
+}
+
+.compiler-btn--reset:hover {
+  background: #f85149;
+}
+
+/* ─── Save Indicator ──────────────────────────────────────────────────────── */
+.save-indicator {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  min-width: 120px;
+  justify-content: center;
+}
+
+.save-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.save-status.saving {
+  color: #f59e0b;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.save-status.saved {
+  color: #48bb78;
+}
+
+.save-status.unsaved {
+  color: #f56565;
+}
+
+/* ─── Animation ───────────────────────────────────────────────────────────── */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ─── Textarea ────────────────────────────────────────────────────────────── */
+.compiler-textarea {
+  width: 100%;
+  min-height: 300px;
+  padding: 16px;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  background: #0d1117;
+  color: #e6edf3;
+  border: none;
+  resize: vertical;
+  outline: none;
+  tab-size: 2;
+  transition: outline 0.2s ease;
+}
+
+.compiler-textarea:focus {
+  outline: 2px solid #ff4d6d;
+  outline-offset: -2px;
+}
+
+.compiler-textarea::placeholder {
+  color: #484f58;
+}
+
+/* ─── Actions Row ─────────────────────────────────────────────────────────── */
+.compiler-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  flex-wrap: wrap;
+}
+
+.compiler-status {
+  padding: 6px 12px;
+  background: #161b22;
+  border-radius: 6px;
+  color: #8b949e;
+  font-size: 13px;
+  flex: 1;
+  min-width: 100px;
+}
+
+/* ─── Preview Iframe ──────────────────────────────────────────────────────── */
+.compiler-preview {
+  width: 100%;
+  min-height: 200px;
+  max-height: 400px;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  background: #ffffff;
+  transition: border-color 0.2s ease;
+}
+
+.compiler-preview:hover {
+  border-color: #ff4d6d;
+}
+
+/* ─── Feedback Panel ──────────────────────────────────────────────────────── */
+.feedback-panel {
+  margin-top: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  animation: slideDown 0.3s ease;
+}
+
+.feedback-panel--success {
+  background: rgba(46, 160, 67, 0.15);
+  border: 1px solid #238636;
+}
+
+.feedback-panel--error {
+  background: rgba(218, 54, 51, 0.15);
+  border: 1px solid #da3633;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.feedback-success-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.feedback-success-icon {
+  font-size: 24px;
+}
+
+.feedback-success-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #3fb950;
+}
+
+.feedback-success-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.feedback-meta-chip {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  font-size: 13px;
+  color: #8b949e;
+}
+
+.feedback-meta-chip b {
+  color: #e6edf3;
+}
+
+.feedback-error-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.feedback-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: white;
+}
+
+.feedback-section {
+  margin: 8px 0;
+}
+
+.feedback-raw {
+  padding: 10px;
+  background: #0d1117;
+  border-radius: 6px;
+  border: 1px solid #30363d;
+  font-family: 'Fira Code', monospace;
+  font-size: 13px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #e6edf3;
+}
+
+.feedback-hint {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(255, 77, 109, 0.1);
+  border-left: 3px solid #ff4d6d;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.feedback-hint-icon {
+  font-size: 16px;
+}
+
+.feedback-hint-text {
+  color: #e6edf3;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ─── Responsive Design ───────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .compiler {
+    padding: 10px;
+  }
+
+  .compiler-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .compiler-toolbar-left,
+  .compiler-toolbar-right {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .save-indicator {
+    min-width: 100px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .compiler-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .compiler-actions button {
+    justify-content: center;
+  }
+
+  .compiler-textarea {
+    min-height: 200px;
+    font-size: 13px;
+  }
+
+  .compiler-preview {
+    min-height: 150px;
+  }
+}
+
+@media (max-width: 480px) {
+  .compiler {
+    padding: 6px;
+  }
+
+  .compiler-btn {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
+
+  .compiler-textarea {
+    min-height: 150px;
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .save-status {
+    font-size: 11px;
+  }
+
+  .feedback-success-title {
+    font-size: 15px;
+  }
+
+  .feedback-meta-chip {
+    font-size: 12px;
+    padding: 2px 10px;
+  }
+}

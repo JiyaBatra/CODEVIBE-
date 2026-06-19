@@ -1,10 +1,19 @@
 // src/components/Compiler.jsx
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useAuth } from "../AuthProvider.jsx";
 // Dynamic API URL config resolving to localhost in dev and Render live server in production
 import API_BASE_URL from "../config/api";
 import Dropdown from "./common/Dropdown";
+import "./Compiler.css";
+// ─── Debounce Utility ────────────────────────────────────────────────────────
+const debounce = (func, delay) => {
+  let timeoutId;
+  return (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
+};
 
 const SCORING = (attempt) =>
   attempt === 1 ? 100 :
@@ -83,7 +92,6 @@ const FeedbackPanel = ({ isSuccess, score, tries, executionTime, errorType, hint
   );
 };
 
-
 // ─── Main Compiler component ─────────────────────────────────────────────────
 const Compiler = ({
   LessonId,
@@ -97,6 +105,11 @@ const Compiler = ({
   const [code, setCode]                 = useState(initialCode);
   const [tries, setTries]               = useState(0);
   const [score, setScore]               = useState(null);
+
+  // ─── Auto-Save States ─────────────────────────────────────────────────────
+  const [lastSaved, setLastSaved]       = useState(null);
+  const [isSaved, setIsSaved]           = useState(false);
+  const [showSaveIndicator, setShowSaveIndicator] = useState(false);
 
   // feedback state
   const [isSuccess, setIsSuccess]       = useState(false);
@@ -112,6 +125,99 @@ const Compiler = ({
 
   const iframeRef = useRef(null);
   const startTimeRef = useRef(Date.now());
+
+  // ─── Load Saved Code on Mount ─────────────────────────────────────────────
+  useEffect(() => {
+    const loadSavedCode = () => {
+      try {
+        const savedCode = localStorage.getItem('compiler_code');
+        const savedTimestamp = localStorage.getItem('compiler_last_saved');
+        
+        if (savedCode && savedCode.trim()) {
+          setCode(savedCode);
+          if (savedTimestamp) {
+            setLastSaved(new Date(parseInt(savedTimestamp)));
+          }
+          setIsSaved(true);
+          setStatus(`💾 Restored saved code from ${new Date(parseInt(savedTimestamp)).toLocaleTimeString()}`);
+          setTimeout(() => setStatus(""), 3000);
+        }
+      } catch (error) {
+        console.error('Error loading saved code:', error);
+      }
+    };
+    
+    loadSavedCode();
+  }, []);
+
+  // ─── Auto-Save Function ───────────────────────────────────────────────────
+  const debouncedSave = useCallback(
+    debounce((newCode) => {
+      if (newCode && newCode.trim()) {
+        try {
+          localStorage.setItem('compiler_code', newCode);
+          const timestamp = Date.now();
+          localStorage.setItem('compiler_last_saved', timestamp.toString());
+          setLastSaved(new Date(timestamp));
+          setIsSaved(true);
+          
+          // Show save indicator
+          setShowSaveIndicator(true);
+          setTimeout(() => setShowSaveIndicator(false), 2000);
+        } catch (error) {
+          if (error.name === 'QuotaExceededError') {
+            console.warn('LocalStorage quota exceeded. Code not saved.');
+            setStatus("⚠️ Storage full - code not saved");
+            setTimeout(() => setStatus(""), 3000);
+          } else {
+            console.error('Error saving code:', error);
+          }
+        }
+      }
+    }, 1000),
+    []
+  );
+
+  // ─── Clear Saved Code ─────────────────────────────────────────────────────
+  const clearSavedCode = () => {
+    try {
+      localStorage.removeItem('compiler_code');
+      localStorage.removeItem('compiler_last_saved');
+      setLastSaved(null);
+      setIsSaved(false);
+    } catch (error) {
+      console.error('Error clearing saved code:', error);
+    }
+  };
+
+  // ─── Page Unload Backup ──────────────────────────────────────────────────
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (code && code.trim()) {
+        // Backup before leaving the page
+        localStorage.setItem('compiler_code_backup', code);
+        localStorage.setItem('compiler_backup_time', Date.now().toString());
+      }
+    };
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [code]);
+
+  // ─── Handle Lesson Changes ───────────────────────────────────────────────
+  useEffect(() => {
+    const previousLessonId = localStorage.getItem('current_lesson_id');
+    if (LessonId && previousLessonId && previousLessonId !== LessonId) {
+      // Clear previous lesson's code when switching lessons
+      clearSavedCode();
+    }
+    if (LessonId) {
+      localStorage.setItem('current_lesson_id', LessonId);
+    }
+  }, [LessonId]);
 
   useEffect(() => {
     startTimeRef.current = Date.now();
@@ -183,6 +289,8 @@ const Compiler = ({
     setGot(undefined);
     setStatus("");
     saveProgress(LessonId, sc, attempt);
+    // Clear saved code on success (optional - if you want to clear after completion)
+    // clearSavedCode();
   };
 
   const logMistake = async ({ type = "OutputMismatch", message = "", exp = "", got: gotVal = "" } = {}) => {
@@ -236,6 +344,7 @@ const Compiler = ({
       if (e.ctrlKey && e.key === "Enter") { e.preventDefault(); runCode(); }
       if (e.ctrlKey && e.key.toLowerCase() === "r") {
         e.preventDefault();
+        // Reset with clear saved code
         setCode(initialCode);
         setStatus("");
         setIsSuccess(false);
@@ -243,6 +352,7 @@ const Compiler = ({
         setErrorMessage("");
         setActiveHint("");
         setScore(null);
+        clearSavedCode();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -472,30 +582,32 @@ const Compiler = ({
     if (language === "react")                return runReact(attempt, iframeDoc);
     fail({ type: "ExecutionError", message: "Unsupported language in this setup." });
   };
+
   useEffect(() => {
-  const handleKeyDown = (e) => {
-    // Ctrl + Enter => Run Code
-    if (e.ctrlKey && e.key === "Enter") {
-      e.preventDefault();
-      runCode();
-    }
+    const handleKeyDown = (e) => {
+      // Ctrl + Enter => Run Code
+      if (e.ctrlKey && e.key === "Enter") {
+        e.preventDefault();
+        runCode();
+      }
 
-    // Esc => Clear feedback/status
-    if (e.key === "Escape") {
-      setStatus("");
-      setIsSuccess(false);
-      setErrorType(null);
-      setErrorMessage("");
-      setActiveHint("");
-    }
-  };
+      // Esc => Clear feedback/status
+      if (e.key === "Escape") {
+        setStatus("");
+        setIsSuccess(false);
+        setErrorType(null);
+        setErrorMessage("");
+        setActiveHint("");
+      }
+    };
 
-  window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
-  return () => {
-    window.removeEventListener("keydown", handleKeyDown);
-  };
-}, [code, language]);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [code, language]);
+
   // ─── render ──────────────────────────────────────────────────────────────
   return (
     <div className="compiler">
@@ -534,20 +646,41 @@ const Compiler = ({
       )}
 
       <div className="compiler-editor-wrap">
-        {/* toolbar */}
+        {/* toolbar with save indicator */}
         <div className="compiler-toolbar">
-          <button title="Copy Code" onClick={copyCode} className="compiler-btn compiler-btn--copy">
-            📋 Copy
-          </button>
-          <button title="Download Code" onClick={downloadCode} className="compiler-btn compiler-btn--download">
-            ⬇️ Download
-          </button>
+          <div className="compiler-toolbar-left">
+            <button title="Copy Code" onClick={copyCode} className="compiler-btn compiler-btn--copy">
+              📋 Copy
+            </button>
+            <button title="Download Code" onClick={downloadCode} className="compiler-btn compiler-btn--download">
+              ⬇️ Download
+            </button>
+          </div>
+          <div className="compiler-toolbar-right">
+            {/* Save Status Indicator */}
+            <div className="save-indicator">
+              {showSaveIndicator && (
+                <span className="save-status saving">💾 Saving...</span>
+              )}
+              {isSaved && !showSaveIndicator && lastSaved && (
+                <span className="save-status saved" title={`Last saved at ${lastSaved.toLocaleTimeString()}`}>
+                  ✅ Saved {lastSaved.toLocaleTimeString()}
+                </span>
+              )}
+              {!isSaved && !showSaveIndicator && code && code.trim() && (
+                <span className="save-status unsaved">⚠️ Unsaved</span>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* editor */}
         <textarea
           value={code}
-          onChange={(e) => setCode(e.target.value)}
+          onChange={(e) => {
+            setCode(e.target.value);
+            debouncedSave(e.target.value);
+          }}
           className="compiler-textarea"
           placeholder={`// Type your code here. Use console.log for JS outputs.\n// For React define function App(){ return <h1>Hello</h1> }\n// Server languages will be executed by backend: POST /api/execute/:language`}
           spellCheck={false}
@@ -560,7 +693,7 @@ const Compiler = ({
           ▶ Run
         </button>
         <button
-          title="Reset (Ctrl + R)"
+          title="Reset (Ctrl + R) - Clears editor and saved code"
           onClick={() => {
             setCode(initialCode);
             setStatus("");
@@ -569,6 +702,7 @@ const Compiler = ({
             setErrorMessage("");
             setActiveHint("");
             setScore(null);
+            clearSavedCode();
           }}
           className="compiler-btn compiler-btn--reset"
         >
