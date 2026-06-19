@@ -2691,7 +2691,7 @@ select:focus {
   background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
   padding: 1rem;
   border-bottom: 3px solid #ff4d6d;
-  overflow-x: auto;
+  overflow: visible;
   scrollbar-width: none;
 }
 
