@@ -49,7 +49,7 @@ const DynamicProgressSidebar = () => {
       .get(`${API_BASE_URL}/api/progress/${email}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((res) => setProgress((current) => mergeProgress(current, res.data)))
+    .then((res) => setProgress((current) => mergeProgress(current, res.data)))
       .catch(() => {});
   }, [activeGroup]);
 
@@ -106,16 +106,28 @@ const DynamicProgressSidebar = () => {
   }, [activeGroup, isCollapsed]);
 
   if (!activeGroup) return null;
-
-  const completedLessons = progress?.completedLessons || [];
+  const normalizedCompletedLessons = (progress?.completedLessons || []).map(
+  (lessonId) =>
+    lessonId.replace(
+      /^([a-z]+)-lesson(\d+)$/i,
+      "$1-lesson-$2"
+    )
+);
   const scores = getProgressScores(progress?.scores);
   const completedCount = activeGroup.lessons.filter((lesson) =>
-    completedLessons.includes(lesson.lessonId)
+    normalizedCompletedLessons.includes(lesson.lessonId)
   ).length;
   const completionPercent = Math.round((completedCount / activeGroup.lessons.length) * 100);
-  const courseScores = activeGroup.lessons
-    .map((lesson) => scores[lesson.lessonId])
-    .filter((score) => typeof score === "number");
+  
+  const normalizedScores = Object.fromEntries(
+  Object.entries(scores).map(([key, value]) => [
+    key.replace(/^([a-z]+)-lesson(\d+)$/i, "$1-lesson-$2"),
+    value,
+  ])
+);
+const courseScores = activeGroup.lessons
+  .map((lesson) => normalizedScores[lesson.lessonId])
+  .filter((score) => typeof score === "number");
   const averageScore = courseScores.length
     ? Math.round(courseScores.reduce((total, score) => total + score, 0) / courseScores.length)
     : 0;

@@ -36,12 +36,25 @@ exports.getProgress = async (req, res) => {
 
 exports.getLeaderboard = async (req, res) => {
   try {
-    const leaderboard = await Progress.find({}, 'username xp level badges')
-      .sort({ xp: -1 })
-      .limit(50)
-      .lean();
-    
-    res.json(leaderboard);
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      Progress.find({}, 'username xp level badges')
+        .sort({ xp: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Progress.countDocuments({}),
+    ]);
+
+    res.json({
+      data,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    });
   } catch (err) {
     console.error('Error fetching leaderboard:', err);
     res.status(500).json({ message: 'Server error' });

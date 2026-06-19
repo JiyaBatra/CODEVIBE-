@@ -144,19 +144,19 @@ body::-webkit-scrollbar,
 }
 
 .avatar-upload-button {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  border-radius: 999px;
-  padding: 0.6rem 0.85rem;
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text);
-  font-size: 0.8rem;
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.10);
+    position: absolute;
+    right: 7px;
+    bottom: 7px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: 17px;
+    padding: 0.4rem 0.6rem;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text);
+    font-size: 0.8rem;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.10);
 }
 
 .avatar-upload-button input {

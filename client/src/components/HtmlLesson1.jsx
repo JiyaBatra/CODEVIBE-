@@ -111,6 +111,7 @@ const HtmlLesson1 = () => {
         <Compiler
         hint="💡 Review the lesson instructions carefully. Make sure your output matches exactly." 
         LessonId="html-lesson1"
+        lessonTitle="HTML Lesson 1 - Basic Headings"
         expectedOutput={`<h1> heading 1 </h1> <h6> last heading </h6> <p> paragraph </p>`}
         initialCode={`<h1> heading 1 </h1>\n<h6> last heading </h6>\n<p> paragraph </p>`}
         onSuccess={handleSuccess}

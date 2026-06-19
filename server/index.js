@@ -2,9 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const routes = require("./routes/index");
-
 dotenv.config();
+const routes = require("./routes/index");
+const passport = require("passport");
+require("./config/passport");
 
 const backend = express();
 backend.set("trust proxy", 1);
@@ -21,6 +22,7 @@ process.on("unhandledRejection", (reason) => {
 
 backend.use(express.json());
 backend.use(express.urlencoded({ extended: true }));
+backend.use(passport.initialize());
 
 // CORS Configuration - read allowed origins from environment or use defaults
 const allowedOrigins = (
@@ -49,12 +51,16 @@ backend.use(
   cors({
     origin: (origin, callback) => {
       if (
-        !origin ||
         allowedOrigins.includes(origin) ||
         isLocalDevOrigin(origin) ||
         /^https:\/\/deploy-preview-\d+--codevibeforyou\.netlify\.app$/.test(origin)
       ) {
         return callback(null, true);
+      }
+
+      if (!origin) {
+        console.log("❌ Blocked request with missing Origin header");
+        return callback(null, false);
       }
 
       console.log("❌ Blocked CORS origin:", origin);
@@ -140,7 +146,11 @@ const connectToMongo = async () => {
   }
 };
 
-connectToMongo();
+if (require.main === module) {
+  connectToMongo();
+}
+
+module.exports = { backend, allowedOrigins, isLocalDevOrigin };
 
 const gracefulShutdown = (signal) => {
   console.log(`\n⚠️ ${signal} received. Starting graceful shutdown...`);

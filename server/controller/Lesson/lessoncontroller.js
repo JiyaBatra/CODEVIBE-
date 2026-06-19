@@ -140,8 +140,16 @@ const validateCompletionPayload = (body = {}) => {
 
 exports.getAllLessons = async (req, res) => {
   try {
-    const lessons = await Lesson.find({}).sort({ order: 1 });
-    res.json(lessons);
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 20));
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      Lesson.find({}).sort({ order: 1 }).skip(skip).limit(limit).lean(),
+      Lesson.countDocuments({}),
+    ]);
+
+    res.json({ data, total, page, totalPages: Math.ceil(total / limit) });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
@@ -225,21 +233,20 @@ exports.completeLesson = async (req, res) => {
       const { getLearningStreak } = require('../analytics/analyticsController');
       const events = await Analytics.find({ email }).sort({ createdAt: 1 }).lean();
       const currentStreak = getLearningStreak(events);
-      
+
       let multiplier = 1.0;
       if (currentStreak >= 7) multiplier = 1.5;
       else if (currentStreak >= 3) multiplier = 1.2;
 
       earnedXp = Math.round(baseXp * multiplier);
 
-      if (!earnedBadges.includes('first_blood') && (!progress || progress.completedLessons.length === 0)) {
-        earnedBadges.push('first_blood');
-      }
-      
-      const hour = new Date().getHours();
-      if (!earnedBadges.includes('night_owl') && (hour >= 0 && hour < 5)) {
-        earnedBadges.push('night_owl');
-      }
+      const { checkAndAwardBadges } = require('../../config/badges');
+      const progressData = progress ? { ...progress.toObject(), badges: earnedBadges } : { completedLessons: [], scores: {}, badges: [], currentStreak: 0 };
+      const result = checkAndAwardBadges(
+        progressData,
+        { score, analyticsEvents: events }
+      );
+      earnedBadges = result.earnedBadgeIds;
     }
 
     const currentXp = progress?.xp || 0;
@@ -266,7 +273,7 @@ exports.completeLesson = async (req, res) => {
       }
     );
 
-    const user = await User.findOne({ Email: email }).lean();
+    const user = await User.findOne({ email }).lean();
 
     try {
       await Analytics.create({

@@ -27,6 +27,7 @@ import Certificate from './components/Certificate.jsx';
 import ViewReport from './components/ViewReport.jsx';
 import DynamicProgressSidebar from './components/DynamicProgressSidebar.jsx';
 import Leaderboard from './components/Leaderboard.jsx';
+import BadgesPage from './components/BadgesPage.jsx';
 import Flashcard from './components/Flashcard.jsx';
 import {
   AuthProvider,
@@ -226,6 +227,10 @@ import GlobalBackNav from "./components/common/GlobalBackNav.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import { SearchProvider } from "./context/SearchContext.jsx";
 import  Contact  from "./components/Contact.jsx";
+import OAuthCallback from "./components/OAuthCallback.jsx";
+import LessonLayout from "./components/LessonLayout.jsx";
+import BookmarksPage from "./components/BookmarksPage.jsx";
+import SnippetViewer from "./components/SnippetViewer.jsx";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -243,10 +248,13 @@ createRoot(document.getElementById('root')).render(
               <Route path="/lessons" element={<Courses />} />
               <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
               <Route path="/signup" element={<PublicRoute><SignUp /></PublicRoute>} />
+              <Route path="/auth/success" element={<OAuthCallback />} />
               <Route path="/ForgetPassword" element={<ForgetPassword />} />
               <Route path="/ResetPassword" element={<ResetPassword />} />
               <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+              <Route path="/bookmarks" element={<PrivateRoute><BookmarksPage /></PrivateRoute>} />
               <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/badges" element={<BadgesPage />} />
               <Route path="/flashcards" element={<Flashcard />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
@@ -257,10 +265,11 @@ createRoot(document.getElementById('root')).render(
               <Route path="/CssLesson" element={<PrivateRoute><CssLesson /></PrivateRoute>} />
               <Route path="/JsLesson" element={<PrivateRoute><JsLesson /></PrivateRoute>} />
               <Route path="/Compiler" element={<PrivateRoute><Compiler /></PrivateRoute>} />
+              <Route path="/snippet/:slug" element={<SnippetViewer />} />
               <Route path="/contact" element={<Contact />} />
 
               {/* HTML Lessons */}
-              <Route element={<PrivateRoute />}>
+              <Route element={<LessonLayout />}>
                 <Route path="/HtmlLesson" element={<HtmlLesson />} />
                 <Route path="/HtmlLesson1" element={<HtmlLesson1 />} />
                 <Route path="/HtmlLesson2" element={<HtmlLesson2 />} />

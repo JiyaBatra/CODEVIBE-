@@ -313,7 +313,7 @@ const getAnalytics = async (req, res) => {
       })
         .select('username Email college year bio avatarUrl joinedAt')
         .lean(),
-      Progress.findOne({ email }).select('scores completedLessons').lean(),
+      Progress.findOne({ email }).select('scores completedLessons xp level badges').lean(),
       Analytics.find({ email })
         .select('lessonId score points coins learningTime createdAt type')
         .sort({ createdAt: 1 })
@@ -440,7 +440,13 @@ const getAnalytics = async (req, res) => {
     const weeklyStats = buildWeeklyStats(events);
     const heatmapData = buildHeatmapData(events, 32);
 
-    const userLessons = lessons;
+    const totalStaticLessons = Object.values(SUBJECT_TOTALS).reduce(
+  (sum, count) => sum + count,
+  0
+);
+    const userLessons = lessons.length
+  ? lessons
+  : Array(totalStaticLessons).fill(null);
     const stats = {
       lessonsCompleted: completedLessons.length,
       totalLessons: userLessons.length,

@@ -1,26 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Trophy, Medal, Award, UserCircle } from 'lucide-react';
 import './Dashboard.css';
 import API_BASE_URL from '../config/api';
+import Pagination from './common/Pagination';
+
+const LIMIT = 20;
 
 const Leaderboard = () => {
   const [leaders, setLeaders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+
+  const fetchLeaderboard = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_BASE_URL}/api/progress/leaderboard?page=${page}&limit=${LIMIT}`);
+      const result = await response.json();
+      if (result.data) {
+        setLeaders(result.data);
+        setTotal(result.total);
+        setTotalPages(result.totalPages);
+      } else {
+        setLeaders(Array.isArray(result) ? result : []);
+        setTotal(Array.isArray(result) ? result.length : 0);
+        setTotalPages(1);
+      }
+    } catch (err) {
+      console.error('Failed to fetch leaderboard', err);
+    } finally {
+      setLoading(false);
+    }
+  }, [page]);
 
   useEffect(() => {
-    const fetchLeaderboard = async () => {
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/progress/leaderboard`);
-        const data = await response.json();
-        setLeaders(Array.isArray(data) ? data : []);
-      } catch (err) {
-        console.error('Failed to fetch leaderboard', err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchLeaderboard();
-  }, []);
+  }, [fetchLeaderboard]);
 
   if (loading) {
     return <div className="dashboard-loading">Loading Leaderboard...</div>;
@@ -158,6 +174,14 @@ const Leaderboard = () => {
               </div>
             </div>
           )}
+
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            total={total}
+            limit={LIMIT}
+            onPageChange={setPage}
+          />
         </main>
       </div>
     </section>

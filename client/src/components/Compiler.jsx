@@ -99,7 +99,8 @@ const Compiler = ({
   initialCode = "",
   expectedOutput,
   onSuccess,
-  hint: lessonHint,   // ← question-specific hint passed from each lesson
+  hint: lessonHint,
+  lessonTitle = "",
 }) => {
   const [language, setLanguage]         = useState(fixedLanguage || "html");
   const [code, setCode]                 = useState(initialCode);
@@ -246,6 +247,30 @@ const Compiler = ({
     link.click();
     URL.revokeObjectURL(link.href);
     setStatus("⬇️ Code downloaded!");
+  };
+
+  // ── share snippet ────────────────────────────────────────────────────────
+  const shareCode = async () => {
+    if (!code.trim()) return;
+    setStatus("⏳ Creating share link...");
+    try {
+      const email = localStorage.getItem("userEmail");
+      const username = JSON.parse(localStorage.getItem("user") || "{}")?.username || "Anonymous";
+      const res = await axios.post(`${API_BASE_URL}/api/snippets`, {
+        code,
+        language,
+        lessonId: LessonId || "",
+        title: lessonTitle || LessonId || "Untitled",
+        username,
+        score,
+      });
+      const shareUrl = `${window.location.origin}/#/snippet/${res.data.slug}`;
+      await navigator.clipboard.writeText(shareUrl);
+      setStatus("✅ Share link copied to clipboard!");
+    } catch (err) {
+      console.error("Share snippet error:", err);
+      setStatus("❌ Failed to create share link");
+    }
   };
 
   // ── progress ─────────────────────────────────────────────────────────────
@@ -648,6 +673,7 @@ const Compiler = ({
       <div className="compiler-editor-wrap">
         {/* toolbar with save indicator */}
         <div className="compiler-toolbar">
+
           <div className="compiler-toolbar-left">
             <button title="Copy Code" onClick={copyCode} className="compiler-btn compiler-btn--copy">
               📋 Copy
@@ -672,6 +698,32 @@ const Compiler = ({
               )}
             </div>
           </div>
+
+          <button
+              title="Copy Code"
+              aria-label="Copy code to clipboard"
+              onClick={copyCode}
+              className="compiler-btn compiler-btn--copy"
+            >
+            📋 Copy
+          </button>
+          <button
+              title="Download Code"
+              aria-label="Download code file"
+              onClick={downloadCode}
+              className="compiler-btn compiler-btn--download"
+            >
+            ⬇️ Download
+          </button>
+          <button
+              title="Share Code"
+              aria-label="Share code snippet"
+              onClick={shareCode}
+              className="compiler-btn compiler-btn--share"
+            >
+            🔗 Share
+          </button>
+
         </div>
 
         {/* editor */}
@@ -689,11 +741,22 @@ const Compiler = ({
 
       {/* action row */}
       <div className="compiler-actions">
-        <button title="Run (Ctrl + Enter)" onClick={runCode} className="compiler-btn compiler-btn--run">
+        <button
+            title="Run (Ctrl + Enter)"
+            aria-label="Run code"
+            onClick={runCode}
+            className="compiler-btn compiler-btn--run"
+          >
           ▶ Run
         </button>
+
         <button
           title="Reset (Ctrl + R) - Clears editor and saved code"
+
+       <button
+          title="Reset (Ctrl + R)"
+          aria-label="Reset code editor"
+
           onClick={() => {
             setCode(initialCode);
             setStatus("");
@@ -708,8 +771,15 @@ const Compiler = ({
         >
           ↺ Reset
         </button>
+
         {status && !isSuccess && !errorType && (
-          <span className="compiler-status">{status}</span>
+          <span
+            className="compiler-status"
+            role="status"
+            aria-live="polite"
+          >
+            {status}
+          </span>
         )}
       </div>
 

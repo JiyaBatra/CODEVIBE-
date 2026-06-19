@@ -12,6 +12,10 @@ const analyticsRoutes = require('./analytics');
 // My Mistakes Dashboard - NEW FEATURE
 const mistakesRoutes = require('./mistakesRoutes');
 const examRoutes = require('./examRoutes');
+const notesRoutes = require('./notesRoutes');
+const bookmarkRoutes = require('./bookmarkRoutes');
+const notificationRoutes = require('./notificationRoutes');
+const snippetRoutes = require('./snippetRoutes');
 
 router.use('/feedback', feedbackRoutes);
 router.use('/progress', progressRoutes);
@@ -24,5 +28,9 @@ router.use('/contributors', contributorRoutes);
 // My Mistakes Dashboard - NEW FEATURE
 router.use('/mistakes', mistakesRoutes);
 router.use('/exam', examRoutes);
+router.use('/notes', notesRoutes);
+router.use('/bookmarks', bookmarkRoutes);
+router.use('/notifications', notificationRoutes);
+router.use('/snippets', snippetRoutes);
 
 module.exports = router;

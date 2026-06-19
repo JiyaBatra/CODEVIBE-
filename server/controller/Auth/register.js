@@ -7,17 +7,23 @@ const { validatePassword } = require("../../utils/passwordValidator");
 
 const register = async (req, res, next) => {
   try {
-    // 📌 Extract + normalize input
     const username = req.body.username?.trim();
     const email = req.body.email?.trim().toLowerCase();
     const college = req.body.college?.trim();
     const year = req.body.year?.trim();
     const password = req.body.password;
 
-    console.log("📝 Register attempt:", { username, email, college, year });
+    console.log("📝 Register attempt:");
+    console.log({
+      username,
+      email,
+      college,
+      year,
+    });
 
-    // 📌 Password strength validation (before Joi validation for clearer error messages)
+    // Password validation
     const passwordValidation = validatePassword(password);
+
     if (!passwordValidation.isValid) {
       return res.status(400).json({
         success: false,
@@ -26,7 +32,7 @@ const register = async (req, res, next) => {
       });
     }
 
-    // 📌 Validation check
+    // Joi validation
     const { error } = momsvalidation.validate({
       username,
       email,
@@ -42,8 +48,12 @@ const register = async (req, res, next) => {
       });
     }
 
-    // 📌 Check if user already exists (SIMPLE + RELIABLE)
-    const userExist = await UserModel.findOne({ email });
+    // Check existing user
+    const userExist = await UserModel.findOne({
+      email: email,
+    });
+
+    console.log("🔍 Existing user:", userExist);
 
     if (userExist) {
       return res.status(409).json({
@@ -52,10 +62,10 @@ const register = async (req, res, next) => {
       });
     }
 
-    // 📌 Hash password
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 📌 Create user
+    // Create user
     const userCreate = await UserModel.create({
       username,
       email,
@@ -64,7 +74,9 @@ const register = async (req, res, next) => {
       year,
     });
 
-    // 📌 Generate token
+    console.log("✅ User created:", userCreate._id);
+
+    // Generate JWT
     const token = jwt.sign(
       {
         userId: userCreate._id,
@@ -72,10 +84,11 @@ const register = async (req, res, next) => {
         username: userCreate.username,
       },
       JWT_SECRET,
-      { expiresIn: JWT_EXPIRES_IN }
+      {
+        expiresIn: JWT_EXPIRES_IN,
+      }
     );
 
-    // 📌 Success response
     return res.status(201).json({
       success: true,
       message: "User registered successfully",
@@ -86,18 +99,20 @@ const register = async (req, res, next) => {
         email: userCreate.email,
         college: userCreate.college,
         year: userCreate.year,
-        joinedAt: userCreate.createdAt,
       },
     });
-
   } catch (error) {
-    console.error("❌ Registration error:", error);
+    console.error("❌ Registration Error");
+    console.error("Message:", error.message);
+    console.error("Code:", error.code);
+    console.error("Key Pattern:", error.keyPattern);
+    console.error("Key Value:", error.keyValue);
 
-    // duplicate key error fallback
     if (error.code === 11000) {
       return res.status(409).json({
         success: false,
-        message: "User already exists",
+        message: "Duplicate entry detected",
+        field: Object.keys(error.keyPattern || {})[0],
       });
     }
 

@@ -512,3 +512,15 @@ Made with ❤️ by the **CodeVibe Team**
 **[⬆ back to top](#codevibe---learn-practice-master-code)**
 
 </div>
+
+## 🐳 Quick Start with Docker
+
+You can now run the entire CodeVibe application (Frontend, Backend, and Database) with a single command using Docker.
+
+**Prerequisites:** Ensure you have [Docker](https://www.docker.com/products/docker-desktop/) installed on your system.
+
+1. Clone the repository: `git clone <repo-url>`
+2. Navigate to the root directory: `cd CODEVIBE-`
+3. Start the containers:
+   ```bash
+   docker-compose up --build

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import CourseSidebar from './CourseSidebar';
 import API_BASE_URL from '../config/api';
+import BookmarkButton from './BookmarkButton';
 import { FaCheckCircle, FaArrowRight, FaCode, FaBookOpen, FaTrophy, FaMicrochip, FaTerminal, FaDatabase } from 'react-icons/fa';
 
 const CLesson = () => {
@@ -159,6 +160,7 @@ const CLesson = () => {
                 {lesson.isProject && (
                   <span className="project-badge">🚀 PROJECT</span>
                 )}
+                <BookmarkButton lessonId={lesson.id} size={16} className="card-bookmark-btn" />
               </div>
 
               {/* Category Icon & Title */}
@@ -493,6 +495,10 @@ const CLesson = () => {
           right: 10px;
           color: #00b894;
           font-size: 1.2rem;
+        }
+
+        .card-bookmark-btn {
+          margin-left: auto;
         }
 
         /* Responsive Design */

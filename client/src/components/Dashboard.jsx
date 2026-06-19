@@ -19,8 +19,11 @@ import { useAuth } from "../AuthProvider.jsx";
 import API_BASE_URL from "../config/api";
 // My Mistakes Dashboard - NEW FEATURE
 import MyMistakesDashboard from "./MyMistakesDashboard";
+import BookmarksWidget from "./BookmarksWidget";
 import DailyQuests from "./DailyQuests.jsx";
 import "./Dashboard.css";
+import { Upload } from 'lucide-react';
+import { ALL_POSSIBLE_BADGES } from "../config/badges";
 
 const formatNumber = (value) => {
   if (value === undefined || value === null) return "—";
@@ -70,14 +73,6 @@ const getSubjectGradient = (subject) => {
   const key = subject?.toString().toLowerCase();
   return SUBJECT_GRADIENTS[key] || generateFallbackGradient(subject);
 };
-
-const ALL_POSSIBLE_BADGES = [
-  { id: "first_blood", label: "First Blood", desc: "Complete your very first lesson" },
-  { id: "night_owl", label: "Night Owl", desc: "Complete a lesson between 12 AM and 5 AM" },
-  { id: "fast_learner", label: "Fast Learner", desc: "Complete 5 lessons in a single day" },
-  { id: "weekend_warrior", label: "Weekend Warrior", desc: "Complete 5 lessons on a weekend" },
-  { id: "html_master", label: "HTML Master", desc: "Complete all HTML lessons" }
-];
 
 const buildHeatmapCells = (heatmapData = {}, streak = 0, events = [], weeks = 10) => {
   const dayMs = 24 * 60 * 60 * 1000;
@@ -689,9 +684,7 @@ const Dashboard = () => {
         cancelToken: source.token,
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((response) => {
-        setAnalytics(response.data);
-      })
+.then((response) => {setAnalytics(response.data);})
       .catch((err) => {
         if (!axios.isCancel(err)) {
           setError(err.response?.data?.message || "Failed to load dashboard data.");
@@ -800,7 +793,6 @@ const Dashboard = () => {
       setSaving(false);
     }
   };
-
   const metrics = useMemo(() => {
     const stats = analytics?.stats || {};
     return [
@@ -841,7 +833,10 @@ const Dashboard = () => {
     return analytics?.subjects?.map((subject) => {
       const completed = subject.completedLessons || 0;
       const total = subject.totalLessons || subject.completedLessons || 0;
-      const completionValue = Math.max(0, completed);
+      const completionValue =
+  total > 0
+    ? Math.round((completed / total) * 100)
+    : 0;
 
       return {
         title: subject.subject,
@@ -916,7 +911,6 @@ const Dashboard = () => {
       spanLabel: formatGrowthSpan(adjustedPoints),
     };
   }, [analytics]);
-
   if (!user) {
     return (
       <section className="dashboard-shell">
@@ -954,7 +948,7 @@ const Dashboard = () => {
                   alt="Profile avatar"
                 />
                 <label className="avatar-upload-button">
-                  Upload
+                  <Upload size={15}/>
                   <input
                     type="file"
                     accept="image/*"
@@ -1030,6 +1024,19 @@ const Dashboard = () => {
                     );
                   })}
                 </div>
+                <a
+                  href="#/badges"
+                  style={{
+                    display: "inline-block",
+                    marginTop: "0.5rem",
+                    fontSize: "0.75rem",
+                    color: "#ff5f8f",
+                    textDecoration: "none",
+                    fontWeight: 500,
+                  }}
+                >
+                  View all badges →
+                </a>
               </div>
 
               <div className="profile-details">
@@ -1107,7 +1114,6 @@ const Dashboard = () => {
                 </div>
               )}
             </aside>
-
             <main className="dashboard-main">
               <div className="stats-grid">
                 {metrics.map((item) => (
@@ -1297,13 +1303,16 @@ const Dashboard = () => {
               {/* ── My Mistakes Dashboard - NEW FEATURE ── */}
               <MyMistakesDashboard />
 
+              {/* ── Bookmarks Widget ── */}
+              <BookmarksWidget />
+
               {/* ── Solved / Unsolved per Subject ── */}
               {analytics?.analytics?.subjectSolvedStats?.length > 0 && (
                 <section className="analytics-section glass-card" style={{ marginTop: '24px' }}>
                   <div className="section-header">
                     <div>
                       <p className="section-overline">Completion map</p>
-                      <h2>✅ Solved vs unsolved</h2>
+                      <h2>Solved vs unsolved</h2>
                     </div>
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '16px' }}>

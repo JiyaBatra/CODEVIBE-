@@ -5,6 +5,7 @@ import { useAuth } from "../AuthProvider.jsx";
 import API_BASE_URL from "../config/api";
 import loginImage from "../assets/loginImage.png";
 import PasswordField from "./PasswordField";
+import { FcGoogle } from "react-icons/fc";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -171,6 +172,33 @@ const Login = () => {
 
             <button type="submit" disabled={loading}>
               {loading ? "SUBMITTING..." : "SUBMIT"}
+            </button>
+
+            <div style={{ textAlign: "center", margin: "15px 0", color: "#ccc", fontSize: "0.9rem" }}>
+              OR
+            </div>
+
+            <button
+              type="button"
+              onClick={() => window.location.href = `${API_BASE_URL}/api/auth/google`}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+                backgroundColor: "white",
+                color: "#333",
+                border: "none",
+                width: "100%",
+                padding: "12px",
+                borderRadius: "25px",
+                cursor: "pointer",
+                fontWeight: "bold",
+                fontSize: "1rem"
+              }}
+            >
+              <FcGoogle size={24} />
+              Sign in with Google
             </button>
 
             {responseMsg && (

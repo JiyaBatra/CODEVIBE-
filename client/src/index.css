@@ -159,6 +159,7 @@ header img:hover {
   display: flex;
   gap: 10px;
   color: white;
+  margin-left: auto;
 }
 
 .nav-link {
@@ -408,11 +409,15 @@ body {
   background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #050710 100%);
   color: var(--text-primary);
   line-height: 1.6;
-  transition: all 0.3s ease-in-out;
+  /* Prevent scroll/jank caused by animating layout on scroll */
+  transition: none;
   position: relative;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
+
+  /* Ensure no temporary white page flashes during scroll/render */
+  background-attachment: fixed;
 }
 
 /* Animated background grid */
@@ -2675,14 +2680,14 @@ select:focus {
 .header-top {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 1.5rem;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 999999;
   width: 100%;
   background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0a0e27 100%);
-
   padding: 1rem 2.5rem;
   border-bottom: 3px solid #ff4d6d;
 }
@@ -2971,11 +2976,11 @@ select:focus {
   border: none;
   color: rgba(176, 184, 212, 0.6);
   cursor: pointer;
-  padding: 0.25rem;
+  padding: 0.8rem;
   display: flex;
   align-items: center;
   font-size: 0.8rem;
-  border-radius: 50%;
+  border-radius: 14px;
   margin: 0;
   box-shadow: none;
   transition:
@@ -3133,7 +3138,7 @@ select:focus {
 
   /* Hide "Search" text label on very small screens, keep icon */
   .search-btn {
-    padding: 0.45rem 0.75rem;
+    padding: 0.9rem 0.9rem;
     font-size: 0;
     /* hide text */
     line-height: 1;

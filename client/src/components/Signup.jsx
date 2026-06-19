@@ -7,6 +7,7 @@ import registerImage from "../assets/registerImage.png";
 import PasswordField from "./PasswordField";
 import PasswordStrengthIndicator from "./PasswordStrengthIndicator";
 import Dropdown from "./common/Dropdown";
+import { FcGoogle } from "react-icons/fc";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -211,6 +212,33 @@ const Signup = () => {
             {/* Submit */}
             <button type="submit" disabled={loading}>
               {loading ? "CREATING ACCOUNT..." : "CREATE ACCOUNT"}
+            </button>
+
+            <div style={{ textAlign: "center", margin: "15px 0", color: "#ccc", fontSize: "0.9rem" }}>
+              OR
+            </div>
+
+            <button
+              type="button"
+              onClick={() => window.location.href = `${API_BASE_URL}/api/auth/google`}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
+                backgroundColor: "white",
+                color: "#333",
+                border: "none",
+                width: "100%",
+                padding: "12px",
+                borderRadius: "25px",
+                cursor: "pointer",
+                fontWeight: "bold",
+                fontSize: "1rem"
+              }}
+            >
+              <FcGoogle size={24} />
+              Sign in with Google
             </button>
 
             {/* Message */}

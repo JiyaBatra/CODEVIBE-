@@ -21,7 +21,7 @@ const getBackendURL = () => {
   ) {
     // IMPORTANT:
     // Your backend runs on PORT 5002
-    return "http://127.0.0.1:5002";
+    return "http://localhost:5002";
   }
 
   // Production backend
