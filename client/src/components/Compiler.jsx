@@ -6,6 +6,9 @@ import { useAuth } from "../AuthProvider.jsx";
 import API_BASE_URL from "../config/api";
 import Dropdown from "./common/Dropdown";
 import "./Compiler.css";
+import ExecutionHistory from './ExecutionHistory';
+import "./ExecutionHistory.css";
+
 // ─── Debounce Utility ────────────────────────────────────────────────────────
 const debounce = (func, delay) => {
   let timeoutId;
@@ -112,6 +115,16 @@ const Compiler = ({
   const [isSaved, setIsSaved]           = useState(false);
   const [showSaveIndicator, setShowSaveIndicator] = useState(false);
 
+  // ─── Execution History State ──────────────────────────────────────────────
+  const [executionHistory, setExecutionHistory] = useState(() => {
+    try {
+      const saved = localStorage.getItem('execution_history');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
   // feedback state
   const [isSuccess, setIsSuccess]       = useState(false);
   const [errorType, setErrorType]       = useState(null);
@@ -126,6 +139,15 @@ const Compiler = ({
 
   const iframeRef = useRef(null);
   const startTimeRef = useRef(Date.now());
+
+  // ─── Save history to localStorage ──────────────────────────────────────
+  useEffect(() => {
+    try {
+      localStorage.setItem('execution_history', JSON.stringify(executionHistory));
+    } catch (error) {
+      console.error('Error saving execution history:', error);
+    }
+  }, [executionHistory]);
 
   // ─── Load Saved Code on Mount ─────────────────────────────────────────────
   useEffect(() => {
@@ -189,6 +211,33 @@ const Compiler = ({
     } catch (error) {
       console.error('Error clearing saved code:', error);
     }
+  };
+
+  // ─── Add to History ──────────────────────────────────────────────────────
+  const addToHistory = ({ output = '', error = '', status = 'failure', score = null, attempt = 1 }) => {
+    const entry = {
+      timestamp: Date.now(),
+      output: output || '',
+      error: error || '',
+      status: status, // 'success' or 'failure'
+      score: score,
+      attempt: attempt,
+      language: language,
+      code: code.substring(0, 200) + (code.length > 200 ? '...' : ''), // Truncate code
+      executionTime: executionTime || 0,
+    };
+
+    setExecutionHistory(prev => {
+      // Keep only last 10 entries
+      const newHistory = [entry, ...prev].slice(0, 10);
+      return newHistory;
+    });
+  };
+
+  // ─── Clear History ──────────────────────────────────────────────────────
+  const clearHistory = () => {
+    setExecutionHistory([]);
+    localStorage.removeItem('execution_history');
   };
 
   // ─── Page Unload Backup ──────────────────────────────────────────────────
@@ -314,8 +363,14 @@ const Compiler = ({
     setGot(undefined);
     setStatus("");
     saveProgress(LessonId, sc, attempt);
-    // Clear saved code on success (optional - if you want to clear after completion)
-    // clearSavedCode();
+    
+    // ─── Add to history ──────────────────────────────────────────────────
+    addToHistory({ 
+      status: 'success', 
+      score: sc, 
+      attempt: attempt, 
+      executionTime: ms 
+    });
   };
 
   const logMistake = async ({ type = "OutputMismatch", message = "", exp = "", got: gotVal = "" } = {}) => {
@@ -361,6 +416,15 @@ const Compiler = ({
     if (!serverLanguages.includes(language)) {
       logMistake({ type, message, exp, got: gotVal });
     }
+
+    // ─── Add to history ──────────────────────────────────────────────────
+    addToHistory({ 
+      status: 'failure', 
+      error: message || 'Wrong answer', 
+      score: 0, 
+      attempt: tries || 1,
+      executionTime: ms 
+    });
   };
 
   // ─── keyboard shortcuts ──────────────────────────────────────────────────
@@ -681,7 +745,11 @@ const Compiler = ({
             <button title="Download Code" onClick={downloadCode} className="compiler-btn compiler-btn--download">
               ⬇️ Download
             </button>
+            <button title="Share Code" onClick={shareCode} className="compiler-btn compiler-btn--share">
+              🔗 Share
+            </button>
           </div>
+
           <div className="compiler-toolbar-right">
             {/* Save Status Indicator */}
             <div className="save-indicator">
@@ -698,32 +766,6 @@ const Compiler = ({
               )}
             </div>
           </div>
-
-          <button
-              title="Copy Code"
-              aria-label="Copy code to clipboard"
-              onClick={copyCode}
-              className="compiler-btn compiler-btn--copy"
-            >
-            📋 Copy
-          </button>
-          <button
-              title="Download Code"
-              aria-label="Download code file"
-              onClick={downloadCode}
-              className="compiler-btn compiler-btn--download"
-            >
-            ⬇️ Download
-          </button>
-          <button
-              title="Share Code"
-              aria-label="Share code snippet"
-              onClick={shareCode}
-              className="compiler-btn compiler-btn--share"
-            >
-            🔗 Share
-          </button>
-
         </div>
 
         {/* editor */}
@@ -742,21 +784,17 @@ const Compiler = ({
       {/* action row */}
       <div className="compiler-actions">
         <button
-            title="Run (Ctrl + Enter)"
-            aria-label="Run code"
-            onClick={runCode}
-            className="compiler-btn compiler-btn--run"
-          >
+          title="Run (Ctrl + Enter)"
+          aria-label="Run code"
+          onClick={runCode}
+          className="compiler-btn compiler-btn--run"
+        >
           ▶ Run
         </button>
 
         <button
           title="Reset (Ctrl + R) - Clears editor and saved code"
-
-       <button
-          title="Reset (Ctrl + R)"
           aria-label="Reset code editor"
-
           onClick={() => {
             setCode(initialCode);
             setStatus("");
@@ -773,11 +811,7 @@ const Compiler = ({
         </button>
 
         {status && !isSuccess && !errorType && (
-          <span
-            className="compiler-status"
-            role="status"
-            aria-live="polite"
-          >
+          <span className="compiler-status" role="status" aria-live="polite">
             {status}
           </span>
         )}
@@ -805,6 +839,14 @@ const Compiler = ({
         got={got}
         status={status}
       />
+
+      {/* ─── Execution History ──────────────────────────────────────────────── */}
+      <div className="compiler-history-wrapper" style={{ marginTop: '12px' }}>
+        <ExecutionHistory 
+          history={executionHistory} 
+          onClearHistory={clearHistory}
+        />
+      </div>
     </div>
   );
 };
