@@ -97,12 +97,18 @@ if (user?.email) {
       }
     }
 
-    if (location.state?.scrollToContact) {
-      const element = document.getElementById('contact-footer');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
+if (location.state?.scrollToContact) {
+  setTimeout(() => {
+    const element = document.getElementById("contact-footer");
+
+    if (element) {
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
+  }, 300);
+}
 
     if (
       location.state?.scrollToTop ||
@@ -136,7 +142,7 @@ if (user?.email) {
     { title: 'CSS for Beginners', prefix: 'css', total: 14, desc: 'Learn how to style beautiful websites.', img: cssLogo, link: '/CssLesson', level: 'Beginner', duration: '14 lessons', time: '3h', category: 'Frontend' },
     { title: 'JS for Beginners', prefix: 'js', total: 29, desc: 'Learn how to give functionality to websites.', img: jsLogo, link: '/JsLesson', level: 'Intermediate', duration: '29 lessons', time: '6h 30m', category: 'Frontend' },
     { title: 'C Language for You!', prefix: 'c', total: 17, desc: 'Master the fundamentals of C programming.', img: cLogo, link: '/CLesson', level: 'Beginner', duration: '17 lessons', time: '4h', category: 'Programming' },
-    { title: 'OOP Concepts', prefix: 'oop', total: 14, desc: 'Learn object-oriented programming concepts.', img: OOPLogo, link: '/OopLesson', level: 'Intermediate', duration: '14 lessons', time: '3h 30m' , category: 'Programming' },
+    { title: 'OOP Concepts', prefix: 'oop', total: 14, desc: 'Learn object-oriented programming concepts.', img: OOPLogo, link: '/OOPLesson', level: 'Intermediate', duration: '14 lessons', time: '3h 30m' , category: 'Programming' },
     { title: 'Data Structures & Algorithms', prefix: 'dsa', total: 13, desc: 'Build strong problem-solving skills.', img: dsaLogo, link: '/DsaLesson', level: 'Advanced', duration: '12 lessons', time: '8h', category: 'Programming' },
     { title: 'Node.js', prefix: 'node', total: 12, desc: 'Learn backend development with Node.js.', img: nodeLogo, link: '/NodeLesson', level: 'Intermediate', duration: '12 lessons', time: '3h' , category: 'Backend' },
     { title: 'React.js', prefix: 'react', total: 13, desc: 'Build modern frontend applications.', img: reactLogo, link: '/ReactLesson', level: 'Intermediate', duration: '13 lessons', time: '5h' , category: 'Frontend' },

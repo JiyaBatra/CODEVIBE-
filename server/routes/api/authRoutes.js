@@ -6,6 +6,7 @@ const { authLimiter } = require("../../middleware/rateLimiter")
 
 const register = require("../../controller/Auth/register");
 const login = require("../../controller/Auth/login");
+const logout = require("../../controller/Auth/logout");
 const forgotPassword = require("../../controller/Auth/forgotPassword");
 const resetPassword = require("../../controller/Auth/resetPassword");
 const updateProfile = require("../../controller/Auth/updateProfile");
@@ -15,6 +16,7 @@ const { googleAuthCallback } = require("../../controller/Auth/googleAuth");
 
 Router.post("/register", authLimiter, register);
 Router.post("/login", authLimiter, login);
+Router.post("/logout", verifyToken, logout);
 Router.post("/forgot-password", authLimiter, forgotPassword);
 Router.post("/reset-password", authLimiter, resetPassword);
 Router.put("/profile", verifyToken, updateProfile);

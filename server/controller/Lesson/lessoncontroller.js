@@ -2,6 +2,7 @@ const Lesson = require('../../models/lesson');
 const Progress = require('../../models/progress');
 const User = require('../../models/user.models');
 const Analytics = require('../../models/analytics');
+const Notification = require('../../models/notification');
 
 const LESSON_ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/i;
 const MAX_LESSON_ID_LENGTH = 80;
@@ -291,6 +292,30 @@ exports.completeLesson = async (req, res) => {
       });
     } catch (analyticsErr) {
       console.error('Analytics event creation failed:', analyticsErr);
+    }
+
+    try {
+      await Notification.create({
+        email,
+        type: 'lesson_complete',
+        message: `You completed the lesson "${lessonId}" with a score of ${score}!`,
+        relatedEntity: lessonId,
+      });
+    } catch (notifErr) {
+      console.error('Notification creation failed:', notifErr);
+    }
+
+    if (currentStreak > 1 && currentStreak % 5 === 0) {
+      try {
+        await Notification.create({
+          email,
+          type: 'streak_milestone',
+          message: `You've reached a ${currentStreak}-day learning streak! Keep it up!`,
+          relatedEntity: '',
+        });
+      } catch (notifErr) {
+        console.error('Streak notification creation failed:', notifErr);
+      }
     }
 
     res.json({

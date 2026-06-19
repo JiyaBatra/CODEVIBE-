@@ -3,31 +3,10 @@
   display: inline-flex;
 }
 
-.notification-bell {
-  position: relative;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #c0c0d0;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-
-.notification-bell:hover {
-  background: rgba(255, 95, 143, 0.15);
-  color: #ff5f8f;
-  border-color: rgba(255, 95, 143, 0.3);
-}
-
 .notification-badge {
   position: absolute;
-  top: -4px;
-  right: -4px;
+  top: -8px;
+  right: -8px;
   min-width: 18px;
   height: 18px;
   padding: 0 4px;

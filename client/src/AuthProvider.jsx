@@ -1,5 +1,7 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+import axios from "axios";
+import API_BASE_URL from "./config/api";
 
 const AuthContext = createContext(null);
 
@@ -49,12 +51,24 @@ export const AuthProvider = ({ children }) => {
     setAuthState({ user: updatedUser, token: currentToken });
   }, [authState?.token]);
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    const token = authState?.token;
+    if (token) {
+      try {
+        await axios.post(
+          `${API_BASE_URL}/api/auth/logout`,
+          {},
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      } catch {
+        // clear local state regardless
+      }
+    }
     localStorage.removeItem("authToken");
     localStorage.removeItem("user");
     localStorage.removeItem("userEmail");
     setAuthState({ user: null, token: null });
-  }, []);
+  }, [authState?.token]);
 
   const value = useMemo(
     () => ({ user: authState.user, token: authState.token, login, updateUser, logout }),

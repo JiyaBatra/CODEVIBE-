@@ -13,7 +13,7 @@ import {
   UserCircle,
   Wand2,
   Flame,
-  CheckCircle2
+  CheckCircle2,
 } from "lucide-react";
 import { useAuth } from "../AuthProvider.jsx";
 import API_BASE_URL from "../config/api";
@@ -22,8 +22,9 @@ import MyMistakesDashboard from "./MyMistakesDashboard";
 import BookmarksWidget from "./BookmarksWidget";
 import DailyQuests from "./DailyQuests.jsx";
 import "./Dashboard.css";
-import { Upload } from 'lucide-react';
+import { Upload } from "lucide-react";
 import { ALL_POSSIBLE_BADGES } from "../config/badges";
+import { History } from "lucide-react";
 
 const formatNumber = (value) => {
   if (value === undefined || value === null) return "—";
@@ -61,7 +62,10 @@ const SUBJECT_GRADIENTS = {
 
 const generateFallbackGradient = (subject) => {
   const key = subject?.toString() || "fallback";
-  const hash = Array.from(key).reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const hash = Array.from(key).reduce(
+    (acc, char) => acc + char.charCodeAt(0),
+    0,
+  );
   const hue = 45 + (hash % 310);
   return {
     start: `hsl(${hue}, 88%, 64%)`,
@@ -74,7 +78,12 @@ const getSubjectGradient = (subject) => {
   return SUBJECT_GRADIENTS[key] || generateFallbackGradient(subject);
 };
 
-const buildHeatmapCells = (heatmapData = {}, streak = 0, events = [], weeks = 10) => {
+const buildHeatmapCells = (
+  heatmapData = {},
+  streak = 0,
+  events = [],
+  weeks = 10,
+) => {
   const dayMs = 24 * 60 * 60 * 1000;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -84,7 +93,7 @@ const buildHeatmapCells = (heatmapData = {}, streak = 0, events = [], weeks = 10
   // Merge server heatmapData with event-derived counts for backward compat
   const activeDates = { ...heatmapData };
   events.forEach((event) => {
-    const date = new Date(event.x || event.createdAt || event.date || '');
+    const date = new Date(event.x || event.createdAt || event.date || "");
     if (!date || Number.isNaN(date.getTime())) return;
     const key = date.toISOString().slice(0, 10);
     if (!activeDates[key]) activeDates[key] = 0;
@@ -119,7 +128,7 @@ const HeatmapCalendar = ({ heatmapData = {}, events = [], streak = 0 }) => {
 
   React.useEffect(() => {
     if (!containerRef.current) return;
-    const observer = new ResizeObserver(entries => {
+    const observer = new ResizeObserver((entries) => {
       for (let entry of entries) {
         // Each column is 12px cell + 6px gap = 18px
         const calculatedWeeks = Math.floor(entry.contentRect.width / 18);
@@ -132,7 +141,7 @@ const HeatmapCalendar = ({ heatmapData = {}, events = [], streak = 0 }) => {
 
   const heatmapCells = useMemo(
     () => buildHeatmapCells(heatmapData, streak, events, weeks),
-    [heatmapData, events, streak, weeks]
+    [heatmapData, events, streak, weeks],
   );
 
   return (
@@ -140,11 +149,15 @@ const HeatmapCalendar = ({ heatmapData = {}, events = [], streak = 0 }) => {
       <div className="heatmap-label-row">
         <span>Recent activity</span>
         <div className="heatmap-legend">
-          {[0,1,2,3,4].map((lvl) => (
+          {[0, 1, 2, 3, 4].map((lvl) => (
             <span
               key={lvl}
               className={`heatmap-legend-dot heatmap-legend-dot--level-${lvl}`}
-              title={['None','1 lesson','2 lessons','3-4 lessons','5+ lessons'][lvl]}
+              title={
+                ["None", "1 lesson", "2 lessons", "3-4 lessons", "5+ lessons"][
+                  lvl
+                ]
+              }
             />
           ))}
           <span>More</span>
@@ -155,7 +168,7 @@ const HeatmapCalendar = ({ heatmapData = {}, events = [], streak = 0 }) => {
           <div
             key={cell.date.toISOString()}
             className={`heatmap-cell heatmap-cell--level-${getHeatIntensity(cell.count)}`}
-            title={`${formatShortDate(cell.date)}${cell.count > 0 ? ` — ${cell.count} lesson${cell.count > 1 ? 's' : ''}` : ' — Rest'}`}
+            title={`${formatShortDate(cell.date)}${cell.count > 0 ? ` — ${cell.count} lesson${cell.count > 1 ? "s" : ""}` : " — Rest"}`}
             role="button"
             aria-label={`${formatShortDate(cell.date)} ${cell.count} lessons`}
           />
@@ -169,15 +182,15 @@ const StreakWeekVisualizer = ({ events = [], streak = 0 }) => {
   const dayMs = 24 * 60 * 60 * 1000;
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  
+
   // Get last 7 days
   const last7Days = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(today.getTime() - (6 - i) * dayMs);
     return {
       date: d,
-      dayName: d.toLocaleDateString('en-US', { weekday: 'short' }),
+      dayName: d.toLocaleDateString("en-US", { weekday: "short" }),
       dateKey: d.toISOString().slice(0, 10),
-      isToday: i === 6
+      isToday: i === 6,
     };
   });
 
@@ -196,31 +209,107 @@ const StreakWeekVisualizer = ({ events = [], streak = 0 }) => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', marginTop: '1.5rem', background: 'rgba(0,0,0,0.2)', padding: '16px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-        <h4 style={{ margin: 0, fontSize: '0.95rem', color: '#ffb8d9', display: 'flex', alignItems: 'center', gap: '6px', whiteSpace: 'nowrap' }}>
-          <Flame size={16} color="#ffb8d9" fill="#ffb8d9" style={{ flexShrink: 0 }} /> {streak} Day Streak
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        marginTop: "1.5rem",
+        background: "rgba(0,0,0,0.2)",
+        padding: "16px",
+        borderRadius: "16px",
+        border: "1px solid rgba(255,255,255,0.05)",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "8px",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "12px",
+        }}
+      >
+        <h4
+          style={{
+            margin: 0,
+            fontSize: "0.95rem",
+            color: "#ffb8d9",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            whiteSpace: "nowrap",
+          }}
+        >
+          <Flame
+            size={16}
+            color="#ffb8d9"
+            fill="#ffb8d9"
+            style={{ flexShrink: 0 }}
+          />{" "}
+          {streak} Day Streak
         </h4>
-        <span style={{ fontSize: '0.75rem', opacity: 0.6, whiteSpace: 'nowrap' }}>Keep it burning!</span>
+        <span
+          style={{ fontSize: "0.75rem", opacity: 0.6, whiteSpace: "nowrap" }}
+        >
+          Keep it burning!
+        </span>
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', gap: '4px' }}>
+      <div
+        style={{ display: "flex", justifyContent: "space-between", gap: "4px" }}
+      >
         {last7Days.map((day, idx) => {
           const isActive = activeDates[day.dateKey];
           return (
-            <div key={day.dateKey} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
-              <div style={{
-                width: '32px', height: '32px',
-                borderRadius: '50%',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                background: isActive ? 'rgba(255, 77, 109, 0.2)' : 'transparent',
-                border: `2px solid ${isActive ? '#ff4d4d' : 'rgba(255,255,255,0.1)'}`,
-                boxShadow: isActive ? '0 0 10px rgba(255, 77, 109, 0.4)' : 'none',
-                color: isActive ? '#ff4d4d' : 'rgba(255,255,255,0.2)',
-                transition: 'all 0.3s ease'
-              }}>
-                {isActive ? <Flame size={16} fill="#ff4d4d" /> : <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'currentColor' }} />}
+            <div
+              key={day.dateKey}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "6px",
+              }}
+            >
+              <div
+                style={{
+                  width: "32px",
+                  height: "32px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: isActive
+                    ? "rgba(255, 77, 109, 0.2)"
+                    : "transparent",
+                  border: `2px solid ${isActive ? "#ff4d4d" : "rgba(255,255,255,0.1)"}`,
+                  boxShadow: isActive
+                    ? "0 0 10px rgba(255, 77, 109, 0.4)"
+                    : "none",
+                  color: isActive ? "#ff4d4d" : "rgba(255,255,255,0.2)",
+                  transition: "all 0.3s ease",
+                }}
+              >
+                {isActive ? (
+                  <Flame size={16} fill="#ff4d4d" />
+                ) : (
+                  <div
+                    style={{
+                      width: "6px",
+                      height: "6px",
+                      borderRadius: "50%",
+                      background: "currentColor",
+                    }}
+                  />
+                )}
               </div>
-              <span style={{ fontSize: '0.65rem', opacity: day.isToday ? 1 : 0.5, fontWeight: day.isToday ? 'bold' : 'normal', color: day.isToday ? '#ffb8d9' : 'white' }}>
+              <span
+                style={{
+                  fontSize: "0.65rem",
+                  opacity: day.isToday ? 1 : 0.5,
+                  fontWeight: day.isToday ? "bold" : "normal",
+                  color: day.isToday ? "#ffb8d9" : "white",
+                }}
+              >
                 {day.dayName}
               </span>
             </div>
@@ -234,7 +323,9 @@ const StreakWeekVisualizer = ({ events = [], streak = 0 }) => {
 const getLevel = (points) => {
   if (!points) return "Beginner";
   const tier = Math.min(6, Math.max(1, Math.ceil(points / 180)));
-  return ["Beginner", "Rising", "Skilled", "Advanced", "Expert", "Master"][tier - 1];
+  return ["Beginner", "Rising", "Skilled", "Advanced", "Expert", "Master"][
+    tier - 1
+  ];
 };
 
 const buildSmoothPath = (values, width, height, xOffset = 24) => {
@@ -268,7 +359,7 @@ const buildGrowthTimeline = (points = []) => {
   const timeline = [];
 
   points
-    .filter((item) => item && typeof item.y === 'number')
+    .filter((item) => item && typeof item.y === "number")
     .forEach((item) => {
       cumulative += item.y;
       if (item.lessonId) {
@@ -279,10 +370,15 @@ const buildGrowthTimeline = (points = []) => {
         date: item.x || item.createdAt || null,
         value: cumulative,
         lessonsCompleted: item.lessonsCompleted ?? uniqueLessonsCompleted.size,
-        label: item.x ? formatShortDate(item.x) : `Step ${uniqueLessonsCompleted.size || 1}`,
+        label: item.x
+          ? formatShortDate(item.x)
+          : `Step ${uniqueLessonsCompleted.size || 1}`,
       };
 
-      if (!timeline.length || timeline[timeline.length - 1].value !== point.value) {
+      if (
+        !timeline.length ||
+        timeline[timeline.length - 1].value !== point.value
+      ) {
         timeline.push(point);
       }
     });
@@ -292,7 +388,7 @@ const buildGrowthTimeline = (points = []) => {
       date: timeline[0].date || new Date().toISOString(),
       value: 0,
       lessonsCompleted: 0,
-      label: 'Start',
+      label: "Start",
     });
   }
 
@@ -311,7 +407,8 @@ const getGrowthLabels = (points = []) => {
 };
 
 const formatGrowthSpan = (points = []) => {
-  if (points.length < 2 || !points[0].date || !points[points.length - 1].date) return 'Recent';
+  if (points.length < 2 || !points[0].date || !points[points.length - 1].date)
+    return "Recent";
   const first = new Date(points[0].date);
   const last = new Date(points[points.length - 1].date);
   const days = Math.max(1, Math.round((last - first) / (1000 * 60 * 60 * 24)));
@@ -320,7 +417,11 @@ const formatGrowthSpan = (points = []) => {
   return `${days} days`;
 };
 
-const GrowthLineChart = ({ points = [], color = { start: '#ffb8d9', end: '#c386ff' }, label = 'Growth chart' }) => {
+const GrowthLineChart = ({
+  points = [],
+  color = { start: "#ffb8d9", end: "#c386ff" },
+  label = "Growth chart",
+}) => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const hasData = points.length > 1;
 
@@ -343,12 +444,18 @@ const GrowthLineChart = ({ points = [], color = { start: '#ffb8d9', end: '#c386f
 
   const path = buildSmoothPath(values, chartWidth, chartHeight);
   const labels = getGrowthLabels(points);
-  const yTicks = [0, Math.round(max * 0.33), Math.round(max * 0.66), max].map((value) => Math.round(value / 10) * 10);
+  const yTicks = [0, Math.round(max * 0.33), Math.round(max * 0.66), max].map(
+    (value) => Math.round(value / 10) * 10,
+  );
   const hoveredPoint = hoveredIndex !== null ? points[hoveredIndex] : null;
 
   return (
     <div className="growth-chart-wrapper">
-      <svg viewBox={`0 0 ${width} ${height}`} className="analytics-chart" aria-label={label}>
+      <svg
+        viewBox={`0 0 ${width} ${height}`}
+        className="analytics-chart"
+        aria-label={label}
+      >
         <defs>
           <linearGradient id="growth-line" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor={color.start} />
@@ -360,22 +467,57 @@ const GrowthLineChart = ({ points = [], color = { start: '#ffb8d9', end: '#c386f
           </linearGradient>
         </defs>
 
-        <rect x="24" y="12" width={chartWidth} height={chartHeight} rx="24" fill="rgba(255,255,255,0.03)" />
+        <rect
+          x="24"
+          y="12"
+          width={chartWidth}
+          height={chartHeight}
+          rx="24"
+          fill="rgba(255,255,255,0.03)"
+        />
 
         {yTicks.map((tickValue, index) => {
-          const y = 12 + chartHeight - (tickValue - min) / Math.max(yRange, 1) * chartHeight;
+          const y =
+            12 +
+            chartHeight -
+            ((tickValue - min) / Math.max(yRange, 1)) * chartHeight;
           return (
             <g key={tickValue}>
-              <line x1="24" x2={chartWidth + 24} y1={y} y2={y} stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-              <text x="12" y={y + 4} fill="rgba(255,255,255,0.55)" fontSize="10" textAnchor="start">
+              <line
+                x1="24"
+                x2={chartWidth + 24}
+                y1={y}
+                y2={y}
+                stroke="rgba(255,255,255,0.08)"
+                strokeWidth="1"
+              />
+              <text
+                x="12"
+                y={y + 4}
+                fill="rgba(255,255,255,0.55)"
+                fontSize="10"
+                textAnchor="start"
+              >
                 {tickValue}
               </text>
             </g>
           );
         })}
 
-        <path d={`${path} L ${chartWidth + 24} ${chartHeight + 12} L 24 ${chartHeight + 12} Z`} fill="url(#growth-fill)" opacity="0.8" />
-        <path d={path} fill="none" stroke="url(#growth-line)" strokeWidth="3" strokeLinecap="butt" strokeLinejoin="round" className="chart-path" />
+        <path
+          d={`${path} L ${chartWidth + 24} ${chartHeight + 12} L 24 ${chartHeight + 12} Z`}
+          fill="url(#growth-fill)"
+          opacity="0.8"
+        />
+        <path
+          d={path}
+          fill="none"
+          stroke="url(#growth-line)"
+          strokeWidth="3"
+          strokeLinecap="butt"
+          strokeLinejoin="round"
+          className="chart-path"
+        />
 
         {points.map((point, index) => {
           const x = (index / Math.max(points.length - 1, 1)) * chartWidth + 24;
@@ -399,9 +541,15 @@ const GrowthLineChart = ({ points = [], color = { start: '#ffb8d9', end: '#c386f
                 opacity={hoveredIndex === index ? 0.12 : 0.06}
               />
               <rect
-                x={Math.max(24, x - chartWidth / Math.max(points.length, 1) / 2)}
+                x={Math.max(
+                  24,
+                  x - chartWidth / Math.max(points.length, 1) / 2,
+                )}
                 y="12"
-                width={Math.min(chartWidth / Math.max(points.length, 1), chartWidth)}
+                width={Math.min(
+                  chartWidth / Math.max(points.length, 1),
+                  chartWidth,
+                )}
                 height={chartHeight}
                 fill="transparent"
                 onMouseEnter={() => setHoveredIndex(index)}
@@ -420,7 +568,15 @@ const GrowthLineChart = ({ points = [], color = { start: '#ffb8d9', end: '#c386f
       </div>
       {hoveredPoint && (
         <div className="chart-tooltip">
-          <span>{hoveredPoint.date ? new Date(hoveredPoint.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recent activity'}</span>
+          <span>
+            {hoveredPoint.date
+              ? new Date(hoveredPoint.date).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })
+              : "Recent activity"}
+          </span>
           <strong>{hoveredPoint.value} points</strong>
           <small>{hoveredPoint.lessonsCompleted} lessons completed</small>
         </div>
@@ -429,20 +585,36 @@ const GrowthLineChart = ({ points = [], color = { start: '#ffb8d9', end: '#c386f
   );
 };
 
-const MiniLineChart = ({ points = [], values = [], color = "#ff7aa5", label = "", gradientId = "subject-gradient", maxScale = null }) => {
-  const chartColor = typeof color === 'string' ? { start: color, end: color } : color;
+const MiniLineChart = ({
+  points = [],
+  values = [],
+  color = "#ff7aa5",
+  label = "",
+  gradientId = "subject-gradient",
+  maxScale = null,
+}) => {
+  const chartColor =
+    typeof color === "string" ? { start: color, end: color } : color;
   const rawPoints = values.length
-    ? values.map((value, index) => ({ value: value || 0, label: `Step ${index + 1}` }))
+    ? values.map((value, index) => ({
+        value: value || 0,
+        label: `Step ${index + 1}`,
+      }))
     : points.map((point, index) => {
-      if (typeof point === 'number') {
-        return { value: point, label: `Step ${index + 1}` };
-      }
+        if (typeof point === "number") {
+          return { value: point, label: `Step ${index + 1}` };
+        }
 
-      return {
-        value: typeof point.progress === 'number' ? point.progress : point.value || 0,
-        label: point.lesson ? `Lesson ${point.lesson}` : point.label || `Step ${index + 1}`,
-      };
-    });
+        return {
+          value:
+            typeof point.progress === "number"
+              ? point.progress
+              : point.value || 0,
+          label: point.lesson
+            ? `Lesson ${point.lesson}`
+            : point.label || `Step ${index + 1}`,
+        };
+      });
 
   if (!rawPoints.length) {
     return (
@@ -453,29 +625,51 @@ const MiniLineChart = ({ points = [], values = [], color = "#ff7aa5", label = ""
   }
 
   const valuesList = rawPoints.map((point) => point.value || 0);
-  const max = maxScale ? Math.max(maxScale, ...valuesList) : Math.max(...valuesList);
+  const max = maxScale
+    ? Math.max(maxScale, ...valuesList)
+    : Math.max(...valuesList);
   const min = Math.min(0, ...valuesList);
 
   if (rawPoints.length === 1) {
     const point = rawPoints[0];
     const x = 120;
-    const normalized = max === min ? 0 : (point.value - min) / Math.max(max - min, 1);
+    const normalized =
+      max === min ? 0 : (point.value - min) / Math.max(max - min, 1);
     const y = 90 - 12 - normalized * 70;
     const path = `M 24 78 C 64 78 96 ${y} ${x} ${y}`;
 
     return (
       <svg viewBox="0 0 240 90" className="analytics-chart" aria-label={label}>
         <defs>
-          <linearGradient id={`${gradientId}-line`} x1="0%" y1="0%" x2="100%" y2="0%">
+          <linearGradient
+            id={`${gradientId}-line`}
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="0%"
+          >
             <stop offset="0%" stopColor={chartColor.start} />
             <stop offset="100%" stopColor={chartColor.end} />
           </linearGradient>
-          <linearGradient id={`${gradientId}-fill`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <linearGradient
+            id={`${gradientId}-fill`}
+            x1="0%"
+            y1="0%"
+            x2="0%"
+            y2="100%"
+          >
             <stop offset="0%" stopColor={chartColor.end} stopOpacity="0.24" />
             <stop offset="100%" stopColor={chartColor.start} stopOpacity="0" />
           </linearGradient>
         </defs>
-        <rect x="9" y="10" width="222" height="70" rx="16" fill="rgba(255,255,255,0.02)" />
+        <rect
+          x="9"
+          y="10"
+          width="222"
+          height="70"
+          rx="16"
+          fill="rgba(255,255,255,0.02)"
+        />
         {[1, 2, 3].map((index) => (
           <line
             key={index}
@@ -496,7 +690,15 @@ const MiniLineChart = ({ points = [], values = [], color = "#ff7aa5", label = ""
           strokeLinejoin="round"
           className="chart-path"
         />
-        <circle cx={x} cy={y} r="4.5" fill={chartColor.end} stroke={chartColor.end} strokeWidth="1" opacity="0.95">
+        <circle
+          cx={x}
+          cy={y}
+          r="4.5"
+          fill={chartColor.end}
+          stroke={chartColor.end}
+          strokeWidth="1"
+          opacity="0.95"
+        >
           <title>{`${point.label}: ${point.value}`}</title>
         </circle>
       </svg>
@@ -508,16 +710,35 @@ const MiniLineChart = ({ points = [], values = [], color = "#ff7aa5", label = ""
   return (
     <svg viewBox="0 0 240 90" className="analytics-chart" aria-label={label}>
       <defs>
-        <linearGradient id={`${gradientId}-line`} x1="0%" y1="0%" x2="100%" y2="0%">
+        <linearGradient
+          id={`${gradientId}-line`}
+          x1="0%"
+          y1="0%"
+          x2="100%"
+          y2="0%"
+        >
           <stop offset="0%" stopColor={chartColor.start} />
           <stop offset="100%" stopColor={chartColor.end} />
         </linearGradient>
-        <linearGradient id={`${gradientId}-fill`} x1="0%" y1="0%" x2="0%" y2="100%">
+        <linearGradient
+          id={`${gradientId}-fill`}
+          x1="0%"
+          y1="0%"
+          x2="0%"
+          y2="100%"
+        >
           <stop offset="0%" stopColor={chartColor.end} stopOpacity="0.24" />
           <stop offset="100%" stopColor={chartColor.start} stopOpacity="0" />
         </linearGradient>
       </defs>
-      <rect x="9" y="10" width="222" height="70" rx="16" fill="rgba(255,255,255,0.02)" />
+      <rect
+        x="9"
+        y="10"
+        width="222"
+        height="70"
+        rx="16"
+        fill="rgba(255,255,255,0.02)"
+      />
       {[1, 2, 3].map((index) => (
         <line
           key={index}
@@ -554,7 +775,8 @@ const MiniLineChart = ({ points = [], values = [], color = "#ff7aa5", label = ""
       />
       {rawPoints.map((point, index) => {
         const x = (index / Math.max(rawPoints.length - 1, 1)) * 222 + 9;
-        const normalized = max === min ? 0.5 : (point.value - min) / Math.max(max - min, 1);
+        const normalized =
+          max === min ? 0.5 : (point.value - min) / Math.max(max - min, 1);
         const y = 90 - 12 - normalized * 70;
         return (
           <circle
@@ -576,7 +798,9 @@ const MiniLineChart = ({ points = [], values = [], color = "#ff7aa5", label = ""
 };
 
 const buildSubjectProgressPoints = (completedLessons = 0) => {
-  const lessons = Number.isFinite(completedLessons) ? Math.max(0, completedLessons) : 0;
+  const lessons = Number.isFinite(completedLessons)
+    ? Math.max(0, completedLessons)
+    : 0;
 
   if (lessons === 0) {
     return [{ lesson: 0, progress: 0 }];
@@ -588,31 +812,44 @@ const buildSubjectProgressPoints = (completedLessons = 0) => {
   }));
 };
 
-const SubjectTrend = ({ completedLessons = 0, completion = null, totalLessons = 0, gradientId = "subject-gradient", color = { start: "#8f7bff", end: "#5b6cff" } }) => {
+const SubjectTrend = ({
+  completedLessons = 0,
+  completion = null,
+  totalLessons = 0,
+  gradientId = "subject-gradient",
+  color = { start: "#8f7bff", end: "#5b6cff" },
+}) => {
   const points = buildSubjectProgressPoints(completedLessons);
   const chartPoints = points;
-  const computedPercent = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : null;
+  const computedPercent =
+    totalLessons > 0
+      ? Math.round((completedLessons / totalLessons) * 100)
+      : null;
   const displayValue = chartPoints.length
-    ? typeof completion === 'number' && completion > 0
+    ? typeof completion === "number" && completion > 0
       ? completion
       : computedPercent !== null && computedPercent > 0
         ? computedPercent
         : null
     : null;
-  const axisLabels = chartPoints.length > 1
-    ? [
-      chartPoints[0].label || `Lesson ${chartPoints[0].lesson}`,
-      chartPoints[chartPoints.length - 1].label || `Lesson ${chartPoints[chartPoints.length - 1].lesson}`,
-    ]
-    : chartPoints.length === 1
-      ? [chartPoints[0].label || `Lesson ${chartPoints[0].lesson}`]
-      : [];
+  const axisLabels =
+    chartPoints.length > 1
+      ? [
+          chartPoints[0].label || `Lesson ${chartPoints[0].lesson}`,
+          chartPoints[chartPoints.length - 1].label ||
+            `Lesson ${chartPoints[chartPoints.length - 1].lesson}`,
+        ]
+      : chartPoints.length === 1
+        ? [chartPoints[0].label || `Lesson ${chartPoints[0].lesson}`]
+        : [];
 
   return (
     <div className="subject-trend-card">
       <div className="subject-trend-chart-header">
         <div className="subject-trend-label">Progress line</div>
-        <div className="subject-trend-value">{displayValue !== null ? `${displayValue}%` : "—"}</div>
+        <div className="subject-trend-value">
+          {displayValue !== null ? `${displayValue}%` : "—"}
+        </div>
       </div>
       <div className="subject-trend-chart">
         <MiniLineChart
@@ -626,12 +863,17 @@ const SubjectTrend = ({ completedLessons = 0, completion = null, totalLessons = 
       <div className="subject-date-axis subject-date-axis--spread">
         {axisLabels.length ? (
           axisLabels.map((date, index) => (
-            <span key={`${date}-${index}`} className="subject-date-label subject-date-label--small">
+            <span
+              key={`${date}-${index}`}
+              className="subject-date-label subject-date-label--small"
+            >
               {date}
             </span>
           ))
         ) : (
-          <span className="subject-date-label subject-date-label--small">Start learning to build progress history</span>
+          <span className="subject-date-label subject-date-label--small">
+            Start learning to build progress history
+          </span>
         )}
       </div>
     </div>
@@ -684,10 +926,14 @@ const Dashboard = () => {
         cancelToken: source.token,
         headers: { Authorization: `Bearer ${token}` },
       })
-.then((response) => {setAnalytics(response.data);})
+      .then((response) => {
+        setAnalytics(response.data);
+      })
       .catch((err) => {
         if (!axios.isCancel(err)) {
-          setError(err.response?.data?.message || "Failed to load dashboard data.");
+          setError(
+            err.response?.data?.message || "Failed to load dashboard data.",
+          );
         }
       })
       .finally(() => setLoading(false));
@@ -729,7 +975,7 @@ const Dashboard = () => {
         { avatarUrl },
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       if (response.data?.user) {
@@ -737,7 +983,7 @@ const Dashboard = () => {
         setAnalytics((prev) =>
           prev
             ? { ...prev, profile: { ...prev.profile, ...response.data.user } }
-            : prev
+            : prev,
         );
       }
     } catch (err) {
@@ -775,7 +1021,7 @@ const Dashboard = () => {
         profileForm,
         {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        },
       );
 
       if (response.data?.user) {
@@ -783,7 +1029,7 @@ const Dashboard = () => {
         setAnalytics((prev) =>
           prev
             ? { ...prev, profile: { ...prev.profile, ...response.data.user } }
-            : prev
+            : prev,
         );
       }
       setEditMode(false);
@@ -830,36 +1076,39 @@ const Dashboard = () => {
   }, [analytics]);
 
   const subjectCards = useMemo(() => {
-    return analytics?.subjects?.map((subject) => {
-      const completed = subject.completedLessons || 0;
-      const total = subject.totalLessons || subject.completedLessons || 0;
-      const completionValue =
-  total > 0
-    ? Math.round((completed / total) * 100)
-    : 0;
+    return (
+      analytics?.subjects?.map((subject) => {
+        const completed = subject.completedLessons || 0;
+        const total = subject.totalLessons || subject.completedLessons || 0;
+        const completionValue =
+          total > 0 ? Math.round((completed / total) * 100) : 0;
 
-      return {
-        title: subject.subject,
-        completion: completionValue,
-        averageScore: subject.averageScore || 0,
-        lessons: completed,
-        totalLessons: total,
-        history: subject.history || [],
-        streak: subject.streak || 0,
-        lastActivity: subject.lastActivity || null,
-      };
-    }) || [];
+        return {
+          title: subject.subject,
+          completion: completionValue,
+          averageScore: subject.averageScore || 0,
+          lessons: completed,
+          totalLessons: total,
+          history: subject.history || [],
+          streak: subject.streak || 0,
+          lastActivity: subject.lastActivity || null,
+        };
+      }) || []
+    );
   }, [analytics]);
 
   const maxSubjectLessons = useMemo(() => {
-    const values = analytics?.subjects?.map((item) => item.completedLessons || 0) || [];
+    const values =
+      analytics?.subjects?.map((item) => item.completedLessons || 0) || [];
     return Math.max(1, ...values);
   }, [analytics]);
 
   const timelineData = useMemo(() => {
     const rawPoints = analytics?.analytics?.timelines?.points || [];
     const points = buildGrowthTimeline(rawPoints);
-    const statsTotalPoints = Number.isFinite(analytics?.stats?.totalPoints) ? analytics.stats.totalPoints : 0;
+    const statsTotalPoints = Number.isFinite(analytics?.stats?.totalPoints)
+      ? analytics.stats.totalPoints
+      : 0;
 
     const cappedPoints = points.map((point) => ({
       ...point,
@@ -877,10 +1126,11 @@ const Dashboard = () => {
           {
             date: analytics?.stats?.lastUpdated || new Date().toISOString(),
             value: statsTotalPoints,
-            lessonsCompleted: cappedPoints[cappedPoints.length - 1]?.lessonsCompleted || 0,
+            lessonsCompleted:
+              cappedPoints[cappedPoints.length - 1]?.lessonsCompleted || 0,
             label: analytics?.stats?.lastUpdated
               ? formatShortDate(analytics.stats.lastUpdated)
-              : 'Now',
+              : "Now",
           },
         ];
       }
@@ -892,7 +1142,7 @@ const Dashboard = () => {
           lessonsCompleted: 0,
           label: analytics?.stats?.lastUpdated
             ? formatShortDate(analytics.stats.lastUpdated)
-            : 'Now',
+            : "Now",
         },
       ];
     } else {
@@ -901,13 +1151,19 @@ const Dashboard = () => {
 
     const finalValue = statsTotalPoints;
     const firstValue = adjustedPoints[0]?.value || 0;
-    const growthPercent = firstValue > 0 ? Math.round(((finalValue - firstValue) / firstValue) * 100) : 0;
+    const growthPercent =
+      firstValue > 0
+        ? Math.round(((finalValue - firstValue) / firstValue) * 100)
+        : 0;
 
     return {
       points: adjustedPoints,
       totalPoints: finalValue,
       growthPercent,
-      lastActive: analytics?.stats?.lastUpdated || adjustedPoints[adjustedPoints.length - 1]?.date || null,
+      lastActive:
+        analytics?.stats?.lastUpdated ||
+        adjustedPoints[adjustedPoints.length - 1]?.date ||
+        null,
       spanLabel: formatGrowthSpan(adjustedPoints),
     };
   }, [analytics]);
@@ -922,9 +1178,15 @@ const Dashboard = () => {
   }
 
   return (
-
     <section className="dashboard-shell">
-      {showConfetti && <Confetti width={width} height={height} recycle={false} numberOfPieces={500} />}
+      {showConfetti && (
+        <Confetti
+          width={width}
+          height={height}
+          recycle={false}
+          numberOfPieces={500}
+        />
+      )}
       <header className="dashboard-hero">
         <div>
           <p className="dashboard-subtitle">Welcome back</p>
@@ -943,12 +1205,14 @@ const Dashboard = () => {
               <div className="profile-avatar-wrap">
                 <img
                   className="profile-avatar"
-                  src={avatarPreview ||
-                    "https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=256&q=80"}
+                  src={
+                    avatarPreview ||
+                    "https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=256&q=80"
+                  }
                   alt="Profile avatar"
                 />
                 <label className="avatar-upload-button">
-                  <Upload size={15}/>
+                  <Upload size={15} />
                   <input
                     type="file"
                     accept="image/*"
@@ -962,7 +1226,10 @@ const Dashboard = () => {
                   <UserCircle size={20} />
                   <span>{analytics?.profile?.username || user.username}</span>
                 </div>
-                <p className="profile-text">{analytics?.profile?.bio || "A focused learner building real skills."}</p>
+                <p className="profile-text">
+                  {analytics?.profile?.bio ||
+                    "A focused learner building real skills."}
+                </p>
               </div>
 
               <div className="profile-stats">
@@ -976,50 +1243,106 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              <div className="gamification-progress" style={{ margin: '1.5rem 0', padding: '1.2rem', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' }}>
-                  <span style={{ fontWeight: '600', color: '#ffb8d9', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Star size={16} fill="#ffb8d9" /> Level {analytics?.stats?.level || 1}
+              <div
+                className="gamification-progress"
+                style={{
+                  margin: "1.5rem 0",
+                  padding: "1.2rem",
+                  background: "rgba(255, 255, 255, 0.03)",
+                  borderRadius: "12px",
+                  border: "1px solid rgba(255, 255, 255, 0.05)",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginBottom: "0.8rem",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color: "#ffb8d9",
+                      fontSize: "1.1rem",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                    }}
+                  >
+                    <Star size={16} fill="#ffb8d9" /> Level{" "}
+                    {analytics?.stats?.level || 1}
                   </span>
-                  <span style={{ fontSize: '0.9rem', opacity: 0.7 }}>
-                    {analytics?.stats?.xp || 0} / {(analytics?.stats?.level || 1) * 100} XP
+                  <span style={{ fontSize: "0.9rem", opacity: 0.7 }}>
+                    {analytics?.stats?.xp || 0} /{" "}
+                    {(analytics?.stats?.level || 1) * 100} XP
                   </span>
                 </div>
-                <div style={{ background: 'rgba(255, 255, 255, 0.1)', borderRadius: '8px', height: '8px', overflow: 'hidden' }}>
-                  <div style={{ 
-                    background: 'linear-gradient(90deg, #ffb8d9, #c386ff)', 
-                    height: '100%', 
-                    borderRadius: '8px',
-                    width: `${Math.min(100, ((analytics?.stats?.xp || 0) / ((analytics?.stats?.level || 1) * 100)) * 100)}%`,
-                    transition: 'width 1s cubic-bezier(0.4, 0, 0.2, 1)'
-                  }}></div>
+                <div
+                  style={{
+                    background: "rgba(255, 255, 255, 0.1)",
+                    borderRadius: "8px",
+                    height: "8px",
+                    overflow: "hidden",
+                  }}
+                >
+                  <div
+                    style={{
+                      background: "linear-gradient(90deg, #ffb8d9, #c386ff)",
+                      height: "100%",
+                      borderRadius: "8px",
+                      width: `${Math.min(100, ((analytics?.stats?.xp || 0) / ((analytics?.stats?.level || 1) * 100)) * 100)}%`,
+                      transition: "width 1s cubic-bezier(0.4, 0, 0.2, 1)",
+                    }}
+                  ></div>
                 </div>
-                <div style={{ textAlign: 'center', marginTop: '0.8rem', fontSize: '0.8rem', opacity: 0.6 }}>
-                  {((analytics?.stats?.level || 1) * 100) - (analytics?.stats?.xp || 0)} XP to next level
+                <div
+                  style={{
+                    textAlign: "center",
+                    marginTop: "0.8rem",
+                    fontSize: "0.8rem",
+                    opacity: 0.6,
+                  }}
+                >
+                  {(analytics?.stats?.level || 1) * 100 -
+                    (analytics?.stats?.xp || 0)}{" "}
+                  XP to next level
                 </div>
-                <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                  {ALL_POSSIBLE_BADGES.map(badge => {
-                    const isEarned = analytics?.stats?.badges?.includes(badge.id);
+                <div
+                  style={{
+                    marginTop: "1rem",
+                    paddingTop: "1rem",
+                    borderTop: "1px solid rgba(255,255,255,0.05)",
+                    display: "flex",
+                    gap: "0.5rem",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {ALL_POSSIBLE_BADGES.map((badge) => {
+                    const isEarned = analytics?.stats?.badges?.includes(
+                      badge.id,
+                    );
                     return (
-                      <span 
-                        key={badge.id} 
+                      <span
+                        key={badge.id}
                         title={badge.desc}
-                        style={{ 
-                          fontSize: '0.75rem', 
-                          background: 'rgba(255,255,255,0.1)', 
-                          padding: '4px 8px', 
-                          borderRadius: '6px', 
-                          color: '#fff',
+                        style={{
+                          fontSize: "0.75rem",
+                          background: "rgba(255,255,255,0.1)",
+                          padding: "4px 8px",
+                          borderRadius: "6px",
+                          color: "#fff",
                           opacity: isEarned ? 1 : 0.4,
-                          filter: isEarned ? 'none' : 'grayscale(100%)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '4px',
-                          cursor: 'help',
-                          transition: 'all 0.2s ease'
+                          filter: isEarned ? "none" : "grayscale(100%)",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "4px",
+                          cursor: "help",
+                          transition: "all 0.2s ease",
                         }}
                       >
-                        {isEarned ? '🏆' : '🔒'} {badge.label}
+                        {isEarned ? "🏆" : "🔒"} {badge.label}
                       </span>
                     );
                   })}
@@ -1042,26 +1365,50 @@ const Dashboard = () => {
               <div className="profile-details">
                 <div className="profile-detail-item">
                   <span className="detail-label">Joined</span>
-                  <strong className="detail-value">{analytics?.profile?.joinedAt ? new Date(analytics.profile.joinedAt).toLocaleDateString() : "—"}</strong>
+                  <strong className="detail-value">
+                    {analytics?.profile?.joinedAt
+                      ? new Date(
+                          analytics.profile.joinedAt,
+                        ).toLocaleDateString()
+                      : "—"}
+                  </strong>
                 </div>
-                <StreakWeekVisualizer events={analytics?.analytics?.timelines?.points || []} streak={analytics?.stats?.streak || 0} />
+                <StreakWeekVisualizer
+                  events={analytics?.analytics?.timelines?.points || []}
+                  streak={analytics?.stats?.streak || 0}
+                />
 
                 <div className="profile-detail-item">
                   <span className="detail-label">Current Streak</span>
-                  <strong className="detail-value">{formatNumber(analytics?.stats?.streak)} days</strong>
+                  <strong className="detail-value">
+                    {formatNumber(analytics?.stats?.streak)} days
+                  </strong>
                 </div>
                 <div className="profile-detail-item">
                   <span className="detail-label">Longest Streak</span>
-                  <strong className="detail-value">{formatNumber(analytics?.stats?.longestStreak || 0)} days</strong>
+                  <strong className="detail-value">
+                    {formatNumber(analytics?.stats?.longestStreak || 0)} days
+                  </strong>
                 </div>
                 <div className="profile-detail-item">
                   <span className="detail-label">Local Time</span>
-                  <strong className="detail-value clock-value">{currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</strong>
+                  <strong className="detail-value clock-value">
+                    {currentTime.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                    })}
+                  </strong>
                 </div>
               </div>
 
-              <div className={`profile-actions ${editMode ? "profile-actions--edit" : ""}`}>
-                <button className="ghost-button" onClick={() => setEditMode((prev) => !prev)}>
+              <div
+                className={`profile-actions ${editMode ? "profile-actions--edit" : ""}`}
+              >
+                <button
+                  className="ghost-button"
+                  onClick={() => setEditMode((prev) => !prev)}
+                >
                   {editMode ? "Cancel" : "Edit Profile"}
                 </button>
                 {editMode && (
@@ -1133,7 +1480,16 @@ const Dashboard = () => {
                     <p className="section-overline">Performance Snapshot</p>
                     <h2>Global analytics</h2>
                   </div>
-                  <span>{analytics?.stats?.lastUpdated ? new Date(analytics.stats.lastUpdated).toLocaleDateString() : "Updated recently"}</span>
+                  <div className="flex items-center gap-1 mr-[2px] mb-[5px] updated-div">
+                    <History size={22} className="history"  />
+                    <span className="last-updated">
+                      {analytics?.stats?.lastUpdated
+                        ? new Date(
+                            analytics.stats.lastUpdated,
+                          ).toLocaleDateString()
+                        : "Updated recently"}
+                    </span>
+                  </div>
                 </div>
 
                 <div className="charts-grid">
@@ -1141,32 +1497,51 @@ const Dashboard = () => {
                     <div className="chart-panel-header">
                       <div>
                         <p className="growth-header-title">Points Growth</p>
-                        <p className="growth-header-subtitle">{timelineData.spanLabel}</p>
+                        <p className="growth-header-subtitle">
+                          {timelineData.spanLabel}
+                        </p>
                       </div>
                       <div className="growth-header-values">
                         <div>
-                          <span className="growth-main-value">{formatNumber(timelineData.totalPoints)}</span>
+                          <span className="growth-main-value">
+                            {formatNumber(timelineData.totalPoints)}
+                          </span>
                           <small>Total points</small>
                         </div>
                         <div>
-                          <span className="growth-secondary-value">{timelineData.growthPercent >= 0 ? `+${timelineData.growthPercent}%` : `${timelineData.growthPercent}%`}</span>
+                          <span className="growth-secondary-value">
+                            {timelineData.growthPercent >= 0
+                              ? `+${timelineData.growthPercent}%`
+                              : `${timelineData.growthPercent}%`}
+                          </span>
                           <small>Growth</small>
                         </div>
                         <div>
-                          <span className="growth-secondary-value">{timelineData.lastActive ? formatShortDate(timelineData.lastActive) : '—'}</span>
+                          <span className="growth-secondary-value">
+                            {timelineData.lastActive
+                              ? formatShortDate(timelineData.lastActive)
+                              : "—"}
+                          </span>
                           <small>Last active</small>
                         </div>
                       </div>
                     </div>
                     <GrowthLineChart
                       points={timelineData.points}
-                      color={{ start: '#f8b4d8', end: '#b67cff' }}
+                      color={{ start: "#f8b4d8", end: "#b67cff" }}
                     />
                   </div>
                   <div className="chart-panel heatmap-card">
                     <div className="chart-panel-header">
                       <span>Activity Heatmap</span>
-                      <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.4)' }}>Intensity = lessons/day</span>
+                      <span
+                        style={{
+                          fontSize: "0.78rem",
+                          color: "rgba(255,255,255,0.4)",
+                        }}
+                      >
+                        Intensity = lessons/day
+                      </span>
                     </div>
                     <HeatmapCalendar
                       heatmapData={analytics?.analytics?.heatmapData || {}}
@@ -1178,24 +1553,53 @@ const Dashboard = () => {
               </section>
 
               {/* ── Streak Breakdown ── */}
-              <section className="analytics-section glass-card" style={{ marginTop: '24px' }}>
+              <section
+                className="analytics-section glass-card"
+                style={{ marginTop: "24px" }}
+              >
                 <div className="section-header">
                   <div>
                     <p className="section-overline">Consistency</p>
                     <h2>Streak breakdown</h2>
                   </div>
                 </div>
-                <div className="stats-grid" style={{ marginTop: '16px' }}>
+                <div className="stats-grid" style={{ marginTop: "16px" }}>
                   {[
-                    { label: '🔥 Current Streak', value: `${analytics?.stats?.streak ?? 0} days`, sub: 'Consecutive days active' },
-                    { label: '🏆 Longest Streak', value: `${analytics?.stats?.longestStreak ?? 0} days`, sub: 'All-time personal best' },
-                    { label: '📅 Weekly Streak',  value: `${analytics?.stats?.weeklyStreak ?? 0} weeks`, sub: 'Consecutive active weeks' },
-                    { label: '⏱ Learning Time',  value: formatTime(analytics?.stats?.learningTime || 0), sub: 'Total time spent learning' },
+                    {
+                      label: "🔥 Current Streak",
+                      value: `${analytics?.stats?.streak ?? 0} days`,
+                      sub: "Consecutive days active",
+                    },
+                    {
+                      label: "🏆 Longest Streak",
+                      value: `${analytics?.stats?.longestStreak ?? 0} days`,
+                      sub: "All-time personal best",
+                    },
+                    {
+                      label: "📅 Weekly Streak",
+                      value: `${analytics?.stats?.weeklyStreak ?? 0} weeks`,
+                      sub: "Consecutive active weeks",
+                    },
+                    {
+                      label: "⏱ Learning Time",
+                      value: formatTime(analytics?.stats?.learningTime || 0),
+                      sub: "Total time spent learning",
+                    },
                   ].map((item) => (
                     <article key={item.label} className="stat-card glass-card">
-                      <p className="stat-value" style={{ fontSize: '1.4rem' }}>{item.value}</p>
+                      <p className="stat-value" style={{ fontSize: "1.4rem" }}>
+                        {item.value}
+                      </p>
                       <p className="stat-label">{item.label}</p>
-                      <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem', marginTop: '4px' }}>{item.sub}</p>
+                      <p
+                        style={{
+                          color: "rgba(255,255,255,0.4)",
+                          fontSize: "0.75rem",
+                          marginTop: "4px",
+                        }}
+                      >
+                        {item.sub}
+                      </p>
                     </article>
                   ))}
                 </div>
@@ -1203,55 +1607,112 @@ const Dashboard = () => {
 
               {/* ── This Week vs Last Week ── */}
               {analytics?.analytics?.weeklyStats && (
-                <section className="analytics-section glass-card" style={{ marginTop: '24px' }}>
+                <section
+                  className="analytics-section glass-card"
+                  style={{ marginTop: "24px" }}
+                >
                   <div className="section-header">
                     <div>
                       <p className="section-overline">Weekly comparison</p>
                       <h2>This week vs last week</h2>
                     </div>
                   </div>
-                  <div className="stats-grid" style={{ marginTop: '16px' }}>
+                  <div className="stats-grid" style={{ marginTop: "16px" }}>
                     {[
                       {
-                        label: 'Lessons',
-                        thisWeek: analytics.analytics.weeklyStats.thisWeek.lessons,
-                        lastWeek: analytics.analytics.weeklyStats.lastWeek.lessons,
+                        label: "Lessons",
+                        thisWeek:
+                          analytics.analytics.weeklyStats.thisWeek.lessons,
+                        lastWeek:
+                          analytics.analytics.weeklyStats.lastWeek.lessons,
                         delta: analytics.analytics.weeklyStats.lessonsDelta,
                       },
                       {
-                        label: 'Points',
-                        thisWeek: analytics.analytics.weeklyStats.thisWeek.points,
-                        lastWeek: analytics.analytics.weeklyStats.lastWeek.points,
+                        label: "Points",
+                        thisWeek:
+                          analytics.analytics.weeklyStats.thisWeek.points,
+                        lastWeek:
+                          analytics.analytics.weeklyStats.lastWeek.points,
                         delta: analytics.analytics.weeklyStats.pointsDelta,
                       },
                       {
-                        label: 'Time',
-                        thisWeek: formatTime(analytics.analytics.weeklyStats.thisWeek.time),
-                        lastWeek: formatTime(analytics.analytics.weeklyStats.lastWeek.time),
+                        label: "Time",
+                        thisWeek: formatTime(
+                          analytics.analytics.weeklyStats.thisWeek.time,
+                        ),
+                        lastWeek: formatTime(
+                          analytics.analytics.weeklyStats.lastWeek.time,
+                        ),
                         delta: null,
                       },
                     ].map((item) => (
-                      <article key={item.label} className="stat-card glass-card">
-                        <p className="stat-label" style={{ marginBottom: '10px', fontWeight: 600 }}>{item.label}</p>
-                        <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-end' }}>
+                      <article
+                        key={item.label}
+                        className="stat-card glass-card"
+                      >
+                        <p
+                          className="stat-label"
+                          style={{ marginBottom: "10px", fontWeight: 600 }}
+                        >
+                          {item.label}
+                        </p>
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "16px",
+                            alignItems: "flex-end",
+                          }}
+                        >
                           <div>
-                            <p className="stat-value" style={{ fontSize: '1.5rem' }}>{item.thisWeek}</p>
-                            <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.72rem' }}>This week</p>
+                            <p
+                              className="stat-value"
+                              style={{ fontSize: "1.5rem" }}
+                            >
+                              {item.thisWeek}
+                            </p>
+                            <p
+                              style={{
+                                color: "rgba(255,255,255,0.4)",
+                                fontSize: "0.72rem",
+                              }}
+                            >
+                              This week
+                            </p>
                           </div>
                           <div>
-                            <p className="stat-value" style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.45)' }}>{item.lastWeek}</p>
-                            <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.72rem' }}>Last week</p>
+                            <p
+                              className="stat-value"
+                              style={{
+                                fontSize: "1.1rem",
+                                color: "rgba(255,255,255,0.45)",
+                              }}
+                            >
+                              {item.lastWeek}
+                            </p>
+                            <p
+                              style={{
+                                color: "rgba(255,255,255,0.35)",
+                                fontSize: "0.72rem",
+                              }}
+                            >
+                              Last week
+                            </p>
                           </div>
                           {item.delta !== null && (
-                            <span style={{
-                              marginLeft: 'auto',
-                              fontSize: '0.85rem',
-                              fontWeight: 700,
-                              color: item.delta >= 0 ? '#4ade80' : '#f87171',
-                              background: item.delta >= 0 ? 'rgba(74,222,128,0.12)' : 'rgba(248,113,113,0.12)',
-                              padding: '3px 9px',
-                              borderRadius: '20px',
-                            }}>
+                            <span
+                              style={{
+                                marginLeft: "auto",
+                                fontSize: "0.85rem",
+                                fontWeight: 700,
+                                color: item.delta >= 0 ? "#4ade80" : "#f87171",
+                                background:
+                                  item.delta >= 0
+                                    ? "rgba(74,222,128,0.12)"
+                                    : "rgba(248,113,113,0.12)",
+                                padding: "3px 9px",
+                                borderRadius: "20px",
+                              }}
+                            >
                               {item.delta >= 0 ? `+${item.delta}` : item.delta}
                             </span>
                           )}
@@ -1264,33 +1725,81 @@ const Dashboard = () => {
 
               {/* ── Weak Topics ── */}
               {analytics?.analytics?.weakSubjects?.length > 0 && (
-                <section className="analytics-section glass-card" style={{ marginTop: '24px', border: '1px solid rgba(248,113,113,0.25)' }}>
+                <section
+                  className="analytics-section glass-card"
+                  style={{
+                    marginTop: "24px",
+                    border: "1px solid rgba(248,113,113,0.25)",
+                  }}
+                >
                   <div className="section-header">
                     <div>
-                      <p className="section-overline" style={{ color: '#f87171' }}>Needs attention</p>
+                      <p
+                        className="section-overline"
+                        style={{ color: "#f87171" }}
+                      >
+                        Needs attention
+                      </p>
                       <h2>📉 Weak topics</h2>
                     </div>
-                    <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem' }}>Score below 60%</span>
+                    <span
+                      style={{
+                        color: "rgba(255,255,255,0.4)",
+                        fontSize: "0.8rem",
+                      }}
+                    >
+                      Score below 60%
+                    </span>
                   </div>
-                  <div className="subject-grid" style={{ marginTop: '16px' }}>
+                  <div className="subject-grid" style={{ marginTop: "16px" }}>
                     {analytics.analytics.weakSubjects.map((item) => (
-                      <article key={item.subject} className="subject-card glass-card" style={{ border: '1px solid rgba(248,113,113,0.2)' }}>
+                      <article
+                        key={item.subject}
+                        className="subject-card glass-card"
+                        style={{ border: "1px solid rgba(248,113,113,0.2)" }}
+                      >
                         <div className="subject-header">
                           <div>
                             <p>{item.subject}</p>
-                            <small>{item.completedLessons} of {item.totalLessons} lessons done</small>
+                            <small>
+                              {item.completedLessons} of {item.totalLessons}{" "}
+                              lessons done
+                            </small>
                           </div>
-                          <div className="subject-score" style={{ color: '#f87171' }}>
+                          <div
+                            className="subject-score"
+                            style={{ color: "#f87171" }}
+                          >
                             {item.averageScore}%
                           </div>
                         </div>
-                        <div style={{ margin: '12px 0', height: '6px', borderRadius: '4px', background: 'rgba(255,255,255,0.08)', overflow: 'hidden' }}>
-                          <div style={{ height: '100%', width: `${item.averageScore}%`, borderRadius: '4px', background: 'linear-gradient(90deg, #f87171, #fbbf24)' }} />
+                        <div
+                          style={{
+                            margin: "12px 0",
+                            height: "6px",
+                            borderRadius: "4px",
+                            background: "rgba(255,255,255,0.08)",
+                            overflow: "hidden",
+                          }}
+                        >
+                          <div
+                            style={{
+                              height: "100%",
+                              width: `${item.averageScore}%`,
+                              borderRadius: "4px",
+                              background:
+                                "linear-gradient(90deg, #f87171, #fbbf24)",
+                            }}
+                          />
                         </div>
                         <button
                           className="ghost-button"
-                          style={{ width: '100%', marginTop: '8px', fontSize: '0.82rem' }}
-                          onClick={() => navigate('/lessons')}
+                          style={{
+                            width: "100%",
+                            marginTop: "8px",
+                            fontSize: "0.82rem",
+                          }}
+                          onClick={() => navigate("/lessons")}
                         >
                           Revisit topic →
                         </button>
@@ -1308,35 +1817,77 @@ const Dashboard = () => {
 
               {/* ── Solved / Unsolved per Subject ── */}
               {analytics?.analytics?.subjectSolvedStats?.length > 0 && (
-                <section className="analytics-section glass-card" style={{ marginTop: '24px' }}>
+                <section
+                  className="analytics-section glass-card"
+                  style={{ marginTop: "24px" }}
+                >
                   <div className="section-header">
                     <div>
                       <p className="section-overline">Completion map</p>
                       <h2>Solved vs unsolved</h2>
                     </div>
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '16px' }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "14px",
+                      marginTop: "16px",
+                    }}
+                  >
                     {analytics.analytics.subjectSolvedStats.map((item) => {
-                      const pct = item.total > 0 ? Math.round((item.solved / item.total) * 100) : 0;
+                      const pct =
+                        item.total > 0
+                          ? Math.round((item.solved / item.total) * 100)
+                          : 0;
                       const grad = getSubjectGradient(item.subject);
                       return (
                         <div key={item.subject}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px', fontSize: '0.88rem' }}>
-                            <span style={{ color: 'rgba(255,255,255,0.85)', fontWeight: 500 }}>{item.subject}</span>
-                            <span style={{ color: 'rgba(255,255,255,0.5)' }}>
-                              <span style={{ color: grad.end, fontWeight: 700 }}>{item.solved}</span> / {item.total} lessons
-                              &nbsp;·&nbsp;
-                              <span style={{ color: '#f87171' }}>{item.unsolved} left</span>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              marginBottom: "6px",
+                              fontSize: "0.88rem",
+                            }}
+                          >
+                            <span
+                              style={{
+                                color: "rgba(255,255,255,0.85)",
+                                fontWeight: 500,
+                              }}
+                            >
+                              {item.subject}
+                            </span>
+                            <span style={{ color: "rgba(255,255,255,0.5)" }}>
+                              <span
+                                style={{ color: grad.end, fontWeight: 700 }}
+                              >
+                                {item.solved}
+                              </span>{" "}
+                              / {item.total} lessons &nbsp;·&nbsp;
+                              <span style={{ color: "#f87171" }}>
+                                {item.unsolved} left
+                              </span>
                             </span>
                           </div>
-                          <div style={{ height: '8px', borderRadius: '6px', background: 'rgba(255,255,255,0.07)', overflow: 'hidden' }}>
-                            <div style={{
-                              height: '100%',
-                              width: `${pct}%`,
-                              borderRadius: '6px',
-                              background: `linear-gradient(90deg, ${grad.start}, ${grad.end})`,
-                              transition: 'width 0.6s ease',
-                            }} />
+                          <div
+                            style={{
+                              height: "8px",
+                              borderRadius: "6px",
+                              background: "rgba(255,255,255,0.07)",
+                              overflow: "hidden",
+                            }}
+                          >
+                            <div
+                              style={{
+                                height: "100%",
+                                width: `${pct}%`,
+                                borderRadius: "6px",
+                                background: `linear-gradient(90deg, ${grad.start}, ${grad.end})`,
+                                transition: "width 0.6s ease",
+                              }}
+                            />
                           </div>
                         </div>
                       );
@@ -1351,36 +1902,57 @@ const Dashboard = () => {
                     <p className="section-overline">Subject breakdown</p>
                     <h2>Active topics</h2>
                   </div>
-                  <button onClick={() => navigate("/lessons")} className="ghost-button">
+                  <button
+                    onClick={() => navigate("/lessons")}
+                    className="ghost-button"
+                  >
                     Explore lessons <ArrowRight size={16} />
                   </button>
                 </div>
 
                 <div className="subject-grid">
-                  <DailyQuests 
-                    xpEarnedToday={timelineData.points.length > 1 ? (timelineData.totalPoints - (timelineData.points[timelineData.points.length-2]?.value || 0)) : 0} 
-                    lessonsCompletedToday={analytics?.stats?.lessonsCompleted || 0} 
+                  <DailyQuests
+                    xpEarnedToday={
+                      timelineData.points.length > 1
+                        ? timelineData.totalPoints -
+                          (timelineData.points[timelineData.points.length - 2]
+                            ?.value || 0)
+                        : 0
+                    }
+                    lessonsCompletedToday={
+                      analytics?.stats?.lessonsCompleted || 0
+                    }
                   />
                   {subjectCards.length ? (
                     subjectCards.map((subject) => (
-                      <article key={subject.title} className="subject-card glass-card">
+                      <article
+                        key={subject.title}
+                        className="subject-card glass-card"
+                      >
                         <div className="subject-header">
                           <div>
                             <p>{subject.title}</p>
                             <small>{subject.lessons} lessons completed</small>
                           </div>
                           <div className="subject-score">
-                            {subject.completion > 0 ? `${subject.completion}%` : "—"}
+                            {subject.completion > 0
+                              ? `${subject.completion}%`
+                              : "—"}
                           </div>
                         </div>
                         <div className="subject-meta-row">
-                          <span>Last active: {subject.lastActivity ? formatShortDate(subject.lastActivity) : "—"}</span>
+                          <span>
+                            Last active:{" "}
+                            {subject.lastActivity
+                              ? formatShortDate(subject.lastActivity)
+                              : "—"}
+                          </span>
                         </div>
                         <SubjectTrend
                           completedLessons={subject.lessons}
                           completion={subject.completion}
                           totalLessons={subject.totalLessons}
-                          gradientId={`subject-${subject.title.toLowerCase().replace(/\s+/g, '-')}`}
+                          gradientId={`subject-${subject.title.toLowerCase().replace(/\s+/g, "-")}`}
                           color={getSubjectGradient(subject.title)}
                         />
                       </article>
@@ -1388,8 +1960,15 @@ const Dashboard = () => {
                   ) : (
                     <div className="empty-state-card">
                       <h3>No subject activity yet</h3>
-                      <p>Complete your first lesson to populate the topic charts.</p>
-                      <button className="primary-button" onClick={() => navigate("/lessons")}>Start learning</button>
+                      <p>
+                        Complete your first lesson to populate the topic charts.
+                      </p>
+                      <button
+                        className="primary-button"
+                        onClick={() => navigate("/lessons")}
+                      >
+                        Start learning
+                      </button>
                     </div>
                   )}
                 </div>
@@ -1400,8 +1979,16 @@ const Dashboard = () => {
           {analytics && analytics.subjects.length === 0 && (
             <div className="dashboard-empty-state glass-card">
               <h3>No progress history yet</h3>
-              <p>As you complete lessons, your analytics will appear here in real time.</p>
-              <button className="primary-button" onClick={() => navigate("/lessons")}>Go to lessons</button>
+              <p>
+                As you complete lessons, your analytics will appear here in real
+                time.
+              </p>
+              <button
+                className="primary-button"
+                onClick={() => navigate("/lessons")}
+              >
+                Go to lessons
+              </button>
             </div>
           )}
         </>

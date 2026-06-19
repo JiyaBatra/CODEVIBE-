@@ -22,15 +22,19 @@ const NotificationBell = () => {
   return (
     <div className="notification-bell-wrapper" ref={wrapperRef}>
       <button
-        className="notification-bell"
+        type="button"
+        className="nav-link"
         onClick={() => setIsOpen((v) => !v)}
         aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ""}`}
         title="Notifications"
       >
-        <Bell size={20} />
-        {unreadCount > 0 && (
-          <span className="notification-badge">{unreadCount > 99 ? "99+" : unreadCount}</span>
-        )}
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+          <Bell className="nav-icon" size={16} />
+          {unreadCount > 0 && (
+            <span className="notification-badge">{unreadCount > 99 ? "99+" : unreadCount}</span>
+          )}
+        </div>
+        <span>Notifications</span>
       </button>
 
       {isOpen && (

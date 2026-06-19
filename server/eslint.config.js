@@ -14,6 +14,7 @@ export default defineConfig([
       globals: {
         ...globals.node,
         ...globals.commonjs,
+        ...globals.jest,
       },
       parserOptions: {
         ecmaVersion: 'latest',
@@ -21,7 +22,7 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['warn', { varsIgnorePattern: '^_', argsIgnorePattern: '^_' }],
+      'no-unused-vars': ['warn', { varsIgnorePattern: '^_', argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' }],
     },
   },
 ])

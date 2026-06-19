@@ -385,7 +385,7 @@ Join our growing community of learners and contributors!
 - **GitHub Discussions**: Ask questions and share ideas
 - **Issues**: Report bugs and suggest features
 - **Pull Requests**: Contribute code improvements
-- **Email**: [contact@codevibe.dev]
+- **Email**: [jiyabatra0007@gmail.com]
 
 ---
 
