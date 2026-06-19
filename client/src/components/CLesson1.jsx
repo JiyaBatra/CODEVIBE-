@@ -51,11 +51,22 @@ int main() {
         LessonId="c-lesson-1"
         language="c"
         hint="Use printf() inside main() to print Hello C. Do not forget to include stdio.h at the top and return 0 at the end."
+        hints={[
+          "Every C program needs #include <stdio.h> at the very top to use the printf() function.",
+          "The main() function is the entry point of every C program. Your printing code goes inside it.",
+          "Use printf(\"Hello C\"); inside main() — then close with return 0; to signal success to the OS.",
+        ]}
+        solution={`#include <stdio.h>
+
+int main() {
+    printf("Hello C");
+    return 0;
+}`}
         initialCode={`#include <stdio.h>
 
 int main() {
     // Write your code here
-    printf("Hello C");
+
     return 0;
 }`}
         expectedOutput="Hello C"

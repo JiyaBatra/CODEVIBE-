@@ -1,5 +1,6 @@
 // controller/exam/examController.js
 const ExamResult = require('../../models/examResult');
+const Notification = require('../../models/notification');
 
 /**
  * POST /api/exam/submit
@@ -37,6 +38,19 @@ exports.submitExam = async (req, res) => {
       passed,
       attemptedAt: new Date(),
     });
+
+    try {
+      await Notification.create({
+        email,
+        type: 'exam_result',
+        message: passed
+          ? `You passed the "${courseId}" exam with ${percentage}%!`
+          : `You scored ${percentage}% on "${courseId}" exam. Keep practicing!`,
+        relatedEntity: courseId,
+      });
+    } catch (notifErr) {
+      console.error('Exam notification creation failed:', notifErr);
+    }
 
     return res.status(201).json({
       message: 'Exam result saved',

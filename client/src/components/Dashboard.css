@@ -380,7 +380,7 @@ body::-webkit-scrollbar,
 .analytics-section {
   padding: 1.55rem;
   display: grid;
-  gap: 1.35rem;
+  /* gap: 1.35rem; */
 }
 
 .section-header {
@@ -388,6 +388,25 @@ body::-webkit-scrollbar,
   justify-content: space-between;
   gap: 1rem;
   align-items: flex-end;
+}
+
+.last-updated {
+  display: none;
+}
+
+@media (min-width: 721px) {
+  .last-updated {
+    display: inline;
+    
+  }
+  .history{
+        margin-bottom: -4px;
+    margin-right: 2px;
+  }
+  .updated-div{
+        margin-right: 5px;
+     margin-bottom: 3px;
+  }
 }
 
 .section-overline {
@@ -411,7 +430,7 @@ body::-webkit-scrollbar,
 
 .chart-panel {
   padding: 1.15rem;
-  border-radius: 28px;
+  border-radius: 18px;
   background: rgba(17, 23, 48, 0.72);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 28px 70px rgba(0, 0, 0, 0.18);
@@ -686,7 +705,8 @@ body::-webkit-scrollbar,
   place-items: center;
   color: var(--muted);
   background: rgba(255, 255, 255, 0.03);
-  border-radius: 18px;
+  border-radius: 10px;
+  padding-left: inherit;
   border: 1px dashed rgba(255, 255, 255, 0.12);
 }
 
@@ -849,6 +869,8 @@ body::-webkit-scrollbar,
   .dashboard-shell {
     padding: 1.3rem 1rem;
   }
+
+  
 
   .dashboard-hero {
     flex-direction: column;

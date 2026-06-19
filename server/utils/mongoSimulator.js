@@ -312,7 +312,7 @@ const makeMockMongoClient = (storage) => {
 // ============================================================
 // MOCK EXPRESS
 // ============================================================
-const makeMockExpress = (logs) => {
+const makeMockExpress = () => {
   const express = () => {
     const app = {
       _routes: {},
@@ -403,7 +403,7 @@ const runMongoSimulation = async (code) => {
 
   // Build mock modules
   const MockMongoClient = makeMockMongoClient(storage);
-  const mockExpress     = makeMockExpress(logs);
+  const mockExpress     = makeMockExpress();
 
   // require() interceptor - ONLY intercepts mongodb & express
   const mockRequire = (mod) => {

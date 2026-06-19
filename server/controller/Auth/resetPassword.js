@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const UserModel = require("../../models/user.models");
 const { validatePassword } = require("../../utils/passwordValidator");
 
-const resetPassword = async (req, res, next) => {
+const resetPassword = async (req, res) => {
   try {
     const { token, newPassword } = req.body;
 

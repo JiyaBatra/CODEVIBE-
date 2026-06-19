@@ -110,10 +110,16 @@ const HtmlLesson1 = () => {
 
         <Compiler
         hint="💡 Review the lesson instructions carefully. Make sure your output matches exactly." 
+        hints={[
+          "HTML headings use the <h1> to <h6> tags. The lowest-numbered heading is the largest.",
+          "Paragraph text is wrapped in <p> tags. Pay close attention to the spaces around words in the instructions.",
+          "Write each tag on its own line, exactly as shown: <h1> heading 1 </h1>, then <h6> last heading </h6>, then <p> paragraph </p>.",
+        ]}
+        solution={`<h1> heading 1 </h1>\n<h6> last heading </h6>\n<p> paragraph </p>`}
         LessonId="html-lesson1"
         lessonTitle="HTML Lesson 1 - Basic Headings"
         expectedOutput={`<h1> heading 1 </h1> <h6> last heading </h6> <p> paragraph </p>`}
-        initialCode={`<h1> heading 1 </h1>\n<h6> last heading </h6>\n<p> paragraph </p>`}
+        initialCode={`<!-- Write your HTML tags here -->\n`}
         onSuccess={handleSuccess}
       />
 

@@ -5,6 +5,7 @@ import { useAuth } from "../AuthProvider.jsx";
 // Dynamic API URL config resolving to localhost in dev and Render live server in production
 import API_BASE_URL from "../config/api";
 import Dropdown from "./common/Dropdown";
+
 import "./Compiler.css";
 import ExecutionHistory from './ExecutionHistory';
 import "./ExecutionHistory.css";
@@ -17,6 +18,10 @@ const debounce = (func, delay) => {
     timeoutId = setTimeout(() => func(...args), delay);
   };
 };
+
+import HintModal from "./HintModal";
+import SolutionModal from "./SolutionModal";
+import { useHints } from "../hooks/useHints";
 
 const SCORING = (attempt) =>
   attempt === 1 ? 100 :
@@ -36,6 +41,7 @@ const normalizeHTML = (s = "") => {
 };
 
 // ─── Error type badge colours ────────────────────────────────────────────────
+// NOTE: These are intentionally used by FeedbackPanel — keep them.
 const ERROR_BADGE_COLOR = {
   CompilationError: "#ef4444",
   RuntimeError:     "#f97316",
@@ -53,7 +59,11 @@ const ERROR_BADGE_LABEL = {
 };
 
 // ─── Simple Result Panel ─────────────────────────────────────────────────────
-const FeedbackPanel = ({ isSuccess, score, tries, executionTime, errorType, hint, expected, status }) => {
+const FeedbackPanel = ({
+  isSuccess, score, tries, executionTime,
+  errorType, errorLine, errorMessage,
+  hint, expected, got, status,
+}) => {
   if (!isSuccess && !errorType && !status) return null;
 
   if (isSuccess) {
@@ -74,15 +84,34 @@ const FeedbackPanel = ({ isSuccess, score, tries, executionTime, errorType, hint
     );
   }
 
+  // Use specific badge colour + label when we have a recognised error type,
+  // otherwise fall back to the generic "Wrong Answer" display.
+  const badgeColor = ERROR_BADGE_COLOR[errorType] || "#ef4444";
+  const badgeLabel = ERROR_BADGE_LABEL[errorType] || "❌ Wrong Answer";
+
   return (
     <div className="feedback-panel feedback-panel--error">
       <div className="feedback-error-header">
-        <span className="feedback-badge" style={{ background: "#ef4444" }}>❌ Wrong Answer</span>
+        <span className="feedback-badge" style={{ background: badgeColor }}>{badgeLabel}</span>
+        {errorLine != null && (
+          <span className="feedback-line-badge">Line {errorLine}</span>
+        )}
       </div>
+      {errorMessage ? (
+        <div className="feedback-section">
+          <pre className="feedback-raw">{errorMessage}</pre>
+        </div>
+      ) : null}
       {expected !== undefined && (
         <div className="feedback-section">
           <div style={{ color: "#94a3b8", fontSize: "0.85rem", marginBottom: "6px" }}>Expected Output:</div>
           <pre className="feedback-raw" style={{ color: "#86efac" }}>{String(expected ?? "")}</pre>
+        </div>
+      )}
+      {got !== undefined && got !== expected && (
+        <div className="feedback-section">
+          <div style={{ color: "#94a3b8", fontSize: "0.85rem", marginBottom: "6px" }}>Your Output:</div>
+          <pre className="feedback-raw" style={{ color: "#fca5a5" }}>{String(got ?? "")}</pre>
         </div>
       )}
       {hint && (
@@ -104,6 +133,9 @@ const Compiler = ({
   onSuccess,
   hint: lessonHint,
   lessonTitle = "",
+  // ── New progressive-hints / solution props (all optional, fully backward-compatible) ──
+  hints,       // string[]  – ordered list of progressive hints
+  solution,    // string    – full solution code; only loadable after all hints viewed
 }) => {
   const [language, setLanguage]         = useState(fixedLanguage || "html");
   const [code, setCode]                 = useState(initialCode);
@@ -140,6 +172,7 @@ const Compiler = ({
   const iframeRef = useRef(null);
   const startTimeRef = useRef(Date.now());
 
+
   // ─── Save history to localStorage ──────────────────────────────────────
   useEffect(() => {
     try {
@@ -148,6 +181,7 @@ const Compiler = ({
       console.error('Error saving execution history:', error);
     }
   }, [executionHistory]);
+
 
   // ─── Load Saved Code on Mount ─────────────────────────────────────────────
   useEffect(() => {
@@ -269,9 +303,45 @@ const Compiler = ({
     }
   }, [LessonId]);
 
+  // ── Progressive hints + solution ────────────────────────────────────────
+  const {
+    totalHints,
+    revealedIndex,
+    allHintsRevealed,
+    canShowSolution,
+    hasSolution,
+    hintModalOpen,
+    activeHintText,
+    activeHintNumber,
+    solutionModalOpen,
+    requestNextHint,
+    closeHintModal,
+    requestSolution,
+    closeSolutionModal,
+  } = useHints(hints, solution);
+
+
   useEffect(() => {
     startTimeRef.current = Date.now();
   }, [LessonId]);
+
+  // ── load solution into editor ────────────────────────────────────────────
+  // Wrapped in useCallback so the reference is stable across renders and
+  // SolutionModal's onConfirm prop does not cause unnecessary re-renders.
+  const loadSolution = useCallback(() => {
+    if (solution) {
+      setCode(solution);
+      // Clear any prior feedback so the editor state is unambiguous.
+      // Then set a neutral status that is ALWAYS visible (not gated on
+      // !isSuccess) — we rely on a dedicated data-attribute instead.
+      setIsSuccess(false);
+      setErrorType(null);
+      setErrorMessage("");
+      setActiveHint("");
+      setScore(null);
+      setStatus("✅ Solution loaded. You can still edit and run it!");
+    }
+  }, [solution]);
 
   // ── copy / download ──────────────────────────────────────────────────────
   const copyCode = async () => {
@@ -428,25 +498,67 @@ const Compiler = ({
   };
 
   // ─── keyboard shortcuts ──────────────────────────────────────────────────
+  // Single consolidated handler.
+  // • Ctrl+Enter / Cmd+Enter → run code
+  // • Ctrl+R / Cmd+R         → reset, BUT ONLY when the textarea is focused,
+  //   so the browser's native refresh shortcut still works everywhere else.
+  // • Escape                 → clear feedback, ONLY when no modal is open
+  //   (modals handle their own Escape via useFocusTrap; firing both would
+  //    cause redundant state updates and potential focus-management conflicts).
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.ctrlKey && e.key === "Enter") { e.preventDefault(); runCode(); }
-      if (e.ctrlKey && e.key.toLowerCase() === "r") {
+      // ── Ctrl+Enter / Cmd+Enter → Run ─────────────────────────────────────
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
         e.preventDefault();
+
         // Reset with clear saved code
         setCode(initialCode);
+
+        runCode();
+        return;
+      }
+
+      // ── Ctrl+R / Cmd+R → Reset (textarea-focused only) ───────────────────
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "r") {
+        const isEditorFocused =
+          document.activeElement?.classList?.contains("compiler-textarea");
+        if (isEditorFocused) {
+          e.preventDefault();
+          setCode(initialCode);
+          setStatus("");
+          setIsSuccess(false);
+          setErrorType(null);
+          setErrorMessage("");
+          setActiveHint("");
+          setScore(null);
+        }
+        return;
+      }
+
+      // ── Escape → clear feedback only when no modal is currently open ──────
+      // Modals register their own Escape handler via useFocusTrap.
+      // Letting this handler also fire when a modal is open causes double
+      // state updates and can reset feedback the user still needs to see.
+      if (e.key === "Escape" && !hintModalOpen && !solutionModalOpen) {
+
         setStatus("");
         setIsSuccess(false);
         setErrorType(null);
         setErrorMessage("");
         setActiveHint("");
+
         setScore(null);
         clearSavedCode();
+
       }
     };
+
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [code, initialCode, language, tries]);
+  // score is intentionally included: runCode() reads it and would capture a
+  // stale value if score changed between effect registrations.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code, initialCode, language, tries, score, hintModalOpen, solutionModalOpen]);
 
   // ─── client-side runners ─────────────────────────────────────────────────
 
@@ -794,7 +906,20 @@ const Compiler = ({
 
         <button
           title="Reset (Ctrl + R) - Clears editor and saved code"
+
           aria-label="Reset code editor"
+
+
+       <button
+
+          title="Reset (Ctrl + R)"
+          aria-label="Reset code editor"
+
+
+          title="Reset code to starter (Ctrl + R when editor is focused)"
+          aria-label="Reset code editor to original starter code"
+
+
           onClick={() => {
             setCode(initialCode);
             setStatus("");
@@ -816,6 +941,58 @@ const Compiler = ({
           </span>
         )}
       </div>
+
+      {/* ── Hint & Solution controls ── */}
+      {(totalHints > 0 || hasSolution) && (
+        <div className="compiler-hint-controls" role="group" aria-label="Hints and solution">
+          {totalHints > 0 && (
+            <button
+              className={`compiler-btn compiler-btn--hint ${allHintsRevealed ? "compiler-btn--hint-done" : ""}`}
+              onClick={requestNextHint}
+              aria-label={
+                allHintsRevealed
+                  ? `All ${totalHints} hints revealed. Click to review the last hint.`
+                  : revealedIndex === -1
+                    ? `Reveal hint 1 of ${totalHints}`
+                    : `Hint ${revealedIndex + 1} of ${totalHints} shown. Click for hint ${revealedIndex + 2}.`
+              }
+              title={
+                allHintsRevealed
+                  ? "All hints revealed — click to review the last one"
+                  : revealedIndex === -1
+                    ? `Show hint 1 of ${totalHints}`
+                    : `Show hint ${revealedIndex + 2} of ${totalHints}`
+              }
+            >
+              💡 {allHintsRevealed
+                  ? `All Hints Revealed (${totalHints}/${totalHints})`
+                  : revealedIndex === -1
+                    ? "Need a Hint?"
+                    : `Hint ${revealedIndex + 1}/${totalHints} – Next Hint?`}
+            </button>
+          )}
+
+          {hasSolution && (
+            <button
+              className={`compiler-btn compiler-btn--solution ${!canShowSolution ? "compiler-btn--solution-locked" : ""}`}
+              onClick={requestSolution}
+              disabled={!canShowSolution}
+              aria-label={
+                canShowSolution
+                  ? "Show solution"
+                  : `View all ${totalHints} hints to unlock the solution`
+              }
+              title={
+                canShowSolution
+                  ? "Load solution into editor"
+                  : `View all ${totalHints} hint${totalHints !== 1 ? "s" : ""} to unlock`
+              }
+            >
+              {canShowSolution ? "🔓 Show Solution" : `🔒 Solution (view all hints to unlock)`}
+            </button>
+          )}
+        </div>
+      )}
 
       {/* preview iframe */}
       <iframe
@@ -840,6 +1017,7 @@ const Compiler = ({
         status={status}
       />
 
+
       {/* ─── Execution History ──────────────────────────────────────────────── */}
       <div className="compiler-history-wrapper" style={{ marginTop: '12px' }}>
         <ExecutionHistory 
@@ -847,6 +1025,23 @@ const Compiler = ({
           onClearHistory={clearHistory}
         />
       </div>
+
+      {/* ── Hint modal ── */}
+      <HintModal
+        isOpen={hintModalOpen}
+        onClose={closeHintModal}
+        hint={activeHintText}
+        hintNumber={activeHintNumber}
+        totalHints={totalHints}
+      />
+
+      {/* ── Solution confirmation modal ── */}
+      <SolutionModal
+        isOpen={solutionModalOpen}
+        onClose={closeSolutionModal}
+        onConfirm={loadSolution}
+      />
+
     </div>
   );
 };
