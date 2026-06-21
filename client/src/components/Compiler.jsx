@@ -904,17 +904,10 @@ const Compiler = ({
           ▶ Run
         </button>
 
-        <button
-          title="Reset (Ctrl + R) - Clears editor and saved code"
+       
 
-          aria-label="Reset code editor"
-
-
-       <button
-
-          title="Reset (Ctrl + R)"
-          aria-label="Reset code editor"
-
+    
+<button 
 
           title="Reset code to starter (Ctrl + R when editor is focused)"
           aria-label="Reset code editor to original starter code"
