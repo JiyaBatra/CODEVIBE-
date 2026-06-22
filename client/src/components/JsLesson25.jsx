@@ -30,7 +30,7 @@ const JsLesson25 = () => {
             // file: math.js<br />
             export function add(a, b) &#123; return a + b; &#125;<br /><br />
             // file: main.js<br />
-            import { add } from './math.js';<br />
+            import &#123; add &#125; from './math.js';<br />
             console.log(add(5, 3)); // 8
           </code>
         </p>

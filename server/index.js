@@ -6,6 +6,7 @@ dotenv.config();
 const routes = require("./routes/index");
 const passport = require("passport");
 require("./config/passport");
+const { initSocketServer } = require("./socket");
 
 const backend = express();
 backend.set("trust proxy", 1);
@@ -99,12 +100,19 @@ const DEFAULT_PORT = Number(process.env.PORT) || 5002;
 const MAX_PORT_ATTEMPTS = 10;
 
 const tryStartServer = (port, attempt = 1) => {
-  server = backend.listen(port, () => {
+  server = backend.listen(port, async () => {
     console.log(`✅ Server Started on port ${port}`);
     if (port !== DEFAULT_PORT) {
       console.log(
         `ℹ️ Fallback port used because ${DEFAULT_PORT} was already occupied.`
       );
+    }
+
+    // Initialize Socket.io on the running HTTP server
+    try {
+      await initSocketServer(server);
+    } catch (socketErr) {
+      console.error("⚠️ Socket.io initialization failed:", socketErr.message);
     }
   });
 
