@@ -31,8 +31,12 @@ const userSchema = new Schema({
   profilePicture: {
     type: String,
   },
-  resetToken: { type: String },       // for password reset token
-  resetTokenExpiry: { type: Date },   // for password reset token expiry
+  skills: {
+    type: [String],
+    default: [],
+  },
+  resetToken: { type: String },
+  resetTokenExpiry: { type: Date },
 });
 
 module.exports = model("User", userSchema, "users");

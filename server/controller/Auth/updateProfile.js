@@ -1,4 +1,5 @@
 const UserModel = require('../../models/user.models');
+const { validateAndNormalizeSkills } = require('../../utils/skills');
 
 const updateProfile = async (req, res) => {
   try {
@@ -8,13 +9,17 @@ const updateProfile = async (req, res) => {
     }
 
     const updateFields = {};
-    const allowedFields = ['username', 'college', 'year', 'bio', 'avatarUrl'];
+    const allowedFields = ['username', 'college', 'year', 'bio', 'avatarUrl', 'skills'];
 
     allowedFields.forEach((field) => {
       if (req.body[field] !== undefined) {
         updateFields[field] = req.body[field];
       }
     });
+
+    if (updateFields.skills !== undefined) {
+      updateFields.skills = validateAndNormalizeSkills(updateFields.skills);
+    }
 
     if (Object.keys(updateFields).length === 0) {
       return res.status(400).json({ message: 'No profile fields to update' });
@@ -38,6 +43,7 @@ const updateProfile = async (req, res) => {
         college: user.college,
         year: user.year,
         bio: user.bio || '',
+        skills: user.skills || [],
         avatarUrl: user.avatarUrl || '',
         joinedAt:
           user.joinedAt ||
