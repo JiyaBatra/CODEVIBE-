@@ -21,6 +21,7 @@ import API_BASE_URL from "../config/api";
 import MyMistakesDashboard from "./MyMistakesDashboard";
 import BookmarksWidget from "./BookmarksWidget";
 import DailyQuests from "./DailyQuests.jsx";
+import SkillsInput from "./SkillsInput";
 import "./Dashboard.css";
 import { Upload } from "lucide-react";
 import { ALL_POSSIBLE_BADGES } from "../config/badges";
@@ -894,6 +895,7 @@ const Dashboard = () => {
     college: user?.college || "",
     year: user?.year || "",
     bio: user?.bio || "",
+    skills: user?.skills || [],
     avatarUrl: user?.avatarUrl || "",
   });
   const [avatarPreview, setAvatarPreview] = useState(user?.avatarUrl || "");
@@ -963,8 +965,12 @@ const Dashboard = () => {
   };
 
   const handleInputChange = (field) => (event) => {
-    const value = event.target.value;
+    const value = event?.target?.value ?? event;
     setProfileForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSkillsChange = (skills) => {
+    setProfileForm((prev) => ({ ...prev, skills }));
   };
 
   const persistAvatar = async (avatarUrl) => {
@@ -1458,6 +1464,13 @@ const Dashboard = () => {
                       />
                     </label>
                   </div>
+                  <label>
+                    Skills
+                    <SkillsInput
+                      value={profileForm.skills}
+                      onChange={handleSkillsChange}
+                    />
+                  </label>
                 </div>
               )}
             </aside>
