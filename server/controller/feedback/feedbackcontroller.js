@@ -4,7 +4,8 @@ const Notification = require('../../models/notification');
 
 exports.submitFeedback = async (req, res) => {
   try {
-    const { email, name, courseName, lessonId, message } = req.body;
+    const { name, courseName, lessonId, message } = req.body;  
+    const email = req.user.email;                               
 
     if (!email || !message) {
       return res.status(400).json({ message: "Email and message are required" });
@@ -20,7 +21,6 @@ exports.submitFeedback = async (req, res) => {
     });
 
     await feedback.save();
-
     res.status(201).json({ message: "Feedback submitted successfully" });
   } catch (error) {
     console.error(error);
