@@ -4,7 +4,7 @@
   publish = "client/dist"
 
 [build.environment]
-  NODE_VERSION = "22"
+  NODE_VERSION = "20"
   CI = "false"
 
 [[redirects]]
