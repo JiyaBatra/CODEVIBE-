@@ -17,7 +17,7 @@ const StudyPlanner = () => {
     if (!token || !user?.email) return;
     axios
       .get(`${API_BASE_URL}/api/progress/${encodeURIComponent(user.email)}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        
       })
       .then(({ data }) => {
         setProgress(data);
@@ -38,7 +38,7 @@ const StudyPlanner = () => {
       await axios.put(
         `${API_BASE_URL}/api/progress/goal`,
         { dailyGoal },
-        { headers: { Authorization: `Bearer ${token}` } }
+        { }
       );
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);

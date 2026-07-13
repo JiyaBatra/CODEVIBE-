@@ -16,7 +16,7 @@ const CourseSidebar = ({ coursePrefix, totalLessons, courseTitle }) => {
     if (!userEmail) return;
 
     axios.get(`${API_BASE_URL}/api/progress/${userEmail}`, {
-      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      headers: token ? { } : {},
     })
       .then(res => {
         setProgressData(res.data);
