@@ -37,11 +37,10 @@ const CssLesson13 = () => {
 
   // Fetch the most recent saved result on mount so score survives a refresh
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
     if (!token) return;
     axios
       .get(`${API_BASE_URL}/api/exam/results?courseId=${COURSE_ID}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        
       })
       .then((res) => {
         const results = res.data?.results || [];
@@ -65,14 +64,13 @@ const CssLesson13 = () => {
     setScore(totalScore);
 
     // Persist result to backend
-    const token = localStorage.getItem('authToken');
     if (token) {
       setSaving(true);
       try {
         await axios.post(
           `${API_BASE_URL}/api/exam/submit`,
           { courseId: COURSE_ID, score: totalScore, totalQuestions: MAX_SCORE, passingScore: 44 },
-          { headers: { Authorization: `Bearer ${token}` } }
+          { }
         );
       } catch (err) {
         console.error('Failed to save exam result:', err);

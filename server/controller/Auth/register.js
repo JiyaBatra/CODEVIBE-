@@ -1,6 +1,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 const UserModel = require("../../models/user.models");
+const RefreshTokenModel = require("../../models/RefreshToken");
 const momsvalidation = require("../../services/validationScheme");
 const { JWT_SECRET, JWT_EXPIRES_IN, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXPIRES_IN } = require("../../config/jwt");
 const { validatePassword } = require("../../utils/passwordValidator");
@@ -110,17 +112,28 @@ const register = async (req, res, next) => {
       }
     );
 
+    const family = crypto.randomBytes(16).toString("hex");
+
     const refreshToken = jwt.sign(
       {
         userId: userCreate._id,
         email: userCreate.email,
         username: userCreate.username,
+        family,
       },
       REFRESH_TOKEN_SECRET,
       {
         expiresIn: REFRESH_TOKEN_EXPIRES_IN,
       }
     );
+
+    // Save refresh token to DB
+    await RefreshTokenModel.create({
+      token: refreshToken,
+      user: userCreate._id,
+      family,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+    });
 
     const isProd = process.env.NODE_ENV === "production";
 

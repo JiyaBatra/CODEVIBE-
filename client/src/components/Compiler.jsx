@@ -195,7 +195,7 @@ const Compiler = ({
     setHistoryLoading(true);
     try {
       const { data } = await axios.get(`${API_BASE_URL}/api/execute/history?page=${pageNum}&limit=10`, {
-        headers: { Authorization: `Bearer ${token}` },
+        
       });
       if (data.success) {
         setHistoryLogs(data.logs);
@@ -320,7 +320,7 @@ const Compiler = ({
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            
           },
         }
       );

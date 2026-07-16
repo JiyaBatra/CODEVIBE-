@@ -925,7 +925,7 @@ const Dashboard = () => {
     axios
       .get(`${API_BASE_URL}/api/analytics/${encodeURIComponent(email)}`, {
         cancelToken: source.token,
-        headers: { Authorization: `Bearer ${token}` },
+        
       })
       .then((response) => {
         setAnalytics(response.data);
@@ -975,7 +975,7 @@ const Dashboard = () => {
         `${API_BASE_URL}/api/auth/profile`,
         { avatarUrl },
         {
-          headers: { Authorization: `Bearer ${token}` },
+          
         },
       );
 
@@ -1022,7 +1022,7 @@ const Dashboard = () => {
         `${API_BASE_URL}/api/auth/profile`,
         profileForm,
         {
-          headers: { Authorization: `Bearer ${token}` },
+          
         },
       );
 

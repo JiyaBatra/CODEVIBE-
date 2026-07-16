@@ -40,11 +40,9 @@ const Courses = () => {
 
   useEffect(() => {
 if (user?.email) {
-    const token = localStorage.getItem('authToken');
     if (token) {
       axios.get(`${API_BASE_URL}/api/progress/${user.email}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+        })
         .then(res => {
           setCompletedLessons(res.data.completedLessons || []);
           setProgressData(res.data);

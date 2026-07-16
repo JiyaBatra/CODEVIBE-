@@ -25,7 +25,7 @@ export const useMistakes = () => {
           `${API_BASE_URL}/api/mistakes/${user.email}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              
             },
           }
         );

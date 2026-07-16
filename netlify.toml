@@ -1,11 +1,10 @@
 [build]
   base = "."
-  command = "npm install --legacy-peer-deps && npm run build --workspace=client"
+  command = "rm -rf package-lock.json node_modules && npm install && npm run build --workspace=client"
   publish = "client/dist"
 
 [build.environment]
-  NODE_VERSION = "22"
-  NPM_VERSION = "11.6.1"
+  NODE_VERSION = "20"
   CI = "false"
 
 [[redirects]]

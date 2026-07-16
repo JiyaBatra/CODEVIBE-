@@ -41,5 +41,4 @@ coverage/
 .npm
 
 # lock files - Windows-generated lockfile breaks Linux CI (missing native binaries)
-package-lock.json
 yarn.lock

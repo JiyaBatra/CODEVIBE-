@@ -25,7 +25,7 @@ export const useNotifications = () => {
     try {
       setError(null);
       const response = await axios.get(`${API_BASE_URL}/api/notifications`, {
-        headers: { Authorization: `Bearer ${token}` },
+        
       });
       setNotifications(response.data || []);
       setUnreadCount(response.data.filter(n => !n.read).length);
@@ -115,7 +115,7 @@ export const useNotifications = () => {
       await axios.patch(
         `${API_BASE_URL}/api/notifications/${id}/read`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        { }
       );
     } catch (err) {
       console.error("Failed to mark notification as read:", err);
@@ -132,7 +132,7 @@ export const useNotifications = () => {
       await axios.patch(
         `${API_BASE_URL}/api/notifications/read-all`,
         {},
-        { headers: { Authorization: `Bearer ${token}` } }
+        { }
       );
     } catch (err) {
       console.error("Failed to mark all as read:", err);
