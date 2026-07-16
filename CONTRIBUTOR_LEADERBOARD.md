@@ -2,7 +2,7 @@
 
 This leaderboard is generated automatically for `JiyaBatra/CODEVIBE-` by GitHub Actions.
 
-Last updated: 2026-07-15
+Last updated: 2026-07-16
 
 ## Scoring
 
@@ -36,22 +36,22 @@ Last updated: 2026-07-15
 | 20 | [@anan-yaa](https://github.com/anan-yaa) | 70 | 5 | 4 | 4 |
 | 21 | [@Owais-Siddique-11](https://github.com/Owais-Siddique-11) | 70 | 0 | 0 | 14 |
 | 22 | [@shivani11jadhav](https://github.com/shivani11jadhav) | 65 | 0 | 2 | 9 |
-| 23 | [@codedbydollys10](https://github.com/codedbydollys10) | 61 | 13 | 2 | 3 |
-| 24 | [@Haritha-054](https://github.com/Haritha-054) | 59 | 2 | 2 | 7 |
-| 25 | [@notlexius-glitch](https://github.com/notlexius-glitch) | 58 | 4 | 3 | 4 |
-| 26 | [@Soham156](https://github.com/Soham156) | 58 | 4 | 2 | 6 |
-| 27 | [@riteshpatil9686-lgtm](https://github.com/riteshpatil9686-lgtm) | 57 | 11 | 2 | 3 |
-| 28 | [@ArshiBansal](https://github.com/ArshiBansal) | 55 | 5 | 2 | 5 |
-| 29 | [@jagrati7305](https://github.com/jagrati7305) | 55 | 5 | 3 | 3 |
-| 30 | [@knoxiboy](https://github.com/knoxiboy) | 55 | 0 | 0 | 11 |
-| 31 | [@Hiral-Barot](https://github.com/Hiral-Barot) | 54 | 2 | 1 | 8 |
-| 32 | [@annrose2277-glitch](https://github.com/annrose2277-glitch) | 52 | 1 | 1 | 8 |
-| 33 | [@shyam-medh](https://github.com/shyam-medh) | 51 | 13 | 1 | 3 |
-| 34 | [@Smrithi-krishna](https://github.com/Smrithi-krishna) | 51 | 8 | 2 | 3 |
-| 35 | [@sonusharma6-dsa](https://github.com/sonusharma6-dsa) | 50 | 0 | 0 | 10 |
-| 36 | [@pragya0129](https://github.com/pragya0129) | 49 | 2 | 2 | 5 |
-| 37 | [@theblag](https://github.com/theblag) | 49 | 2 | 2 | 5 |
-| 38 | [@bh462007](https://github.com/bh462007) | 47 | 1 | 1 | 7 |
+| 23 | [@bh462007](https://github.com/bh462007) | 63 | 4 | 2 | 7 |
+| 24 | [@codedbydollys10](https://github.com/codedbydollys10) | 61 | 13 | 2 | 3 |
+| 25 | [@Haritha-054](https://github.com/Haritha-054) | 59 | 2 | 2 | 7 |
+| 26 | [@notlexius-glitch](https://github.com/notlexius-glitch) | 58 | 4 | 3 | 4 |
+| 27 | [@Soham156](https://github.com/Soham156) | 58 | 4 | 2 | 6 |
+| 28 | [@riteshpatil9686-lgtm](https://github.com/riteshpatil9686-lgtm) | 57 | 11 | 2 | 3 |
+| 29 | [@ArshiBansal](https://github.com/ArshiBansal) | 55 | 5 | 2 | 5 |
+| 30 | [@jagrati7305](https://github.com/jagrati7305) | 55 | 5 | 3 | 3 |
+| 31 | [@knoxiboy](https://github.com/knoxiboy) | 55 | 0 | 0 | 11 |
+| 32 | [@Hiral-Barot](https://github.com/Hiral-Barot) | 54 | 2 | 1 | 8 |
+| 33 | [@annrose2277-glitch](https://github.com/annrose2277-glitch) | 52 | 1 | 1 | 8 |
+| 34 | [@shyam-medh](https://github.com/shyam-medh) | 51 | 13 | 1 | 3 |
+| 35 | [@Smrithi-krishna](https://github.com/Smrithi-krishna) | 51 | 8 | 2 | 3 |
+| 36 | [@sonusharma6-dsa](https://github.com/sonusharma6-dsa) | 50 | 0 | 0 | 10 |
+| 37 | [@pragya0129](https://github.com/pragya0129) | 49 | 2 | 2 | 5 |
+| 38 | [@theblag](https://github.com/theblag) | 49 | 2 | 2 | 5 |
 | 39 | [@YashvardhanJani](https://github.com/YashvardhanJani) | 47 | 6 | 2 | 3 |
 | 40 | [@anujsharma8d](https://github.com/anujsharma8d) | 45 | 5 | 2 | 3 |
 | 41 | [@advikdivekar](https://github.com/advikdivekar) | 40 | 5 | 3 | 0 |
