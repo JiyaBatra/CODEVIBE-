@@ -7,7 +7,9 @@ const getBearerToken = (authorization = "") => {
 
 const validateLeaderboardToken = (req, res) => {
   if (!process.env.LEADERBOARD_API_TOKEN) {
-    return true;
+    console.error("FATAL: LEADERBOARD_API_TOKEN is not set. Sync disabled.");
+    res.status(500).json({ message: "Server misconfiguration. Sync disabled." });
+    return false;  
   }
 
   const token = getBearerToken(req.headers.authorization);
