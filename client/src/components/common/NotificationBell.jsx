@@ -34,7 +34,7 @@ const NotificationBell = () => {
             <span className="notification-badge">{unreadCount > 99 ? "99+" : unreadCount}</span>
           )}
         </div>
-        <span>Notifications</span>
+        <span>NotificationBell</span>
       </button>
 
       {isOpen && (
