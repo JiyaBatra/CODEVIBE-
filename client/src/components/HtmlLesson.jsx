@@ -1,12 +1,14 @@
 // src/components/HtmlLesson.jsx
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useProgress } from '../hooks/useProgress';
+
 import API_BASE_URL from '../config/api';
 import { Link } from 'react-router-dom';
 import CourseSidebar from './CourseSidebar';
 import { FaCheckCircle, FaArrowRight, FaCode, FaHtml5, FaBookOpen, FaTrophy, FaStar } from 'react-icons/fa';
 
 const HtmlLesson = () => {
+  const { progress, completeLesson } = useProgress();
   const [completed, setCompleted] = useState([]);
   const [hoveredCard, setHoveredCard] = useState(null);
 
