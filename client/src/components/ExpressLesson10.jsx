@@ -4,7 +4,6 @@ import Compiler from './Compiler';
 
 const DSALesson12 = () => {
   const [isCorrect, setIsCorrect] = useState(false);
-  const [output, setOutput] = useState("");
   const navigate = useNavigate();
   const [practiceCompleted, setPracticeCompleted] = useState({});
 
@@ -28,20 +27,6 @@ const DSALesson12 = () => {
       localStorage.setItem(`dsaPractice_${email}`, JSON.stringify(updated));
       return updated;
     });
-  };
-
-  const handleRun = (userCode) => {
-    try {
-      const fn = new Function(userCode);
-      const result = fn();
-      setOutput(result || "Welcome to DSA");
-      if (result === undefined || result === "Welcome to DSA") {
-        setIsCorrect(true);
-      }
-    } catch (err) {
-    console.error("Error:", err);
-      setOutput(err.message);
-    }
   };
 
   const goToNextLesson = () => navigate('/Certificate');
@@ -89,15 +74,8 @@ const DSALesson12 = () => {
         language="js"
         initialCode={`// Write your code here
 console.log("Welcome to DSA");`}
-        runCode={handleRun}
+        onSuccess={() => setIsCorrect(true)}
       />
-
-      {output && (
-        <div className="output">
-          <strong>Output:</strong>
-          <pre>{output}</pre>
-        </div>
-      )}
 
       {isCorrect && (
         <div style={{ marginTop: '20px' }} className="success-action-container">
