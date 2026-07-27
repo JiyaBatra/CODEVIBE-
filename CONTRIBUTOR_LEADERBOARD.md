@@ -14,7 +14,7 @@ Last updated: 2026-07-27
 
 | Rank | Contributor | Score | Commits | Merged PRs | Closed Issues |
 | --- | --- | ---: | ---: | ---: | ---: |
-| 1 | [@jayshreerathoreai32-hue](https://github.com/jayshreerathoreai32-hue) | 169 | 47 | 5 | 5 |
+| 1 | [@jayshreerathoreai32-hue](https://github.com/jayshreerathoreai32-hue) | 199 | 47 | 7 | 7 |
 | 2 | [@thedaripanator](https://github.com/thedaripanator) | 167 | 16 | 10 | 7 |
 | 3 | [@Saubhagya1621](https://github.com/Saubhagya1621) | 138 | 9 | 7 | 10 |
 | 4 | [@sricharan-213](https://github.com/sricharan-213) | 131 | 8 | 7 | 9 |
