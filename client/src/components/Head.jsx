@@ -49,10 +49,12 @@ const Head = () => {
   }, []);
 
   const [showProjects, setShowProjects] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
 useEffect(() => {
   const closeDropdown = () => {
     setShowProjects(false);
+    setShowProfileMenu(false);
   };
 
   document.addEventListener("click", closeDropdown);
@@ -61,7 +63,6 @@ useEffect(() => {
     document.removeEventListener("click", closeDropdown);
   };
 }, []);
-
   //  Filtering now runs only when debouncedQuery changes, not on every keystroke
   useEffect(() => {
     if (debouncedQuery.trim().length === 0) {
@@ -175,7 +176,7 @@ useEffect(() => {
   className="nav-link"
   onClick={() => navigate("/lessons", { state: { scrollToRoadmap: true } })}
 >
-  <span>Roadmap Generator</span>
+  <span>Roadmap</span>
 </button>
 
 
@@ -242,77 +243,104 @@ useEffect(() => {
   <span>Contact Us</span>
 </button>
 
-<Link to="/glossary" className="nav-link">
+ {<Link to="/glossary" className="nav-link">
   <span>Glossary</span>
-</Link>
+</Link>} 
 
           {/* 2. Conditional Links based on Auth State */}
           <div className="header-navlink">
 
             {user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' , color: 'white'}}>
-              <NotificationBell />
-              <StreakCounter />
-              <button
-              type="button"
-              className="nav-link"
-              onClick={() => navigate("/leaderboard")}
-             >
-             <FaTrophy className="nav-icon" />
-             <span>LeaderBoard</span>
-            </button>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "16px",
+                  color: "white",
+                }}
+              >
+                <NotificationBell/>
+                <StreakCounter />
 
-            <button
-            type="button"
-            className="nav-link"
-            onClick={() => navigate("/badges")}
-            >
-            <FaMedal className="nav-icon" />
-            <span>Badges</span>
-            </button>
+                <div
+                  className="dropdown"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <button
+                    type="button"
+                    className="nav-link dropdown-btn"
+                    onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  >
+                    <FaTachometerAlt className="nav-icon" />
+                    <span>{user?.name || "Profile"}</span>
+                    <FaChevronDown
+                      className={`dropdown-arrow ${showProfileMenu ? "rotate-arrow" : ""
+                        }`}
+                    />
+                  </button>
 
-            <button
-            type="button"
-            className="nav-link"
-            onClick={() => navigate("/dashboard")}
-            >
-           <FaTachometerAlt className="nav-icon" />
-           <span>Dashboard</span>
-           </button>
-          <button
-           type="button"
-           className="nav-link"
-           onClick={() => {
-           handleLogout();
-           navigate("/login");
-           }}
->
-          <FaSignOutAlt className="nav-icon" />
-          <span>Logout</span>
-          </button>
-              
-            </div>
+                  {showProfileMenu && (
+                    <div className="dropdown-content">
+                      <button
+                        className="dropdown-item"
+                        onClick={() => navigate("/dashboard")}
+                      >
+                        Dashboard
+                      </button>
+
+                      <button
+                        className="dropdown-item"
+                        onClick={() => navigate("/leaderboard")}
+                      >
+                        Leaderboard
+                      </button>
+
+                      <button
+                        className="dropdown-item"
+                        onClick={() => navigate("/badges")}
+                      >
+                        Badges
+                      </button>
+
+                      <Link
+                        to="/glossary"
+                        className="dropdown-item"
+                        onClick={() => setShowProfileMenu(false)}
+                      >
+                        Glossary
+                      </Link>
+
+                      <button
+                        className="dropdown-item"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
             ) : (
               <>
 
-          <button
-            type="button"
-            className="nav-link"
-            onClick={() => navigate("/login")}
-          >
-          <FaSignInAlt className="nav-icon" />
-          <span>Login</span>
-          </button>
+                <button
+                  type="button"
+                  className="nav-link"
+                  onClick={() => navigate("/login")}
+                >
+                  <FaSignInAlt className="nav-icon" />
+                  <span>Login</span>
+                </button>
 
-          <button 
-            type="button"
-            className="nav-link"
-            onClick={() => navigate("/signup")}
-          >
-          <FaUserPlus className="nav-icon" />
-          <span>Sign Up</span>
-          </button>
-              
+                <button
+                  type="button"
+                  className="nav-link"
+                  onClick={() => navigate("/signup")}
+                >
+                  <FaUserPlus className="nav-icon" />
+                  <span>Sign Up</span>
+                </button>
+
               </>
             )}
           </div>
