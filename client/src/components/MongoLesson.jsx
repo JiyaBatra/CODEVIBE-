@@ -1,12 +1,14 @@
 // src/components/MongoLesson.jsx
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useProgress } from '../hooks/useProgress';
+
 import API_BASE_URL from '../config/api';
 import { Link } from 'react-router-dom';
 import CourseSidebar from './CourseSidebar';
 import { FaCheckCircle, FaArrowRight, FaDatabase, FaBookOpen, FaTrophy, FaSearch, FaPlus, FaEdit, FaTrash, FaChartLine } from 'react-icons/fa';
 
 const MongoLesson = () => {
+  const { progress, completeLesson } = useProgress();
   const [completed, setCompleted] = useState([]);
   const [hoveredCard, setHoveredCard] = useState(null);
 

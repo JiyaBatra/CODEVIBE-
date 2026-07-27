@@ -313,6 +313,46 @@ const getAnalytics = async (req, res) => {
                 },
               },
             ],
+            heatmap: [
+              {
+                $match: {
+                  createdAt: {
+                    $gte: new Date(new Date().setHours(0,0,0,0) - (24 * 60 * 60 * 1000 * (32 * 7 - 1)))
+                  }
+                }
+              },
+              {
+                $group: {
+                  _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+                  count: { $sum: 1 }
+                }
+              }
+            ],
+            streakDates: [
+              {
+                $group: {
+                  _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }
+                }
+              }
+            ],
+            subjectHistory: [
+              { $sort: { createdAt: 1 } },
+              {
+                $group: {
+                  _id: "$subject",
+                  events: {
+                    $push: {
+                      lessonId: "$lessonId",
+                      score: "$score",
+                      points: "$points",
+                      coins: "$coins",
+                      learningTime: "$learningTime",
+                      createdAt: "$createdAt"
+                    }
+                  }
+                }
+              }
+            ],
             // Weekly stats — $facet nested inside avoids a second round-trip
             weekly: [
               {
@@ -456,19 +496,14 @@ const getAnalytics = async (req, res) => {
         };
       });
 
-    const subjectHistory = events.reduce((acc, event) => {
-      const subject = normalizeSubject(event.lessonId);
-      if (!acc[subject]) acc[subject] = [];
-      acc[subject].push({
-        lessonId: event.lessonId,
-        score: event.score,
-        points: event.points,
-        coins: event.coins,
-        learningTime: event.learningTime,
-        createdAt: event.createdAt,
+    const subjectHistory = {};
+    if (agg.subjectHistory) {
+      agg.subjectHistory.forEach(sh => {
+        const subject = normalizeSubject(sh._id || 'Other');
+        if (!subjectHistory[subject]) subjectHistory[subject] = [];
+        subjectHistory[subject].push(...sh.events);
       });
-      return acc;
-    }, {});
+    }
 
     // True per-subject totals from lessonRoutes config (server-side mirror)
     const SUBJECT_TOTALS = {
@@ -496,12 +531,15 @@ const getAnalytics = async (req, res) => {
       unsolved: Math.max(0, (SUBJECT_TOTALS[s.subject] || s.totalLessons || s.completedLessons) - s.completedLessons),
     }));
 
-    const eventDates = events.map((e) => e.createdAt);
+    const eventDates = agg.streakDates ? agg.streakDates.map(d => d._id).filter(Boolean) : [];
     const currentStreak = getLearningStreak(eventDates);
     const longestStreak = getLongestStreak(eventDates);
     const weeklyStreak = getWeeklyStreak(eventDates);
     // weeklyStats is now computed by the DB aggregation above — no JS event iteration needed
-    const heatmapData = buildHeatmapData(events, 32);
+    const heatmapData = {};
+    if (agg.heatmap) {
+      agg.heatmap.forEach(h => { if (h._id) heatmapData[h._id] = h.count; });
+    }
 
     const totalStaticLessons = Object.values(SUBJECT_TOTALS).reduce(
   (sum, count) => sum + count,

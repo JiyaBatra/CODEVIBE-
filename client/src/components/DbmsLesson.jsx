@@ -1,11 +1,13 @@
 // src/components/DBMSLessons.jsx
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useProgress } from '../hooks/useProgress';
+
 import { Link } from 'react-router-dom';
 import CourseSidebar from './CourseSidebar';
 import API_BASE_URL from '../config/api';
 
 const DbmsLesson = () => {
+  const { progress, completeLesson } = useProgress();
   const [completed, setCompleted] = useState([]);
 
   useEffect(() => {

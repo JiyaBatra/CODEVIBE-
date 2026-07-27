@@ -65,23 +65,26 @@ exports.exportProgress = async (req, res) => {
       return 'Other';
     };
 
-    const progress = await Progress.findOne({ email }).lean();
-    const analyticsData = await Analytics.find({ email }).lean();
-
-    const completedLessonIds = new Set(progress?.completedLessons || []);
-    const scores = progress?.scores || {};
+    const lessonAgg = await Analytics.aggregate([
+      { $match: { email } },
+      {
+        $group: {
+          _id: "$lessonId",
+          totalScore: { $sum: "$score" },
+          count: { $sum: { $cond: [{ $type: "$score" }, { $cond: [{ $ne: ["$score", null] }, 1, 0] }, 0] } }
+        }
+      }
+    ]);
 
     const subjectStats = {};
-    for (const entry of analyticsData) {
-      const subject = normalizeSubject(entry.lessonId);
+    for (const entry of lessonAgg) {
+      const subject = normalizeSubject(entry._id);
       if (!subjectStats[subject]) {
         subjectStats[subject] = { completed: new Set(), totalScore: 0, count: 0 };
       }
-      if (entry.lessonId) subjectStats[subject].completed.add(entry.lessonId);
-      if (typeof entry.score === 'number') {
-        subjectStats[subject].totalScore += entry.score;
-        subjectStats[subject].count += 1;
-      }
+      if (entry._id) subjectStats[subject].completed.add(entry._id);
+      subjectStats[subject].totalScore += entry.totalScore || 0;
+      subjectStats[subject].count += entry.count || 0;
     }
 
     const rows = Object.entries(subjectStats).map(([subject, stats]) => {

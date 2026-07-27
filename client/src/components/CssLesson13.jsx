@@ -1,7 +1,8 @@
 // src/pages/CssLesson13.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useProgress } from '../hooks/useProgress';
+
 import API_BASE_URL from '../config/api';
 
 const questions = [
@@ -26,6 +27,7 @@ const questions = [
 ];
 
 const CssLesson13 = () => {
+  const { progress, completeLesson } = useProgress();
   const COURSE_ID = 'css';
   const MAX_SCORE = questions.reduce((sum, q) => sum + q.marks, 0); // 25
 
