@@ -47,8 +47,8 @@ router.get("/:slug", async (req, res) => {
 
 router.get("/", async (req, res) => {
   try {
-    const page = Math.max(1, parseInt(req.query.page) || 1);
-    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 20));
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit, 10) || 20));
     const [data, total] = await Promise.all([
       Snippet.find()
         .sort({ createdAt: -1 })
