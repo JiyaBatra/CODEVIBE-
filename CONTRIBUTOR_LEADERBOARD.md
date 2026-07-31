@@ -2,7 +2,7 @@
 
 This leaderboard is generated automatically for `JiyaBatra/CODEVIBE-` by GitHub Actions.
 
-Last updated: 2026-07-30
+Last updated: 2026-07-31
 
 ## Scoring
 
@@ -139,8 +139,8 @@ Last updated: 2026-07-30
 | 123 | [@utkarsh4444](https://github.com/utkarsh4444) | 15 | 0 | 0 | 3 |
 | 124 | [@weiwei-gitch](https://github.com/weiwei-gitch) | 15 | 0 | 0 | 3 |
 | 125 | [@bhavyaxtech](https://github.com/bhavyaxtech) | 12 | 1 | 1 | 0 |
-| 126 | [@MD-Mushfiqur123](https://github.com/MD-Mushfiqur123) | 12 | 1 | 1 | 0 |
-| 127 | [@reshukushwah28](https://github.com/reshukushwah28) | 12 | 1 | 1 | 0 |
+| 126 | [@reshukushwah28](https://github.com/reshukushwah28) | 12 | 1 | 1 | 0 |
+| 127 | [@Zorvanek](https://github.com/Zorvanek) | 12 | 1 | 1 | 0 |
 | 128 | [@adrika4](https://github.com/adrika4) | 10 | 0 | 0 | 2 |
 | 129 | [@akshatsinghai6682-sketch](https://github.com/akshatsinghai6682-sketch) | 10 | 0 | 0 | 2 |
 | 130 | [@Akshayab-07](https://github.com/Akshayab-07) | 10 | 0 | 0 | 2 |
