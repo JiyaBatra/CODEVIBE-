@@ -468,7 +468,7 @@ export default function Glossary() {
             </div>
           ) : (
             Object.keys(grouped)
-              .sort()
+              .sort((a, b) => a - b)
               .map((letter) => (
                 <section
                   key={letter}
