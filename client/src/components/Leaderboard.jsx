@@ -17,7 +17,8 @@ const Leaderboard = () => {
     try {
       setLoading(true);
       const response = await fetch(`${API_BASE_URL}/api/progress/leaderboard?page=${page}&limit=${LIMIT}`);
-      const result = await response.json();
+      if (!response.ok) throw new Error("Request failed");
+const result = await response.json();
       if (result.data) {
         setLeaders(result.data);
         setTotal(result.total);
