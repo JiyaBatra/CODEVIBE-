@@ -26,7 +26,7 @@ const PasswordStrengthIndicator = ({ password }) => {
   };
 
   const getStrengthLabel = () => {
-    return strength.strength.charAt(0).toUpperCase() + strength.strength.slice(1);
+    return strength.strength[0].toUpperCase() + strength.strength.slice(1);
   };
 
   return (
