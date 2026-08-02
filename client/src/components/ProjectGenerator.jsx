@@ -155,7 +155,7 @@ export default function ProjectGenerator() {
     setValidationError("");
     setShowError(false);
 
-    if (!tempSelection || tempSelection.trim() === "") {
+    if (!tempSelection || tempSelection.trim().length === 0) {
       setValidationError("Please select a domain before generating projects.");
       setShowError(true);
       return;
