@@ -28,34 +28,4 @@ for (const file of files) {
 
   // Replace axios.get for progress inside useEffect
   // Usually looks like: axios.get(`${API_BASE_URL}/api/progress/${email}`).then(res => { const completedFromBackend = res.data?.completedLessons || [];
-  const getRegex = /axios\.get\(`\$\{API_BASE_URL\}\/api\/progress\/\$\{email\}`\)\s*\.then\(\s*res\s*=>\s*{([\s\S]*?)const\s+completedFromBackend\s*=\s*res\.data\?\.completedLessons\s*\|\|\s*\[\];/;
-  if (getRegex.test(content)) {
-    content = content.replace(getRegex, "if (progress) {\n          const completedFromBackend = progress.completedLessons || [];");
-    // Also remove the .catch
-    content = content.replace(/\.catch\(err\s*=>\s*console\.error\(['"]Error syncing practice progress from backend:['"],\s*err\)\);/, "}");
-  }
-
-  const getRegex2 = /axios\.get\(`\$\{API_BASE_URL\}\/api\/progress\/\$\{email\}`\)\s*\.then\(\(res\)\s*=>\s*{([\s\S]*?)const\s+completedFromBackend\s*=\s*res\.data\?\.completedLessons\s*\|\|\s*\[\];/;
-  if (getRegex2.test(content)) {
-    content = content.replace(getRegex2, "if (progress) {\n          const completedFromBackend = progress.completedLessons || [];");
-    content = content.replace(/\.catch\(\(err\)\s*=>\s*console\.error\(['"]Error syncing practice progress from backend:['"],\s*err\)\);/, "}");
-  }
-  
-  // Replace axios.post for completing lesson
-  const postRegex = /axios\.post\(`\$\{API_BASE_URL\}\/api\/lesson\/\$\{([^}]+)\}\/complete`,\s*{\s*email(?:,\s*score:\s*(\d+))?\s*}\)/g;
-  content = content.replace(postRegex, (match, p1, p2) => {
-    return `completeLesson({ lessonId: ${p1}, score: ${p2 || 100} })`;
-  });
-
-  const postRegex2 = /axios\.post\(`\$\{API_BASE_URL\}\/api\/lesson\/\$\{([^}]+)\}\/complete`,\s*{\s*email,\s*score:\s*(\d+),\s*coins:\s*(\d+)\s*}\)/g;
-  content = content.replace(postRegex2, (match, p1, p2, p3) => {
-    return `completeLesson({ lessonId: ${p1}, score: ${p2 || 100}, coins: ${p3 || 0} })`;
-  });
-
-  if (modified) {
-    fs.writeFileSync(filePath, content, 'utf-8');
-    replaced++;
-  }
-}
-
-console.log(`Refactored ${replaced} files.`);
+  .catch(err => console.error(err))
