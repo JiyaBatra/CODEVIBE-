@@ -1,4 +1,3 @@
-import API_BASE_URL from '../config/api';
 import React, { useState, useEffect } from 'react';
 import { useProgress } from '../hooks/useProgress';
 
@@ -8,7 +7,6 @@ import Compiler from './Compiler';
 const DSALesson12 = () => {
   const { progress, completeLesson } = useProgress();
   const [isCorrect, setIsCorrect] = useState(false);
-  const [output, setOutput] = useState("");
   const navigate = useNavigate();
   const [practiceCompleted, setPracticeCompleted] = useState({});
 
@@ -59,20 +57,6 @@ const DSALesson12 = () => {
     });
   };
 
-  const handleRun = (userCode) => {
-    try {
-      const fn = new Function(userCode);
-      const result = fn();
-      setOutput(result || "Welcome to DSA");
-      if (result === undefined || result === "Welcome to DSA") {
-        setIsCorrect(true);
-      }
-    } catch (err) {
-    console.error("Error:", err);
-      setOutput(err.message);
-    }
-  };
-
   const goToNextLesson = () => navigate('/Certificate');
 
   // Social Share Handlers
@@ -118,15 +102,8 @@ const DSALesson12 = () => {
         language="js"
         initialCode={`// Write your code here
 console.log("Welcome to DSA");`}
-        runCode={handleRun}
+        onSuccess={() => setIsCorrect(true)}
       />
-
-      {output && (
-        <div className="output">
-          <strong>Output:</strong>
-          <pre>{output}</pre>
-        </div>
-      )}
 
       {isCorrect && (
         <div style={{ marginTop: '20px' }} className="success-action-container">
