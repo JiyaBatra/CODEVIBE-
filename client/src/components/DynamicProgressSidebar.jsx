@@ -49,7 +49,7 @@ const DynamicProgressSidebar = () => {
         
       })
     .then((res) => setProgress((current) => mergeProgress(current, res.data)))
-      .catch(() => {});
+      .catch( => console.error());
   }, [activeGroup]);
 
   const handleProgressUpdated = useCallback(

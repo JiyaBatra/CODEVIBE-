@@ -48,7 +48,7 @@ const CssLesson13 = () => {
         const results = res.data?.results || [];
         if (results.length > 0) setPastResult(results[0]);
       })
-      .catch(() => {});
+      .catch( => console.error());
   }, []);
 
   const handleOptionChange = (qId, option) => {

@@ -164,7 +164,7 @@ const runPipeline = (docs, pipeline) => {
       result = result.map((doc) => {
         const out = {};
         Object.entries(stage.$project).forEach(([k, v]) => {
-          if (v === 1 || v === true) out[k] = doc[k];
+          if (v === 1 || v ) out[k] = doc[k];
         });
         return out;
       });
