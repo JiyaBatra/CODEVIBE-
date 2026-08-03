@@ -12,6 +12,15 @@ const authLimiter = rateLimit({
     legacyHeaders: false,
 });
 
+const compilerLimiter = rateLimit({
+  windowMs: 60 * 1000,  // 1 minute
+  max: 10,              // 10 executions per minute per user
+  message: { error: 'Too many code executions. Please wait a minute.' },
+  keyGenerator: (req) => req.user?.id || req.ip,
+});
+
+router.post('/execute', authenticateToken, compilerLimiter, async (req, res) => { ... });
+
 // 1 minute window, max 5 feedback submissions per IP
 const feedbackLimiter = rateLimit({
     windowMs: 60 * 1000,
