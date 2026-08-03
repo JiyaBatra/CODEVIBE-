@@ -158,7 +158,7 @@ exports.getMyResults = async (req, res) => {
 exports.getExamLeaderboard = async (req, res) => {
   try {
     const { courseId } = req.query;
-    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit) || 10));
+    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit, 10) || 10));
 
     const cacheKey = `leaderboard:exam:${courseId || 'global'}:limit:${limit}`;
     const redisClient = getRedisClient();
