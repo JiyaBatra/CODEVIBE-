@@ -14,10 +14,27 @@ const emitNotification = (email, notif) => {
 
 exports.getNotifications = async (req, res) => {
   try {
-    const notifs = await Notification.find({ email: req.user.email })
-      .sort({ createdAt: -1 })
-      .limit(50);
-    res.status(200).json(notifs);
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 50;
+    const skip = (page - 1) * limit;
+
+    const [notifs, total] = await Promise.all([
+      Notification.find({ email: req.user.email })
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      Notification.countDocuments({ email: req.user.email }),
+    ]);
+
+    res.status(200).json({
+      notifications: notifs,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (err) {
     console.error("Error fetching notifications:", err);
     res.status(500).json({ message: "Failed to fetch notifications" });
@@ -35,11 +52,8 @@ exports.markAsRead = async (req, res) => {
     if (!notif) {
       return res.status(404).json({ message: "Notification not found" });
     }
-
-    // Emit read event to all of the user's connected tabs/devices
     const io = getIO();
     if (io) emitNotificationRead(io, req.user.email, id);
-
     res.status(200).json(notif);
   } catch (err) {
     console.error("Error marking notification as read:", err);
@@ -53,11 +67,8 @@ exports.markAllAsRead = async (req, res) => {
       { email: req.user.email, read: false },
       { read: true }
     );
-
-    // Emit bulk-read event
     const io = getIO();
     if (io) emitBulkRead(io, req.user.email);
-
     res.status(200).json({ message: "All notifications marked as read" });
   } catch (err) {
     console.error("Error marking all as read:", err);
@@ -72,10 +83,7 @@ exports.createNotification = async (req, res) => {
       return res.status(400).json({ message: "email, type, and message are required" });
     }
     const notif = await Notification.create({ email, type, message, relatedEntity });
-
-    // Emit to socket AFTER successful DB write
     emitNotification(email, notif.toObject ? notif.toObject() : notif);
-
     res.status(201).json(notif);
   } catch (err) {
     console.error("Error creating notification:", err);
@@ -93,5 +101,4 @@ exports.getUnreadCount = async (req, res) => {
   }
 };
 
-// Re-export helper for programmatic use elsewhere in the server
 exports.emitNotification = emitNotification;

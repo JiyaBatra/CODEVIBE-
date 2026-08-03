@@ -5,16 +5,21 @@ import API_BASE_URL from "../config/api";
 import { useAuth } from "../AuthProvider";
 import { EVENTS } from "../socket/socketEvents";
 
+const LIMIT = 50;
+
 export const useNotifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
   const { user, token } = useAuth();
-  
+
   const socketRef = useRef(null);
 
-  const fetchNotifications = useCallback(async () => {
+  const fetchNotifications = useCallback(async (pageToFetch = 1) => {
     if (!user?.email || !token) {
       setNotifications([]);
       setUnreadCount(0);
@@ -24,11 +29,24 @@ export const useNotifications = () => {
 
     try {
       setError(null);
+      setLoading(true);
+
       const response = await axios.get(`${API_BASE_URL}/api/notifications`, {
-        
+        params: { page: pageToFetch, limit: LIMIT },
       });
-      setNotifications(response.data || []);
-      setUnreadCount(response.data.filter(n => !n.read).length);
+
+      const data = Array.isArray(response.data)
+        ? { notifications: response.data, pagination: { page: 1, totalPages: 1, total: response.data.length, limit: LIMIT } }
+        : response.data;
+
+      setNotifications(data.notifications);
+      setPage(data.pagination.page);
+      setTotalPages(data.pagination.totalPages);
+      setTotal(data.pagination.total);
+
+      if (pageToFetch === 1) {
+        setUnreadCount(data.notifications.filter((n) => !n.read).length);
+      }
     } catch (err) {
       console.error("Failed to fetch notifications:", err);
       setError(err.response?.data?.message || "Failed to load notifications");
@@ -37,12 +55,15 @@ export const useNotifications = () => {
     }
   }, [user?.email, token]);
 
+  const goToPage = useCallback((newPage) => {
+    fetchNotifications(newPage);
+  }, [fetchNotifications]);
+
   useEffect(() => {
-    fetchNotifications();
+    fetchNotifications(1);
 
     if (!token || !user?.email) return;
 
-    // Initialize Socket.io connection
     const socket = io(API_BASE_URL, {
       auth: { token },
       transports: ["websocket", "polling"],
@@ -53,19 +74,16 @@ export const useNotifications = () => {
 
     socket.on("connect", () => {
       console.log("[Socket] Connected for notifications");
-      // We can't access latest notifications directly here reliably due to closure,
-      // but we can request a sync from a safe past timestamp if needed.
-      // A more complex sync logic could go here.
-      socket.emit(EVENTS.NOTIFICATION_SYNC_REQUEST, { since: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString() }); // Last 24 hours fallback
+      socket.emit(EVENTS.NOTIFICATION_SYNC_REQUEST, {
+        since: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      });
     });
 
     socket.on(EVENTS.NOTIFICATION_NEW, (payload) => {
       const newNotif = payload.data;
       setNotifications((prev) => {
-        // Prevent duplicates if already added
-        if (prev.find(n => n._id === newNotif.id || n._id === newNotif._id)) return prev;
-        
-        // Normalize id mapping (socket payload uses id instead of _id sometimes)
+        if (page !== 1) return prev;
+        if (prev.find((n) => n._id === newNotif.id || n._id === newNotif._id)) return prev;
         const normalizedNotif = { ...newNotif, _id: newNotif.id || newNotif._id };
         return [normalizedNotif, ...prev];
       });
@@ -85,10 +103,10 @@ export const useNotifications = () => {
     });
 
     socket.on(EVENTS.NOTIFICATION_SYNC, (payload) => {
-      if (payload.data?.notifications?.length > 0) {
+      if (payload.data?.notifications?.length > 0 && page === 1) {
         setNotifications((prev) => {
           const merged = [...payload.data.notifications, ...prev];
-          const unique = Array.from(new Map(merged.map(n => [n._id, n])).values());
+          const unique = Array.from(new Map(merged.map((n) => [n._id, n])).values());
           unique.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
           return unique;
         });
@@ -102,7 +120,7 @@ export const useNotifications = () => {
     return () => {
       socket.disconnect();
     };
-  }, [fetchNotifications, token, user?.email]);
+  }, [fetchNotifications, token, user?.email, page]);
 
   const markAsRead = async (id) => {
     if (!token) return;
@@ -112,14 +130,10 @@ export const useNotifications = () => {
       );
       setUnreadCount((prev) => Math.max(0, prev - 1));
 
-      await axios.patch(
-        `${API_BASE_URL}/api/notifications/${id}/read`,
-        {},
-        { }
-      );
+      await axios.patch(`${API_BASE_URL}/api/notifications/${id}/read`, {}, {});
     } catch (err) {
       console.error("Failed to mark notification as read:", err);
-      fetchNotifications();
+      fetchNotifications(page);
     }
   };
 
@@ -129,16 +143,25 @@ export const useNotifications = () => {
       setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
       setUnreadCount(0);
 
-      await axios.patch(
-        `${API_BASE_URL}/api/notifications/read-all`,
-        {},
-        { }
-      );
+      await axios.patch(`${API_BASE_URL}/api/notifications/read-all`, {}, {});
     } catch (err) {
       console.error("Failed to mark all as read:", err);
-      fetchNotifications();
+      fetchNotifications(page);
     }
   };
 
-  return { notifications, unreadCount, loading, error, markAsRead, markAllAsRead, refresh: fetchNotifications };
+  return {
+    notifications,
+    unreadCount,
+    loading,
+    error,
+    markAsRead,
+    markAllAsRead,
+    page,
+    totalPages,
+    total,
+    limit: LIMIT,
+    goToPage,
+    refresh: () => fetchNotifications(page),
+  };
 };
