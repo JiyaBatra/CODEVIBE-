@@ -5,6 +5,9 @@ const UserModel = require("../../models/user.models");
 const RefreshTokenModel = require("../../models/RefreshToken");
 const { JWT_SECRET, JWT_EXPIRES_IN, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXPIRES_IN } = require("../../config/jwt");
 
+// Dummy bcrypt hash used to normalize authentication timing for unknown users.
+const DUMMY_HASH = "$2b$10$EIX9ZdaXZEX9ZdaXZEX9ZdaXZEX9ZdaXZEX9ZdaXZEX9ZdaXZEX9Z";
+
 const escapeRegex = (value = "") => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 const login = async (req, res, next) => {
@@ -27,13 +30,14 @@ const login = async (req, res, next) => {
       ],
     });
 
-
-
-
     if (!user) {
-      return res.status(404).json({
+      await bcrypt.compare(password, DUMMY_HASH);
+
+      console.warn(`Failed login attempt for non-existent email: ${email}`);
+
+      return res.status(401).json({
         success: false,
-        message: "User not found",
+        message: "Invalid email or password",
       });
     }
 
@@ -48,7 +52,12 @@ const login = async (req, res, next) => {
     }
 
     if (!isMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
+      console.warn(`Failed login attempt for user: ${user._id} (${email})`);
+
+      return res.status(401).json({ 
+        success: false,
+        message: "Invalid email or password"
+       });
     }
 
     const token = jwt.sign(

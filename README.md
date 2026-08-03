@@ -91,6 +91,12 @@ CodeVibe removes friction from the learning journey. Whether you're a complete b
 - **Severity Levels**: Visual indicators (High/Medium/Low) show which errors need most attention
 - **Learning Insights**: Understand your weak areas and focus revision efforts efficiently
 
+## Compiler resource limits
+- **Max execution time**: 5 seconds (SIGTERM sent after timeout)
+- **Max output size**: 10 KB (stdout + stderr combined)
+- **Rate limit**: 10 executions per user per minute
+- **Cleanup**: Temp files in /tmp are removed after each execution
+
 ---
 
 ## Learning Paths

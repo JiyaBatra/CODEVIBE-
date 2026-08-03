@@ -78,7 +78,7 @@ const register = async (req, res, next) => {
       console.log("❌ Registration failed: User already exists");
       return res.status(409).json({
         success: false,
-        message: "Account with this Email already exists",
+        message: "User already exists",
         field: "email",
       });
     }
@@ -186,7 +186,7 @@ const register = async (req, res, next) => {
       return res.status(409).json({
         success: false,
         message: duplicateField === "email" 
-          ? "Account with this Email already exists" 
+          ? "User already exists" 
           : `Registration failed: A user with this ${duplicateField} already exists.`,
         field: duplicateField,
       });
