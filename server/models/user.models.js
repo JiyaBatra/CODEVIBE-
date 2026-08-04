@@ -35,6 +35,13 @@ const userSchema = new Schema({
   },
   resetToken: { type: String },       // for password reset token
   resetTokenExpiry: { type: Date },   // for password reset token expiry
+  notificationPreferences: {
+    mutedTypes: {
+      type: [String],
+      enum: ['lesson_complete', 'exam_result', 'certificate_earned', 'streak_milestone', 'feedback_reply'],
+      default: [],
+    },
+  },
 });
 
 module.exports = model("User", userSchema, "users");

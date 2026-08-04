@@ -1,4 +1,5 @@
 const Notification = require("../models/notification");
+const User = require("../models/user.models");
 const { getIO, emitNewNotification, emitNotificationRead, emitBulkRead } = require("../socket");
 
 /**
@@ -82,6 +83,12 @@ exports.createNotification = async (req, res) => {
     if (!email || !type || !message) {
       return res.status(400).json({ message: "email, type, and message are required" });
     }
+
+    const user = await User.findOne({ email }).select("notificationPreferences");
+    if (user?.notificationPreferences?.mutedTypes?.includes(type)) {
+      return res.status(200).json({ message: "Notification type muted, not created" });
+    }
+
     const notif = await Notification.create({ email, type, message, relatedEntity });
     emitNotification(email, notif.toObject ? notif.toObject() : notif);
     res.status(201).json(notif);
@@ -98,6 +105,47 @@ exports.getUnreadCount = async (req, res) => {
   } catch (err) {
     console.error("Error fetching unread count:", err);
     res.status(500).json({ message: "Failed to fetch unread count" });
+  }
+};
+
+exports.getPreferences = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.user.email }).select("notificationPreferences");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({
+      mutedTypes: user.notificationPreferences?.mutedTypes || [],
+    });
+  } catch (err) {
+    console.error("Error fetching notification preferences:", err);
+    res.status(500).json({ message: "Failed to fetch preferences" });
+  }
+};
+
+exports.updatePreferences = async (req, res) => {
+  try {
+    const { mutedTypes } = req.body;
+    if (!Array.isArray(mutedTypes)) {
+      return res.status(400).json({ message: "mutedTypes must be an array" });
+    }
+
+    const user = await User.findOneAndUpdate(
+      { email: req.user.email },
+      { "notificationPreferences.mutedTypes": mutedTypes },
+      { new: true }
+    ).select("notificationPreferences");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      mutedTypes: user.notificationPreferences?.mutedTypes || [],
+    });
+  } catch (err) {
+    console.error("Error updating notification preferences:", err);
+    res.status(500).json({ message: "Failed to update preferences" });
   }
 };
 
