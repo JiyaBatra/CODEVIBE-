@@ -2,12 +2,6 @@ const Notification = require("../models/notification");
 const User = require("../models/user.models");
 const { getIO, emitNewNotification, emitNotificationRead, emitBulkRead } = require("../socket");
 
-/**
- * Helper: emits a notification event to a user's socket room.
- * Safe to call even when Socket.io is not initialised (returns silently).
- * @param {string} email   Recipient email.
- * @param {object} notif   Notification document (mongoose lean or toObject).
- */
 const emitNotification = (email, notif) => {
   const io = getIO();
   if (io) emitNewNotification(io, email, notif);

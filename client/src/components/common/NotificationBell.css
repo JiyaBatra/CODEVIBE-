@@ -188,7 +188,6 @@
   padding: 4px;
   border-radius: 4px;
   opacity: 0.8;
-  color: #c0c0d0;
 }
 
 .notification-settings-btn:hover {
@@ -202,7 +201,7 @@
 
 .notification-preferences-hint {
   font-size: 0.8rem;
-  color: #808090;
+  opacity: 0.7;
   margin-bottom: 12px;
 }
 
@@ -213,8 +212,6 @@
   padding: 8px 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   cursor: pointer;
-  color: #d0d0e0;
-  font-size: 13px;
 }
 
 .notification-preference-row:last-child {

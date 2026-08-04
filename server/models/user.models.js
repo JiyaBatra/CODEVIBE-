@@ -33,8 +33,8 @@ const userSchema = new Schema({
   profilePicture: {
     type: String,
   },
-  resetToken: { type: String },       // for password reset token
-  resetTokenExpiry: { type: Date },   // for password reset token expiry
+  resetToken: { type: String },
+  resetTokenExpiry: { type: Date },
   notificationPreferences: {
     mutedTypes: {
       type: [String],
