@@ -2,7 +2,7 @@
 
 This leaderboard is generated automatically for `JiyaBatra/CODEVIBE-` by GitHub Actions.
 
-Last updated: 2026-08-03
+Last updated: 2026-08-04
 
 ## Scoring
 
@@ -36,34 +36,34 @@ Last updated: 2026-08-03
 | 20 | [@anan-yaa](https://github.com/anan-yaa) | 70 | 5 | 4 | 4 |
 | 21 | [@Owais-Siddique-11](https://github.com/Owais-Siddique-11) | 70 | 0 | 0 | 14 |
 | 22 | [@shivani11jadhav](https://github.com/shivani11jadhav) | 65 | 0 | 2 | 9 |
-| 23 | [@bh462007](https://github.com/bh462007) | 63 | 4 | 2 | 7 |
-| 24 | [@codedbydollys10](https://github.com/codedbydollys10) | 61 | 13 | 2 | 3 |
-| 25 | [@Haritha-054](https://github.com/Haritha-054) | 59 | 2 | 2 | 7 |
-| 26 | [@notlexius-glitch](https://github.com/notlexius-glitch) | 58 | 4 | 3 | 4 |
-| 27 | [@Soham156](https://github.com/Soham156) | 58 | 4 | 2 | 6 |
-| 28 | [@riteshpatil9686-lgtm](https://github.com/riteshpatil9686-lgtm) | 57 | 11 | 2 | 3 |
-| 29 | [@ArshiBansal](https://github.com/ArshiBansal) | 55 | 5 | 2 | 5 |
-| 30 | [@jagrati7305](https://github.com/jagrati7305) | 55 | 5 | 3 | 3 |
-| 31 | [@knoxiboy](https://github.com/knoxiboy) | 55 | 0 | 0 | 11 |
-| 32 | [@Hiral-Barot](https://github.com/Hiral-Barot) | 54 | 2 | 1 | 8 |
-| 33 | [@sashatakpere](https://github.com/sashatakpere) | 53 | 4 | 3 | 3 |
-| 34 | [@annrose2277-glitch](https://github.com/annrose2277-glitch) | 52 | 1 | 1 | 8 |
-| 35 | [@shyam-medh](https://github.com/shyam-medh) | 51 | 13 | 1 | 3 |
-| 36 | [@Smrithi-krishna](https://github.com/Smrithi-krishna) | 51 | 8 | 2 | 3 |
-| 37 | [@sonusharma6-dsa](https://github.com/sonusharma6-dsa) | 50 | 0 | 0 | 10 |
-| 38 | [@pragya0129](https://github.com/pragya0129) | 49 | 2 | 2 | 5 |
-| 39 | [@theblag](https://github.com/theblag) | 49 | 2 | 2 | 5 |
-| 40 | [@pranshugarg637](https://github.com/pranshugarg637) | 47 | 1 | 1 | 7 |
-| 41 | [@YashvardhanJani](https://github.com/YashvardhanJani) | 47 | 6 | 2 | 3 |
-| 42 | [@anujsharma8d](https://github.com/anujsharma8d) | 45 | 5 | 2 | 3 |
-| 43 | [@advikdivekar](https://github.com/advikdivekar) | 40 | 5 | 3 | 0 |
-| 44 | [@NarraMounika](https://github.com/NarraMounika) | 37 | 1 | 1 | 5 |
-| 45 | [@Neelr1912](https://github.com/Neelr1912) | 37 | 1 | 1 | 5 |
-| 46 | [@suryagkp2007-cmyk](https://github.com/suryagkp2007-cmyk) | 36 | 3 | 2 | 2 |
-| 47 | [@YASHcode-IIITV](https://github.com/YASHcode-IIITV) | 35 | 5 | 1 | 3 |
-| 48 | [@alenalex-009](https://github.com/alenalex-009) | 34 | 2 | 2 | 2 |
-| 49 | [@aryanm9026](https://github.com/aryanm9026) | 34 | 2 | 2 | 2 |
-| 50 | [@prince-pokharna](https://github.com/prince-pokharna) | 34 | 2 | 2 | 2 |
+| 23 | [@prince-pokharna](https://github.com/prince-pokharna) | 64 | 2 | 2 | 8 |
+| 24 | [@bh462007](https://github.com/bh462007) | 63 | 4 | 2 | 7 |
+| 25 | [@codedbydollys10](https://github.com/codedbydollys10) | 61 | 13 | 2 | 3 |
+| 26 | [@Haritha-054](https://github.com/Haritha-054) | 59 | 2 | 2 | 7 |
+| 27 | [@notlexius-glitch](https://github.com/notlexius-glitch) | 58 | 4 | 3 | 4 |
+| 28 | [@Soham156](https://github.com/Soham156) | 58 | 4 | 2 | 6 |
+| 29 | [@riteshpatil9686-lgtm](https://github.com/riteshpatil9686-lgtm) | 57 | 11 | 2 | 3 |
+| 30 | [@ArshiBansal](https://github.com/ArshiBansal) | 55 | 5 | 2 | 5 |
+| 31 | [@jagrati7305](https://github.com/jagrati7305) | 55 | 5 | 3 | 3 |
+| 32 | [@knoxiboy](https://github.com/knoxiboy) | 55 | 0 | 0 | 11 |
+| 33 | [@Hiral-Barot](https://github.com/Hiral-Barot) | 54 | 2 | 1 | 8 |
+| 34 | [@sashatakpere](https://github.com/sashatakpere) | 53 | 4 | 3 | 3 |
+| 35 | [@annrose2277-glitch](https://github.com/annrose2277-glitch) | 52 | 1 | 1 | 8 |
+| 36 | [@shyam-medh](https://github.com/shyam-medh) | 51 | 13 | 1 | 3 |
+| 37 | [@Smrithi-krishna](https://github.com/Smrithi-krishna) | 51 | 8 | 2 | 3 |
+| 38 | [@sonusharma6-dsa](https://github.com/sonusharma6-dsa) | 50 | 0 | 0 | 10 |
+| 39 | [@pragya0129](https://github.com/pragya0129) | 49 | 2 | 2 | 5 |
+| 40 | [@theblag](https://github.com/theblag) | 49 | 2 | 2 | 5 |
+| 41 | [@pranshugarg637](https://github.com/pranshugarg637) | 47 | 1 | 1 | 7 |
+| 42 | [@YashvardhanJani](https://github.com/YashvardhanJani) | 47 | 6 | 2 | 3 |
+| 43 | [@anujsharma8d](https://github.com/anujsharma8d) | 45 | 5 | 2 | 3 |
+| 44 | [@advikdivekar](https://github.com/advikdivekar) | 40 | 5 | 3 | 0 |
+| 45 | [@NarraMounika](https://github.com/NarraMounika) | 37 | 1 | 1 | 5 |
+| 46 | [@Neelr1912](https://github.com/Neelr1912) | 37 | 1 | 1 | 5 |
+| 47 | [@suryagkp2007-cmyk](https://github.com/suryagkp2007-cmyk) | 36 | 3 | 2 | 2 |
+| 48 | [@YASHcode-IIITV](https://github.com/YASHcode-IIITV) | 35 | 5 | 1 | 3 |
+| 49 | [@alenalex-009](https://github.com/alenalex-009) | 34 | 2 | 2 | 2 |
+| 50 | [@aryanm9026](https://github.com/aryanm9026) | 34 | 2 | 2 | 2 |
 | 51 | [@RehanAhmad25](https://github.com/RehanAhmad25) | 34 | 2 | 2 | 2 |
 | 52 | [@SatyajeetSahoo08](https://github.com/SatyajeetSahoo08) | 34 | 2 | 2 | 2 |
 | 53 | [@savniagrawal1701](https://github.com/savniagrawal1701) | 34 | 7 | 1 | 2 |
