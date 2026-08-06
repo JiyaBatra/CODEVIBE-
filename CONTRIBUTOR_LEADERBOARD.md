@@ -2,7 +2,7 @@
 
 This leaderboard is generated automatically for `JiyaBatra/CODEVIBE-` by GitHub Actions.
 
-Last updated: 2026-08-05
+Last updated: 2026-08-06
 
 ## Scoring
 
@@ -36,10 +36,10 @@ Last updated: 2026-08-05
 | 20 | [@anshul23102](https://github.com/anshul23102) | 72 | 1 | 1 | 12 |
 | 21 | [@anan-yaa](https://github.com/anan-yaa) | 70 | 5 | 4 | 4 |
 | 22 | [@Owais-Siddique-11](https://github.com/Owais-Siddique-11) | 70 | 0 | 0 | 14 |
-| 23 | [@shivani11jadhav](https://github.com/shivani11jadhav) | 65 | 0 | 2 | 9 |
-| 24 | [@prince-pokharna](https://github.com/prince-pokharna) | 64 | 2 | 2 | 8 |
-| 25 | [@bh462007](https://github.com/bh462007) | 63 | 4 | 2 | 7 |
-| 26 | [@pranshugarg637](https://github.com/pranshugarg637) | 62 | 1 | 2 | 8 |
+| 23 | [@pranshugarg637](https://github.com/pranshugarg637) | 68 | 4 | 2 | 8 |
+| 24 | [@shivani11jadhav](https://github.com/shivani11jadhav) | 65 | 0 | 2 | 9 |
+| 25 | [@prince-pokharna](https://github.com/prince-pokharna) | 64 | 2 | 2 | 8 |
+| 26 | [@bh462007](https://github.com/bh462007) | 63 | 4 | 2 | 7 |
 | 27 | [@codedbydollys10](https://github.com/codedbydollys10) | 61 | 13 | 2 | 3 |
 | 28 | [@Haritha-054](https://github.com/Haritha-054) | 59 | 2 | 2 | 7 |
 | 29 | [@notlexius-glitch](https://github.com/notlexius-glitch) | 58 | 4 | 3 | 4 |
