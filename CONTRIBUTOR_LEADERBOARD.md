@@ -2,7 +2,7 @@
 
 This leaderboard is generated automatically for `JiyaBatra/CODEVIBE-` by GitHub Actions.
 
-Last updated: 2026-08-06
+Last updated: 2026-08-07
 
 ## Scoring
 
@@ -36,20 +36,20 @@ Last updated: 2026-08-06
 | 20 | [@anshul23102](https://github.com/anshul23102) | 72 | 1 | 1 | 12 |
 | 21 | [@anan-yaa](https://github.com/anan-yaa) | 70 | 5 | 4 | 4 |
 | 22 | [@Owais-Siddique-11](https://github.com/Owais-Siddique-11) | 70 | 0 | 0 | 14 |
-| 23 | [@pranshugarg637](https://github.com/pranshugarg637) | 68 | 4 | 2 | 8 |
-| 24 | [@shivani11jadhav](https://github.com/shivani11jadhav) | 65 | 0 | 2 | 9 |
-| 25 | [@prince-pokharna](https://github.com/prince-pokharna) | 64 | 2 | 2 | 8 |
-| 26 | [@bh462007](https://github.com/bh462007) | 63 | 4 | 2 | 7 |
-| 27 | [@codedbydollys10](https://github.com/codedbydollys10) | 61 | 13 | 2 | 3 |
-| 28 | [@Haritha-054](https://github.com/Haritha-054) | 59 | 2 | 2 | 7 |
-| 29 | [@notlexius-glitch](https://github.com/notlexius-glitch) | 58 | 4 | 3 | 4 |
-| 30 | [@Soham156](https://github.com/Soham156) | 58 | 4 | 2 | 6 |
-| 31 | [@riteshpatil9686-lgtm](https://github.com/riteshpatil9686-lgtm) | 57 | 11 | 2 | 3 |
-| 32 | [@ArshiBansal](https://github.com/ArshiBansal) | 55 | 5 | 2 | 5 |
-| 33 | [@jagrati7305](https://github.com/jagrati7305) | 55 | 5 | 3 | 3 |
-| 34 | [@knoxiboy](https://github.com/knoxiboy) | 55 | 0 | 0 | 11 |
-| 35 | [@Hiral-Barot](https://github.com/Hiral-Barot) | 54 | 2 | 1 | 8 |
-| 36 | [@sashatakpere](https://github.com/sashatakpere) | 53 | 4 | 3 | 3 |
+| 23 | [@sashatakpere](https://github.com/sashatakpere) | 70 | 5 | 4 | 4 |
+| 24 | [@pranshugarg637](https://github.com/pranshugarg637) | 68 | 4 | 2 | 8 |
+| 25 | [@shivani11jadhav](https://github.com/shivani11jadhav) | 65 | 0 | 2 | 9 |
+| 26 | [@prince-pokharna](https://github.com/prince-pokharna) | 64 | 2 | 2 | 8 |
+| 27 | [@bh462007](https://github.com/bh462007) | 63 | 4 | 2 | 7 |
+| 28 | [@codedbydollys10](https://github.com/codedbydollys10) | 61 | 13 | 2 | 3 |
+| 29 | [@Haritha-054](https://github.com/Haritha-054) | 59 | 2 | 2 | 7 |
+| 30 | [@notlexius-glitch](https://github.com/notlexius-glitch) | 58 | 4 | 3 | 4 |
+| 31 | [@Soham156](https://github.com/Soham156) | 58 | 4 | 2 | 6 |
+| 32 | [@riteshpatil9686-lgtm](https://github.com/riteshpatil9686-lgtm) | 57 | 11 | 2 | 3 |
+| 33 | [@ArshiBansal](https://github.com/ArshiBansal) | 55 | 5 | 2 | 5 |
+| 34 | [@jagrati7305](https://github.com/jagrati7305) | 55 | 5 | 3 | 3 |
+| 35 | [@knoxiboy](https://github.com/knoxiboy) | 55 | 0 | 0 | 11 |
+| 36 | [@Hiral-Barot](https://github.com/Hiral-Barot) | 54 | 2 | 1 | 8 |
 | 37 | [@annrose2277-glitch](https://github.com/annrose2277-glitch) | 52 | 1 | 1 | 8 |
 | 38 | [@shyam-medh](https://github.com/shyam-medh) | 51 | 13 | 1 | 3 |
 | 39 | [@Smrithi-krishna](https://github.com/Smrithi-krishna) | 51 | 8 | 2 | 3 |
