@@ -152,22 +152,58 @@ if (location.state?.scrollToContact) {
   const categories = ['All', ...new Set(courses.map(course => course.category))];
   const difficulties = ['All', ...new Set(courses.map(course => course.level))];
 
-  const filteredCourses = courses.filter((course) => {
-    const matchesSearch = course.title.toLowerCase().includes(debouncedQuery.trim().toLowerCase());
-    const matchesCategory = selectedCategory === 'All' || course.category === selectedCategory;
-    const matchesDifficulty = selectedDifficulty === 'All' || course.level === selectedDifficulty;
-    const matchesWishlist = !showWishlistOnly || wishlist.includes(course.title);
-    return matchesSearch && matchesCategory && matchesDifficulty && matchesWishlist;
-  });
+  // const filteredCourses = courses.filter((course) => {
+  //   const matchesSearch = course.title.toLowerCase().includes(debouncedQuery.trim().toLowerCase());
+  //   const matchesCategory = selectedCategory === 'All' || course.category === selectedCategory;
+  //   const matchesDifficulty = selectedDifficulty === 'All' || course.level === selectedDifficulty;
+  //   const matchesWishlist = !showWishlistOnly || wishlist.includes(course.title);
+  //   return matchesSearch && matchesCategory && matchesDifficulty && matchesWishlist;
+  // });
 
-  const getLevelBadge = (level) => {
-    switch (level) {
-      case 'Beginner': return { bg: '#2e7d32', text: '#fff' };
-      case 'Intermediate': return { bg: '#ed6c02', text: '#fff' };
-      case 'Advanced': return { bg: '#d32f2f', text: '#fff' };
-      default: return { bg: '#1976d2', text: '#fff' };
-    }
-  };
+  console.log("Search:", debouncedQuery);
+console.log("Category:", selectedCategory);
+console.log("Difficulty:", selectedDifficulty);
+
+const filteredCourses = courses.filter((course) => {
+  const matchesSearch =
+    course.title.toLowerCase().includes(debouncedQuery.trim().toLowerCase());
+
+  const matchesCategory =
+    selectedCategory === "All" || course.category === selectedCategory;
+
+  const matchesDifficulty =
+    selectedDifficulty === "All" || course.level === selectedDifficulty;
+
+  const matchesWishlist =
+    !showWishlistOnly || wishlist.includes(course.title);
+
+  return (
+    matchesSearch &&
+    matchesCategory &&
+    matchesDifficulty &&
+    matchesWishlist
+  );
+});
+
+console.log({
+  search: debouncedQuery,
+  category: selectedCategory,
+  difficulty: selectedDifficulty,
+  wishlist: showWishlistOnly,
+});
+
+const getLevelBadge = (level) => {
+  switch (level) {
+    case "Beginner":
+      return { bg: "#2e7d32", text: "#fff" };
+    case "Intermediate":
+      return { bg: "#ed6c02", text: "#fff" };
+    case "Advanced":
+      return { bg: "#d32f2f", text: "#fff" };
+    default:
+      return { bg: "#1976d2", text: "#fff" };
+  }
+};
 
   return (
     <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 20px' }} id='courses'>
@@ -528,7 +564,7 @@ if (location.state?.scrollToContact) {
       <Testimonials />
       <FAQ />
     </div>
-  );
-};
+  )};
+;
 
 export default Courses;
