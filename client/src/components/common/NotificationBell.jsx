@@ -5,7 +5,18 @@ import NotificationDropdown from "./NotificationDropdown";
 import "./NotificationBell.css";
 
 const NotificationBell = () => {
-  const { notifications, unreadCount, markAsRead, markAllAsRead, loading } = useNotifications();
+  const {
+    notifications,
+    unreadCount,
+    markAsRead,
+    markAllAsRead,
+    loading,
+    page,
+    totalPages,
+    total,
+    limit,
+    goToPage,
+  } = useNotifications();
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
 
@@ -36,7 +47,6 @@ const NotificationBell = () => {
         </div>
         <span>NotificationBell</span>
       </button>
-
       {isOpen && (
         <NotificationDropdown
           notifications={notifications}
@@ -45,6 +55,11 @@ const NotificationBell = () => {
           onMarkAsRead={markAsRead}
           onMarkAllAsRead={markAllAsRead}
           onClose={() => setIsOpen(false)}
+          page={page}
+          totalPages={totalPages}
+          total={total}
+          limit={limit}
+          onPageChange={goToPage}
         />
       )}
     </div>
