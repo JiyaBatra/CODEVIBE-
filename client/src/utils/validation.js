@@ -90,18 +90,19 @@ export const getPasswordStrength = (password) => {
 };
 
 export const validateUsername = (username) => {
-  if (!username) return "Username is required";
+  if (!username || !username.trim()) return "Username is required";
 
-  if (username.length < 3) {
+  if (username.trim().length < 3) {
     return "Username must be at least 3 characters";
   }
 
   return "";
 };
-export const validateCollege = (college) => {
-  if (!college) return "College is required";
 
-  if (college.length < 2) {
+export const validateCollege = (college) => {
+  if (!college || !college.trim()) return "College is required";
+
+  if (college.trim().length < 2) {
     return "College name must be at least 2 characters";
   }
 
