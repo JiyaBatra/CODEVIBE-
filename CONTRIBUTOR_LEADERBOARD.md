@@ -29,10 +29,10 @@ Last updated: 2026-08-09
 | 13 | [@PremSahith](https://github.com/PremSahith) | 106 | 8 | 4 | 10 |
 | 14 | [@Aayuiiitmg](https://github.com/Aayuiiitmg) | 104 | 12 | 8 | 0 |
 | 15 | [@namrarafique93-del](https://github.com/namrarafique93-del) | 97 | 11 | 5 | 5 |
-| 16 | [@pranav-cholleti](https://github.com/pranav-cholleti) | 86 | 18 | 3 | 4 |
-| 17 | [@divyaa404](https://github.com/divyaa404) | 80 | 5 | 4 | 6 |
-| 18 | [@Swetha-Varma-K](https://github.com/Swetha-Varma-K) | 75 | 5 | 4 | 5 |
-| 19 | [@Tech4Aditya](https://github.com/Tech4Aditya) | 74 | 7 | 3 | 6 |
+| 16 | [@Tech4Aditya](https://github.com/Tech4Aditya) | 91 | 8 | 4 | 7 |
+| 17 | [@pranav-cholleti](https://github.com/pranav-cholleti) | 86 | 18 | 3 | 4 |
+| 18 | [@divyaa404](https://github.com/divyaa404) | 80 | 5 | 4 | 6 |
+| 19 | [@Swetha-Varma-K](https://github.com/Swetha-Varma-K) | 75 | 5 | 4 | 5 |
 | 20 | [@anshul23102](https://github.com/anshul23102) | 72 | 1 | 1 | 12 |
 | 21 | [@anan-yaa](https://github.com/anan-yaa) | 70 | 5 | 4 | 4 |
 | 22 | [@Owais-Siddique-11](https://github.com/Owais-Siddique-11) | 70 | 0 | 0 | 14 |
