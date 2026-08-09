@@ -19,12 +19,25 @@ const Contact = () => {
     });
   }, []);
   
-  const handleSubmit = (e)=>{
+  // const handleSubmit = (e)=>{
+  //   e.preventDefault();
+  //   alert("Message Sent!");
+  //   e.target.reset();
+  // };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
+
+    const name = e.target.elements.fullName.value.trim();
+
+    if (!/[A-Za-z]/.test(name)) {
+      alert("Please enter a valid name.");
+      return;
+    }
+
     alert("Message Sent!");
     e.target.reset();
   };
-
 
   return (
     <div className='contact-page'>
@@ -43,7 +56,14 @@ const Contact = () => {
           <p>Fill the form below and we'll get back to you as soon as possible</p>
           <form onSubmit={handleSubmit} className='message-input'>
             <div className='message-input-top'>
-              <input type="text" placeholder='Enter your full name' required/>
+              <input
+                type="text"
+                name="fullName"
+                placeholder="Enter your full name"
+                pattern="[A-Za-z][A-Za-z\s'-]*"
+                title="Please enter a valid name"
+                required
+              />
               <input type="email" placeholder='Enter you email' required/>
             </div>
             <input type="text" placeholder='Subject' required/>
