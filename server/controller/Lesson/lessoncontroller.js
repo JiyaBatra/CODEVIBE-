@@ -201,6 +201,9 @@ exports.completeLesson = async (req, res) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
+    // Single source of truth for streak: date-diff logic based on lastActiveDate.
+    // This value is used BOTH for the XP multiplier below AND for the DB write,
+    // so the reward and the persisted/displayed streak can never diverge.
     let currentStreak = existingProgress?.currentStreak || 0;
     let longestStreak = existingProgress?.longestStreak || 0;
 
@@ -231,10 +234,12 @@ exports.completeLesson = async (req, res) => {
     if (isNewCompletion) {
       const baseXp = Math.round(score * 0.5);
 
-      const { getLearningStreak } = require('../analytics/analyticsController');
       const events = await Analytics.find({ email }).sort({ createdAt: 1 }).lean();
-      const currentStreak = getLearningStreak(events);
 
+      // Multiplier now reuses the single `currentStreak` computed above
+      // instead of a second, separately-derived (and previously shadowed)
+      // analytics-based streak. This keeps the XP reward and the persisted
+      // streak consistent with each other.
       let multiplier = 1.0;
       if (currentStreak >= 7) multiplier = 1.5;
       else if (currentStreak >= 3) multiplier = 1.2;
