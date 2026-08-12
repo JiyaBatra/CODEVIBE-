@@ -19,7 +19,7 @@ const compilerLimiter = rateLimit({
   keyGenerator: (req) => req.user?.id || req.ip,
 });
 
-router.post('/execute', authenticateToken, compilerLimiter, async (req, res) => { ... });
+
 
 // 1 minute window, max 5 feedback submissions per IP
 const feedbackLimiter = rateLimit({
