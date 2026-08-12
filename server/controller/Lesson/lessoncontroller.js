@@ -1,8 +1,5 @@
 const Lesson = require('../../models/lesson');
-const Progress = require('../../models/progress');
-const User = require('../../models/user.models');
-const Analytics = require('../../models/analytics');
-const Notification = require('../../models/notification');
+const { recordLessonCompletion } = require('../../services/progressService');
 
 const LESSON_ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/i;
 const MAX_LESSON_ID_LENGTH = 80;
@@ -24,10 +21,7 @@ const STATIC_LESSON_LIMITS = {
 };
 const STATIC_LESSON_ID_RE = /^(html|css|js|c|dbms|dsa|express|mongo|node|oop|react)-lesson-?(\d+)$/i;
 
-const getSubjectFromLessonId = (lessonId) => {
-  if (!lessonId || typeof lessonId !== 'string') return 'Other';
-  return lessonId.split('-')[0].replace(/\d+$/, '') || lessonId;
-};
+
 
 const parseFiniteNumber = (value) => {
   if (typeof value === 'number') return Number.isFinite(value) ? value : null;
@@ -196,140 +190,21 @@ exports.completeLesson = async (req, res) => {
 
     const { score, coins, learningTime, type } = payload.value;
 
-    const existingProgress = await Progress.findOne({ email });
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-
-    // Single source of truth for streak: date-diff logic based on lastActiveDate.
-    // This value is used BOTH for the XP multiplier below AND for the DB write,
-    // so the reward and the persisted/displayed streak can never diverge.
-    let currentStreak = existingProgress?.currentStreak || 0;
-    let longestStreak = existingProgress?.longestStreak || 0;
-
-    if (!existingProgress?.lastActiveDate) {
-      currentStreak = 1;
-    } else {
-      const lastDate = new Date(existingProgress.lastActiveDate);
-      lastDate.setHours(0, 0, 0, 0);
-      const diffDays = Math.floor(
-        (today - lastDate) / (1000 * 60 * 60 * 24)
-      );
-      if (diffDays === 1) {
-        currentStreak += 1;
-      } else if (diffDays > 1) {
-        currentStreak = 1;
-      }
-      // diffDays === 0 -> same day, don't change streak
-    }
-
-    longestStreak = Math.max(longestStreak, currentStreak);
-
-    let progress = await Progress.findOne({ email });
-    const isNewCompletion = !progress || !progress.completedLessons.includes(lessonId);
-
-    let earnedXp = 0;
-    let earnedBadges = progress?.badges || [];
-
-    if (isNewCompletion) {
-      const baseXp = Math.round(score * 0.5);
-
-      const events = await Analytics.find({ email }).sort({ createdAt: 1 }).lean();
-
-      // Multiplier now reuses the single `currentStreak` computed above
-      // instead of a second, separately-derived (and previously shadowed)
-      // analytics-based streak. This keeps the XP reward and the persisted
-      // streak consistent with each other.
-      let multiplier = 1.0;
-      if (currentStreak >= 7) multiplier = 1.5;
-      else if (currentStreak >= 3) multiplier = 1.2;
-
-      earnedXp = Math.round(baseXp * multiplier);
-
-      const { checkAndAwardBadges } = require('../../config/badges');
-      const progressData = progress ? { ...progress.toObject(), badges: earnedBadges } : { completedLessons: [], scores: {}, badges: [], currentStreak: 0 };
-      const result = checkAndAwardBadges(
-        progressData,
-        { score, analyticsEvents: events }
-      );
-      earnedBadges = result.earnedBadgeIds;
-    }
-
-    const currentXp = progress?.xp || 0;
-    const newTotalXp = currentXp + earnedXp;
-    const newLevel = Math.floor(newTotalXp / 100) + 1;
-
-    progress = await Progress.findOneAndUpdate(
-      { email },
-      {
-        $addToSet: { completedLessons: lessonId },
-        $set: {
-          [`scores.${lessonId}`]: score,
-          xp: newTotalXp,
-          level: newLevel,
-          badges: earnedBadges,
-          currentStreak,
-          longestStreak,
-          lastActiveDate: today,
-        }
-      },
-      {
-        new: true,
-        upsert: true,
-      }
-    );
-
-    const user = await User.findOne({ email }).lean();
-
-    try {
-      await Analytics.create({
-        userId: user?._id || null,
-        email,
-        username: user?.username || progress.username || '',
-        lessonId,
-        subject: getSubjectFromLessonId(lessonId),
-        score,
-        completed: true,
-        points: score,
-        coins,
-        learningTime,
-        type,
-      });
-    } catch (analyticsErr) {
-      console.error('Analytics event creation failed:', analyticsErr);
-    }
-
-    try {
-      await Notification.create({
-        email,
-        type: 'lesson_complete',
-        message: `You completed the lesson "${lessonId}" with a score of ${score}!`,
-        relatedEntity: lessonId,
-      });
-    } catch (notifErr) {
-      console.error('Notification creation failed:', notifErr);
-    }
-
-    if (currentStreak > 1 && currentStreak % 5 === 0) {
-      try {
-        await Notification.create({
-          email,
-          type: 'streak_milestone',
-          message: `You've reached a ${currentStreak}-day learning streak! Keep it up!`,
-          relatedEntity: '',
-        });
-      } catch (notifErr) {
-        console.error('Streak notification creation failed:', notifErr);
-      }
-    }
+    // Delegate all DB writes to the transactional service. All related
+    // documents (Progress, Analytics, Notification) commit atomically or
+    // are rolled back together via a Mongoose session transaction.
+    const result = await recordLessonCompletion({
+      email,
+      lessonId,
+      score,
+      coins,
+      learningTime,
+      type,
+    });
 
     res.json({
       message: 'Lesson marked as completed',
-      completedLessons: progress.completedLessons,
-      scores: progress.scores,
-      currentStreak: progress.currentStreak,
-      longestStreak: progress.longestStreak,
-      dailyGoal: progress.dailyGoal,
+      ...result,
     });
   } catch (err) {
     console.error(err);
