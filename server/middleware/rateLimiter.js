@@ -1,30 +1,59 @@
 const rateLimit = require('express-rate-limit');
 
-// 5 minutes window, max 6 requests per IP
-const authLimiter = rateLimit({
-    windowMs: 5 * 60 * 1000,
-    max: 6,
+// General API Limiter
+const generalWindowMs = parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000; // 15 minutes
+const generalMaxRequests = parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100;
+const generalLimiter = rateLimit({
+    windowMs: generalWindowMs,
+    max: generalMaxRequests,
     message: {
         success: false,
-        message: "Too many requests from this IP, please try again after 15 minutes."
+        message: "Too many requests, please try again later."
     },
     standardHeaders: true,
     legacyHeaders: false,
 });
 
-const compilerLimiter = rateLimit({
-  windowMs: 60 * 1000,  // 1 minute
-  max: 10,              // 10 executions per minute per user
-  message: { error: 'Too many code executions. Please wait a minute.' },
-  keyGenerator: (req) => req.user?.id || req.ip,
+// Auth Limiter (Stricter)
+const authWindowMs = parseInt(process.env.AUTH_RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000; // 15 minutes
+const authMaxRequests = parseInt(process.env.AUTH_RATE_LIMIT_MAX_REQUESTS) || 10;
+const authLimiter = rateLimit({
+    windowMs: authWindowMs,
+    max: authMaxRequests,
+    message: {
+        success: false,
+        message: "Too many authentication attempts from this IP, please try again after 15 minutes."
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
 });
 
+// Compiler Limiter
+const compilerWindowMs = parseInt(process.env.COMPILER_RATE_LIMIT_WINDOW_MS) || 60 * 1000; // 1 minute
+const compilerMaxRequests = parseInt(process.env.COMPILER_RATE_LIMIT_MAX_REQUESTS) || 10;
+const compilerLimiter = rateLimit({
+    windowMs: compilerWindowMs,
+    max: compilerMaxRequests,
+    message: {
+        success: false,
+        message: "Too many code executions. Please wait a minute."
+    },
+    keyGenerator: (req) => req.user?.id || req.ip,
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+feat/secure-forgot-password-1426
 
 
-// 1 minute window, max 5 feedback submissions per IP
+// 1 minute window, max 5 feedback submissions per 
+// Feedback Limiter
+const feedbackWindowMs = parseInt(process.env.FEEDBACK_RATE_LIMIT_WINDOW_MS) || 60 * 1000; // 1 minute
+const feedbackMaxRequests = parseInt(process.env.FEEDBACK_RATE_LIMIT_MAX_REQUESTS) || 5;
+main
 const feedbackLimiter = rateLimit({
-    windowMs: 60 * 1000,
-    max: 5,
+    windowMs: feedbackWindowMs,
+    max: feedbackMaxRequests,
     message: {
         success: false,
         message: "Too many feedback submissions. Please try again later."
@@ -33,4 +62,4 @@ const feedbackLimiter = rateLimit({
     legacyHeaders: false,
 });
 
-module.exports = { authLimiter, feedbackLimiter };
+module.exports = { generalLimiter, authLimiter, compilerLimiter, feedbackLimiter };
