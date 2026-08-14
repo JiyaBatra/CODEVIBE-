@@ -16,6 +16,10 @@ const notesRoutes = require('./notesRoutes');
 const bookmarkRoutes = require('./bookmarkRoutes');
 const notificationRoutes = require('./notificationRoutes');
 const snippetRoutes = require('./snippetRoutes');
+const { generalLimiter } = require('../../middleware/rateLimiter');
+
+// Apply general rate limiting to all API routes
+router.use(generalLimiter);
 
 router.use('/feedback', feedbackRoutes);
 router.use('/progress', progressRoutes);
