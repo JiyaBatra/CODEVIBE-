@@ -26,9 +26,10 @@ const forgotPasswordLogic = async (req, res) => {
 
     // Generate 32-byte secure token
     const token = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
     const expiry = Date.now() + 15 * 60 * 1000; // 15 min validity
 
-    user.resetToken = token;
+    user.resetToken = hashedToken;
     user.resetTokenExpiry = expiry;
     await user.save();
 
