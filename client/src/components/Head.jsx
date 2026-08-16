@@ -3,7 +3,7 @@ import { NavLink, Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthProvider.jsx";
 import { useSearch } from "../context/SearchContext.jsx";
 import { useDebounce } from "../hooks/useDebounce"; // added
-import { FaSignInAlt, FaSignOutAlt, FaUserPlus, FaTachometerAlt, FaGamepad, FaSearch, FaTimes, FaHome, FaQuestionCircle, FaBook, FaEnvelope, FaTrophy, FaMedal } from "react-icons/fa";
+import { FaSignInAlt, FaSignOutAlt, FaUserPlus, FaTachometerAlt, FaGamepad, FaSearch, FaTimes, FaHome, FaQuestionCircle, FaBook, FaEnvelope, FaTrophy, FaMedal, FaUserCircle } from "react-icons/fa";
 import logo from "../assets/favicon.png";
 import StreakCounter from "./StreakCounter.jsx";
 import NotificationBell from "./common/NotificationBell.jsx";
@@ -272,7 +272,7 @@ useEffect(() => {
                     onClick={() => setShowProfileMenu(!showProfileMenu)}
                   >
                     <FaTachometerAlt className="nav-icon" />
-                    <span>{user?.name || "Profile"}</span>
+                    <span>{user?.username || user?.name || "Profile"}</span>
                     <FaChevronDown
                       className={`dropdown-arrow ${showProfileMenu ? "rotate-arrow" : ""
                         }`}
@@ -283,7 +283,20 @@ useEffect(() => {
                     <div className="dropdown-content">
                       <button
                         className="dropdown-item"
-                        onClick={() => navigate("/dashboard")}
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          navigate("/dashboard");
+                        }}
+                      >
+                        My Profile
+                      </button>
+
+                      <button
+                        className="dropdown-item"
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          navigate("/dashboard");
+                        }}
                       >
                         Dashboard
                       </button>
@@ -404,6 +417,9 @@ useEffect(() => {
             <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.1)', marginBottom: '8px' }}>
               <StreakCounter />
             </div>
+            <Link to="/dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
+              <FaUserCircle className="nav-icon" /><span>My Profile</span>
+            </Link>
             <Link to="/leaderboard" className="nav-link" onClick={() => setMenuOpen(false)}>
               <FaTrophy className="nav-icon" /><span>Leaderboard</span>
             </Link>
