@@ -17,13 +17,6 @@ const register = async (req, res, next) => {
     const year = req.body.year?.trim();
     const password = req.body.password;
 
-    console.log("📝 Register attempt:");
-    console.log({
-      username,
-      email,
-      college,
-      year,
-    });
 
     // Password validation
     const passwordValidation = validatePassword(password);
