@@ -1,14 +1,12 @@
 // src/components/CssLesson.jsx
 import React, { useEffect, useState } from 'react';
-import { useProgress } from '../hooks/useProgress';
-
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import CourseSidebar from './CourseSidebar';
 import API_BASE_URL from '../config/api';
 import { FaCheckCircle, FaArrowRight, FaCss3Alt, FaBookOpen, FaTrophy, FaPaintBrush, FaMobileAlt } from 'react-icons/fa';
 
 const CssLesson = () => {
-  const { progress, completeLesson } = useProgress();
   const [completed, setCompleted] = useState([]);
   const [hoveredCard, setHoveredCard] = useState(null);
 

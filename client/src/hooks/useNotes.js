@@ -20,7 +20,7 @@ export const useNotes = (lessonId) => {
       setError(null);
       const response = await axios.get(
         `${API_BASE_URL}/api/notes?lessonId=${encodeURIComponent(lessonId)}`,
-        { }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setNotes(response.data || []);
     } catch (err) {
@@ -38,7 +38,7 @@ export const useNotes = (lessonId) => {
       const response = await axios.post(
         `${API_BASE_URL}/api/notes`,
         { lessonId, content },
-        { }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setNotes((prev) => [response.data, ...prev]);
       return response.data;
@@ -55,7 +55,7 @@ export const useNotes = (lessonId) => {
       const response = await axios.put(
         `${API_BASE_URL}/api/notes/${id}`,
         { content },
-        { }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setNotes((prev) =>
         prev.map((n) => (n._id === id ? response.data : n))
@@ -72,7 +72,7 @@ export const useNotes = (lessonId) => {
     if (!token) return false;
     try {
       await axios.delete(`${API_BASE_URL}/api/notes/${id}`, {
-        
+        headers: { Authorization: `Bearer ${token}` },
       });
       setNotes((prev) => prev.filter((n) => n._id !== id));
       return true;

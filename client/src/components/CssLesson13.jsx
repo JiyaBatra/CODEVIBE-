@@ -1,8 +1,7 @@
 // src/pages/CssLesson13.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useProgress } from '../hooks/useProgress';
-
+import axios from 'axios';
 import API_BASE_URL from '../config/api';
 
 const questions = [
@@ -27,7 +26,6 @@ const questions = [
 ];
 
 const CssLesson13 = () => {
-  const { progress, completeLesson } = useProgress();
   const COURSE_ID = 'css';
   const MAX_SCORE = questions.reduce((sum, q) => sum + q.marks, 0); // 25
 
@@ -39,10 +37,11 @@ const CssLesson13 = () => {
 
   // Fetch the most recent saved result on mount so score survives a refresh
   useEffect(() => {
+    const token = localStorage.getItem('authToken');
     if (!token) return;
     axios
       .get(`${API_BASE_URL}/api/exam/results?courseId=${COURSE_ID}`, {
-        
+        headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
         const results = res.data?.results || [];
@@ -66,13 +65,14 @@ const CssLesson13 = () => {
     setScore(totalScore);
 
     // Persist result to backend
+    const token = localStorage.getItem('authToken');
     if (token) {
       setSaving(true);
       try {
         await axios.post(
           `${API_BASE_URL}/api/exam/submit`,
           { courseId: COURSE_ID, score: totalScore, totalQuestions: MAX_SCORE, passingScore: 44 },
-          { }
+          { headers: { Authorization: `Bearer ${token}` } }
         );
       } catch (err) {
         console.error('Failed to save exam result:', err);

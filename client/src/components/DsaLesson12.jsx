@@ -1,12 +1,12 @@
+import API_BASE_URL from '../config/api';
 import React, { useState, useEffect } from 'react';
-import { useProgress } from '../hooks/useProgress';
-
+import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import Compiler from './Compiler';
 
 const DSALesson12 = () => {
-  const { progress, completeLesson } = useProgress();
   const [isCorrect, setIsCorrect] = useState(false);
+  const [output, setOutput] = useState("");
   const navigate = useNavigate();
   const [practiceCompleted, setPracticeCompleted] = useState({});
 
@@ -25,8 +25,9 @@ const DSALesson12 = () => {
     }
 
     if (email !== 'guest') {
-      if (progress) {
-          const completedFromBackend = progress.completedLessons || [];
+      axios.get(`${API_BASE_URL}/api/progress/${email}`)
+        .then(res => {
+          const completedFromBackend = res.data?.completedLessons || [];
           let hasUpdates = false;
           const mergedPractice = { ...localPractice };
           completedFromBackend.forEach(problemId => {
@@ -39,7 +40,8 @@ const DSALesson12 = () => {
             setPracticeCompleted(mergedPractice);
             localStorage.setItem(`dsaPractice_${email}`, JSON.stringify(mergedPractice));
           }
-        }
+        })
+        .catch(err => console.error('Error syncing practice progress from backend:', err));
     }
   }, []);
 
@@ -50,11 +52,24 @@ const DSALesson12 = () => {
       localStorage.setItem(`dsaPractice_${email}`, JSON.stringify(updated));
 
       if (updated[problemId]) {
-        completeLesson({  lessonId: problemId, score: 100  }).catch(err => console.error("Save practice progress error:", err));
+        axios.post(`${API_BASE_URL}/api/lesson/${problemId}/complete`, { email, score: 100 })
+          .catch(err => console.error("Save practice progress error:", err));
       }
 
       return updated;
     });
+  };
+
+  const handleRun = (userCode) => {
+    try {
+      const result = eval(userCode);
+      setOutput(result || "Welcome to DSA");
+      if (result === undefined || result === "Welcome to DSA") {
+        setIsCorrect(true);
+      }
+    } catch (err) {
+      setOutput(err.message);
+    }
   };
 
   const goToNextLesson = () => navigate('/Certificate');
@@ -102,8 +117,15 @@ const DSALesson12 = () => {
         language="js"
         initialCode={`// Write your code here
 console.log("Welcome to DSA");`}
-        onSuccess={() => setIsCorrect(true)}
+        runCode={handleRun}
       />
+
+      {output && (
+        <div className="output">
+          <strong>Output:</strong>
+          <pre>{output}</pre>
+        </div>
+      )}
 
       {isCorrect && (
         <div style={{ marginTop: '20px' }} className="success-action-container">

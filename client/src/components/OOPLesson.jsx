@@ -1,14 +1,12 @@
 // src/components/OOPLesson.jsx
 import React, { useEffect, useState } from 'react';
-import { useProgress } from '../hooks/useProgress';
-
+import axios from 'axios';
 import API_BASE_URL from '../config/api';
 import { Link } from 'react-router-dom';
 import CourseSidebar from './CourseSidebar';
 import { FaCheckCircle, FaArrowRight, FaObjectGroup, FaBookOpen, FaTrophy, FaCode, FaProjectDiagram, FaCrown } from 'react-icons/fa';
 
 const OOPLesson = () => {
-  const { progress, completeLesson } = useProgress();
   const [completed, setCompleted] = useState([]);
   const [hoveredCard, setHoveredCard] = useState(null);
 

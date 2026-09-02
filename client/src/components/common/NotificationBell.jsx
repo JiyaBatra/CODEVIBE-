@@ -5,18 +5,7 @@ import NotificationDropdown from "./NotificationDropdown";
 import "./NotificationBell.css";
 
 const NotificationBell = () => {
-  const {
-    notifications,
-    unreadCount,
-    markAsRead,
-    markAllAsRead,
-    loading,
-    page,
-    totalPages,
-    total,
-    limit,
-    goToPage,
-  } = useNotifications();
+  const { notifications, unreadCount, markAsRead, markAllAsRead, loading } = useNotifications();
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
 
@@ -33,20 +22,17 @@ const NotificationBell = () => {
   return (
     <div className="notification-bell-wrapper" ref={wrapperRef}>
       <button
-        type="button"
-        className="nav-link"
+        className="notification-bell"
         onClick={() => setIsOpen((v) => !v)}
         aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ""}`}
         title="Notifications"
       >
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-          <Bell className="nav-icon" size={16} />
-          {unreadCount > 0 && (
-            <span className="notification-badge">{unreadCount > 99 ? "99+" : unreadCount}</span>
-          )}
-        </div>
-        <span>NotificationBell</span>
+        <Bell size={20} />
+        {unreadCount > 0 && (
+          <span className="notification-badge">{unreadCount > 99 ? "99+" : unreadCount}</span>
+        )}
       </button>
+
       {isOpen && (
         <NotificationDropdown
           notifications={notifications}
@@ -55,11 +41,6 @@ const NotificationBell = () => {
           onMarkAsRead={markAsRead}
           onMarkAllAsRead={markAllAsRead}
           onClose={() => setIsOpen(false)}
-          page={page}
-          totalPages={totalPages}
-          total={total}
-          limit={limit}
-          onPageChange={goToPage}
         />
       )}
     </div>

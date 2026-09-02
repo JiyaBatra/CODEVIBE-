@@ -1,12 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
 const UserModel = require("../../models/user.models");
-const RefreshTokenModel = require("../../models/RefreshToken");
-const { JWT_SECRET, JWT_EXPIRES_IN, REFRESH_TOKEN_SECRET, REFRESH_TOKEN_EXPIRES_IN } = require("../../config/jwt");
-
-// Dummy bcrypt hash used to normalize authentication timing for unknown users.
-const DUMMY_HASH = "$2b$10$EIX9ZdaXZEX9ZdaXZEX9ZdaXZEX9ZdaXZEX9ZdaXZEX9ZdaXZEX9Z";
+const { JWT_SECRET, JWT_EXPIRES_IN } = require("../../config/jwt");
 
 const escapeRegex = (value = "") => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -30,14 +25,13 @@ const login = async (req, res, next) => {
       ],
     });
 
+
+
+
     if (!user) {
-      await bcrypt.compare(password, DUMMY_HASH);
-
-      console.warn(`Failed login attempt for non-existent email: ${email}`);
-
-      return res.status(401).json({
+      return res.status(404).json({
         success: false,
-        message: "Invalid email or password",
+        message: "User not found",
       });
     }
 
@@ -52,12 +46,7 @@ const login = async (req, res, next) => {
     }
 
     if (!isMatch) {
-      console.warn(`Failed login attempt for user: ${user._id} (${email})`);
-
-      return res.status(401).json({ 
-        success: false,
-        message: "Invalid email or password"
-       });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const token = jwt.sign(
@@ -66,42 +55,10 @@ const login = async (req, res, next) => {
       { expiresIn: JWT_EXPIRES_IN }
     );
 
-    const family = crypto.randomBytes(16).toString("hex");
-
-    const refreshToken = jwt.sign(
-      { userId: user._id, email: user.email || user.Email, username: user.username, family },
-      REFRESH_TOKEN_SECRET,
-      { expiresIn: REFRESH_TOKEN_EXPIRES_IN }
-    );
-
-    // Save refresh token to DB
-    await RefreshTokenModel.create({
-      token: refreshToken,
-      user: user._id,
-      family,
-      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
-    });
-
-    const isProd = process.env.NODE_ENV === "production";
-
-    res.cookie("accessToken", token, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: "strict",
-      maxAge: 15 * 60 * 1000 // 15 mins
-    });
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: "strict",
-      path: "/api/auth/refresh",
-      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-    });
-
     return res.status(200).json({
       success: true,
       message: "Login successful",
+      token,
       user: {
         username: user.username,
         email: user.email || user.Email,

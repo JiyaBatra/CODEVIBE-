@@ -1,7 +1,7 @@
 // routes/api/executeRoutes.js
 const rateLimit = require('express-rate-limit');
 const express = require("express");
-const { executeCode, getExecutionHistory } = require("../../controller/execute/executeController");
+const { executeCode } = require("../../controller/execute/executeController");
 const verifyToken = require("../../middleware/authMiddleware");
 
 // Limit each caller to 10 code executions per minute.
@@ -24,7 +24,6 @@ const router = express.Router();
 // POST => /api/compiler/:language
 // verifyToken first so only authenticated users consume the rate-limit window.
 // executeLimiter second so the throttle is applied to every authenticated request.
-router.get("/history", verifyToken, getExecutionHistory);
 router.post("/:language", verifyToken, executeLimiter, executeCode);
 
 module.exports = router;

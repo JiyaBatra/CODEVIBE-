@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import './ProjectGenerator.css';
 import Dropdown from './common/Dropdown';
 
@@ -123,51 +123,17 @@ const PROJECTS_DATABASE = {
 export default function ProjectGenerator() {
   const [tempSelection, setTempSelection] = useState("");
   const [renderedTier, setRenderedTier] = useState("");
-  const [validationError, setValidationError] = useState("");
-  const [showError, setShowError] = useState(false);
-  const errorRef = useRef(null);
-
-  useEffect(() => {
-    if (validationError && showError) {
-      const timer = setTimeout(() => setShowError(false), 4000);
-      return () => clearTimeout(timer);
-    }
-  }, [validationError, showError]);
-
-  useEffect(() => {
-    if (showError && errorRef.current) {
-      errorRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-  }, [showError]);
 
   const handleDropdownChange = (value) => {
     setTempSelection(value);
-    if (value) {
-      setValidationError("");
-      setShowError(false);
-    }
+    
+    // Instantly collapse the lower results view if toggled back to 'Select Domain'
     if (value === "") {
       setRenderedTier("");
     }
   };
 
   const handleGetProjects = () => {
-    setValidationError("");
-    setShowError(false);
-
-    if (!tempSelection || tempSelection.trim() === "") {
-      setValidationError("Please select a domain before generating projects.");
-      setShowError(true);
-      return;
-    }
-
-    const validDomains = ["html-css", "javascript", "react", "fullstack", "dsa-cpp"];
-    if (!validDomains.includes(tempSelection)) {
-      setValidationError("Invalid domain selected. Please choose a valid option.");
-      setShowError(true);
-      return;
-    }
-
     setRenderedTier(tempSelection);
   };
 
@@ -215,28 +181,6 @@ export default function ProjectGenerator() {
           Generate Projects
         </button>
       </div>
-
-      {showError && validationError && (
-        <div
-          ref={errorRef}
-          role="alert"
-          style={{
-            backgroundColor: "rgba(255, 77, 77, 0.12)",
-            border: "1px solid rgba(255, 77, 77, 0.35)",
-            borderRadius: "10px",
-            padding: "12px 18px",
-            marginTop: "16px",
-            marginBottom: "4px",
-            color: "#ff6b6b",
-            fontSize: "0.9rem",
-            fontWeight: 500,
-            textAlign: "center",
-            animation: "fadeIn 0.3s ease",
-          }}
-        >
-          ⚠️ {validationError}
-        </div>
-      )}
 
       {/* Symmetrical Output Results Display Area */}
       {renderedTier && PROJECTS_DATABASE[renderedTier] && (

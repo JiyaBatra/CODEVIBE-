@@ -19,7 +19,7 @@ export const useBookmarks = () => {
       setLoading(true);
       setError(null);
       const response = await axios.get(`${API_BASE_URL}/api/bookmarks`, {
-        
+        headers: { Authorization: `Bearer ${token}` },
       });
       setBookmarks(response.data || []);
     } catch (err) {
@@ -37,7 +37,7 @@ export const useBookmarks = () => {
       const response = await axios.post(
         `${API_BASE_URL}/api/bookmarks`,
         { lessonId },
-        { }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       const { bookmarked } = response.data;
       if (bookmarked) {
@@ -59,7 +59,7 @@ export const useBookmarks = () => {
     if (!token) return false;
     try {
       await axios.delete(`${API_BASE_URL}/api/bookmarks/${lessonId}`, {
-        
+        headers: { Authorization: `Bearer ${token}` },
       });
       setBookmarks((prev) => prev.filter((b) => b.lessonId !== lessonId));
       return true;

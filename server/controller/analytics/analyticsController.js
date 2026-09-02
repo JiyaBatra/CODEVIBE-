@@ -196,9 +196,42 @@ const buildHeatmapData = (events, weeks = 32) => {
   return countMap;
 };
 
-// NOTE: buildWeeklyStats (JS event loop) was removed.
-// Weekly stats are now computed via a MongoDB $facet aggregation in getAnalytics()
-// using $dateSubtract + $group, which offloads the computation to the DB engine.
+/**
+ * Builds this-week vs last-week summary stats.
+ */
+const buildWeeklyStats = (events) => {
+  const now = new Date();
+  const dayOfWeek = now.getDay();
+  const monday = new Date(now);
+  monday.setDate(now.getDate() - ((dayOfWeek + 6) % 7));
+  monday.setHours(0, 0, 0, 0);
+
+  const lastMonday = new Date(monday);
+  lastMonday.setDate(monday.getDate() - 7);
+
+  let thisWeekLessons = 0, thisWeekPoints = 0, thisWeekTime = 0;
+  let lastWeekLessons = 0, lastWeekPoints = 0, lastWeekTime = 0;
+
+  events.forEach((event) => {
+    const d = new Date(event.createdAt);
+    if (d >= monday) {
+      thisWeekLessons += 1;
+      thisWeekPoints += event.points || 0;
+      thisWeekTime += event.learningTime || 0;
+    } else if (d >= lastMonday) {
+      lastWeekLessons += 1;
+      lastWeekPoints += event.points || 0;
+      lastWeekTime += event.learningTime || 0;
+    }
+  });
+
+  return {
+    thisWeek: { lessons: thisWeekLessons, points: thisWeekPoints, time: thisWeekTime },
+    lastWeek: { lessons: lastWeekLessons, points: lastWeekPoints, time: lastWeekTime },
+    lessonsDelta: thisWeekLessons - lastWeekLessons,
+    pointsDelta: thisWeekPoints - lastWeekPoints,
+  };
+};
 
 const buildSubjectHistory = (subject, lessons, completedLessonIds, events, scores) => {
   const subjectLessons = lessons.filter((lesson) => normalizeSubject(lesson.lessonId) === subject);
@@ -271,11 +304,7 @@ const getAnalytics = async (req, res) => {
     }
 
     console.log(`[getAnalytics] Querying user with email: "${email}"`);
-
-    // Single round-trip: fetch user + progress in parallel, and use a
-    // $facet aggregation on Analytics to compute event list + summary stats
-    // + weekly breakdown all in one database query instead of JS reduces.
-    const [user, progress, analyticsAgg] = await Promise.all([
+    const [user, progress, events] = await Promise.all([
       User.findOne({
         $or: [
           { email },
@@ -285,143 +314,11 @@ const getAnalytics = async (req, res) => {
         .select('username Email college year bio avatarUrl joinedAt')
         .lean(),
       Progress.findOne({ email }).select('scores completedLessons xp level badges').lean(),
-      Analytics.aggregate([
-        { $match: { email } },
-        {
-          $facet: {
-            // Raw events for chart timelines and streak calculation
-            events: [
-              { $sort: { createdAt: 1 } },
-              {
-                $project: {
-                  lessonId: 1, score: 1, points: 1, coins: 1,
-                  learningTime: 1, createdAt: 1, type: 1,
-                },
-              },
-            ],
-            // Global totals — computed in DB, not JS
-            totals: [
-              {
-                $group: {
-                  _id: null,
-                  totalPoints: { $sum: '$points' },
-                  coinsEarned: { $sum: '$coins' },
-                  learningTime: { $sum: '$learningTime' },
-                  quizAttempts: {
-                    $sum: { $cond: [{ $eq: ['$type', 'quiz'] }, 1, 0] },
-                  },
-                },
-              },
-            ],
-            heatmap: [
-              {
-                $match: {
-                  createdAt: {
-                    $gte: new Date(new Date().setHours(0,0,0,0) - (24 * 60 * 60 * 1000 * (32 * 7 - 1)))
-                  }
-                }
-              },
-              {
-                $group: {
-                  _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
-                  count: { $sum: 1 }
-                }
-              }
-            ],
-            streakDates: [
-              {
-                $group: {
-                  _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }
-                }
-              }
-            ],
-            subjectHistory: [
-              { $sort: { createdAt: 1 } },
-              {
-                $group: {
-                  _id: "$subject",
-                  events: {
-                    $push: {
-                      lessonId: "$lessonId",
-                      score: "$score",
-                      points: "$points",
-                      coins: "$coins",
-                      learningTime: "$learningTime",
-                      createdAt: "$createdAt"
-                    }
-                  }
-                }
-              }
-            ],
-            // Weekly stats — $facet nested inside avoids a second round-trip
-            weekly: [
-              {
-                $addFields: {
-                  weekBucket: {
-                    $switch: {
-                      branches: [
-                        {
-                          case: {
-                            $gte: [
-                              '$createdAt',
-                              {
-                                $dateSubtract: {
-                                  startDate: '$$NOW',
-                                  unit: 'day',
-                                  amount: {
-                                    $mod: [
-                                      { $add: [{ $dayOfWeek: '$$NOW' }, 5] },
-                                      7,
-                                    ],
-                                  },
-                                },
-                              },
-                            ],
-                          },
-                          then: 'thisWeek',
-                        },
-                      ],
-                      default: 'lastWeek',
-                    },
-                  },
-                },
-              },
-              {
-                $group: {
-                  _id: '$weekBucket',
-                  lessons: { $sum: 1 },
-                  points: { $sum: '$points' },
-                  learningTime: { $sum: '$learningTime' },
-                },
-              },
-            ],
-          },
-        },
-      ]),
+      Analytics.find({ email })
+        .select('lessonId score points coins learningTime createdAt type')
+        .sort({ createdAt: 1 })
+        .lean(),
     ]);
-
-    const agg = analyticsAgg[0] || { events: [], totals: [], weekly: [] };
-    const events = agg.events || [];
-    const aggTotals = agg.totals[0] || { totalPoints: 0, coinsEarned: 0, learningTime: 0, quizAttempts: 0 };
-    const weeklyBuckets = agg.weekly || [];
-
-    // Reconstruct weeklyStats shape from DB buckets (keeps existing API contract)
-    const thisWeekBucket = weeklyBuckets.find((b) => b._id === 'thisWeek') || {};
-    const lastWeekBucket = weeklyBuckets.find((b) => b._id === 'lastWeek') || {};
-    const weeklyStatsFromAgg = {
-      thisWeek: {
-        lessons: thisWeekBucket.lessons || 0,
-        points: thisWeekBucket.points || 0,
-        time: thisWeekBucket.learningTime || 0,
-      },
-      lastWeek: {
-        lessons: lastWeekBucket.lessons || 0,
-        points: lastWeekBucket.points || 0,
-        time: lastWeekBucket.learningTime || 0,
-      },
-      lessonsDelta: (thisWeekBucket.lessons || 0) - (lastWeekBucket.lessons || 0),
-      pointsDelta: (thisWeekBucket.points || 0) - (lastWeekBucket.points || 0),
-    };
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -496,14 +393,19 @@ const getAnalytics = async (req, res) => {
         };
       });
 
-    const subjectHistory = {};
-    if (agg.subjectHistory) {
-      agg.subjectHistory.forEach(sh => {
-        const subject = normalizeSubject(sh._id || 'Other');
-        if (!subjectHistory[subject]) subjectHistory[subject] = [];
-        subjectHistory[subject].push(...sh.events);
+    const subjectHistory = events.reduce((acc, event) => {
+      const subject = normalizeSubject(event.lessonId);
+      if (!acc[subject]) acc[subject] = [];
+      acc[subject].push({
+        lessonId: event.lessonId,
+        score: event.score,
+        points: event.points,
+        coins: event.coins,
+        learningTime: event.learningTime,
+        createdAt: event.createdAt,
       });
-    }
+      return acc;
+    }, {});
 
     // True per-subject totals from lessonRoutes config (server-side mirror)
     const SUBJECT_TOTALS = {
@@ -531,15 +433,12 @@ const getAnalytics = async (req, res) => {
       unsolved: Math.max(0, (SUBJECT_TOTALS[s.subject] || s.totalLessons || s.completedLessons) - s.completedLessons),
     }));
 
-    const eventDates = agg.streakDates ? agg.streakDates.map(d => d._id).filter(Boolean) : [];
+    const eventDates = events.map((e) => e.createdAt);
     const currentStreak = getLearningStreak(eventDates);
     const longestStreak = getLongestStreak(eventDates);
     const weeklyStreak = getWeeklyStreak(eventDates);
-    // weeklyStats is now computed by the DB aggregation above — no JS event iteration needed
-    const heatmapData = {};
-    if (agg.heatmap) {
-      agg.heatmap.forEach(h => { if (h._id) heatmapData[h._id] = h.count; });
-    }
+    const weeklyStats = buildWeeklyStats(events);
+    const heatmapData = buildHeatmapData(events, 32);
 
     const totalStaticLessons = Object.values(SUBJECT_TOTALS).reduce(
   (sum, count) => sum + count,
@@ -557,10 +456,9 @@ const getAnalytics = async (req, res) => {
       completionRate: userLessons.length
         ? Math.round((completedLessons.length / userLessons.length) * 100)
         : 0,
-      // Use DB-computed totals — avoids iterating all events in Node.js
-      coinsEarned: aggTotals.coinsEarned,
-      learningTime: aggTotals.learningTime,
-      quizAttempts: aggTotals.quizAttempts,
+      coinsEarned: events.reduce((sum, event) => sum + (event.coins || 0), 0),
+      learningTime: events.reduce((sum, event) => sum + (event.learningTime || 0), 0),
+      quizAttempts: events.filter((event) => event.type === 'quiz').length,
       streak: currentStreak,
       longestStreak,
       weeklyStreak,
@@ -589,7 +487,7 @@ const getAnalytics = async (req, res) => {
       subjectHistory,
       weakSubjects,
       subjectSolvedStats,
-      weeklyStats: weeklyStatsFromAgg,
+      weeklyStats,
       heatmapData,
     };
 

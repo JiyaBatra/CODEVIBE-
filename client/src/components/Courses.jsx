@@ -30,7 +30,6 @@ const Courses = () => {
   const { query, setQuery } = useSearch();
   const debouncedQuery = useDebounce(query, 350);
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [selectedDifficulty, setSelectedDifficulty] = useState('All');
   const [wishlist, setWishlist] = useState([]);
   const [animatingId, setAnimatingId] = useState(null);
   const [showWishlistOnly, setShowWishlistOnly] = useState(false);
@@ -40,9 +39,11 @@ const Courses = () => {
 
   useEffect(() => {
 if (user?.email) {
+    const token = localStorage.getItem('authToken');
     if (token) {
       axios.get(`${API_BASE_URL}/api/progress/${user.email}`, {
-        })
+        headers: { Authorization: `Bearer ${token}` }
+      })
         .then(res => {
           setCompletedLessons(res.data.completedLessons || []);
           setProgressData(res.data);
@@ -96,18 +97,12 @@ if (user?.email) {
       }
     }
 
-if (location.state?.scrollToContact) {
-  setTimeout(() => {
-    const element = document.getElementById("contact-footer");
-
-    if (element) {
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+    if (location.state?.scrollToContact) {
+      const element = document.getElementById('contact-footer');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
-  }, 300);
-}
 
     if (
       location.state?.scrollToTop ||
@@ -141,7 +136,7 @@ if (location.state?.scrollToContact) {
     { title: 'CSS for Beginners', prefix: 'css', total: 14, desc: 'Learn how to style beautiful websites.', img: cssLogo, link: '/CssLesson', level: 'Beginner', duration: '14 lessons', time: '3h', category: 'Frontend' },
     { title: 'JS for Beginners', prefix: 'js', total: 29, desc: 'Learn how to give functionality to websites.', img: jsLogo, link: '/JsLesson', level: 'Intermediate', duration: '29 lessons', time: '6h 30m', category: 'Frontend' },
     { title: 'C Language for You!', prefix: 'c', total: 17, desc: 'Master the fundamentals of C programming.', img: cLogo, link: '/CLesson', level: 'Beginner', duration: '17 lessons', time: '4h', category: 'Programming' },
-    { title: 'OOP Concepts', prefix: 'oop', total: 14, desc: 'Learn object-oriented programming concepts.', img: OOPLogo, link: '/OOPLesson', level: 'Intermediate', duration: '14 lessons', time: '3h 30m' , category: 'Programming' },
+    { title: 'OOP Concepts', prefix: 'oop', total: 14, desc: 'Learn object-oriented programming concepts.', img: OOPLogo, link: '/OopLesson', level: 'Intermediate', duration: '14 lessons', time: '3h 30m' , category: 'Programming' },
     { title: 'Data Structures & Algorithms', prefix: 'dsa', total: 13, desc: 'Build strong problem-solving skills.', img: dsaLogo, link: '/DsaLesson', level: 'Advanced', duration: '12 lessons', time: '8h', category: 'Programming' },
     { title: 'Node.js', prefix: 'node', total: 12, desc: 'Learn backend development with Node.js.', img: nodeLogo, link: '/NodeLesson', level: 'Intermediate', duration: '12 lessons', time: '3h' , category: 'Backend' },
     { title: 'React.js', prefix: 'react', total: 13, desc: 'Build modern frontend applications.', img: reactLogo, link: '/ReactLesson', level: 'Intermediate', duration: '13 lessons', time: '5h' , category: 'Frontend' },
@@ -150,60 +145,22 @@ if (location.state?.scrollToContact) {
   ];
 
   const categories = ['All', ...new Set(courses.map(course => course.category))];
-  const difficulties = ['All', ...new Set(courses.map(course => course.level))];
 
-  // const filteredCourses = courses.filter((course) => {
-  //   const matchesSearch = course.title.toLowerCase().includes(debouncedQuery.trim().toLowerCase());
-  //   const matchesCategory = selectedCategory === 'All' || course.category === selectedCategory;
-  //   const matchesDifficulty = selectedDifficulty === 'All' || course.level === selectedDifficulty;
-  //   const matchesWishlist = !showWishlistOnly || wishlist.includes(course.title);
-  //   return matchesSearch && matchesCategory && matchesDifficulty && matchesWishlist;
-  // });
+  const filteredCourses = courses.filter((course) => {
+    const matchesSearch = course.title.toLowerCase().includes(debouncedQuery.trim().toLowerCase());
+    const matchesCategory = selectedCategory === 'All' || course.category === selectedCategory;
+    const matchesWishlist = !showWishlistOnly || wishlist.includes(course.title);
+    return matchesSearch && matchesCategory && matchesWishlist;
+  });
 
-  console.log("Search:", debouncedQuery);
-console.log("Category:", selectedCategory);
-console.log("Difficulty:", selectedDifficulty);
-
-const filteredCourses = courses.filter((course) => {
-  const matchesSearch =
-    course.title.toLowerCase().includes(debouncedQuery.trim().toLowerCase());
-
-  const matchesCategory =
-    selectedCategory === "All" || course.category === selectedCategory;
-
-  const matchesDifficulty =
-    selectedDifficulty === "All" || course.level === selectedDifficulty;
-
-  const matchesWishlist =
-    !showWishlistOnly || wishlist.includes(course.title);
-
-  return (
-    matchesSearch &&
-    matchesCategory &&
-    matchesDifficulty &&
-    matchesWishlist
-  );
-});
-
-console.log({
-  search: debouncedQuery,
-  category: selectedCategory,
-  difficulty: selectedDifficulty,
-  wishlist: showWishlistOnly,
-});
-
-const getLevelBadge = (level) => {
-  switch (level) {
-    case "Beginner":
-      return { bg: "#2e7d32", text: "#fff" };
-    case "Intermediate":
-      return { bg: "#ed6c02", text: "#fff" };
-    case "Advanced":
-      return { bg: "#d32f2f", text: "#fff" };
-    default:
-      return { bg: "#1976d2", text: "#fff" };
-  }
-};
+  const getLevelBadge = (level) => {
+    switch (level) {
+      case 'Beginner': return { bg: '#2e7d32', text: '#fff' };
+      case 'Intermediate': return { bg: '#ed6c02', text: '#fff' };
+      case 'Advanced': return { bg: '#d32f2f', text: '#fff' };
+      default: return { bg: '#1976d2', text: '#fff' };
+    }
+  };
 
   return (
     <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 20px' }} id='courses'>
@@ -354,54 +311,23 @@ const getLevelBadge = (level) => {
         )}
       </div>
 
-      {/* Filter Section */}
+      {/* Category Filter Buttons */}
       <div style={{
         display: 'flex',
-        flexDirection: 'column',
-        gap: '20px',
+        flexWrap: 'wrap',
+        gap: '12px',
         marginBottom: '32px',
+        justifyContent: 'center',
       }}>
-        {/* Category Filter Buttons */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-          <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.85rem', fontWeight: '600', letterSpacing: '1px', textTransform: 'uppercase' }}>Categories</span>
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '12px',
-            justifyContent: 'center',
-          }}>
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`filter-btn ${selectedCategory === category ? 'active' : ''}`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Difficulty Filter Buttons */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
-          <span style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '0.85rem', fontWeight: '600', letterSpacing: '1px', textTransform: 'uppercase' }}>Difficulty</span>
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            gap: '12px',
-            justifyContent: 'center',
-          }}>
-            {difficulties.map((difficulty) => (
-              <button
-                key={difficulty}
-                onClick={() => setSelectedDifficulty(difficulty)}
-                className={`filter-btn ${selectedDifficulty === difficulty ? 'active' : ''}`}
-              >
-                {difficulty}
-              </button>
-            ))}
-          </div>
-        </div>
+        {categories.map((category) => (
+          <button
+            key={category}
+            onClick={() => setSelectedCategory(category)}
+            className={`filter-btn ${selectedCategory === category ? 'active' : ''}`}
+          >
+            {category}
+          </button>
+        ))}
       </div>
 
       {filteredCourses.length > 0 ? (
@@ -553,9 +479,9 @@ const getLevelBadge = (level) => {
           title={showWishlistOnly ? "No Wishlisted Courses" : "No Courses Found"}
           description={showWishlistOnly
             ? "You haven't bookmarked any courses yet. Click the bookmark icon on any course to save it!"
-            : "No courses found for the selected filters."}
+            : "We couldn't find any courses matching your selected category or search query."}
           buttonText="Show All Courses"
-          onButtonClick={() => { setSelectedCategory("All"); setSelectedDifficulty("All"); setQuery(""); setShowWishlistOnly(false); }}
+          onButtonClick={() => { setSelectedCategory("All"); setQuery(""); setShowWishlistOnly(false); }}
         />
       )}
       <RoadmapGenerator />
@@ -564,7 +490,7 @@ const getLevelBadge = (level) => {
       <Testimonials />
       <FAQ />
     </div>
-  )};
-;
+  );
+};
 
 export default Courses;

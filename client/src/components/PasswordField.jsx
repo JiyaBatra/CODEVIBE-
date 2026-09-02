@@ -8,7 +8,6 @@ export default function PasswordField({
   onChange,
   required = true,
   hint = null,
-  hasError = false,
 }) {
   const [visible, setVisible] = useState(false);
 
@@ -19,8 +18,6 @@ export default function PasswordField({
         <input
           id={id}
           type={visible ? "text" : "password"}
-          className={hasError ? "input-error" : ""}
-          aria-invalid={hasError}
           value={value}
           onChange={onChange}
           required={required}

@@ -90,19 +90,18 @@ export const getPasswordStrength = (password) => {
 };
 
 export const validateUsername = (username) => {
-  if (!username || !username.trim()) return "Username is required";
+  if (!username) return "Username is required";
 
-  if (username.trim().length < 3) {
+  if (username.length < 3) {
     return "Username must be at least 3 characters";
   }
 
   return "";
 };
-
 export const validateCollege = (college) => {
-  if (!college || !college.trim()) return "College is required";
+  if (!college) return "College is required";
 
-  if (college.trim().length < 2) {
+  if (college.length < 2) {
     return "College name must be at least 2 characters";
   }
 
@@ -118,47 +117,5 @@ export const validateYear = (year) => {
     return "Please enter a valid academic year";
   }
 
-  return "";
-};
-
-export const validateProjectName = (name) => {
-  if (!name || !name.trim()) return "Project name is required";
-  if (name.trim().length < 2) return "Project name must be at least 2 characters";
-  if (name.trim().length > 100) return "Project name must not exceed 100 characters";
-  return "";
-};
-
-export const validateProjectDescription = (description) => {
-  if (!description || !description.trim()) return "Project description is required";
-  if (description.trim().length < 10) return "Description must be at least 10 characters";
-  if (description.trim().length > 1000) return "Description must not exceed 1000 characters";
-  return "";
-};
-
-export const validateDomain = (domain, validDomains) => {
-  if (!domain || !domain.trim()) return "Please select a domain";
-  if (validDomains && !validDomains.includes(domain)) return "Invalid domain selected";
-  return "";
-};
-
-export const validateFormField = (value, rules) => {
-  const { required, minLength, maxLength, pattern, customMessage } = rules || {};
-  
-  if (required && (!value || (typeof value === "string" && !value.trim()))) {
-    return customMessage?.required || "This field is required";
-  }
-  
-  if (typeof value === "string" && value.trim()) {
-    if (minLength && value.trim().length < minLength) {
-      return customMessage?.minLength || `Must be at least ${minLength} characters`;
-    }
-    if (maxLength && value.trim().length > maxLength) {
-      return customMessage?.maxLength || `Must not exceed ${maxLength} characters`;
-    }
-    if (pattern && !pattern.regex.test(value.trim())) {
-      return customMessage?.pattern || pattern.message || "Invalid format";
-    }
-  }
-  
   return "";
 };

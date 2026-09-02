@@ -23,9 +23,7 @@ const GlobalBackNav = () => {
           aria-label={config.label}
           title={config.label}
         >
-          <span style={{ fontSize: '0.9rem', lineHeight: 1, display: 'flex' }}>
-            <FaArrowLeft className="global-back-nav__icon" aria-hidden="true" />
-          </span>
+          <FaArrowLeft className="global-back-nav__icon" aria-hidden="true" />
         </button>
       </div>
     </nav>

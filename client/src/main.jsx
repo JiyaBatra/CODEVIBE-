@@ -9,9 +9,6 @@ import {
   Route,
   Navigate
 } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Toaster } from 'react-hot-toast';
 
 import App from './App.jsx';
 import Head from './components/Head.jsx';
@@ -30,7 +27,6 @@ import Certificate from './components/Certificate.jsx';
 import ViewReport from './components/ViewReport.jsx';
 import DynamicProgressSidebar from './components/DynamicProgressSidebar.jsx';
 import Leaderboard from './components/Leaderboard.jsx';
-import BadgesPage from './components/BadgesPage.jsx';
 import Flashcard from './components/Flashcard.jsx';
 import {
   AuthProvider,
@@ -229,37 +225,23 @@ import ScrollNavigator from "./components/common/ScrollNavigator";
 import GlobalBackNav from "./components/common/GlobalBackNav.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import { SearchProvider } from "./context/SearchContext.jsx";
-import Contact from "./components/Contact.jsx";
-import StudyPlanner from "./components/StudyPlanner.jsx";
+import  Contact  from "./components/Contact.jsx";
 import OAuthCallback from "./components/OAuthCallback.jsx";
 import LessonLayout from "./components/LessonLayout.jsx";
 import BookmarksPage from "./components/BookmarksPage.jsx";
-import SnippetViewer from "./components/SnippetViewer.jsx";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <Toaster position="top-right" />
-      <HashRouter>
-        <AuthProvider>
-          <SearchProvider>
-            <Head />
-            <DynamicProgressSidebar />
-            <ScrollNavigator />
-            <GlobalBackNav />
-            <ErrorBoundary>
-              <Routes>
-                {/* General Routes (no auth needed) */}
+    <HashRouter>
+      <AuthProvider>
+        <SearchProvider>
+          <Head />
+          <DynamicProgressSidebar />
+          <ScrollNavigator />
+          <GlobalBackNav />
+          <ErrorBoundary>
+            <Routes>
+              {/* General Routes (no auth needed) */}
               <Route path="/" element={<Navigate to="/lessons" replace />} />
               <Route path="/lessons" element={<Courses />} />
               <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
@@ -270,9 +252,7 @@ createRoot(document.getElementById('root')).render(
               <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
               <Route path="/bookmarks" element={<PrivateRoute><BookmarksPage /></PrivateRoute>} />
               <Route path="/leaderboard" element={<Leaderboard />} />
-              <Route path="/badges" element={<BadgesPage />} />
               <Route path="/flashcards" element={<Flashcard />} />
-              <Route path="/study-planner" element={<PrivateRoute><StudyPlanner /></PrivateRoute>} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/report/:email" element={<ViewReport />} />
@@ -282,7 +262,6 @@ createRoot(document.getElementById('root')).render(
               <Route path="/CssLesson" element={<PrivateRoute><CssLesson /></PrivateRoute>} />
               <Route path="/JsLesson" element={<PrivateRoute><JsLesson /></PrivateRoute>} />
               <Route path="/Compiler" element={<PrivateRoute><Compiler /></PrivateRoute>} />
-              <Route path="/snippet/:slug" element={<SnippetViewer />} />
               <Route path="/contact" element={<Contact />} />
 
               {/* HTML Lessons */}
@@ -480,7 +459,5 @@ createRoot(document.getElementById('root')).render(
         </SearchProvider>
       </AuthProvider>
     </HashRouter>
-    <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
   </StrictMode>
 );

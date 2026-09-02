@@ -15,11 +15,6 @@ const examRoutes = require('./examRoutes');
 const notesRoutes = require('./notesRoutes');
 const bookmarkRoutes = require('./bookmarkRoutes');
 const notificationRoutes = require('./notificationRoutes');
-const snippetRoutes = require('./snippetRoutes');
-const { generalLimiter } = require('../../middleware/rateLimiter');
-
-// Apply general rate limiting to all API routes
-router.use(generalLimiter);
 
 router.use('/feedback', feedbackRoutes);
 router.use('/progress', progressRoutes);
@@ -35,6 +30,5 @@ router.use('/exam', examRoutes);
 router.use('/notes', notesRoutes);
 router.use('/bookmarks', bookmarkRoutes);
 router.use('/notifications', notificationRoutes);
-router.use('/snippets', snippetRoutes);
 
 module.exports = router;

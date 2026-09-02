@@ -8,7 +8,5 @@ router.get("/unread-count", verifyToken, notificationController.getUnreadCount);
 router.patch("/:id/read", verifyToken, notificationController.markAsRead);
 router.patch("/read-all", verifyToken, notificationController.markAllAsRead);
 router.post("/", verifyToken, notificationController.createNotification);
-router.get("/preferences", verifyToken, notificationController.getPreferences);
-router.patch("/preferences", verifyToken, notificationController.updatePreferences);
 
 module.exports = router;

@@ -1,9 +1,9 @@
+// controller/Auth/resetPassword.js
 const bcrypt = require("bcryptjs");
 const UserModel = require("../../models/user.models");
-const crypto = require("crypto");
 const { validatePassword } = require("../../utils/passwordValidator");
 
-const resetPassword = async (req, res) => {
+const resetPassword = async (req, res, next) => {
   try {
     const { token, newPassword } = req.body;
 
@@ -24,11 +24,8 @@ const resetPassword = async (req, res) => {
       });
     }
 
-    // Hash incoming token to match the database stored token
-    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
-
-    // Find user by hashed token
-    const user = await UserModel.findOne({ resetToken: hashedToken });
+    // Find user by token
+    const user = await UserModel.findOne({ resetToken: token });
     
     if (!user) {
       return res.status(400).json({ 

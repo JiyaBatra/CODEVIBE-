@@ -5,11 +5,6 @@
  * Returns backend base URL
  */
 const getBackendURL = () => {
-  // Use environment variable if available
-  if (import.meta.env.VITE_API_BASE_URL) {
-    return import.meta.env.VITE_API_BASE_URL;
-  }
-
   const hostname = window.location.hostname;
 
   // Local development environments
@@ -19,9 +14,15 @@ const getBackendURL = () => {
     hostname === "::1" ||
     hostname.startsWith("192.168.")
   ) {
-    // IMPORTANT:
-    // Your backend runs on PORT 5002
+    // Local development must not inherit a production URL from .env. Doing so
+    // mixes local UI state/JWTs with a different deployment and makes the app
+    // appear broken when that deployment is unavailable.
     return "http://localhost:5002";
+  }
+
+  // Use an explicitly configured deployment URL outside local development.
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL;
   }
 
   // Production backend

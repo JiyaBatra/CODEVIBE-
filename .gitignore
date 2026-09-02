@@ -1,6 +1,6 @@
 # dependencies
 node_modules/
-#
+
 # environment variables
 .env
 .env.local
@@ -40,5 +40,10 @@ coverage/
 # optional npm cache
 .npm
 
-# lock files - Windows-generated lockfile breaks Linux CI (missing native binaries)
+# lock files (optional if team project)
+package-lock.json
 yarn.lock
+
+ client/package.json
+ client/src/config/api.js
+ server/package.json

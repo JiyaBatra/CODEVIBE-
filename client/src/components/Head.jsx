@@ -3,7 +3,7 @@ import { NavLink, Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../AuthProvider.jsx";
 import { useSearch } from "../context/SearchContext.jsx";
 import { useDebounce } from "../hooks/useDebounce"; // added
-import { FaSignInAlt, FaSignOutAlt, FaUserPlus, FaTachometerAlt, FaGamepad, FaSearch, FaTimes, FaHome, FaQuestionCircle, FaBook, FaEnvelope, FaTrophy, FaMedal, FaUserCircle } from "react-icons/fa";
+import { FaSignInAlt, FaSignOutAlt, FaUserPlus, FaTachometerAlt, FaGamepad, FaSearch, FaTimes, FaHome, FaQuestionCircle, FaBook, FaEnvelope, FaTrophy } from "react-icons/fa";
 import logo from "../assets/favicon.png";
 import StreakCounter from "./StreakCounter.jsx";
 import NotificationBell from "./common/NotificationBell.jsx";
@@ -13,7 +13,7 @@ const COURSES = [
   { label: "HTML Basics", path: "/HtmlLesson" },
   { label: "CSS for Beginner", path: "/CssLesson" },
   { label: "JS for Beginner", path: "/JsLesson" },
-  { label: "OOP Concepts", path: "/OOPLesson" },
+  { label: "OOP Concepts", path: "/OopLesson" },
   { label: "Data Structures & Algorithms", path: "/DsaLesson" },
   { label: "Node.js", path: "/NodeLesson" },
   { label: "React.js", path: "/ReactLesson" },
@@ -27,7 +27,6 @@ const Head = () => {
   const debouncedQuery = useDebounce(query, 350); // added
   const [suggestions, setSuggestions] = useState([]);
   const [focused, setFocused] = useState(false);
-  const [error, setError] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
   const inputRef = useRef(null);
   const wrapperRef = useRef(null);
@@ -49,12 +48,10 @@ const Head = () => {
   }, []);
 
   const [showProjects, setShowProjects] = useState(false);
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
 useEffect(() => {
   const closeDropdown = () => {
     setShowProjects(false);
-    setShowProfileMenu(false);
   };
 
   document.addEventListener("click", closeDropdown);
@@ -63,6 +60,7 @@ useEffect(() => {
     document.removeEventListener("click", closeDropdown);
   };
 }, []);
+
   //  Filtering now runs only when debouncedQuery changes, not on every keystroke
   useEffect(() => {
     if (debouncedQuery.trim().length === 0) {
@@ -76,13 +74,11 @@ useEffect(() => {
   }, [debouncedQuery]);
 
   const handleSearch = (value) => {
-  setError("");
-  setQuery(value);
-
-  if (value.trim().length === 0) {
-    setSuggestions([]);
-  }
-};
+    setQuery(value); // still updates instantly so input stays responsive
+    if (value.trim().length === 0) {
+      setSuggestions([]);
+    }
+  };
 
   const handleSelect = (course) => {
     setQuery(course.label);
@@ -96,25 +92,16 @@ useEffect(() => {
   };
 
   const handleSubmit = (e) => {
-  e.preventDefault();
-
-  if (!query.trim()) {
-    setError("Please enter a course name.");
-    return;
-  }
-
-  setError("");
-
-  const exactMatch = COURSES.find(
-    (c) => c.label.toLowerCase() === query.trim().toLowerCase(),
-  );
-
-  if (exactMatch) {
-    handleSelect(exactMatch);
-  } else {
-    setSuggestions([]);
-  }
-};
+    e.preventDefault();
+    const exactMatch = COURSES.find(
+      (c) => c.label.toLowerCase() === query.trim().toLowerCase(),
+    );
+    if (exactMatch) {
+      handleSelect(exactMatch);
+    } else {
+      setSuggestions([]);
+    }
+  };
 
   const handleLogout = (e) => {
     if (e) e.preventDefault();
@@ -149,16 +136,7 @@ useEffect(() => {
          <button
   type="button"
   className="nav-link"
-  onClick={() => {
-    navigate("/lessons");
-
-    setTimeout(() => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    }, 100);
-  }}
+  onClick={() => navigate("/lessons", { state: { scrollToTop: true } })}
 >
   <span>Home</span>
 </button>
@@ -176,7 +154,7 @@ useEffect(() => {
   className="nav-link"
   onClick={() => navigate("/lessons", { state: { scrollToRoadmap: true } })}
 >
-  <span>Roadmap</span>
+  <span>Roadmap Generator</span>
 </button>
 
 
@@ -238,122 +216,69 @@ useEffect(() => {
 <button
   type="button"
   className="nav-link"
-  onClick={() => navigate("/contact")}
+  onClick={() => navigate("/contact", { state: { scrollToContact: true } })}
 >
   <span>Contact Us</span>
 </button>
-
- {<Link to="/glossary" className="nav-link">
-  <span>Glossary</span>
-</Link>} 
 
           {/* 2. Conditional Links based on Auth State */}
           <div className="header-navlink">
 
             {user ? (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "16px",
-                  color: "white",
-                }}
-              >
-                <NotificationBell/>
-                <StreakCounter />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' , color: 'white'}}>
+              <NotificationBell />
+              <StreakCounter />
+              <button
+              type="button"
+              className="nav-link"
+              onClick={() => navigate("/leaderboard")}
+             >
+             <FaTrophy className="nav-icon" />
+             <span>LeaderBoard</span>
+            </button>
 
-                <div
-                  className="dropdown"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <button
-                    type="button"
-                    className="nav-link dropdown-btn"
-                    onClick={() => setShowProfileMenu(!showProfileMenu)}
-                  >
-                    <FaTachometerAlt className="nav-icon" />
-                    <span>{user?.username || user?.name || "Profile"}</span>
-                    <FaChevronDown
-                      className={`dropdown-arrow ${showProfileMenu ? "rotate-arrow" : ""
-                        }`}
-                    />
-                  </button>
-
-                  {showProfileMenu && (
-                    <div className="dropdown-content">
-                      <button
-                        className="dropdown-item"
-                        onClick={() => {
-                          setShowProfileMenu(false);
-                          navigate("/dashboard");
-                        }}
-                      >
-                        My Profile
-                      </button>
-
-                      <button
-                        className="dropdown-item"
-                        onClick={() => {
-                          setShowProfileMenu(false);
-                          navigate("/dashboard");
-                        }}
-                      >
-                        Dashboard
-                      </button>
-
-                      <button
-                        className="dropdown-item"
-                        onClick={() => navigate("/leaderboard")}
-                      >
-                        Leaderboard
-                      </button>
-
-                      <button
-                        className="dropdown-item"
-                        onClick={() => navigate("/badges")}
-                      >
-                        Badges
-                      </button>
-
-                      <Link
-                        to="/glossary"
-                        className="dropdown-item"
-                        onClick={() => setShowProfileMenu(false)}
-                      >
-                        Glossary
-                      </Link>
-
-                      <button
-                        className="dropdown-item"
-                        onClick={handleLogout}
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
+            <button
+            type="button"
+            className="nav-link"
+            onClick={() => navigate("/dashboard")}
+            >
+           <FaTachometerAlt className="nav-icon" />
+           <span>Dashboard</span>
+           </button>
+          <button
+           type="button"
+           className="nav-link"
+           onClick={() => {
+           handleLogout();
+           navigate("/login");
+           }}
+>
+          <FaSignOutAlt className="nav-icon" />
+          <span>Logout</span>
+          </button>
+              
+            </div>
             ) : (
               <>
 
-                <button
-                  type="button"
-                  className="nav-link"
-                  onClick={() => navigate("/login")}
-                >
-                  <FaSignInAlt className="nav-icon" />
-                  <span>Login</span>
-                </button>
+          <button
+            type="button"
+            className="nav-link"
+            onClick={() => navigate("/login")}
+          >
+          <FaSignInAlt className="nav-icon" />
+          <span>Login</span>
+          </button>
 
-                <button
-                  type="button"
-                  className="nav-link"
-                  onClick={() => navigate("/signup")}
-                >
-                  <FaUserPlus className="nav-icon" />
-                  <span>Sign Up</span>
-                </button>
-
+          <button 
+            type="button"
+            className="nav-link"
+            onClick={() => navigate("/signup")}
+          >
+          <FaUserPlus className="nav-icon" />
+          <span>Sign Up</span>
+          </button>
+              
               </>
             )}
           </div>
@@ -373,58 +298,98 @@ useEffect(() => {
         <span className={`ham-bar ${menuOpen ? "open" : ""}`} />
       </button>
 
-    
-              
-
       {/* Mobile Nav Drawer */}
-<nav
+      <nav
         className={`mobile-nav ${menuOpen ? "mobile-nav--open" : ""}`}
         aria-label="Mobile navigation"
       >
-<button
-  type="button"
-  className="nav-link"
+        <NavLink
+              to="/lessons"
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+              onClick={() => {
+                 setMenuOpen(false);
+                window.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                });
+              }}
+            >
+              <FaHome className="nav-icon" />
+
+              Home
+            </NavLink>
+           <NavLink
+  to="/lessons"
+  className={({ isActive }) =>
+    isActive ? "nav-link active" : "nav-link"
+  }
   onClick={() => {
     setMenuOpen(false);
 
-    navigate("/lessons");
-
     setTimeout(() => {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
+      document
+        .querySelector(".faq-section")
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
     }, 100);
   }}
 >
-  Home
-</button>
+  <FaQuestionCircle className="nav-icon" />
+  FAQ
+</NavLink>
+            <NavLink
+              to="/lessons"
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+              onClick={() => {
+                 setMenuOpen(false);
+                setTimeout(() => {
+                  document
+                    .getElementById("courses")
+                    ?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                }, 100);
+              }}
+            >
+              <FaBook className="nav-icon" />
+              Courses
+            </NavLink>
+            <NavLink
+              to="/lessons"
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+              onClick={() => {
+                 setMenuOpen(false);
 
-<button
-  type="button"
-  className="nav-link"
-  onClick={() => {
-    setMenuOpen(false);
-    navigate("/lessons", {
-      state: { scrollToCourses: true }
-    });
-  }}
->
-  Courses
-</button>
+                setTimeout(() => {
+                  document
+                    .getElementById("contact-footer")
+                    ?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                }, 100);
+              }}
+            >
+              <FaEnvelope className="nav-icon" />
+              Contact Us
+            </NavLink>
+
         {user ? (
           <>
             <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.1)', marginBottom: '8px' }}>
               <StreakCounter />
             </div>
-            <Link to="/dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
-              <FaUserCircle className="nav-icon" /><span>My Profile</span>
-            </Link>
             <Link to="/leaderboard" className="nav-link" onClick={() => setMenuOpen(false)}>
               <FaTrophy className="nav-icon" /><span>Leaderboard</span>
-            </Link>
-            <Link to="/badges" className="nav-link" onClick={() => setMenuOpen(false)}>
-              <FaMedal className="nav-icon" /><span>Badges</span>
             </Link>
             <Link to="/dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
               <FaTachometerAlt className="nav-icon" /><span>Dashboard</span>
@@ -457,73 +422,79 @@ useEffect(() => {
             </Link>
           </>
         )}
+      </nav>
 
-<button
-  type="button"
-  className="nav-link"
-  onClick={() => {
-    setMenuOpen(false);
-    navigate("/lessons", {
-      state: { scrollToRoadmap: true }
-    });
-  }}
->
-  Roadmap Generator
-</button>
-
-<button
-  type="button"
-  className="nav-link"
-  onClick={() => {
-    setMenuOpen(false);
-    navigate("/lessons", {
-      state: { scrollToProjectGenerator: true }
-    });
-  }}
->
-  Project Milestone
-</button>
-
-<button
-  type="button"
-  className="nav-link"
-  onClick={() => {
-    setMenuOpen(false);
-    navigate("/lessons", {
-      state: { scrollToProjectSuggestions: true }
-    });
-  }}
->
-  Project Ideas
-</button>
-
-<button
-  type="button"
-  className="nav-link"
-  onClick={() => {
-    setMenuOpen(false);
-    navigate("/lessons", {
-      state: { scrollToFaq: true }
-    });
-  }}
->
-  FAQ
-</button>
+      {/* Mobile Nav Drawer */}
+      <nav
+        className={`mobile-nav ${menuOpen ? "mobile-nav--open" : ""}`}
+        aria-label="Mobile navigation"
+      >
 <Link
-  to="/contact"
+  to="/lessons"
   className="nav-link"
-  onClick={() => setMenuOpen(false)}
+  onClick={() => {
+    setMenuOpen(false);
+
+    setTimeout(() => {
+      document
+        .querySelector(".faq-section")
+        ?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+    }, 100);
+  }}
 >
-  Contact Us
+  <span>FAQ</span>
 </Link>
-<Link
-  to="/glossary"
-  className="nav-link"
-  onClick={() => setMenuOpen(false)}
->
-  Glossary
-</Link>
-</nav>
+        <button
+          type="button"
+          className="nav-link"
+          onClick={() => {
+            setMenuOpen(false);
+            navigate('/lessons', { state: { scrollToRoadmap: true } });
+          }}
+        >
+          <span>Roadmap Generator</span>
+        </button>
+        <button
+          type="button"
+          className="nav-link"
+          onClick={() => {
+            setMenuOpen(false);
+            navigate('/lessons', { state: { scrollToProjectGenerator: true } });
+          }}
+        >
+          <span>Project Milestone</span>
+        </button>
+        <button
+          type="button"
+          className="nav-link"
+          onClick={() => {
+            setMenuOpen(false);
+            navigate('/lessons', { state: { scrollToProjectSuggestions: true } });
+          }}
+        >
+          <span>Project Suggestions</span>
+        </button>
+        <button
+          type="button"
+          className="nav-link"
+          onClick={() => {
+            setMenuOpen(false);
+            navigate('/lessons', { state: { scrollToCourses: true } });
+          }}
+        >
+          <span>Courses</span>
+        </button>
+        <Link
+          to="/glossary"
+          className="nav-link"
+          onClick={() => setMenuOpen(false)}
+        >
+          <span>Glossary</span>
+        </Link>
+      </nav>
 
       {isHomePage && (
         <div className="header-title-row">
@@ -574,14 +545,8 @@ useEffect(() => {
               </button>
             )}
             <button type="submit" className="search-btn" aria-label="Search">
-               Search
+              Search
             </button>
-
-            {error && (
-              <div className="search-error">
-            {error}
-              </div>
-            )}
 
             {/* Suggestions Dropdown */}
             {focused && suggestions.length > 0 && (

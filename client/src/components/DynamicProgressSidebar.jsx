@@ -27,7 +27,7 @@ const mergeProgress = (current, next) => {
 
 const DynamicProgressSidebar = () => {
   const location = useLocation();
-  const [isCollapsed, setIsCollapsed] = useState(window.innerWidth <= 768);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [progress, setProgress] = useState(null);
 
   const activeGroup = useMemo(
@@ -42,11 +42,12 @@ const DynamicProgressSidebar = () => {
     if (!activeGroup) return;
 
     const email = localStorage.getItem("userEmail");
+    const token = localStorage.getItem("authToken");
     if (!email || !token) return;
 
     axios
       .get(`${API_BASE_URL}/api/progress/${email}`, {
-        
+        headers: { Authorization: `Bearer ${token}` },
       })
     .then((res) => setProgress((current) => mergeProgress(current, res.data)))
       .catch(() => {});
@@ -104,18 +105,6 @@ const DynamicProgressSidebar = () => {
     };
   }, [activeGroup, isCollapsed]);
 
-  useEffect(() => {
-  const handleResize = () => {
-    setIsCollapsed(window.innerWidth <= 768);
-  };
-
-  window.addEventListener("resize", handleResize);
-
-  return () => {
-    window.removeEventListener("resize", handleResize);
-  };
-}, []);
-
   if (!activeGroup) return null;
   const normalizedCompletedLessons = (progress?.completedLessons || []).map(
   (lessonId) =>
@@ -160,7 +149,7 @@ const courseScores = activeGroup.lessons
           aria-label="Expand progress sidebar"
           aria-expanded={!isCollapsed}
         >
-          {"❯"}
+          {">"}
         </button>
       )}
 

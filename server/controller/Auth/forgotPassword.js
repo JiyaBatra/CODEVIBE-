@@ -11,7 +11,7 @@ const forgotPasswordLimiter = rateLimit({
   message: { message: "Too many requests from this IP, please try again after 10 minutes" },
 });
 
-const forgotPasswordLogic = async (req, res) => {
+const forgotPasswordLogic = async (req, res, next) => {
   try {
     const email = (req.body.email || req.body.Email || "").trim().toLowerCase();
 
@@ -26,10 +26,9 @@ const forgotPasswordLogic = async (req, res) => {
 
     // Generate 32-byte secure token
     const token = crypto.randomBytes(32).toString("hex");
-    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
     const expiry = Date.now() + 15 * 60 * 1000; // 15 min validity
 
-    user.resetToken = hashedToken;
+    user.resetToken = token;
     user.resetTokenExpiry = expiry;
     await user.save();
 

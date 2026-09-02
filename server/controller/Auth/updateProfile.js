@@ -1,56 +1,10 @@
 const UserModel = require('../../models/user.models');
-const { validatePassword } = require('../../utils/passwordValidator');
 
 const updateProfile = async (req, res) => {
   try {
     const tokenEmail = req.user?.email;
     if (!tokenEmail) {
       return res.status(401).json({ message: 'Unauthorized' });
-    }
-
-    const errors = [];
-
-    if (req.body.username !== undefined) {
-      const username = req.body.username?.trim();
-      if (!username || username.length < 2) {
-        errors.push('Username must be at least 2 characters long');
-      } else if (username.length > 50) {
-        errors.push('Username must not exceed 50 characters');
-      } else if (!/^[a-zA-Z0-9_\s]+$/.test(username)) {
-        errors.push('Username can only contain letters, numbers, spaces and underscores');
-      } else {
-        req.body.username = username;
-      }
-    }
-
-    if (req.body.college !== undefined) {
-      const college = req.body.college?.trim();
-      if (!college || college.length < 2) {
-        errors.push('College name must be at least 2 characters long');
-      } else if (college.length > 100) {
-        errors.push('College name must not exceed 100 characters');
-      } else {
-        req.body.college = college;
-      }
-    }
-
-    if (req.body.year !== undefined) {
-      const validYears = ['1', '2', '3', '4', '1st year', '2nd year', '3rd year', '4th year'];
-      if (!validYears.includes(req.body.year?.trim())) {
-        errors.push('Year must be a valid academic year (1, 2, 3, or 4)');
-      }
-    }
-
-    if (req.body.bio !== undefined && req.body.bio.length > 500) {
-      errors.push('Bio must not exceed 500 characters');
-    }
-
-    if (errors.length > 0) {
-      return res.status(400).json({
-        success: false,
-        message: 'Validation failed',
-        errors,
-      });
     }
 
     const updateFields = {};

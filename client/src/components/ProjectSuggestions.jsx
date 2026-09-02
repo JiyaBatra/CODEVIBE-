@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Dropdown from "./common/Dropdown";
-import Pagination from "./common/Pagination";
 
 const projectData = {
   Beginner: [
@@ -55,20 +54,8 @@ const projectData = {
 
 const ProjectSuggestions = () => {
   const [level, setLevel] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 2;
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [level]);
 
   const selectedProjects = level ? projectData[level] : [];
-  const totalProjects = selectedProjects.length;
-  const totalPages = Math.ceil(totalProjects / itemsPerPage);
-  const paginatedProjects = selectedProjects.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
   return (
     <section
@@ -132,7 +119,7 @@ const ProjectSuggestions = () => {
       </div>
 
       {/* Project Cards Grid */}
-      {paginatedProjects.length > 0 && (
+      {selectedProjects.length > 0 && (
         <div
           style={{
             display: "grid",
@@ -140,7 +127,7 @@ const ProjectSuggestions = () => {
             gap: "24px",
           }}
         >
-          {paginatedProjects.map((project, idx) => (
+          {selectedProjects.map((project, idx) => (
             <div
               key={idx}
               style={{
@@ -239,16 +226,6 @@ const ProjectSuggestions = () => {
             </div>
           ))}
         </div>
-      )}
-
-      {totalProjects > itemsPerPage && (
-        <Pagination
-          page={currentPage}
-          totalPages={totalPages}
-          total={totalProjects}
-          limit={itemsPerPage}
-          onPageChange={setCurrentPage}
-        />
       )}
     </section>
   );

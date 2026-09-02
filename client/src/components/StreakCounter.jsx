@@ -16,7 +16,8 @@ const StreakCounter = () => {
     const fetchStreak = async () => {
       try {
         const res = await axios.get(`${API_BASE_URL}/api/analytics/${userEmail}`, {
-          });
+          headers: { Authorization: `Bearer ${token}` }
+        });
         const data = res.data;
         const currentStreak = data?.stats?.streak || 0;
         const events = data?.analytics?.timelines?.points || [];

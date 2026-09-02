@@ -1,14 +1,12 @@
 // src/components/ExpressLesson.jsx
 import React, { useEffect, useState } from 'react';
-import { useProgress } from '../hooks/useProgress';
-
+import axios from 'axios';
 import API_BASE_URL from '../config/api';
 import { Link } from 'react-router-dom';
 import CourseSidebar from './CourseSidebar';
 import { FaCheckCircle, FaArrowRight, FaServer, FaBookOpen, FaTrophy, FaRoute, FaShieldAlt, FaDatabase } from 'react-icons/fa';
 
 const ExpressLesson = () => {
-  const { progress, completeLesson } = useProgress();
   const [completed, setCompleted] = useState([]);
   const [hoveredCard, setHoveredCard] = useState(null);
 

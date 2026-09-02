@@ -63,7 +63,7 @@ const Login = () => {
           response.data.user?.email || ""
         );
 
-        login(response.data.user);
+        login(response.data.user, response.data.token);
 
         navigate(from, { replace: true });
       } else {

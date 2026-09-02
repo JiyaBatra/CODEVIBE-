@@ -1,4 +1,4 @@
-import { vi, describe, it, expect } from "vitest";
+import { vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Compiler from "./Compiler";
@@ -38,15 +38,4 @@ describe("Compiler Copy Button - Rapid Click Test", () => {
 
     expect(btn).toBeInTheDocument();
   });
-});
-
-it("registers Ctrl + Enter shortcut", () => {
-  render(<Compiler />);
-
-  fireEvent.keyDown(window, {
-    key: "Enter",
-    ctrlKey: true,
-  });
-
-  expect(true).toBeTruthy();
 });

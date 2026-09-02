@@ -3,12 +3,10 @@ const mongoose = require('mongoose');
 
 const feedbackSchema = new mongoose.Schema({
   email: { type: String, required: true },
-  name: { type: String },
-  courseName: { type: String },
-  lessonId: { type: String },
+  name: { type: String },          // optional user name
+  courseName: { type: String },    // for which course the feedback is
+  lessonId: { type: String },      // optional: to associate feedback with a lesson
   message: { type: String, required: true },
-  reply: { type: String, default: '' },
-  repliedAt: { type: Date },
   createdAt: { type: Date, default: Date.now }
 });
 

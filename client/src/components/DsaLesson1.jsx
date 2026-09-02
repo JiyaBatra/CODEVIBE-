@@ -2,11 +2,9 @@ import API_BASE_URL from '../config/api';
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Compiler from './Compiler';
-import { useProgress } from '../hooks/useProgress';
-
+import axios from 'axios';
 
 const DSALesson1 = () => {
-  const { progress, completeLesson } = useProgress();
   const navigate = useNavigate();
   const email = localStorage.getItem('userEmail') || 'guest';
 
@@ -32,8 +30,9 @@ const DSALesson1 = () => {
     }
 
     if (email !== 'guest') {
-      if (progress) {
-          const completedFromBackend = progress.completedLessons || [];
+      axios.get(`${API_BASE_URL}/api/progress/${email}`)
+        .then(res => {
+          const completedFromBackend = res.data?.completedLessons || [];
           let hasUpdates = false;
           const mergedPractice = { ...localPractice };
           completedFromBackend.forEach(problemId => {
@@ -46,7 +45,8 @@ const DSALesson1 = () => {
             setPracticeCompleted(mergedPractice);
             localStorage.setItem(`dsaPractice_${email}`, JSON.stringify(mergedPractice));
           }
-        }
+        })
+        .catch(err => console.error('Error syncing practice progress from backend:', err));
     }
   }, [email]);
 
@@ -68,7 +68,8 @@ const DSALesson1 = () => {
       localStorage.setItem(`dsaPractice_${email}`, JSON.stringify(updated));
 
       if (updated[problemId]) {
-        completeLesson({  lessonId: problemId, score: 100  }).catch(err => console.error("Save practice progress error:", err));
+        axios.post(`${API_BASE_URL}/api/lesson/${problemId}/complete`, { email, score: 100 })
+          .catch(err => console.error("Save practice progress error:", err));
       }
 
       return updated;

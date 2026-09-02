@@ -1,6 +1,5 @@
 // controller/certificate/certificatecontroller.js
 const Progress = require("../../models/progress");
-const Notification = require("../../models/notification");
 
 const PASS_MARK = 50;
 
@@ -84,17 +83,6 @@ exports.getCertificateInfo = async (req, res) => {
     }
 
     const feedbackMessage = calculateFeedback(score);
-
-    try {
-      await Notification.create({
-        email,
-        type: 'certificate_earned',
-        message: `Congratulations! You earned a certificate for "${courseName}" with a score of ${score}%!`,
-        relatedEntity: courseName,
-      });
-    } catch (notifErr) {
-      console.error('Certificate notification creation failed:', notifErr);
-    }
 
     res.json({
       studentName: progress.username || "Student",

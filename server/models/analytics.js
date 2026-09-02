@@ -15,10 +15,4 @@ const analyticsSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-// Compound index for per-user subject aggregations (used in analytics pipeline)
-analyticsSchema.index({ email: 1, subject: 1, createdAt: 1 });
-
-// Compound index for weekly stats queries (filter by email + date range)
-analyticsSchema.index({ email: 1, createdAt: -1 });
-
 module.exports = mongoose.models.Analytics || mongoose.model('Analytics', analyticsSchema);

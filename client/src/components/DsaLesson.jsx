@@ -1,14 +1,12 @@
 // src/components/DSALesson.jsx
 import React, { useEffect, useState } from 'react';
-import { useProgress } from '../hooks/useProgress';
-
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import CourseSidebar from './CourseSidebar';
 import API_BASE_URL from '../config/api';
 import { FaCheckCircle, FaArrowRight, FaCode, FaBookOpen, FaTrophy, FaChartLine, FaDatabase, FaLink, FaLayerGroup } from 'react-icons/fa';
 
 const DSALesson = () => {
-  const { progress, completeLesson } = useProgress();
   const [completed, setCompleted] = useState([]);
   const [hoveredCard, setHoveredCard] = useState(null);
 

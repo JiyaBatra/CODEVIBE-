@@ -48,7 +48,6 @@ const ResetPassword = () => {
         setTimeout(() => navigate("/login"), 1500); // auto redirect after success
       }
     } catch (err) {
-    console.error("Error:", err);
       // Handle password validation errors from backend
       if (err.response?.data?.passwordErrors) {
         setPasswordErrors(err.response.data.passwordErrors);

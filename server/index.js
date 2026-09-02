@@ -6,9 +6,6 @@ dotenv.config();
 const routes = require("./routes/index");
 const passport = require("passport");
 require("./config/passport");
-const { initSocketServer } = require("./socket");
-const { connectRedis, getRedisClient } = require("./config/redis");
-const cookieParser = require("cookie-parser");
 
 const backend = express();
 backend.set("trust proxy", 1);
@@ -23,7 +20,6 @@ process.on("unhandledRejection", (reason) => {
   console.error("❌ Unhandled Rejection:", reason);
 });
 
-backend.use(cookieParser());
 backend.use(express.json());
 backend.use(express.urlencoded({ extended: true }));
 backend.use(passport.initialize());
@@ -46,8 +42,7 @@ const isLocalDevOrigin = (origin = "") => {
       hostname === "::1";
 
     return protocol.startsWith("http") && isLocalHost && Boolean(port);
-  } catch (error) {
-    console.error("Error:", error);
+  } catch {
     return false;
   }
 };
@@ -81,7 +76,7 @@ backend.use(
 backend.use(routes);
 
 // Central JSON error handler for API responses
-backend.use((err, req, res, _next) => {
+backend.use((err, req, res, next) => {
   console.error("Unhandled server error:", err);
   const status = err.status || 500;
   res.status(status).json({
@@ -104,19 +99,12 @@ const DEFAULT_PORT = Number(process.env.PORT) || 5002;
 const MAX_PORT_ATTEMPTS = 10;
 
 const tryStartServer = (port, attempt = 1) => {
-  server = backend.listen(port, async () => {
+  server = backend.listen(port, () => {
     console.log(`✅ Server Started on port ${port}`);
     if (port !== DEFAULT_PORT) {
       console.log(
         `ℹ️ Fallback port used because ${DEFAULT_PORT} was already occupied.`
       );
-    }
-
-    // Initialize Socket.io on the running HTTP server
-    try {
-      await initSocketServer(server);
-    } catch (socketErr) {
-      console.error("⚠️ Socket.io initialization failed:", socketErr.message);
     }
   });
 
@@ -145,17 +133,6 @@ const connectToMongo = async () => {
   try {
     await mongoose.connect(MONGODB_URL, MONGOOSE_OPTIONS);
     console.log("✅ Connected to MongoDB");
-
-    // Sync model indexes with the database (resolves index conflicts like non-sparse googleId)
-    try {
-      const UserModel = require("./models/user.models");
-      await UserModel.syncIndexes();
-      console.log("✅ Database indexes synced successfully");
-    } catch (syncErr) {
-      console.error("⚠️ Failed to sync database indexes:", syncErr.message);
-    }
-
-    await connectRedis();
   } catch (err) {
     console.error("❌ MongoDB connection error:", err);
     if (process.env.NODE_ENV === "production") {
@@ -179,15 +156,8 @@ const gracefulShutdown = (signal) => {
   console.log(`\n⚠️ ${signal} received. Starting graceful shutdown...`);
 
   if (server && server.close) {
-    server.close(async () => {
+    server.close(() => {
       console.log("🏁 HTTP server closed.");
-      
-      const redisClient = getRedisClient();
-      if (redisClient) {
-        await redisClient.quit();
-        console.log("🔌 Redis connection closed.");
-      }
-
       mongoose.connection.close(false).then(() => {
         console.log("🔌 MongoDB connection closed.");
         process.exit(0);
@@ -197,11 +167,6 @@ const gracefulShutdown = (signal) => {
       });
     });
   } else {
-    const redisClient = getRedisClient();
-    if (redisClient) {
-      redisClient.quit().then(() => console.log("🔌 Redis connection closed.")).catch(console.error);
-    }
-
     mongoose.connection.close(false).then(() => {
       console.log("🔌 MongoDB connection closed.");
       process.exit(0);

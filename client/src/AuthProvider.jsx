@@ -1,64 +1,64 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import axios from "axios";
-import API_BASE_URL from "./config/api";
 
 const AuthContext = createContext(null);
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
 
-function loadAuthState() {
-  if (typeof window === "undefined") return { user: null };
+function isTokenExpired(token) {
   try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.exp * 1000 < Date.now();
+  } catch {
+    return true;
+  }
+}
+
+function loadAuthState() {
+  if (typeof window === "undefined") return { user: null, token: null };
+  try {
+    const token = localStorage.getItem("authToken");
     const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      return { user };
+    if (token && user && !isTokenExpired(token)) {
+      return { user, token };
     }
-  } catch (error) {
-    console.error("Error:", error);
+  } catch {
     // ignore parse errors
   }
+  localStorage.removeItem("authToken");
   localStorage.removeItem("user");
-  return { user: null };
+  return { user: null, token: null };
 }
 
 export const AuthProvider = ({ children }) => {
   const [authState, setAuthState] = useState(() => loadAuthState());
 
-  const login = useCallback((userData) => {
-    if (!userData) return;
+  const login = useCallback((userData, token) => {
+    if (!userData || !token) return;
+    localStorage.setItem("authToken", token);
     localStorage.setItem("user", JSON.stringify(userData));
     localStorage.setItem("userEmail", userData.email || userData.Email || "");
-    setAuthState({ user: userData });
+    setAuthState({ user: userData, token });
   }, []);
 
   const updateUser = useCallback((updatedUser) => {
     if (!updatedUser) return;
+    const currentToken = authState?.token || localStorage.getItem("authToken");
     localStorage.setItem("user", JSON.stringify(updatedUser));
     localStorage.setItem("userEmail", updatedUser.email || updatedUser.Email || "");
-    setAuthState({ user: updatedUser });
-  }, []);
+    setAuthState({ user: updatedUser, token: currentToken });
+  }, [authState?.token]);
 
-  const logout = useCallback(async () => {
-    try {
-      await axios.post(
-        `${API_BASE_URL}/api/auth/logout`,
-        {},
-        { withCredentials: true }
-      );
-    } catch (error) {
-      console.error("Error:", error);
-      // clear local state regardless
-    }
+  const logout = useCallback(() => {
+    localStorage.removeItem("authToken");
     localStorage.removeItem("user");
     localStorage.removeItem("userEmail");
-    setAuthState({ user: null });
+    setAuthState({ user: null, token: null });
   }, []);
 
   const value = useMemo(
-    () => ({ user: authState.user, login, updateUser, logout }),
-    [authState.user, login, updateUser, logout]
+    () => ({ user: authState.user, token: authState.token, login, updateUser, logout }),
+    [authState.user, authState.token, login, updateUser, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

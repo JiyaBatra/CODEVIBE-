@@ -19,7 +19,4 @@ const progressSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
 });
 
-// Compound index for leaderboard: sort by xp descending, level descending
-progressSchema.index({ xp: -1, level: -1 });
-
 module.exports = mongoose.models.Progress || mongoose.model('Progress', progressSchema);

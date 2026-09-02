@@ -1,5 +1,7 @@
 const Lesson = require('../../models/lesson');
-const { recordLessonCompletion } = require('../../services/progressService');
+const Progress = require('../../models/progress');
+const User = require('../../models/user.models');
+const Analytics = require('../../models/analytics');
 
 const LESSON_ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/i;
 const MAX_LESSON_ID_LENGTH = 80;
@@ -21,7 +23,10 @@ const STATIC_LESSON_LIMITS = {
 };
 const STATIC_LESSON_ID_RE = /^(html|css|js|c|dbms|dsa|express|mongo|node|oop|react)-lesson-?(\d+)$/i;
 
-
+const getSubjectFromLessonId = (lessonId) => {
+  if (!lessonId || typeof lessonId !== 'string') return 'Other';
+  return lessonId.split('-')[0].replace(/\d+$/, '') || lessonId;
+};
 
 const parseFiniteNumber = (value) => {
   if (typeof value === 'number') return Number.isFinite(value) ? value : null;
@@ -190,21 +195,112 @@ exports.completeLesson = async (req, res) => {
 
     const { score, coins, learningTime, type } = payload.value;
 
-    // Delegate all DB writes to the transactional service. All related
-    // documents (Progress, Analytics, Notification) commit atomically or
-    // are rolled back together via a Mongoose session transaction.
-    const result = await recordLessonCompletion({
-      email,
-      lessonId,
-      score,
-      coins,
-      learningTime,
-      type,
-    });
+    const existingProgress = await Progress.findOne({ email });
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    let currentStreak = existingProgress?.currentStreak || 0;
+    let longestStreak = existingProgress?.longestStreak || 0;
+
+    if (!existingProgress?.lastActiveDate) {
+      currentStreak = 1;
+    } else {
+      const lastDate = new Date(existingProgress.lastActiveDate);
+      lastDate.setHours(0, 0, 0, 0);
+      const diffDays = Math.floor(
+        (today - lastDate) / (1000 * 60 * 60 * 24)
+      );
+      if (diffDays === 1) {
+        currentStreak += 1;
+      } else if (diffDays > 1) {
+        currentStreak = 1;
+      }
+      // diffDays === 0 -> same day, don't change streak
+    }
+
+    longestStreak = Math.max(longestStreak, currentStreak);
+
+    let progress = await Progress.findOne({ email });
+    const isNewCompletion = !progress || !progress.completedLessons.includes(lessonId);
+
+    let earnedXp = 0;
+    let earnedBadges = progress?.badges || [];
+
+    if (isNewCompletion) {
+      const baseXp = Math.round(score * 0.5);
+
+      const { getLearningStreak } = require('../analytics/analyticsController');
+      const events = await Analytics.find({ email }).sort({ createdAt: 1 }).lean();
+      const currentStreak = getLearningStreak(events);
+      
+      let multiplier = 1.0;
+      if (currentStreak >= 7) multiplier = 1.5;
+      else if (currentStreak >= 3) multiplier = 1.2;
+
+      earnedXp = Math.round(baseXp * multiplier);
+
+      if (!earnedBadges.includes('first_blood') && (!progress || progress.completedLessons.length === 0)) {
+        earnedBadges.push('first_blood');
+      }
+      
+      const hour = new Date().getHours();
+      if (!earnedBadges.includes('night_owl') && (hour >= 0 && hour < 5)) {
+        earnedBadges.push('night_owl');
+      }
+    }
+
+    const currentXp = progress?.xp || 0;
+    const newTotalXp = currentXp + earnedXp;
+    const newLevel = Math.floor(newTotalXp / 100) + 1;
+
+    progress = await Progress.findOneAndUpdate(
+      { email },
+      {
+        $addToSet: { completedLessons: lessonId },
+        $set: {
+          [`scores.${lessonId}`]: score,
+          xp: newTotalXp,
+          level: newLevel,
+          badges: earnedBadges,
+          currentStreak,
+          longestStreak,
+          lastActiveDate: today,
+        }
+      },
+      {
+        new: true,
+        upsert: true,
+      }
+    );
+
+    const user = await User.findOne({ email }).lean();
+
+    try {
+      await Analytics.create({
+        userId: user?._id || null,
+        email,
+        username: user?.username || progress.username || '',
+        lessonId,
+        subject: getSubjectFromLessonId(lessonId),
+        score,
+        completed: true,
+        points: score,
+        coins,
+        learningTime,
+        type,
+      });
+    } catch (analyticsErr) {
+      console.error('Analytics event creation failed:', analyticsErr);
+    }
 
     res.json({
       message: 'Lesson marked as completed',
-      ...result,
+      completedLessons: progress.completedLessons,
+      scores: progress.scores,
+      currentStreak: progress.currentStreak,
+      longestStreak: progress.longestStreak,
+      dailyGoal: progress.dailyGoal,
     });
   } catch (err) {
     console.error(err);
