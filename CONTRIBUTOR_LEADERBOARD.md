@@ -2,7 +2,7 @@
 
 This leaderboard is generated automatically for `JiyaBatra/CODEVIBE-` by GitHub Actions.
 
-Last updated: 2026-10-02
+Last updated: 2026-10-03
 
 ## Scoring
 
@@ -184,20 +184,20 @@ Last updated: 2026-10-02
 | 168 | [@Abhii-afk](https://github.com/Abhii-afk) | 5 | 0 | 0 | 1 |
 | 169 | [@Abhinav-stefly](https://github.com/Abhinav-stefly) | 5 | 0 | 0 | 1 |
 | 170 | [@abhishekydv7](https://github.com/abhishekydv7) | 5 | 0 | 0 | 1 |
-| 171 | [@agrawal-ayush-292005](https://github.com/agrawal-ayush-292005) | 5 | 0 | 0 | 1 |
-| 172 | [@Akanksha-Shahi](https://github.com/Akanksha-Shahi) | 5 | 0 | 0 | 1 |
-| 173 | [@Akshita1140](https://github.com/Akshita1140) | 5 | 0 | 0 | 1 |
-| 174 | [@alsopayalll](https://github.com/alsopayalll) | 5 | 0 | 0 | 1 |
-| 175 | [@anjalikumari45](https://github.com/anjalikumari45) | 5 | 0 | 0 | 1 |
-| 176 | [@ankiitmishraa-tech](https://github.com/ankiitmishraa-tech) | 5 | 0 | 0 | 1 |
-| 177 | [@anksingh1212121](https://github.com/anksingh1212121) | 5 | 0 | 0 | 1 |
-| 178 | [@anshggss](https://github.com/anshggss) | 5 | 0 | 0 | 1 |
-| 179 | [@anushka1330](https://github.com/anushka1330) | 5 | 0 | 0 | 1 |
-| 180 | [@Anushree-Radhika](https://github.com/Anushree-Radhika) | 5 | 0 | 0 | 1 |
-| 181 | [@arpit2006](https://github.com/arpit2006) | 5 | 0 | 0 | 1 |
-| 182 | [@artisanhub39](https://github.com/artisanhub39) | 5 | 0 | 0 | 1 |
-| 183 | [@ash1shkumar](https://github.com/ash1shkumar) | 5 | 0 | 0 | 1 |
-| 184 | [@Ayan281](https://github.com/Ayan281) | 5 | 0 | 0 | 1 |
+| 171 | [@Akanksha-Shahi](https://github.com/Akanksha-Shahi) | 5 | 0 | 0 | 1 |
+| 172 | [@Akshita1140](https://github.com/Akshita1140) | 5 | 0 | 0 | 1 |
+| 173 | [@alsopayalll](https://github.com/alsopayalll) | 5 | 0 | 0 | 1 |
+| 174 | [@anjalikumari45](https://github.com/anjalikumari45) | 5 | 0 | 0 | 1 |
+| 175 | [@ankiitmishraa-tech](https://github.com/ankiitmishraa-tech) | 5 | 0 | 0 | 1 |
+| 176 | [@anksingh1212121](https://github.com/anksingh1212121) | 5 | 0 | 0 | 1 |
+| 177 | [@anshggss](https://github.com/anshggss) | 5 | 0 | 0 | 1 |
+| 178 | [@anushka1330](https://github.com/anushka1330) | 5 | 0 | 0 | 1 |
+| 179 | [@Anushree-Radhika](https://github.com/Anushree-Radhika) | 5 | 0 | 0 | 1 |
+| 180 | [@arpit2006](https://github.com/arpit2006) | 5 | 0 | 0 | 1 |
+| 181 | [@artisanhub39](https://github.com/artisanhub39) | 5 | 0 | 0 | 1 |
+| 182 | [@ash1shkumar](https://github.com/ash1shkumar) | 5 | 0 | 0 | 1 |
+| 183 | [@Ayan281](https://github.com/Ayan281) | 5 | 0 | 0 | 1 |
+| 184 | [@ayushagrawal-dev29](https://github.com/ayushagrawal-dev29) | 5 | 0 | 0 | 1 |
 | 185 | [@battler67](https://github.com/battler67) | 5 | 0 | 0 | 1 |
 | 186 | [@BB-Limbu](https://github.com/BB-Limbu) | 5 | 0 | 0 | 1 |
 | 187 | [@Bheemeswari497](https://github.com/Bheemeswari497) | 5 | 0 | 0 | 1 |
