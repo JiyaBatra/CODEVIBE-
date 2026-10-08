@@ -2,7 +2,7 @@
 
 This leaderboard is generated automatically for `JiyaBatra/CODEVIBE-` by GitHub Actions.
 
-Last updated: 2026-10-07
+Last updated: 2026-10-08
 
 ## Scoring
 
@@ -326,14 +326,13 @@ Last updated: 2026-10-07
 | 310 | [@Vaghasiya-Jemit-kanaiyalal](https://github.com/Vaghasiya-Jemit-kanaiyalal) | 5 | 0 | 0 | 1 |
 | 311 | [@vaibhav051422-collab](https://github.com/vaibhav051422-collab) | 5 | 0 | 0 | 1 |
 | 312 | [@vaishnavikhatri3](https://github.com/vaishnavikhatri3) | 5 | 0 | 0 | 1 |
-| 313 | [@vansh-09](https://github.com/vansh-09) | 5 | 0 | 0 | 1 |
-| 314 | [@varsha-2503](https://github.com/varsha-2503) | 5 | 0 | 0 | 1 |
-| 315 | [@Varshinigurram](https://github.com/Varshinigurram) | 5 | 0 | 0 | 1 |
-| 316 | [@VEDIKAGULWANI](https://github.com/VEDIKAGULWANI) | 5 | 0 | 0 | 1 |
-| 317 | [@VemuriHaritha](https://github.com/VemuriHaritha) | 5 | 0 | 0 | 1 |
-| 318 | [@vidhimeshram](https://github.com/vidhimeshram) | 5 | 0 | 0 | 1 |
-| 319 | [@vidishaa27](https://github.com/vidishaa27) | 5 | 0 | 0 | 1 |
-| 320 | [@Vishwesh-Bonde](https://github.com/Vishwesh-Bonde) | 5 | 0 | 0 | 1 |
-| 321 | [@yashvini-chirri](https://github.com/yashvini-chirri) | 5 | 0 | 0 | 1 |
-| 322 | [@YatindraRai002](https://github.com/YatindraRai002) | 5 | 0 | 0 | 1 |
-| 323 | [@Yogesh23-03](https://github.com/Yogesh23-03) | 5 | 0 | 0 | 1 |
+| 313 | [@varsha-2503](https://github.com/varsha-2503) | 5 | 0 | 0 | 1 |
+| 314 | [@Varshinigurram](https://github.com/Varshinigurram) | 5 | 0 | 0 | 1 |
+| 315 | [@VEDIKAGULWANI](https://github.com/VEDIKAGULWANI) | 5 | 0 | 0 | 1 |
+| 316 | [@VemuriHaritha](https://github.com/VemuriHaritha) | 5 | 0 | 0 | 1 |
+| 317 | [@vidhimeshram](https://github.com/vidhimeshram) | 5 | 0 | 0 | 1 |
+| 318 | [@vidishaa27](https://github.com/vidishaa27) | 5 | 0 | 0 | 1 |
+| 319 | [@Vishwesh-Bonde](https://github.com/Vishwesh-Bonde) | 5 | 0 | 0 | 1 |
+| 320 | [@yashvini-chirri](https://github.com/yashvini-chirri) | 5 | 0 | 0 | 1 |
+| 321 | [@YatindraRai002](https://github.com/YatindraRai002) | 5 | 0 | 0 | 1 |
+| 322 | [@Yogesh23-03](https://github.com/Yogesh23-03) | 5 | 0 | 0 | 1 |
