@@ -2,7 +2,7 @@
 
 This leaderboard is generated automatically for `JiyaBatra/CODEVIBE-` by GitHub Actions.
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 ## Scoring
 
@@ -276,52 +276,52 @@ Last updated: 2026-10-08
 | 260 | [@priya434960](https://github.com/priya434960) | 5 | 0 | 0 | 1 |
 | 261 | [@priyanshu5ingh](https://github.com/priyanshu5ingh) | 5 | 0 | 0 | 1 |
 | 262 | [@puja-patil101](https://github.com/puja-patil101) | 5 | 0 | 0 | 1 |
-| 263 | [@Rachit-Kakkad1](https://github.com/Rachit-Kakkad1) | 5 | 0 | 0 | 1 |
-| 264 | [@radhika7780](https://github.com/radhika7780) | 5 | 0 | 0 | 1 |
-| 265 | [@Rajatgupta2760](https://github.com/Rajatgupta2760) | 5 | 0 | 0 | 1 |
-| 266 | [@RakheeSharma17082005](https://github.com/RakheeSharma17082005) | 5 | 0 | 0 | 1 |
-| 267 | [@rathan2511](https://github.com/rathan2511) | 5 | 0 | 0 | 1 |
-| 268 | [@Ritika-gupta13](https://github.com/Ritika-gupta13) | 5 | 0 | 0 | 1 |
-| 269 | [@ritikasinghchandel210506-ctrl](https://github.com/ritikasinghchandel210506-ctrl) | 5 | 0 | 0 | 1 |
-| 270 | [@riyaghoshi](https://github.com/riyaghoshi) | 5 | 0 | 0 | 1 |
-| 271 | [@ronak-ravtode](https://github.com/ronak-ravtode) | 5 | 0 | 0 | 1 |
-| 272 | [@roneet0916](https://github.com/roneet0916) | 5 | 0 | 0 | 1 |
-| 273 | [@rwits08](https://github.com/rwits08) | 5 | 0 | 0 | 1 |
-| 274 | [@sahana8050](https://github.com/sahana8050) | 5 | 0 | 0 | 1 |
-| 275 | [@sahare77](https://github.com/sahare77) | 5 | 0 | 0 | 1 |
-| 276 | [@saicharankalakoti](https://github.com/saicharankalakoti) | 5 | 0 | 0 | 1 |
-| 277 | [@sanjam3712](https://github.com/sanjam3712) | 5 | 0 | 0 | 1 |
-| 278 | [@sarveshwarikumari05](https://github.com/sarveshwarikumari05) | 5 | 0 | 0 | 1 |
-| 279 | [@satyamaanand](https://github.com/satyamaanand) | 5 | 0 | 0 | 1 |
-| 280 | [@semanirudh94-lang](https://github.com/semanirudh94-lang) | 5 | 0 | 0 | 1 |
-| 281 | [@SenseiSuraj24](https://github.com/SenseiSuraj24) | 5 | 0 | 0 | 1 |
-| 282 | [@Shivangi1515](https://github.com/Shivangi1515) | 5 | 0 | 0 | 1 |
-| 283 | [@shrashti-19](https://github.com/shrashti-19) | 5 | 0 | 0 | 1 |
-| 284 | [@shreyasgawande19](https://github.com/shreyasgawande19) | 5 | 0 | 0 | 1 |
-| 285 | [@shruti-codes-design](https://github.com/shruti-codes-design) | 5 | 0 | 0 | 1 |
-| 286 | [@shshidhar18](https://github.com/shshidhar18) | 5 | 0 | 0 | 1 |
-| 287 | [@siddhipatel0707-cpu](https://github.com/siddhipatel0707-cpu) | 5 | 0 | 0 | 1 |
-| 288 | [@singhsahil6300-byte](https://github.com/singhsahil6300-byte) | 5 | 0 | 0 | 1 |
-| 289 | [@Smithingmire](https://github.com/Smithingmire) | 5 | 0 | 0 | 1 |
-| 290 | [@Sonakshi9900](https://github.com/Sonakshi9900) | 5 | 0 | 0 | 1 |
-| 291 | [@Soumipal56](https://github.com/Soumipal56) | 5 | 0 | 0 | 1 |
-| 292 | [@Souradeep858](https://github.com/Souradeep858) | 5 | 0 | 0 | 1 |
-| 293 | [@sreelakshmiajayan-ship-it](https://github.com/sreelakshmiajayan-ship-it) | 5 | 0 | 0 | 1 |
-| 294 | [@srisha4](https://github.com/srisha4) | 5 | 0 | 0 | 1 |
-| 295 | [@srujana-manda](https://github.com/srujana-manda) | 5 | 0 | 0 | 1 |
-| 296 | [@Sthitips](https://github.com/Sthitips) | 5 | 0 | 0 | 1 |
-| 297 | [@stuti-sudo-123](https://github.com/stuti-sudo-123) | 5 | 0 | 0 | 1 |
-| 298 | [@Subha12125](https://github.com/Subha12125) | 5 | 0 | 0 | 1 |
-| 299 | [@Sudip-2005](https://github.com/Sudip-2005) | 5 | 0 | 0 | 1 |
-| 300 | [@Suhani-ai-dev](https://github.com/Suhani-ai-dev) | 5 | 0 | 0 | 1 |
-| 301 | [@sukanya9434](https://github.com/sukanya9434) | 5 | 0 | 0 | 1 |
-| 302 | [@sunnyrawal](https://github.com/sunnyrawal) | 5 | 0 | 0 | 1 |
-| 303 | [@SupriyaShirsat05](https://github.com/SupriyaShirsat05) | 5 | 0 | 0 | 1 |
-| 304 | [@surjeetkumar8006](https://github.com/surjeetkumar8006) | 5 | 0 | 0 | 1 |
-| 305 | [@Suryank7](https://github.com/Suryank7) | 5 | 0 | 0 | 1 |
-| 306 | [@Suyash2527](https://github.com/Suyash2527) | 5 | 0 | 0 | 1 |
-| 307 | [@tanvi1107](https://github.com/tanvi1107) | 5 | 0 | 0 | 1 |
-| 308 | [@tatha07](https://github.com/tatha07) | 5 | 0 | 0 | 1 |
+| 263 | [@radhika7780](https://github.com/radhika7780) | 5 | 0 | 0 | 1 |
+| 264 | [@Rajatgupta2760](https://github.com/Rajatgupta2760) | 5 | 0 | 0 | 1 |
+| 265 | [@RakheeSharma17082005](https://github.com/RakheeSharma17082005) | 5 | 0 | 0 | 1 |
+| 266 | [@rathan2511](https://github.com/rathan2511) | 5 | 0 | 0 | 1 |
+| 267 | [@Ritika-gupta13](https://github.com/Ritika-gupta13) | 5 | 0 | 0 | 1 |
+| 268 | [@ritikasinghchandel210506-ctrl](https://github.com/ritikasinghchandel210506-ctrl) | 5 | 0 | 0 | 1 |
+| 269 | [@riyaghoshi](https://github.com/riyaghoshi) | 5 | 0 | 0 | 1 |
+| 270 | [@ronak-ravtode](https://github.com/ronak-ravtode) | 5 | 0 | 0 | 1 |
+| 271 | [@roneet0916](https://github.com/roneet0916) | 5 | 0 | 0 | 1 |
+| 272 | [@rwits08](https://github.com/rwits08) | 5 | 0 | 0 | 1 |
+| 273 | [@sahana8050](https://github.com/sahana8050) | 5 | 0 | 0 | 1 |
+| 274 | [@sahare77](https://github.com/sahare77) | 5 | 0 | 0 | 1 |
+| 275 | [@saicharankalakoti](https://github.com/saicharankalakoti) | 5 | 0 | 0 | 1 |
+| 276 | [@sanjam3712](https://github.com/sanjam3712) | 5 | 0 | 0 | 1 |
+| 277 | [@sarveshwarikumari05](https://github.com/sarveshwarikumari05) | 5 | 0 | 0 | 1 |
+| 278 | [@satyamaanand](https://github.com/satyamaanand) | 5 | 0 | 0 | 1 |
+| 279 | [@semanirudh94-lang](https://github.com/semanirudh94-lang) | 5 | 0 | 0 | 1 |
+| 280 | [@SenseiSuraj24](https://github.com/SenseiSuraj24) | 5 | 0 | 0 | 1 |
+| 281 | [@Shivangi1515](https://github.com/Shivangi1515) | 5 | 0 | 0 | 1 |
+| 282 | [@shrashti-19](https://github.com/shrashti-19) | 5 | 0 | 0 | 1 |
+| 283 | [@shreyasgawande19](https://github.com/shreyasgawande19) | 5 | 0 | 0 | 1 |
+| 284 | [@shruti-codes-design](https://github.com/shruti-codes-design) | 5 | 0 | 0 | 1 |
+| 285 | [@shshidhar18](https://github.com/shshidhar18) | 5 | 0 | 0 | 1 |
+| 286 | [@siddhipatel0707-cpu](https://github.com/siddhipatel0707-cpu) | 5 | 0 | 0 | 1 |
+| 287 | [@singhsahil6300-byte](https://github.com/singhsahil6300-byte) | 5 | 0 | 0 | 1 |
+| 288 | [@Smithingmire](https://github.com/Smithingmire) | 5 | 0 | 0 | 1 |
+| 289 | [@Sonakshi9900](https://github.com/Sonakshi9900) | 5 | 0 | 0 | 1 |
+| 290 | [@Soumipal56](https://github.com/Soumipal56) | 5 | 0 | 0 | 1 |
+| 291 | [@Souradeep858](https://github.com/Souradeep858) | 5 | 0 | 0 | 1 |
+| 292 | [@sreelakshmiajayan-ship-it](https://github.com/sreelakshmiajayan-ship-it) | 5 | 0 | 0 | 1 |
+| 293 | [@srisha4](https://github.com/srisha4) | 5 | 0 | 0 | 1 |
+| 294 | [@srujana-manda](https://github.com/srujana-manda) | 5 | 0 | 0 | 1 |
+| 295 | [@Sthitips](https://github.com/Sthitips) | 5 | 0 | 0 | 1 |
+| 296 | [@stuti-sudo-123](https://github.com/stuti-sudo-123) | 5 | 0 | 0 | 1 |
+| 297 | [@Subha12125](https://github.com/Subha12125) | 5 | 0 | 0 | 1 |
+| 298 | [@Sudip-2005](https://github.com/Sudip-2005) | 5 | 0 | 0 | 1 |
+| 299 | [@Suhani-ai-dev](https://github.com/Suhani-ai-dev) | 5 | 0 | 0 | 1 |
+| 300 | [@sukanya9434](https://github.com/sukanya9434) | 5 | 0 | 0 | 1 |
+| 301 | [@sunnyrawal](https://github.com/sunnyrawal) | 5 | 0 | 0 | 1 |
+| 302 | [@SupriyaShirsat05](https://github.com/SupriyaShirsat05) | 5 | 0 | 0 | 1 |
+| 303 | [@surjeetkumar8006](https://github.com/surjeetkumar8006) | 5 | 0 | 0 | 1 |
+| 304 | [@Suryank7](https://github.com/Suryank7) | 5 | 0 | 0 | 1 |
+| 305 | [@Suyash2527](https://github.com/Suyash2527) | 5 | 0 | 0 | 1 |
+| 306 | [@tanvi1107](https://github.com/tanvi1107) | 5 | 0 | 0 | 1 |
+| 307 | [@tatha07](https://github.com/tatha07) | 5 | 0 | 0 | 1 |
+| 308 | [@theRkakkad](https://github.com/theRkakkad) | 5 | 0 | 0 | 1 |
 | 309 | [@tushar-pandhare](https://github.com/tushar-pandhare) | 5 | 0 | 0 | 1 |
 | 310 | [@Vaghasiya-Jemit-kanaiyalal](https://github.com/Vaghasiya-Jemit-kanaiyalal) | 5 | 0 | 0 | 1 |
 | 311 | [@vaibhav051422-collab](https://github.com/vaibhav051422-collab) | 5 | 0 | 0 | 1 |
